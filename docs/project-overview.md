@@ -1,24 +1,33 @@
-# Project Overview: Fluento
+# Project Overview
 
-## Project Information
+## The Problem
 
-- **Project Name**: Fluento - English Learning Practice Platform
-- **Project Type**: Web Application
-- **Target Users**: English learners of all levels (with basic English knowledge)
-- **Current Status**: In Development
+Many English learners struggle to achieve fluency despite having a solid understanding of grammar and vocabulary.
 
-## Purpose and Objectives
+True communication requires the ability to think, speak, and write effectively in real-world situations, which traditional learning methods often fail to provide.
 
-**Background**: English learners need practical, engaging platforms to develop real-world communication skills beyond traditional classroom instruction.
 
-**Purpose**: Fluento is designed to help English learners practice and improve their language skills through interactive exercises, real-world scenarios, and personalized learning paths. The platform emphasizes practical application rather than theoretical teaching.
+## Purpose
 
-**Objectives**:
-- Enable learners to build and reinforce English vocabulary through contextual use
-- Develop conversational skills in realistic, everyday scenarios
-- Improve speaking skills through pronunciation practice and shadowing techniques
-- Help learners articulate thoughts and opinions clearly through writing exercises
-- Provide personalized learning experiences with spaced repetition algorithms
+Fluento is an application designed to help English learners practice and improve their fluency through interactive exercises and real-world scenarios. 
+
+Unlike conventional apps that focus on teaching rules, Fluento emphasizes practice over theory, giving learners opportunities to apply their knowledge in meaningful contexts.
+
+
+## Target Audience
+
+- Intermediate learners who already understand grammar and vocabulary but want to become fluent
+- Learners aiming to improve communication skills in professional or social settings
+
+
+## Core Features
+
+1. **Vocabulary Practice**: Custom word banks, sentence building in real-world contexts, flashcards, and spaced repetition
+2. **Communication Practice**: Interactive conversational scenarios with feedback
+3. **Thinking Practice**: Sentence and paragraph construction exercises
+4. **Speaking Practice**: Shadowing with native speakers and instant pronunciation feedback
+5. **Progress Tracking**: User progress monitoring and personalized recommendations
+
 
 ## Scope
 
@@ -27,8 +36,9 @@
 - **Communication Practice Module**: Simulated conversations with feedback on grammar, pronunciation, and tone
 - **Thinking Practice Module**: Sentence construction, sentence variation, and paragraph rewriting exercises
 - **Speaking Practice Module**: YouTube integration, pronunciation scoring, and recording/comparison functionality
-- **User-Friendly Interface**: Accessible design for learners of all levels
-- **Core Platform Features**: User authentication, progress tracking, and personalized learning paths
+- **User-Friendly Interface**: Intuitive and accessible design
+- **Learner-Submitted Data**: Allow learners to submit their own words, phrases, sentences, and other learning materials
+- **Core Platform Features**: User authentication and progress tracking
 
 **Out-of-Scope**:
 - Advanced proficiency testing or certification programs
@@ -39,23 +49,9 @@
 ## Stakeholders
 
 - **Primary Users**: English learners globally seeking practical communication practice
-- **Development Team**: Software engineers, designers, and product managers
 - **Content Creators**: Language experts developing scenarios, vocabulary lists, and exercises
+- **Development Team**: Software engineers, designers, and product managers
 - **Product Owner**: Responsible for prioritizing features and ensuring alignment with learning objectives
-
-## Resources and Budget
-
-**Estimated Resources**:
-- Development team: Backend and frontend engineers
-- UX/UI Designers: For interface design and user experience
-- Language Content Specialists: For creating realistic scenarios and exercises
-- QA Engineers: For testing and quality assurance
-
-**Tools and Infrastructure**:
-- Web application framework and hosting
-- Speech recognition API for pronunciation scoring
-- YouTube API for video integration
-- Database for storing user progress and vocabulary
 
 ## Risks and Assumptions
 
@@ -72,11 +68,3 @@
 - Speech recognition technology is sufficiently accurate for learning purposes
 - Content can be created and maintained at scale
 - Users are motivated to practice consistently for skill improvement
-
-## Key Features
-
-1. **Vocabulary Practice**: Custom word banks, sentence building in real-world contexts, flashcards, and spaced repetition
-2. **Communication Practice**: Interactive conversational scenarios with feedback
-3. **Thinking Practice**: Sentence and paragraph construction exercises
-4. **Speaking Practice**: Shadowing with native speakers and instant pronunciation feedback
-5. **Progress Tracking**: User progress monitoring and personalized recommendations
