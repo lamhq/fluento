@@ -161,7 +161,7 @@ Feedback includes:
     - Tone: 96/100
 
 **Practice Lesson 4: Sharing opinions**
-- **Prompt**: Gently tell your friend she’s too young for marriage.
+- **Prompt**: Gently tell your friend she's too young for marriage.
 - **User input**: "I reckon you're a little young to be getting married."
 - **App feedback**:
   - Correctness: 92/100 (Conversational and grammatically correct)
@@ -171,7 +171,7 @@ Feedback includes:
     - Tone: 84/100
 
 **Practice Lesson 5: Polite corrections**
-- **Prompt**: Politely correct your friend’s calculation mistake.
+- **Prompt**: Politely correct your friend's calculation mistake.
 - **User input**: "You seem to have made a mistake in this calculation."
 - **App feedback**:
   - Correctness: 94/100 (Clear and grammatically sound)

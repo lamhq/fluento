@@ -4,22 +4,24 @@
 
 - [x] docs: brainstorm ideas for the app
 - [x] docs: create Project Overview document
-- [x] docs: complete ideas note for Communication Practice feature
-- [x] docs: complete ideas note for Vocabulary Practice feature
-- [x] docs: complete ideas note for Thinking Practice feature
-- [x] docs: complete ideas note for Speaking Practice feature
-- [x] docs: add AI prompt to Communication Practice module doc
-- [ ] feat: build an MVP for Communication Practice module
-- [ ] feat: build an MVP for Thinking Practice module
-- [ ] feat: build an MVP for Vocabulary Practice module
-- [ ] feat: build an MVP for Speaking Practice module
+- [x] docs: complete ideas note for core features
+- [x] feat: init python project with `uv`
+- [x] feat: install langchain langchain-openai dotenv
+- [x] feat: create `.env` file with `OPENAI_API_KEY`
+- [x] feat: write an MVP script for the  Communication Practice module
+- [ ] docs: review doc of Thinking Practice module
+- [ ] feat: write an MVP script for the Thinking Practice module
+- [ ] docs: review doc of Vocabulary Practice module
+- [ ] feat: write an MVP script for the Vocabulary Practice module
+- [ ] docs: review doc of Speaking Practice module
+- [ ] feat: write an MVP script for the Speaking Practice module
 - [ ] docs: create Project Structure document
 
 ## Brainstorm ideas for the app
 
 ## Create project overview document
 
-## Build an MVP for Communication Practice module
+## write a MVP script for Communication Practice module
 
 - [ ] write pseudo code to demonstrate the flow 
 - [ ] write a python script for the Practice Flow
