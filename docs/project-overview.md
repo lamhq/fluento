@@ -22,11 +22,10 @@ Unlike conventional apps that focus on teaching rules, Fluento emphasizes practi
 
 ## Core Features
 
-1. **Vocabulary Practice**: Custom word banks, sentence building in real-world contexts, flashcards, and spaced repetition
-2. **Communication Practice**: Interactive conversational scenarios with feedback
-3. **Thinking Practice**: Sentence and paragraph construction exercises
-4. **Speaking Practice**: Shadowing with native speakers and instant pronunciation feedback
-5. **Progress Tracking**: User progress monitoring and personalized recommendations
+1. **Communication Practice**: engaging in short conversations with feedback on grammar, appropriateness
+2. **Thinking Practice**: expressing thoughts in English through sentence construction, variation, and paragraph rewriting
+3. **Speaking Practice**: practice pronunciation and fluency through shadowing and get feedback on pronunciation and tone
+4. **Vocabulary Practice**: recall and use words through various exercises
 
 
 ## Scope
