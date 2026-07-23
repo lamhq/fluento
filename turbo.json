@@ -1,18 +1,21 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
+  "$schema": "node_modules/turbo/schema.json",
+  "ui": "stream",
   "tasks": {
-    "build": {
-      "dependsOn": [
-        "prebuild",
-        "^build"
-      ],
-      "outputs": [
-        "output-file.txt",
-        "dist/**"
-      ]
+    "dev": {
+      "persistent": true,
+      "cache": false
     },
-    "prebuild": {},
-    "lint": {},
-    "check-types": {}
+    "web#dev": {
+      "persistent": true,
+      "cache": false,
+      "env": ["VITE_*"],
+      "with": ["api#dev"],
+    },
+    "api#dev": {
+      "persistent": true,
+      "cache": false,
+      "env": ["DB_URI"]
+    }    
   }
 }
