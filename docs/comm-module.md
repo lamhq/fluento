@@ -75,7 +75,7 @@ Feedback includes:
   - Job Interview
 
 
-## AI Prompts
+## Prompts
 
 Prompt for getting feedback on learner's response:
 

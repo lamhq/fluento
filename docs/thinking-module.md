@@ -65,7 +65,7 @@ Feedback includes:
   - Correctness: 97/100 (Excellent structure and grammar)
   - Completeness: 100/100 (All words incorporated well)
 
-### Prompt
+### Prompts
 
 Prompt for getting feedback for learner's response:
 
@@ -132,7 +132,7 @@ Feedback includes:
   - Correctness: 94/100 (Good grammar, slightly verbose)
   - Meaning Preservation: 88/100 (Meaning preserved but added concept of "thoroughly")
 
-### Prompt
+### Prompts
 
 Prompt for getting feedback for learner's response:
 
@@ -184,7 +184,7 @@ Feedback includes:
   - **Score** (x/100)
   - **Feedback**: how well the overall meaning and structure are preserved
 
-### Prompt
+### Prompts
 
 Prompt for getting feedback for learner's response:
 
