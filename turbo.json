@@ -2,6 +2,8 @@
   "$schema": "node_modules/turbo/schema.json",
   "ui": "stream",
   "tasks": {
+    "type-check": {},
+    "test": {},
     "dev": {
       "persistent": true,
       "cache": false
@@ -10,12 +12,12 @@
       "persistent": true,
       "cache": false,
       "env": ["VITE_*"],
-      "with": ["api#dev"],
+      "with": ["api#dev"]
     },
     "api#dev": {
       "persistent": true,
       "cache": false,
       "env": ["DB_URI"]
-    }    
+    }
   }
 }
