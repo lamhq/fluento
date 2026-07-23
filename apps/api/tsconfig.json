@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": false,
+    "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolvePackageJsonExports": true,
+    "types": ["node", "jest", "express", "supertest"],
+
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true, // Ensures function parameters are more strictly checked
+    "strictPropertyInitialization": false, // Makes sure class properties are correctly initialized
+    "noImplicitAny": true,
+    "noImplicitThis": true, // Disallows `this` keyword with an implicit `any` type
+    "alwaysStrict": true, // Ensures `use strict` is always used
+    "noUnusedLocals": true, // Reports unused local variables
+    "noUnusedParameters": true, // Reports unused function parameters
+    "noImplicitReturns": true, // Ensures all code paths in a function return a value
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true // Allows importing JSON modules
+  }
+}

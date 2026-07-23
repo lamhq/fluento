@@ -19,7 +19,6 @@ venv.bak/
 # --- Build & distribution ---
 build/
 dist/
-*.spec
 *.manifest
 
 # --- Jupyter notebooks ---
@@ -34,7 +33,6 @@ htmlcov/
 .pytest_cache/
 
 # --- IDE & editor files ---
-.vscode/
 .idea/
 *.swp
 *.swo

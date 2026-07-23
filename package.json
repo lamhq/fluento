@@ -4,6 +4,18 @@
   "private": true,
   "packageManager": "pnpm@8.15.6",
   "devDependencies": {
-    "turbo": "^2.10.6"
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-jest": "^29.15.5",
+    "eslint-plugin-prettier": "^5.2.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "turbo": "^2.10.6",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.62.0"
   }
 }
