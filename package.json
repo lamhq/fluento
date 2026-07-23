@@ -1,0 +1,9 @@
+{
+  "name": "fluento",
+  "description": "An English practicing app for fluency.",
+  "private": true,
+  "packageManager": "pnpm@8.15.6",
+  "devDependencies": {
+    "turbo": "^2.10.6"
+  }
+}
