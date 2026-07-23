@@ -4,9 +4,11 @@
 
 Communication practice enables learners to develop conversational skills in realistic scenarios and build confidence in everyday interactions.
 
+
 ## How it works
 
 Learners respond to a prompt then receive feedback from the app.
+
 
 ## Accessing the module
 
@@ -18,6 +20,7 @@ Learners respond to a prompt then receive feedback from the app.
      - **My Library Only** (default: off)
      - **Start Practice**: begins session.
 
+
 ## Practice Flow
 
 1. App selects a **practice lesson** based on the configuration.
@@ -28,21 +31,6 @@ Learners respond to a prompt then receive feedback from the app.
    - **Retry**: re-answer same prompt.
    - **Next**: move to the next practice.
 
-## Practice Lessons
-
-Practice lessons contain the following information:
-- **Skill**: what to practice. For example:
-  - asking for help
-  - showing gratitude
-- **Sentences**: sentences for learners to practice. For example:
-  - "I was hoping you could give me a lift to the airport."
-  - "You're welcome! I'm glad I could help."
-- **Prompts**: prompts that lead to the practice sentences, can be:
-  - a **guided prompt** that asks the learner to respond in a specific way, e.g., Politely request to your friend to take you to the airport.
-  - an **opener sentence** with a realistic **scenario**, e.g., "Thank you for your help!" - someone that you helped with a task says this to you.
-- **Topics**: topics that the practice lesson belongs to. For example:
-  - Small talk
-  - Job Interview
 
 ## App Feedback
 
@@ -69,10 +57,29 @@ Feedback includes:
 **Considerations**:
 - Should **Engagement** be included as a criterion for appropriateness?
 
-### AI Prompts
 
-Getting feedback on learner's response:
-````md
+## Data Model
+
+**Practice lessons** contain the following information:
+- **Skill**: what to practice. For example:
+  - asking for help
+  - showing gratitude
+- **Sentences**: sentences for learners to practice. For example:
+  - "I was hoping you could give me a lift to the airport."
+  - "You're welcome! I'm glad I could help."
+- **Prompts**: prompts that lead to the practice sentences, can be:
+  - a **guided prompt** that asks the learner to respond in a specific way, e.g., Politely request to your friend to take you to the airport.
+  - an **opener sentence** with a realistic **scenario**, e.g., "Thank you for your help!" - someone that you helped with a task says this to you.
+- **Topics**: topics that the practice lesson belongs to. For example:
+  - Small talk
+  - Job Interview
+
+
+## AI Prompts
+
+Prompt for getting feedback on learner's response:
+
+```md
 ## Task
 
 Review my sentence and give feedback for correctness and relevance to the provided prompt.
@@ -102,43 +109,9 @@ Feedback includes:
   - **Tone**: Does the emotional tone fit the situation (friendly, professional, humorous)?
     - **Score** (x/100)
     - **Feedback**
-
-## Example Output
-
-```json
-{
-  "prompt": "Politely request to your friend to take you to the airport",
-  "sentence": "Cpuld you took me to the airport?",
-  "feedback": "The sentence is understandable but contains grammatical and spelling errors. It does attempt to make a polite request, but the phrasing needs correction to be clear and appropriate.",
-  "correctness": {
-    "score": 60,
-    "feedback": "There are issues with spelling ('Cpuld' instead of 'Could') and verb tense ('took' instead of 'take'). These errors affect clarity and correctness.",
-    "fixes": [
-      "Correct 'Cpuld' to 'Could'",
-      "Change 'took' to 'take'"
-    ],
-    "correctedSentence": "Could you take me to the airport?"
-  },
-  "appropriateness": {
-    "score": 85,
-    "clarity": {
-      "score": 80,
-      "feedback": "The meaning is mostly clear, but the grammar mistakes make it slightly confusing."
-    },
-    "politeness": {
-      "score": 90,
-      "feedback": "The request is polite, though adding 'please' would make it even more courteous."
-    },
-    "tone": {
-      "score": 85,
-      "feedback": "The tone is friendly and suitable for asking a favor, but the errors reduce its smoothness."
-    }
-  }
-}
 ```
-````
 
-## Example Practice Lessons
+## Example Practices
 
 **Practice Lesson 1: Asking for help**
 - **Prompt**: Politely request to your friend to take you to the airport.

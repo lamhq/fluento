@@ -57,27 +57,6 @@ Review my sentence and give feedback for correctness and relevance to the provid
 
 - **Prompt:** {prompt}
 - **Sentence:** {sentence}
-
-## Feedback structure
-
-Feedback includes:
-- **Feedback**: overall feedback
-- **Correctness**: check spelling & grammar of learner's response
-  - **Score** (x/100)
-  - **Feedback**: correctness feedback
-  - **Grammar/spelling fixes**
-  - **Corrected sentence**
-- **Appropriateness**: check response is relevant with the prompt
-  - **Score** (x/100): `0` if the response is irrelevant with the prompt, otherwise it's the average of clarity, politeness, and tone scores.
-  - **Clarity**: Is the response easy to understand and free of ambiguity?
-    - **Score** (x/100)
-    - **Feedback**
-  - **Politeness**: Does it show courtesy or acknowledge the other person?
-    - **Score** (x/100)
-    - **Feedback**
-  - **Tone**: Does the emotional tone fit the situation (friendly, professional, humorous)?
-    - **Score** (x/100)
-    - **Feedback**
 """
 
 feedback_prompt_template = PromptTemplate(
@@ -90,7 +69,7 @@ chain = feedback_prompt_template | llm_with_structured_output
 
 # Test input
 test_prompt = "How are you today?"
-test_sentence = "I'm doing well, thank you. And you?"
+test_sentence = "Not too bad. And you?"
 
 response = chain.invoke(input={"prompt": test_prompt, "sentence": test_sentence})
 
