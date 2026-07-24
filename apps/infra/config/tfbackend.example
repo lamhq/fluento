@@ -1,0 +1,14 @@
+region               = "ap-southeast-1"
+
+# S3 bucket to store Terraform state file
+bucket               = "bucket-name"
+
+# State file will be stored at `<workspace_key_prefix>/<workspace_name>/<key>` in the bucket
+# <workspace_name> can be environment name: dev, prod, staging
+workspace_key_prefix = "project-name"
+
+# Name of the state file
+key                  = "terraform.tfstate"
+
+# Use a lockfile for locking the state file
+use_lockfile         = true

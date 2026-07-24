@@ -1,0 +1,38 @@
+# ============================================================================
+# Terraform State Files
+# ============================================================================
+# These files contain the current state of your infrastructure
+*.tfstate
+*.tfstate.*
+
+# ============================================================================
+# Terraform Variable Files
+# ============================================================================
+# Exclude all .tfvars files as they may contain sensitive data like passwords,
+# API keys, and other secrets that should not be committed to version control.
+# Each environment should have its own .tfvars file managed separately.
+*.tfvars
+*.tfvars.json
+
+# ============================================================================
+# Terraform Locks and Configuration
+# ============================================================================
+# Local terraform working directory and dependency locks
+**/.terraform/*
+*.lock.hcl
+
+# Terraform CLI configuration files (not to be committed)
+.terraformrc
+terraform.rc
+
+# ============================================================================
+# Generated Artifacts
+# ============================================================================
+# Zip archives created during deployment (generated from archive_file data source)
+*.zip
+
+# ============================================================================
+# Backend Configuration
+# ============================================================================
+# Backend configuration files should be managed separately per environment
+*.tfbackend
