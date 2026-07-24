@@ -1,0 +1,39 @@
+services:
+  api-service:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - '5600:5600'
+    environment:
+      NODE_ENV: production
+      PORT: 5600
+    healthcheck:
+      test: ['CMD', 'node', 'dist/healthcheck.mjs']
+      interval: 5s
+      timeout: 1s
+      retries: 10
+      start_period: 3s
+
+  web-service:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    ports:
+      - '5601:80'
+    environment:
+      API_URL: http://api-service:5600
+    depends_on:
+      api-service:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/']
+      interval: 5s
+      timeout: 1s
+      retries: 10
+      start_period: 3s
+
+# volumes:
+#   mongodb_data:
+#   keycloak_data:
+#   api_deps:
