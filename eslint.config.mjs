@@ -1,15 +1,16 @@
 // @ts-check
-import eslint from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier/flat";
-import jest from "eslint-plugin-jest";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import { defineConfig } from "eslint/config";
-import globals from "globals";
-import path from "path";
-import tseslint from "typescript-eslint";
-import { fileURLToPath } from "url";
+import eslint from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import jest from 'eslint-plugin-jest';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+import path from 'path';
+import tseslint from 'typescript-eslint';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,27 +18,27 @@ const __dirname = path.dirname(__filename);
 export default defineConfig(
   // Global ignores
   {
-    ignores: [
-      ".turbo/**",
-      "**/*.js",
-      "**/dist",
-      "**/build",
-      "**/node_modules",
-      "eslint.config.mjs",
-    ],
+    ignores: ['.turbo/**', '**/*.js', '**/dist', '**/build', '**/node_modules'],
   },
 
   // JavaScript
   {
-    name: "JavaScript files",
-    files: ["**/*.{js,ts,jsx,tsx}"],
+    name: 'JavaScript files',
+    files: ['**/*.{js,ts,jsx,tsx}'],
     extends: [eslint.configs.recommended],
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+    },
   },
 
   // TypeScript
   {
-    name: "TypeScript files",
-    files: ["**/*.{ts,tsx}"],
+    name: 'TypeScript files',
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -50,11 +51,11 @@ export default defineConfig(
     ],
     rules: {
       // allow NestJS module classes
-      "@typescript-eslint/no-extraneous-class": "off",
+      '@typescript-eslint/no-extraneous-class': 'off',
 
       // fix react-hook-form onSubmit type error
-      "@typescript-eslint/no-misused-promises": [
-        "error",
+      '@typescript-eslint/no-misused-promises': [
+        'error',
         {
           checksVoidReturn: {
             attributes: false,
@@ -62,15 +63,15 @@ export default defineConfig(
         },
       ],
 
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          args: "all",
-          argsIgnorePattern: "^_",
-          caughtErrors: "all",
-          caughtErrorsIgnorePattern: "^_",
-          destructuredArrayIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
           ignoreRestSiblings: true,
         },
       ],
@@ -79,8 +80,8 @@ export default defineConfig(
 
   // TypeScript Node
   {
-    name: "TypeScript Node",
-    files: ["apps/api/**/*.{ts,js}"],
+    name: 'TypeScript Node',
+    files: ['apps/api/**/*.{ts,js}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -90,8 +91,8 @@ export default defineConfig(
 
   // Jest test files
   {
-    name: "Jest test files",
-    files: ["apps/api/**/*.(test|spec).ts(x)?"],
+    name: 'Jest test files',
+    files: ['apps/api/**/*.(test|spec).ts(x)?'],
     plugins: { jest },
     languageOptions: {
       globals: {
@@ -100,25 +101,25 @@ export default defineConfig(
       },
     },
     rules: {
-      "jest/no-disabled-tests": "warn",
-      "jest/no-focused-tests": "error",
-      "jest/no-identical-title": "error",
-      "jest/valid-expect": "error",
+      'jest/no-disabled-tests': 'warn',
+      'jest/no-focused-tests': 'error',
+      'jest/no-identical-title': 'error',
+      'jest/valid-expect': 'error',
     },
   },
 
   // TypeScript React
   {
-    name: "TypeScript React",
-    files: ["apps/web/**/*.{ts,tsx}"],
+    name: 'TypeScript React',
+    files: ['apps/web/**/*.{ts,tsx}'],
     languageOptions: {
       globals: globals.browser,
     },
     settings: {
-      react: { version: "detect" },
+      react: { version: 'detect' },
     },
     extends: [
-      react.configs.flat["jsx-runtime"],
+      react.configs.flat['jsx-runtime'],
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
@@ -127,6 +128,6 @@ export default defineConfig(
   // Prettier - must be last
   {
     ...eslintConfigPrettier,
-    name: "Prettier",
+    name: 'Prettier',
   },
 );
