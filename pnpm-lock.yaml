@@ -41,6 +41,9 @@ importers:
       eslint-plugin-simple-import-sort:
         specifier: ^14.0.0
         version: 14.0.0(eslint@9.39.5)
+      git-branch-is:
+        specifier: ^5.0.0
+        version: 5.0.0
       globals:
         specifier: ^17.7.0
         version: 17.7.0
@@ -3641,6 +3644,11 @@ packages:
       delayed-stream: 1.0.0
     dev: true
 
+  /commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
+    dev: true
+
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
     dev: true
@@ -4976,6 +4984,14 @@ packages:
       call-bound: 1.0.4
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
+    dev: true
+
+  /git-branch-is@5.0.0:
+    resolution: {integrity: sha512-c4E2Gs4zha5ia8woo/xvWH/mFmGotDMBcAUPhSTMjsD2bC92TON4AwH9c45yWCVxbz+3NtjQngk7uKznll5uOw==}
+    engines: {node: ^20.19 || >=22.12, npm: '>=1.3.7'}
+    hasBin: true
+    dependencies:
+      commander: 15.0.0
     dev: true
 
   /glob-parent@5.1.2:
