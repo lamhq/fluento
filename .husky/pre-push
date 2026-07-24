@@ -1,0 +1,1 @@
+npx git-branch-is -r '^(feature|fix)/[a-z\-\d\.]+$'
