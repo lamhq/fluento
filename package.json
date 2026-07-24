@@ -10,6 +10,8 @@
     "start": "turbo run start"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.39.5",
     "eslint": "^9.7.0",
