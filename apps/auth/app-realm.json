@@ -1,0 +1,48 @@
+{
+  "realm": "app",
+  "enabled": true,
+  "ssoSessionIdleTimeout": 31536000,
+  "ssoSessionMaxLifespan": 31536000,
+  "ssoSessionIdleTimeoutRememberMe": 31536000,
+  "ssoSessionMaxLifespanRememberMe": 31536000,
+  "offlineSessionIdleTimeout": 31536000,
+  "offlineSessionMaxLifespan": 31536000,
+  "accessTokenLifespan": 31536000,
+  "accessTokenLifespanForImplicitFlow": 31536000,
+  "clientSessionIdleTimeout": 0,
+  "clientSessionMaxLifespan": 0,
+  "users": [
+    {
+      "username": "test",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "test@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "web-client",
+      "secret": "web-client-secret",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "redirectUris": ["http://localhost:5601/*"],
+      "webOrigins": ["http://localhost:5601"],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ]
+}
