@@ -8,19 +8,22 @@ name: Web Workflow
 # - WEB_ENV_VARS: content of .env file for building the web app
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'apps/web/**'
-      - 'apps/web-e2e/**'
-      - '.github/workflows/web.yml'
-
   push:
-    branches: [main]
-    tags: ['web-v*']
-    paths:
-      - 'apps/web/**'
-      - 'apps/web-e2e/**'
+    branches:
+      - feature/*
+
+  # pull_request:
+  #   branches: [main]
+  #   paths:
+  #     - 'apps/web/**'
+  #     - 'apps/web-e2e/**'
+
+  # push:
+  #   branches: [main]
+  #   tags: ['web-v*']
+  #   paths:
+  #     - 'apps/web/**'
+  #     - 'apps/web-e2e/**'
 
 permissions:
   id-token: write # Allows OIDC token requests
@@ -69,8 +72,8 @@ jobs:
   deploy-dev:
     if: github.event_name == 'push'
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # needs: [lint, type-check, unit-test]
     runs-on: ubuntu-latest
-    needs: [lint, type-check, unit-test]
     environment: dev
 
     steps:

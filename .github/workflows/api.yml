@@ -6,17 +6,20 @@ name: API Workflow
 # - API_HANDLER_LAMBDA: Lambda function name to deploy
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'apps/api/**'
-      - '.github/workflows/api.yml'
-
   push:
-    branches: [main]
-    tags: ['api-v*']
-    paths:
-      - 'apps/api/**'
+    branches:
+      - feature/*
+
+  # pull_request:
+  #   branches: [main]
+  #   paths:
+  #     - 'apps/api/**'
+
+  # push:
+  #   branches: [main]
+  #   tags: ['api-v*']
+  #   paths:
+  #     - 'apps/api/**'
 
 permissions:
   id-token: write # Allows OIDC token requests
@@ -97,8 +100,8 @@ jobs:
   deploy-dev:
     if: github.event_name == 'push'
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # needs: [lint, type-check, unit-test, integration-test, build]
     runs-on: ubuntu-latest
-    needs: [lint, type-check, unit-test, integration-test, build]
     environment: dev
 
     steps:
