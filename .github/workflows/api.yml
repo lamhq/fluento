@@ -108,8 +108,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Debug OIDC token
-        run: echo "${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
+      - name: Print OIDC claims
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const token = await core.getIDToken('sts.amazonaws.com');
+            const parts = token.split('.');
+            const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+            console.log(payload);
+
+      - name: Debug OIDC claims
+        run: |
+          aws sts assume-role-with-web-identity \
+            --role-arn ${{ vars.DEPLOYMENT_ROLE_ARN }} \
+            --role-session-name debugSession \
+            --web-identity-token $ACTIONS_ID_TOKEN_REQUEST_TOKEN \
+            --duration-seconds 900 --debug
+
+      # - name: Debug OIDC token
+      #   run: echo "${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
 
       - name: Deploy API
         uses: ./.github/actions/deploy-api
