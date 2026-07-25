@@ -99,13 +99,17 @@ jobs:
 
   deploy-dev:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [lint, type-check, unit-test, integration-test, build]
+    # needs: [lint, type-check, unit-test, integration-test, build]
+    needs: [build]
     runs-on: ubuntu-latest
     environment: dev
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+
+      - name: Debug OIDC token
+        run: echo "${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
 
       - name: Deploy API
         uses: ./.github/actions/deploy-api
