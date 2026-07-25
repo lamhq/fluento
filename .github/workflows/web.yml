@@ -67,7 +67,7 @@ jobs:
         run: pnpm -F web test
 
   deploy-dev:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'push'
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [lint, type-check, unit-test]
