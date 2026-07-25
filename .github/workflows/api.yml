@@ -6,20 +6,20 @@ name: API Workflow
 # - API_HANDLER_LAMBDA: Lambda function name to deploy
 
 on:
-  push:
-    branches:
-      - feature/*
-
-  # pull_request:
-  #   branches: [main]
-  #   paths:
-  #     - 'apps/api/**'
-
   # push:
-  #   branches: [main]
-  #   tags: ['api-v*']
-  #   paths:
-  #     - 'apps/api/**'
+  #   branches:
+  #     - feature/*
+
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+
+  push:
+    branches: [main]
+    tags: ['api-v*']
+    paths:
+      - 'apps/api/**'
 
 permissions:
   id-token: write # Allows OIDC token requests
@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   lint:
-    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -40,7 +40,7 @@ jobs:
         run: pnpm lint apps/api
 
   type-check:
-    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -53,7 +53,7 @@ jobs:
         run: pnpm -F api run type-check
 
   unit-test:
-    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
         run: pnpm -F api run test
 
   integration-test:
-    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -79,7 +79,7 @@ jobs:
         run: pnpm -F api run test:e2e
 
   build:
-    # if: github.event_name == 'pull_request' || github.event_name == 'push'
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -98,24 +98,14 @@ jobs:
           path: apps/api/dist/
 
   deploy-dev:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    # needs: [lint, type-check, unit-test, integration-test, build]
-    needs: [build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [lint, type-check, unit-test, integration-test, build]
     runs-on: ubuntu-latest
     environment: dev
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
-      - name: Print OIDC claims
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const token = await core.getIDToken('sts.amazonaws.com');
-            const parts = token.split('.');
-            const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
-            console.log(payload);
 
       - name: Deploy API
         uses: ./.github/actions/deploy-api

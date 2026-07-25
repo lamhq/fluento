@@ -8,70 +8,70 @@ name: Web Workflow
 # - WEB_ENV_VARS: content of .env file for building the web app
 
 on:
-  push:
-    branches:
-      - feature/*
-
-  # pull_request:
-  #   branches: [main]
-  #   paths:
-  #     - 'apps/web/**'
-  #     - 'apps/web-e2e/**'
-
   # push:
-  #   branches: [main]
-  #   tags: ['web-v*']
-  #   paths:
-  #     - 'apps/web/**'
-  #     - 'apps/web-e2e/**'
+  #   branches:
+  #     - feature/*
+
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - 'apps/web-e2e/**'
+
+  push:
+    branches: [main]
+    tags: ['web-v*']
+    paths:
+      - 'apps/web/**'
+      - 'apps/web-e2e/**'
 
 permissions:
   id-token: write # Allows OIDC token requests
   contents: read # Allows reading repo contents
 
 jobs:
-  # lint:
-  #   if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v6
+  lint:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-  #     - name: Setup Node environment
-  #       uses: ./.github/actions/setup-node-env
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
 
-  #     - name: Lint code
-  #       run: pnpm lint apps/web
+      - name: Lint code
+        run: pnpm lint apps/web
 
-  # type-check:
-  #   if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v6
+  type-check:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-  #     - name: Setup Node environment
-  #       uses: ./.github/actions/setup-node-env
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
 
-  #     - name: Check types
-  #       run: pnpm -F web run type-check
+      - name: Check types
+        run: pnpm -F web run type-check
 
-  # unit-test:
-  #   if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v6
+  unit-test:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-  #     - name: Setup Node environment
-  #       uses: ./.github/actions/setup-node-env
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
 
-  #     - name: Run unit tests
-  #       run: pnpm -F web test
+      - name: Run unit tests
+        run: pnpm -F web test
 
   deploy-dev:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    # needs: [lint, type-check, unit-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [lint, type-check, unit-test]
     runs-on: ubuntu-latest
     environment: dev
 
