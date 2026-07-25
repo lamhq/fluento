@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   lint:
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -40,7 +40,7 @@ jobs:
         run: pnpm lint apps/api
 
   type-check:
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -53,7 +53,7 @@ jobs:
         run: pnpm -F api run type-check
 
   unit-test:
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
         run: pnpm -F api run test
 
   integration-test:
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -79,7 +79,7 @@ jobs:
         run: pnpm -F api run test:e2e
 
   build:
-    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    # if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -98,9 +98,8 @@ jobs:
           path: apps/api/dist/
 
   deploy-dev:
-    if: github.event_name == 'push'
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    # needs: [lint, type-check, unit-test, integration-test, build]
+    needs: [lint, type-check, unit-test, integration-test, build]
     runs-on: ubuntu-latest
     environment: dev
 
