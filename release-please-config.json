@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    "apps/api": {
+      "release-type": "node",
+      "package-name": "fluento-api",
+      "component": "api"
+    },
+    "apps/web": {
+      "release-type": "node",
+      "package-name": "fluento-web",
+      "component": "web"
+    }
+  },
+  "separate-pull-requests": true,
+  "group-pull-request-title-pattern": "chore: release ${component} ${version}",
+  "changelog-path": "CHANGELOG.md",
+  "changelog-host": "https://github.com"
+}

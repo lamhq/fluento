@@ -1,0 +1,132 @@
+name: API Workflow
+
+# Required environment variables (GitHub Settings > Environments > {dev/staging/prod} > Environment variables):
+# - AWS_REGION: AWS region for deployment (e.g., us-east-1)
+# - DEPLOYMENT_ROLE_ARN: IAM role the CI will assume for deployment
+# - API_HANDLER_LAMBDA: Lambda function name to deploy
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - '.github/workflows/api.yml'
+
+  push:
+    branches: [main]
+    tags: ['api-v*']
+    paths:
+      - 'apps/api/**'
+
+permissions:
+  id-token: write # Allows OIDC token requests
+  contents: read # Allows reading repo contents
+
+jobs:
+  lint:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
+
+      - name: Lint code
+        run: pnpm lint apps/api
+
+  type-check:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
+
+      - name: Check types
+        run: pnpm -F api run type-check
+
+  unit-test:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
+
+      - name: Run unit tests
+        run: pnpm -F api run test
+
+  integration-test:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
+
+      - name: Run integration tests
+        run: pnpm -F api run test:e2e
+
+  build:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
+
+      - name: Build API
+        run: pnpm -F api build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-build-${{ github.sha }}
+          path: apps/api/dist/
+
+  deploy-dev:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [lint, type-check, unit-test, integration-test, build]
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Deploy API
+        uses: ./.github/actions/deploy-api
+        with:
+          build_id: api-build-${{ github.sha }}
+          aws_region: ${{ vars.AWS_REGION }}
+          deployment_role_arn: ${{ vars.DEPLOYMENT_ROLE_ARN }}
+          api_handler_lambda: ${{ vars.API_HANDLER_LAMBDA }}
+
+  deploy-prod:
+    if: startsWith(github.ref, 'refs/tags/api-v')
+    runs-on: ubuntu-latest
+    needs: [lint, type-check, unit-test, integration-test, build]
+    environment: prod
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Deploy API
+        uses: ./.github/actions/deploy-api
+        with:
+          build_id: api-build-${{ github.sha }}
+          aws_region: ${{ vars.AWS_REGION }}
+          deployment_role_arn: ${{ vars.DEPLOYMENT_ROLE_ARN }}
+          api_handler_lambda: ${{ vars.API_HANDLER_LAMBDA }}
