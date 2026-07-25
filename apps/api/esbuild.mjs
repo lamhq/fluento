@@ -3,7 +3,7 @@ import { clean } from 'esbuild-plugin-clean';
 import { esbuildPluginDecorator } from 'esbuild-plugin-decorator';
 
 await build({
-  entryPoints: ['src/main.ts'],
+  entryPoints: ['src/main.ts', 'src/lambda.ts'],
   outdir: 'dist',
   platform: 'node',
   target: 'node22',

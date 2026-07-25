@@ -1,0 +1,52 @@
+name: Deploy Web Action
+description: Download build artifact and deploy web app to S3 with CloudFront invalidation
+
+inputs:
+  aws_region:
+    description: AWS region for deployment (e.g., us-east-1)
+    required: true
+  deployment_role_arn:
+    description: AWS IAM role ARN for OIDC authentication
+    required: true
+  app_bucket:
+    description: S3 bucket name for hosting the web app
+    required: true
+  cf_dist_id:
+    description: CloudFront distribution ID for cache invalidation
+    required: true
+  web_env_vars:
+    description: Environment variables for the web app
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node environment
+      uses: ./.github/actions/setup-node-env
+
+    - name: Build application
+      shell: bash
+      run: |
+        echo "${{ inputs.web_env_vars }}" > apps/web/.env
+        pnpm -F web build
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        role-to-assume: ${{ inputs.deployment_role_arn }}
+        aws-region: ${{ inputs.aws_region }}
+
+    - name: Sync build to S3
+      shell: bash
+      run: |
+        aws s3 sync apps/web/dist/ s3://${{ inputs.app_bucket }}/web \
+          --delete \
+          --region ${{ inputs.aws_region }}
+
+    - name: Invalidate CloudFront cache
+      shell: bash
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ inputs.cf_dist_id }} \
+          --paths "/index.html" \
+          --region ${{ inputs.aws_region }}

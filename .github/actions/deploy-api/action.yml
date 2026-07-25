@@ -1,0 +1,51 @@
+name: Deploy API Action
+description: Download build artifact and deploy API to Lambda
+
+inputs:
+  build_id:
+    description: Build artifact ID
+    required: true
+  aws_region:
+    description: AWS region for deployment (e.g., us-east-1)
+    required: true
+  deployment_role_arn:
+    description: IAM role the CI will assume for deployment
+    required: true
+  api_handler_lambda:
+    description: Lambda function name to deploy
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.build_id }}
+        path: apps/api/dist/
+
+    - name: Create Lambda deployment package
+      shell: bash
+      run: |
+        cd apps/api/dist/ && zip -r ../../../api.zip .
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        role-to-assume: ${{ inputs.deployment_role_arn }}
+        aws-region: ${{ inputs.aws_region }}
+
+    - name: Deploy to Lambda
+      shell: bash
+      run: |
+        aws lambda update-function-code \
+          --function-name ${{ inputs.api_handler_lambda }} \
+          --zip-file fileb://api.zip \
+          --region ${{ inputs.aws_region }}
+
+    - name: Wait for Lambda update
+      shell: bash
+      run: |
+        aws lambda wait function-updated \
+          --function-name ${{ inputs.api_handler_lambda }} \
+          --region ${{ inputs.aws_region }}
