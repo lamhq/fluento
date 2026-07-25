@@ -95,7 +95,8 @@ jobs:
           path: apps/api/dist/
 
   deploy-dev:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [lint, type-check, unit-test, integration-test, build]
     environment: dev
