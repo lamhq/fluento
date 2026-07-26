@@ -3,7 +3,7 @@ import './style.css';
 import heroImg from '../../assets/hero.png';
 import reactLogo from '../../assets/react.svg';
 import viteLogo from '../../assets/vite.svg';
-import SignOutButton from '../../components/SignOutButton/SignOutButton';
+import SignOutButton from '../../components/SignOutButton';
 
 export default function Home() {
   return (

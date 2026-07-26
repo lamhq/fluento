@@ -1,16 +1,18 @@
-import { Navigate } from 'react-router';
+import { Link, Navigate } from 'react-router';
 
 import { useAuth } from '../../auth';
-import AuthErrorView from '../../components/AuthErrorView';
 import { LAST_ROUTE_KEY } from '../../constants';
 import { HOME_ROUTE } from '../../routes';
 
-export default function SignInRedirectPage() {
+export default function SignInCallbackPage() {
   const auth = useAuth();
 
   if (auth.error) {
     return (
-      <AuthErrorView errorMessage={auth.error.message} homeRoute={HOME_ROUTE} />
+      <>
+        <p>{auth.error.message}</p>
+        <Link to={HOME_ROUTE}>Return</Link>
+      </>
     );
   }
 

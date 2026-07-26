@@ -4,8 +4,8 @@ import { Route, Routes } from 'react-router';
 import { requireAuth } from './auth';
 import { LAST_ROUTE_KEY } from './constants';
 import Home from './pages/HomePage';
-import SignInRedirectPage from './pages/SignInRedirectPage';
-import SignOutRedirectPage from './pages/SignOutRedirectPage';
+import SignInCallbackPage from './pages/SignInCallbackPage';
+import SignOutCallbackPage from './pages/SignOutCallbackPage';
 import { SIGN_IN_REDIRECT_ROUTE, SIGN_OUT_REDIRECT_ROUTE } from './routes';
 
 const withAuth = (comp: ComponentType) => {
@@ -23,8 +23,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<ProtectedHomePage />} />
-      <Route path={SIGN_IN_REDIRECT_ROUTE} element={<SignInRedirectPage />} />
-      <Route path={SIGN_OUT_REDIRECT_ROUTE} element={<SignOutRedirectPage />} />
+      <Route path={SIGN_IN_REDIRECT_ROUTE} element={<SignInCallbackPage />} />
+      <Route path={SIGN_OUT_REDIRECT_ROUTE} element={<SignOutCallbackPage />} />
     </Routes>
   );
 }
