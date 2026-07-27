@@ -4,7 +4,7 @@
   "description": "API Gateway for local development and testing",
   "main": "index.mjs",
   "scripts": {
-    "start": "node --watch index.mjs"
+    "dev": "node --watch index.mjs"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
