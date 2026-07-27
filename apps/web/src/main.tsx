@@ -1,5 +1,6 @@
 import './index.css';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -16,6 +17,10 @@ const httpClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 60_000, retry: false } },
 });
 
 const rootEl = document.getElementById('root');
@@ -38,7 +43,9 @@ if (rootEl) {
           }}
         >
           <BrowserRouter>
-            <App />
+            <QueryClientProvider client={queryClient}>
+              <App />
+            </QueryClientProvider>
           </BrowserRouter>
         </AuthProvider>
       </HttpClientProvider>
