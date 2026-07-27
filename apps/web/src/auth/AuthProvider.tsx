@@ -61,7 +61,7 @@ export default function AuthProvider(props: AuthProviderProps) {
   };
 
   useEffect(() => {
-    // attach token to API request on load
+    // trigger sign-in callback on load
     userManager.getUser().then(onSigninCallback, console.error);
   }, [userManager, onSigninCallback]);
 

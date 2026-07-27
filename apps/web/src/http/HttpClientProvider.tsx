@@ -1,27 +1,14 @@
-import axios from 'axios';
-import { useMemo } from 'react';
+import { type AxiosInstance } from 'axios';
 
 import { HttpClientContext } from './contexts';
 
 export interface HttpClientProviderProps {
   children: React.ReactNode;
-  baseUrl: string;
+  httpClient: AxiosInstance;
 }
 
 export default function HttpClientProvider(props: HttpClientProviderProps) {
-  const { baseUrl, children } = props;
-
-  const httpClient = useMemo(
-    () =>
-      axios.create({
-        baseURL: baseUrl,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }),
-    [baseUrl],
-  );
-
+  const { httpClient, children } = props;
   return (
     <HttpClientContext.Provider value={httpClient}>
       {children}
