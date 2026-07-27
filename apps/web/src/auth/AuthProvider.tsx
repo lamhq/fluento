@@ -19,20 +19,18 @@ export interface AuthProviderProps {
   oidcAuthority: string;
 
   /**
-   * The client ID registered with the OIDC provider.
-   * This uniquely identifies your application during the authentication flow.
+   * ID of your application registered with the identity provider during the authentication flow.
    */
   oidcClientId: string;
 
   /**
-   * The redirect URI where the OIDC provider will redirect user after successful authentication.
-   * It receives the code, used for exchanging access token.
+   * Where the OIDC provider redirects user after successful authentication.
+   * The URI is appended with authorization code, used for exchanging access token.
    */
   redirectUri: string;
 
   /**
-   * Optional callback executed after a successful sign-in.
-   * Receives the authenticated user object (or undefined if unavailable).
+   * Callback executed after a successful sign-in.
    * Can be used to attach tokens to API requests or trigger side effects.
    */
   onSigninCallback?: (user: User | null | undefined) => Promise<void> | void;

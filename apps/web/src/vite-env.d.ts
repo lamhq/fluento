@@ -4,11 +4,7 @@ interface ViteTypeOptions {
   strictImportMetaEnv: unknown;
 }
 
-interface ImportMetaEnv {
-  readonly VITE_OIDC_AUTHORITY?: string;
-  readonly VITE_OIDC_CLIENT_ID?: string;
-  // more env variables...
-}
+type ImportMetaEnv = Record<string, string | undefined>;
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
