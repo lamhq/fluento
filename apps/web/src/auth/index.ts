@@ -1,3 +1,3 @@
 export { default as AuthProvider } from './AuthProvider';
-export { withAuthenticationRequired as requireAuth } from 'react-oidc-context';
-export { useAuth } from 'react-oidc-context';
+export { default as requireAuth } from './requireAuth';
+export { default as useAuth } from './useAuth';

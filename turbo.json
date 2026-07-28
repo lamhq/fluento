@@ -39,8 +39,7 @@
     },
     "api#dev": {
       "persistent": true,
-      "cache": false,
-      "env": ["DB_URI"]
+      "cache": false
     }
   }
 }

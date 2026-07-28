@@ -10,8 +10,6 @@ export default function SignOutCallbackPage() {
     return <Navigate to={HOME_ROUTE} />;
   }
 
-  const signIn = () => void auth.signinRedirect();
-
   return (
     <>
       <p>You have been signed out.</p>
@@ -23,7 +21,7 @@ export default function SignOutCallbackPage() {
         <Link to={HOME_ROUTE}>home page</Link>.
       </p>
       <p>
-        <button onClick={signIn}>sign in</button>
+        <button onClick={auth.signIn}>sign in</button>
       </p>
     </>
   );

@@ -32,24 +32,21 @@ async function startServer() {
     });
 
     // Fetch OIDC discovery configuration
-    const discoveryResponse = await fetch(discoveryUrl);
-    if (!discoveryResponse.ok) {
-      throw new Error(
-        `Failed to fetch discovery endpoint: ${discoveryResponse.statusText}`,
-      );
+    let discoveryResponse;
+    try {
+      discoveryResponse = await fetch(discoveryUrl);
+      if (!discoveryResponse.ok) throw new Error(discoveryResponse.statusText);
+    } catch (error) {
+      throw new Error(`Failed to fetch discovery endpoint: ${error.message}`);
     }
 
+    // Check jwksUri exists
     const discoveryConfig = await discoveryResponse.json();
-    const issuer = discoveryConfig.issuer;
     const jwksUri = discoveryConfig.jwks_uri;
-    if (!issuer || !jwksUri) {
-      throw new Error('Missing issuer or jwks_uri in discovery configuration');
-    }
-
-    console.log(`Loaded issuer: ${issuer}`);
+    if (!jwksUri) throw new Error('Missing jwks_uri in discovery configuration');
     console.log(`Loaded jwks_uri: ${jwksUri}`);
 
-    // Middleware: Validate JWT from Keycloak
+    // Initialize JWT validation middleware
     // https://www.npmjs.com/package/express-jwt
     let checkJwt = expressjwt({
       // Dynamically provide signing key based on kid in the header and JWKs from Keycloak
@@ -62,12 +59,12 @@ async function startServer() {
       audience: clientId, // replace with your client_id if needed
     });
 
-    // Apply unless clause if public route is defined
+    // Exclude public routes
     if (publicRoute) {
       checkJwt = checkJwt.unless({ path: [publicRoute, '/api-gtw-health'] });
     }
 
-    // Apply JWT validation middleware before proxy
+    // Apply JWT validation middleware
     app.use(checkJwt);
 
     // Error handling middleware for JWT errors

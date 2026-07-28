@@ -1,8 +1,6 @@
-import type { ComponentType } from 'react';
 import { Route, Routes } from 'react-router';
 
 import { requireAuth } from './auth';
-import { LAST_ROUTE_KEY } from './constants';
 import Home from './pages/HomePage';
 import ProtectedPage from './pages/ProtectedPage';
 import SignInCallbackPage from './pages/SignInCallbackPage';
@@ -10,17 +8,7 @@ import SignOutCallbackPage from './pages/SignOutCallbackPage';
 import { SIGN_IN_REDIRECT_ROUTE, SIGN_OUT_REDIRECT_ROUTE } from './routes';
 import MainLayout from './templates/MainLayout';
 
-const withAuth = (comp: ComponentType) => {
-  return requireAuth(comp, {
-    OnRedirecting: () => <p>Redirecting to sign-in page...</p>,
-    onBeforeSignin: () => {
-      // save the current route for going back after signin
-      window.localStorage.setItem(LAST_ROUTE_KEY, window.location.pathname);
-    },
-  });
-};
-
-const ProtectedPageWithAuth = withAuth(ProtectedPage);
+const ProtectedPageWithAuth = requireAuth(ProtectedPage);
 
 export default function App() {
   return (

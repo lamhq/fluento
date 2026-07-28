@@ -1,16 +1,12 @@
 {
   "realm": "app",
   "enabled": true,
-  "ssoSessionIdleTimeout": 31536000,
-  "ssoSessionMaxLifespan": 31536000,
-  "ssoSessionIdleTimeoutRememberMe": 31536000,
-  "ssoSessionMaxLifespanRememberMe": 31536000,
-  "offlineSessionIdleTimeout": 31536000,
-  "offlineSessionMaxLifespan": 31536000,
   "accessTokenLifespan": 31536000,
   "accessTokenLifespanForImplicitFlow": 31536000,
-  "clientSessionIdleTimeout": 0,
-  "clientSessionMaxLifespan": 0,
+  "ssoSessionIdleTimeout": 31536000,
+  "ssoSessionMaxLifespan": 31536000,
+  "clientSessionIdleTimeout": 31536000,
+  "clientSessionMaxLifespan": 31536000,
   "users": [
     {
       "username": "test",

@@ -1,71 +1,28 @@
-import { User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
-import { useEffect, useMemo } from 'react';
-import type { AuthProviderProps as ReactOidcAuthProviderProps } from 'react-oidc-context';
 import { AuthProvider as ReactOidcAuthProvider } from 'react-oidc-context';
 
-import IndexedDBStorage from './IndexedDBStorage';
+import { AttachToken } from './AttachToken';
+import { AuthConfigContext } from './contexts';
+import type { AuthConfig } from './types';
 
 export interface AuthProviderProps {
-  /**
-   * React children elements that will be wrapped by the AuthProvider.
-   * Typically your application components that need access to authentication context.
-   */
+  config: AuthConfig;
   children: React.ReactNode;
-
-  /**
-   * The base URL of the OpenID Connect (OIDC) authority (identity provider).
-   * Example: "https://cognito-idp.{region}.amazonaws.com/{cognito-user-pool-id}"
-   */
-  oidcAuthority: string;
-
-  /**
-   * ID of your application registered with the identity provider during the authentication flow.
-   */
-  oidcClientId: string;
-
-  /**
-   * Where the OIDC provider redirects user after successful authentication.
-   * The URI is appended with authorization code, used for exchanging access token.
-   */
-  redirectUri: string;
-
-  /**
-   * Callback executed after a successful sign-in.
-   * Can be used to attach tokens to API requests or trigger side effects.
-   */
-  onSigninCallback?: (user: User | null | undefined) => Promise<void> | void;
 }
 
 export default function AuthProvider(props: AuthProviderProps) {
-  const { oidcAuthority, oidcClientId, redirectUri, onSigninCallback } = props;
-
-  const userManager = useMemo(
-    () =>
-      new UserManager({
-        authority: oidcAuthority,
-        client_id: oidcClientId,
-        redirect_uri: redirectUri,
-        response_type: 'code',
-        scope: 'email openid profile',
-        userStore: new WebStorageStateStore({ store: new IndexedDBStorage() }),
-      }),
-    [oidcAuthority, oidcClientId, redirectUri],
-  );
-
-  const oidcConfig: ReactOidcAuthProviderProps = {
-    userManager,
-    // Skip exchanging the authorization token unless the page is the OIDC callback redirect URI,
-    skipSigninCallback: !window.location.href.includes(redirectUri),
-    // Extract the access token from the user object and attach it to the API request
-    onSigninCallback: onSigninCallback,
-  };
-
-  useEffect(() => {
-    // trigger sign-in callback on load
-    userManager.getUser().then(onSigninCallback, console.error);
-  }, [userManager, onSigninCallback]);
+  const { config, children } = props;
 
   return (
-    <ReactOidcAuthProvider {...oidcConfig}>{props.children}</ReactOidcAuthProvider>
+    <ReactOidcAuthProvider
+      userManager={config.userManager}
+      skipSigninCallback={!window.location.href.includes(config.signInUri)}
+      onSigninCallback={() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }}
+    >
+      <AuthConfigContext.Provider value={config}>
+        <AttachToken onAccessToken={config.onAccessToken}>{children}</AttachToken>
+      </AuthConfigContext.Provider>
+    </ReactOidcAuthProvider>
   );
 }
