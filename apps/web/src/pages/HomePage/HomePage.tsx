@@ -2,15 +2,15 @@ import './style.css';
 
 import { useState } from 'react';
 
+import { useApiClient } from '../../api';
 import heroImg from '../../assets/hero.png';
 import reactLogo from '../../assets/react.svg';
 import viteLogo from '../../assets/vite.svg';
 import DataFetchingDemo from '../../components/DataFetchingDemo';
 import DataMutationDemo from '../../components/DataMutationDemo';
-import { useHttpClient } from '../../http';
 
 export default function Home() {
-  const httpClient = useHttpClient();
+  const httpClient = useApiClient();
   const [data, setData] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

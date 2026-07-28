@@ -1,28 +1,23 @@
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import axios from 'axios';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 
+import { ApiClientProvider, createApiClient } from './api';
 import App from './App';
-import { AuthProvider } from './auth';
-import { initializeAuth } from './auth/utils';
+import { AuthProvider, initializeAuth } from './auth';
 import { LAST_ROUTE_KEY } from './constants';
-import { HttpClientProvider } from './http';
 import { SIGN_IN_REDIRECT_ROUTE, SIGN_OUT_REDIRECT_ROUTE } from './routes';
 import { getAbsoluteURL, getEnv } from './utils';
 
-const httpClient = axios.create({
-  baseURL: getEnv('VITE_API_BASE_URL'),
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60_000, retry: false } },
+});
+
+const httpClient = createApiClient({
+  baseURL: getEnv('VITE_API_BASE_URL'),
 });
 
 const authConfig = await initializeAuth({
@@ -45,7 +40,7 @@ const rootEl = document.getElementById('root');
 if (rootEl) {
   createRoot(rootEl).render(
     <StrictMode>
-      <HttpClientProvider httpClient={httpClient}>
+      <ApiClientProvider apiClient={httpClient}>
         <AuthProvider config={authConfig}>
           <BrowserRouter>
             <QueryClientProvider client={queryClient}>
@@ -53,7 +48,7 @@ if (rootEl) {
             </QueryClientProvider>
           </BrowserRouter>
         </AuthProvider>
-      </HttpClientProvider>
+      </ApiClientProvider>
     </StrictMode>,
   );
 }

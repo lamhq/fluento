@@ -5,17 +5,17 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 
-import { useHttpClient } from './http';
+import { useApiClient } from './api';
 
 const SERVER_DATA = ['server-data'];
 
 export function useServerData() {
-  const httpClient = useHttpClient();
+  const apiClient = useApiClient();
   const result = useSuspenseQuery(
     queryOptions({
       queryKey: SERVER_DATA,
       queryFn: async () => {
-        const resp = await httpClient<string[]>({
+        const resp = await apiClient<string[]>({
           url: '/',
           method: 'GET',
         });
@@ -27,12 +27,12 @@ export function useServerData() {
 }
 
 export function useUpdateServerData() {
-  const httpClient = useHttpClient();
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
 
   const result = useMutation({
     mutationFn: async () => {
-      const resp = await httpClient<string>({
+      const resp = await apiClient<string>({
         url: '/',
         method: 'GET',
       });
