@@ -31,7 +31,7 @@ const authConfig = await initializeAuth({
     httpClient.defaults.headers.common.Authorization = `Bearer ${token}`;
   },
   onBeforeSignIn: () => {
-    // save the current route for going back after signin
+    // Save the current route for going back after signin
     window.localStorage.setItem(LAST_ROUTE_KEY, window.location.pathname);
   },
 });

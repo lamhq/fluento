@@ -16,11 +16,18 @@ export async function initializeAuth(authOptions: AuthParams): Promise<AuthConfi
     userStore: new WebStorageStateStore({ store: new IndexedDBStorage() }),
   });
 
-  // load access token of last login session from browser storage
-  const user = await userManager.getUser();
+  // Register for UserLoaded event
+  userManager.events.addUserLoaded((user) => {
+    if (user.id_token && onAccessToken) {
+      // trigger callback function every time access token changed
+      onAccessToken(user.id_token);
+    }
+  });
 
-  // trigger onAccessToken event without sign-in
+  // Load user info from browser storage
+  const user = await userManager.getUser(false);
   if (user?.id_token && onAccessToken) {
+    // trigger callback function on page load
     onAccessToken(user.id_token);
   }
 

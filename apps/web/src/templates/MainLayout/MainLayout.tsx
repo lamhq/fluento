@@ -1,5 +1,6 @@
 import './style.css';
 
+import { NavLink } from 'react-router';
 import { Outlet } from 'react-router';
 
 import { useAuth } from '../../auth';
@@ -17,11 +18,11 @@ export default function MainLayout() {
           </div>
           <ul className="nav-links">
             <li>
-              <a href={HOME_ROUTE}>Home</a>
+              <NavLink to={HOME_ROUTE}>Home</NavLink>
             </li>
 
             <li>
-              <a href={PROTECTED_ROUTE}>Protected</a>
+              <NavLink to={PROTECTED_ROUTE}>Protected</NavLink>
             </li>
             {isAuthenticated && (
               <li>

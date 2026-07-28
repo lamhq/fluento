@@ -1,6 +1,5 @@
 import { AuthProvider as ReactOidcAuthProvider } from 'react-oidc-context';
 
-import { AttachToken } from './AttachToken';
 import { AuthConfigContext } from './contexts';
 import type { AuthConfig } from './types';
 
@@ -21,7 +20,7 @@ export default function AuthProvider(props: AuthProviderProps) {
       }}
     >
       <AuthConfigContext.Provider value={config}>
-        <AttachToken onAccessToken={config.onAccessToken}>{children}</AttachToken>
+        {children}
       </AuthConfigContext.Provider>
     </ReactOidcAuthProvider>
   );
