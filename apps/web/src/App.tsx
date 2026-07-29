@@ -1,6 +1,8 @@
+import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes } from 'react-router';
 
 import { requireAuth } from './auth';
+import ErrorFallback from './common/components/ErrorFallback';
 import Home from './pages/HomePage';
 import ProtectedPage from './pages/ProtectedPage';
 import SignInCallbackPage from './pages/SignInCallbackPage';
@@ -12,13 +14,15 @@ const ProtectedPageWithAuth = requireAuth(ProtectedPage);
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/protected" element={<ProtectedPageWithAuth />} />
-      </Route>
-      <Route path={SIGN_IN_REDIRECT_ROUTE} element={<SignInCallbackPage />} />
-      <Route path={SIGN_OUT_REDIRECT_ROUTE} element={<SignOutCallbackPage />} />
-    </Routes>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/protected" element={<ProtectedPageWithAuth />} />
+        </Route>
+        <Route path={SIGN_IN_REDIRECT_ROUTE} element={<SignInCallbackPage />} />
+        <Route path={SIGN_OUT_REDIRECT_ROUTE} element={<SignOutCallbackPage />} />
+      </Routes>
+    </ErrorBoundary>
   );
 }

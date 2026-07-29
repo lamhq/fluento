@@ -45,3 +45,5 @@ export function useUpdateServerData() {
 
   return result;
 }
+
+export { default as useErrorHandler } from './hooks/useErrorHandler';

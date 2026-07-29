@@ -11,10 +11,10 @@ export interface ErrorProviderProps extends ErrorConfig {
  * Must wrap components that use ErrorBoundary or useErrorHandler.
  */
 export default function ErrorProvider(props: ErrorProviderProps) {
-  const { fallbackRender, children } = props;
+  const { fallbackComponent, children } = props;
 
   return (
-    <ErrorConfigContext.Provider value={{ fallbackRender }}>
+    <ErrorConfigContext.Provider value={{ fallbackComponent }}>
       {children}
     </ErrorConfigContext.Provider>
   );
