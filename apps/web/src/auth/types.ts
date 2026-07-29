@@ -34,7 +34,7 @@ export interface AuthParams {
   /**
    * Fallback component to show when redirecting to sign-in.
    */
-  redirectFallback?: () => React.ReactNode;
+  redirectFallback?: React.ComponentType;
 
   /**
    * Callback executed before the user is redirected to the signin page.

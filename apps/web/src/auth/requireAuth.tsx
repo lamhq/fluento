@@ -25,7 +25,7 @@ export default function requireAuth<P extends object>(
   const WrapperComponent: React.FC<P> = (props) => {
     const auth = useAuth();
     const config = useAuthConfig();
-    const redirectFallback =
+    const RedirectFallback =
       options.redirectFallback ?? config.redirectFallback ?? (() => undefined);
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export default function requireAuth<P extends object>(
     return auth.isAuthenticated ? (
       <Component {...props} />
     ) : auth.activeNavigator?.includes('signin') ? (
-      redirectFallback()
+      <RedirectFallback />
     ) : null;
   };
 
