@@ -9,6 +9,7 @@ import { ApiClientProvider, createApiClient } from './api';
 import App from './App';
 import { AuthProvider, initializeAuth } from './auth';
 import { LAST_ROUTE_KEY } from './constants';
+import { ErrorProvider } from './error';
 import { SIGN_IN_REDIRECT_ROUTE, SIGN_OUT_REDIRECT_ROUTE } from './routes';
 import { getAbsoluteURL, getEnv } from './utils';
 
@@ -44,7 +45,9 @@ if (rootEl) {
         <AuthProvider config={authConfig}>
           <BrowserRouter>
             <QueryClientProvider client={queryClient}>
-              <App />
+              <ErrorProvider>
+                <App />
+              </ErrorProvider>
             </QueryClientProvider>
           </BrowserRouter>
         </AuthProvider>
