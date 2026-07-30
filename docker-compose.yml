@@ -15,6 +15,48 @@ services:
       retries: 10
       start_period: 3s
 
+  api-gateway:
+    build:
+      context: ./apps/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - '5602:5602'
+    environment:
+      API_URL: http://api-service:5600
+      PORT: 5602
+      PUBLIC_ROUTE: ^/health$
+      OIDC_CLIENT_ID: web-client
+      OIDC_AUTHORITY: http://auth-service:8080/realms/app
+    healthcheck:
+      test: ['CMD', 'node', '/healthcheck.mjs']
+      interval: 1s
+      timeout: 1s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      api-service:
+        condition: service_healthy
+
+  auth-service:
+    image: quay.io/keycloak/keycloak:26.5.6
+    ports:
+      - '8080:8080'
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev --import-realm
+    volumes:
+      - auth_data:/opt/keycloak/data
+      - ./apps/auth:/opt/keycloak/data/import
+    healthcheck:
+      test: ['CMD', 'bash', '-c', 'exec 3<>/dev/tcp/localhost/8080']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
   web-service:
     build:
       context: ./apps/web
@@ -33,7 +75,5 @@ services:
       retries: 10
       start_period: 3s
 
-# volumes:
-#   mongodb_data:
-#   keycloak_data:
-#   api_deps:
+volumes:
+  auth_data:

@@ -1,0 +1,16 @@
+{
+  "name": "api-gateway",
+  "version": "0.0.1",
+  "description": "API Gateway for local development and testing",
+  "main": "index.mjs",
+  "scripts": {
+    "dev": "node --watch index.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-jwt": "^8.4.1",
+    "http-proxy-middleware": "^2.0.6",
+    "jwks-rsa": "^3.0.1"
+  }
+}

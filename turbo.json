@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/turbo/schema.json",
-  "ui": "stream",
+  "ui": "tui",
   "tasks": {
     "lint": {},
     "type-check": {},
@@ -30,12 +30,16 @@
       "persistent": true,
       "cache": false,
       "env": ["VITE_*"],
+      "with": ["api-gateway#dev"]
+    },
+    "api-gateway#dev": {
+      "persistent": true,
+      "cache": false,
       "with": ["api#dev"]
     },
     "api#dev": {
       "persistent": true,
-      "cache": false,
-      "env": ["DB_URI"]
+      "cache": false
     }
   }
 }
