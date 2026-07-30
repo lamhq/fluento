@@ -1,42 +1,165 @@
-# Turborepo starter with shell commands
+# Fluento
 
-This Turborepo starter is maintained by the Turborepo core team. This template is great for issue reproductions and exploring building task graphs without frameworks.
+## Introduction
 
-## Using this example
+This is the Git repository for the Fluento project, a full-stack web application built as a monorepo using Turborepo and pnpm workspaces.
 
-Run the following command:
+## Installation
 
-```sh
-npx create-turbo@latest -e with-shell-commands
+```bash
+git clone <repo-url>
+cd fluento
+pnpm install
 ```
 
-### For bug reproductions
+For setup instructions specific to each project, see:
 
-Giving the Turborepo core team a minimal reproduction is the best way to create a tight feedback loop for a bug you'd like to report.
+- `apps/api/README.md`
+- `apps/api-gateway/README.md`
+- `apps/web/README.md`
 
-Because most monorepos will rely on more tooling than Turborepo (frameworks, linters, formatters, etc.), it's often useful for us to have a reproduction that strips away all of this other tooling so we can focus _only_ on Turborepo's role in your repo. This example does exactly that, giving you a good starting point for creating a reproduction.
+## Usage
 
-- Feel free to rename/delete packages for your reproduction so that you can be confident it most closely matches your use case.
-- If you need to use a different package manager to produce your bug, run `npx @turbo/workspaces convert` to switch package managers.
-- It's possible that your bug really **does** have to do with the interaction of Turborepo and other tooling within your repository. If you find that your bug does not reproduce in this minimal example and you're confident Turborepo is still at fault, feel free to bring that other tooling into your reproduction.
+### Start applications
 
-## What's inside?
+Stop any running applications on the required ports before starting new ones:
 
-This Turborepo includes the following packages:
+```bash
+lsof -ti tcp:5601 -i tcp:5600 -i tcp:5602 | xargs -n 1 kill -9
+```
 
-### Apps and Packages
+Start all applications (web, api-gateway, api) in development mode:
 
-- `app-a`: A final package that depends on all other packages in the graph and has no dependents. This could resemble an application in your monorepo that consumes everything in your monorepo through its topological tree.
-- `app-b`: Another final package with many dependencies. No dependents, lots of dependencies.
-- `pkg-a`: A package that has all scripts in the root `package.json`.
-- `pkg-b`: A package with _almost_ all scripts in the root `package.json`.
-- `tooling-config`: A package to simulate a common configuration used for all of your repository. This could resemble a configuration for tools like TypeScript or ESLint that are installed into all of your packages.
+```bash
+pnpm dev
+```
 
-### Some scripts to try
+Then open http://localhost:5601 in your browser.
 
-If you haven't yet, [install global `turbo`](https://turborepo.dev/docs/installing#install-globally) to run tasks.
+### Run Lint
 
-- `turbo build lint check-types`: Runs all tasks in the default graph.
-- `turbo build`: A basic command to build `app-a` and `app-b` in parallel.
-- `turbo build --filter=app-a`: Building only `app-a` and its dependencies.
-- `turbo lint`: A basic command for running lints in all packages in parallel.
+Lint all files:
+
+```bash
+pnpm run lint
+```
+
+Lint a specific project:
+
+```bash
+# lint the `web` project
+pnpx eslint apps/web
+```
+
+### Manage dependencies
+
+Install all dependencies:
+
+```bash
+pnpm install
+```
+
+Add a dependency to a specific project:
+
+```bash
+# add `lodash` to the `web` project
+pnpm -F web add lodash
+```
+
+Remove a dependency from a specific project:
+
+```bash
+# remove `lodash` from the `web` project
+pnpm -F web remove lodash
+```
+
+## Run project's scripts
+
+Run an npm script in a specific project:
+
+```bash
+# run the `build` script in the `web` project
+pnpm -F web run build
+```
+
+### Docker Compose
+
+This project includes a `docker-compose.yml` file, allowing you to run and test all applications without additional setup.
+
+To start all applications locally using Docker Compose, run:
+
+```bash
+docker compose up
+```
+
+The following services are started:
+
+| Service        | Port | Description                                                                                         |
+| -------------- | ---- | --------------------------------------------------------------------------------------------------- |
+| `web-service`  | 5601 | React/Vite frontend application. Serves the user interface and communicates with the api-gateway.   |
+| `api-gateway`  | 5602 | Express.js gateway that routes requests to the api-service and handles authentication via Keycloak. |
+| `api-service`  | 5600 | NestJS REST API that provides core business logic and data processing.                              |
+| `auth-service` | 8080 | Keycloak identity provider for authentication and authorization (OpenID Connect).                   |
+
+**Request Flow**:
+
+```mermaid
+graph TB
+    User["👤 User<br/>Browser"]
+    Web["🌐 web-service (5601)"]
+    Gateway["🚪 api-gateway(5602)"]
+    API["⚙️ api-service (5600)"]
+    Auth["🔐 auth-service (8080)"]
+
+    User -->|HTTP Request| Web
+    Web -->|API Calls| Gateway
+    Gateway -->|Sign In| Auth
+    Gateway -->|Business Logic| API
+
+    style User fill:#e1f5ff
+    style Web fill:#fff3e0
+    style Gateway fill:#f3e5f5
+    style API fill:#e8f5e9
+    style Auth fill:#ffe0b2
+```
+
+**Service Dependencies:**
+
+- `api-gateway` waits for `auth-service` and `api-service` to be healthy before starting
+- `web-service` waits for `api-service` to be healthy before starting
+- All services include health checks to ensure they are running properly
+
+## Repository Structure
+
+This repository follows the [Turborepo workspace structure](https://c.lamhq.com/se/development/tools/turborepo/workspace-structure.md). Here's the layout:
+
+```
+├── apps/               # Runnable projects
+│   ├── api/
+│   ├── api-gateway/
+│   ├── auth/
+│   ├── infra/
+│   ├── poc/
+│   └── web/
+├── docs/                   # Project documentation
+├── commitlint.config.mjs   # Commit message linting rules
+├── eslint.config.mjs       # ESLint configuration
+├── lint-staged.config.mjs  # Pre-commit lint-staged hooks
+├── prettier.config.mjs     # Code formatting configuration
+├── turbo.json              # Turborepo task pipeline configuration
+├── pnpm-workspace.yaml     # pnpm workspace definition
+└── package.json            # Root package scripts and dev dependencies
+```
+
+For details about each project's structure, refer to the Project Structure section in its README.md file.
+
+## Available Projects
+
+| Project       | Description                                   | Techstack                |
+| ------------- | --------------------------------------------- | ------------------------ |
+| `api`         | Backend API service                           | NestJS, REST, TypeScript |
+| `api-gateway` | API Gateway service                           | Node.js, Express         |
+| `web`         | Web application                               | React, Vite, TypeScript  |
+| `infra`       | Infrastructure code for deploying the project | Terraform                |
+| `auth`        | Authentication service                        | Keycloak                 |
+| `poc`         | Demo scripts in Python                        |                          |

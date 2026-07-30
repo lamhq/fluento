@@ -31,7 +31,7 @@ export function getErrorInfo(error: unknown): ErrorInfo {
         case 401:
           errorCode = 'UNAUTHORIZED_ACCESS';
           title = 'Authorization Required';
-          description = 'You must log in to access this resource.';
+          description = 'You must log in to view this content.';
           break;
         case 403:
           errorCode = 'FORBIDDEN_ACCESS';

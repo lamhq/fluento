@@ -77,5 +77,3 @@ services:
 
 volumes:
   auth_data:
-#   mongodb_data:
-#   api_deps:

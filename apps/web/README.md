@@ -1,77 +1,158 @@
-# React + TypeScript + Vite
+# Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduction
 
-Currently, two official plugins are available:
+This is the React-based frontend application for the Fluento project. It's a modern web application built with Vite, React 19, TypeScript, and Tailwind CSS.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Installation
 
-## React Compiler
+From the root of the project, install dependencies:
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Create a `.env` file in the `apps/web` directory by copying from the example file:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+cp .env.example .env
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Then update the values in `.env` based on your environment:
+
+| Variable              | Description                                             | Default                            |
+| --------------------- | ------------------------------------------------------- | ---------------------------------- |
+| `VITE_OIDC_AUTHORITY` | URL of the OpenID Connect (OIDC) authority server       | `http://localhost:8080/realms/app` |
+| `VITE_OIDC_CLIENT_ID` | Client ID registered with the OIDC provider             | `web-client`                       |
+| `VITE_API_BASE_URL`   | Base URL for API requests (can be relative or absolute) | `/api`                             |
+
+## Usage
+
+### Start development server
+
+From the project root, start the web application in development mode:
+
+```bash
+pnpm dev
+```
+
+Then open http://localhost:5601 in your browser.
+
+Alternatively, from the `apps/web` directory:
+
+```bash
+pnpm run dev
+```
+
+The application includes a development proxy that forwards API requests from `/api` to the API gateway running on `http://localhost:5602`.
+
+### Build for production
+
+Build the application for production:
+
+```bash
+pnpm -F web run build
+```
+
+This will compile TypeScript and bundle the application with Vite.
+
+### Preview production build
+
+Preview the production build locally:
+
+```bash
+pnpm -F web run start
+```
+
+### Run lint
+
+Check code quality and style issues:
+
+```bash
+# Lint all files in the web app
+pnpm -F web run lint
+```
+
+### Type checking
+
+Run TypeScript type checking:
+
+```bash
+pnpm -F web run type-check
+```
+
+### Run tests
+
+Run unit and integration tests:
+
+```bash
+pnpm -F web run test
+```
+
+### Format code
+
+Format code using Prettier:
+
+```bash
+pnpm -F web run format
+```
+
+### Manage dependencies
+
+Add a dependency to the web app:
+
+```bash
+pnpm -F web add <package-name>
+```
+
+Remove a dependency from the web app:
+
+```bash
+pnpm -F web remove <package-name>
+```
+
+## Project Structure
 
 ```
+apps/web/
+├── src/                           # Source code
+│   ├── api/                       # API client module
+│   ├── auth/                      # Authentication logic and OIDC integration
+│   ├── common/                    # Common pages, components, utilities
+│   ├── demo/                      # Pages and components for demo purposes
+│   ├── error/                     # Error handling module
+│   ├── App.tsx                    # Root application component
+│   ├── main.tsx                   # Application entry point
+│   ├── routes.ts                  # Route definitions
+│   ├── constants.ts               # Application constants
+│   ├── utils.ts                   # Utility functions
+│   ├── hooks.ts                   # Custom React hooks used by the application
+│   ├── global.css                 # Global styles
+│   └── vite-env.d.ts              # Vite environment type definitions
+├── public/                        # Static assets
+├── docker/                        # For building container with Docker
+│   ├── entrypoint.sh              # Docker entrypoint script
+│   └── nginx.conf.template        # Nginx configuration for production
+├── Dockerfile                     # Docker image definition
+├── vite.config.ts                 # Vite configuration
+├── tsconfig.json                  # Final TypeScript configuration
+├── tsconfig.app.json              # TypeScript configuration for `src/*`
+├── tsconfig.node.json             # TypeScript configuration for `vite.config.ts`
+├── index.html                     # HTML template
+└── package.json                   # Project dependencies and scripts
+```
+
+## Tech Stack
+
+| Technology   | Purpose                       |
+| ------------ | ----------------------------- |
+| React 19     | UI library                    |
+| Vite         | Build tool and dev server     |
+| TypeScript   | Type-safe JavaScript          |
+| Tailwind     | Utility-first CSS framework   |
+| Shadcn/ui    | Component library             |
+| React Router | Client-side routing           |
+| React Query  | Server state management       |
+| OIDC Client  | OpenID Connect authentication |
+| Axios        | HTTP client for API requests  |
+| Vitest       | Unit and integration testing  |
