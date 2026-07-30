@@ -1,7 +1,7 @@
 import { Link, Navigate } from 'react-router';
 
-import { useAuth } from '../../auth';
-import { HOME_ROUTE } from '../../routes';
+import { useAuth } from '../../../auth';
+import { HOME_ROUTE } from '../../../routes';
 
 export default function SignOutCallbackPage() {
   const auth = useAuth();

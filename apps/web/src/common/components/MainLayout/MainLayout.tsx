@@ -3,9 +3,14 @@ import './style.css';
 import { NavLink } from 'react-router';
 import { Outlet } from 'react-router';
 
-import { useAuth } from '../../auth';
-import SignOutButton from '../../components/SignOutButton';
-import { HOME_ROUTE, PROTECTED_ROUTE } from '../../routes';
+import { useAuth } from '../../../auth';
+import SignOutButton from '../../../common/components/SignOutButton';
+import {
+  DATA_FETCHING_ROUTE,
+  DATA_MUTATION_ROUTE,
+  HOME_ROUTE,
+  PROTECTED_ROUTE,
+} from '../../../routes';
 
 export default function MainLayout() {
   const { isAuthenticated } = useAuth();
@@ -22,7 +27,13 @@ export default function MainLayout() {
             </li>
 
             <li>
-              <NavLink to={PROTECTED_ROUTE}>Protected</NavLink>
+              <NavLink to={PROTECTED_ROUTE}>Protected Page</NavLink>
+            </li>
+            <li>
+              <NavLink to={DATA_FETCHING_ROUTE}>Data Fetching</NavLink>
+            </li>
+            <li>
+              <NavLink to={DATA_MUTATION_ROUTE}>Data Mutation</NavLink>
             </li>
             {isAuthenticated && (
               <li>

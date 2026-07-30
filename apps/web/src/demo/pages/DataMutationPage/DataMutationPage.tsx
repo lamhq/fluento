@@ -1,13 +1,14 @@
-import { useUpdateServerData } from '../../hooks';
+import { useErrorHandler } from '../../../error';
+import { useUpdateServerData } from '../../../hooks';
 
-export default function DataMutationDemo() {
+export default function DataMutationPage() {
   const { mutateAsync, isPending } = useUpdateServerData();
-
+  const handleError = useErrorHandler();
   const handleClick = async () => {
     try {
       await mutateAsync();
     } catch (err) {
-      console.error(err);
+      await handleError(err);
     }
   };
 

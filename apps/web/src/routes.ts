@@ -4,6 +4,16 @@
 export const HOME_ROUTE = '/';
 
 /**
+ * Data Fetching page
+ */
+export const DATA_FETCHING_ROUTE = '/data-fetching';
+
+/**
+ * Data Mutation page
+ */
+export const DATA_MUTATION_ROUTE = '/data-mutation';
+
+/**
  * Protected page accessible only to authenticated users
  */
 export const PROTECTED_ROUTE = '/protected';
