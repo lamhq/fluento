@@ -1,7 +1,7 @@
-import { getNestApp } from './app';
+import { createNestApp } from './app';
 
 async function bootstrap() {
-  const app = await getNestApp();
+  const app = await createNestApp();
   await app.listen(process.env.PORT ?? 5600);
 }
 
