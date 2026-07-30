@@ -4,11 +4,9 @@
 
 Communication practice enables learners to develop conversational skills in realistic scenarios and build confidence in everyday interactions.
 
-
 ## How it works
 
 Learners respond to a prompt then receive feedback from the app.
-
 
 ## Accessing the module
 
@@ -20,21 +18,20 @@ Learners respond to a prompt then receive feedback from the app.
      - **My Library Only** (default: off)
      - **Start Practice**: begins session.
 
-
 ## Practice Flow
 
-1. App selects a **practice lesson** based on the configuration.
-2. App displays a prompt of that **practice lesson**
+1. App selects a **Exercise** based on the configuration.
+2. App displays a prompt of that **Exercise**
 3. Learner responds and clicks **Submit**.
 4. App gives feedback about learner's response
 5. Learner chooses:
    - **Retry**: re-answer same prompt.
    - **Next**: move to the next practice.
 
-
 ## App Feedback
 
 Feedback includes:
+
 - **Feedback**: overall feedback
 - **Correctness**: check spelling & grammar of learner's response
   - **Score** (x/100)
@@ -55,25 +52,48 @@ Feedback includes:
 - **Alternatives**: alternative responses that are also can be used in the same scenario.
 
 **Considerations**:
-- Should **Engagement** be included as a criterion for appropriateness?
 
+- Should **Engagement** be included as a criterion for appropriateness?
 
 ## Data Model
 
-**Practice lessons** contain the following information:
-- **Skill**: what to practice. For example:
-  - asking for help
-  - showing gratitude
-- **Sentences**: sentences for learners to practice. For example:
-  - "I was hoping you could give me a lift to the airport."
-  - "You're welcome! I'm glad I could help."
-- **Prompts**: prompts that lead to the practice sentences, can be:
-  - a **guided prompt** that asks the learner to respond in a specific way, e.g., Politely request to your friend to take you to the airport.
-  - an **opener sentence** with a realistic **scenario**, e.g., "Thank you for your help!" - someone that you helped with a task says this to you.
-- **Topics**: topics that the practice lesson belongs to. For example:
-  - Small talk
-  - Job Interview
+**Exercises** include:
 
+- **Name**: skill to practice (e.g., asking for help, showing gratitude)
+- **Sentences**: practice lines with:
+  - **Content**: the sentence (e.g., "I was hoping you could give me a lift to the airport.")
+  - **Style**: The overall manner or approach of the reply, combining tone with formality, length, and phrasing (e.g., casual and simple, professional and courteous, witty and creative).
+  - **Meaning**: translation in learner’s native language
+- **Prompts**: cues that lead to the practice line, either:
+  - **Guided prompt** (e.g., "Politely ask your friend to take you to the airport")
+  - **Opener + scenario** (e.g., "Thank you for your help!" said by someone you assisted)
+  - Each prompt has **Content**, **Style**, and **Meaning**
+- **Topics**: categories of the exercise (e.g., Asking for help)
+
+```json
+{
+  "exercises": [
+    {
+      "name": "Asking for help",
+      "sentences": [
+        {
+          "content": "I was hoping you could give me a lift to the airport.",
+          "style": "polite and courteous",
+          "meaning": "Tôi hy vọng bạn có thể đưa tôi đến sân bay."
+        }
+      ],
+      "prompts": [
+        {
+          "content": "Politely request to your friend to take you to the airport.",
+          "style": "casual and simple",
+          "meaning": "Lịch sự yêu cầu bạn của bạn đưa bạn đến sân bay."
+        }
+      ],
+      "topics": ["Asking for help", "Everyday situations"]
+    }
+  ]
+}
+```
 
 ## Prompts
 
@@ -86,12 +106,13 @@ Review my sentence and give feedback for correctness and relevance to the provid
 
 ## Inputs
 
-- **Prompt:** _Politely request to your friend to take you to the airport_  
+- **Prompt:** _Politely request to your friend to take you to the airport_
 - **Sentence:** "I was hoping you could give me a lift to the airport.”
 
 ## Feedback structure
 
 Feedback includes:
+
 - **Feedback**: overall feedback
 - **Correctness**: check spelling & grammar of learner's response
   - **Score** (x/100)
@@ -111,9 +132,10 @@ Feedback includes:
     - **Feedback**
 ```
 
-## Example Practices
+## Example Exercises
 
-**Practice Lesson 1: Asking for help**
+**Exercise 1: Asking for help**
+
 - **Prompt**: Politely request to your friend to take you to the airport.
 - **User input**: "I was hoping you could give me a lift to the airport."
 - **App feedback**:
@@ -123,7 +145,8 @@ Feedback includes:
     - Politeness: 92/100
     - Tone: 88/100
 
-**Practice Lesson 3: Showing gratitude**
+**Exercise 3: Showing gratitude**
+
 - **Prompt**: "Thank you for your help!" - someone that you helped with a task says this to you.
 - **User input**: "You're welcome! I'm glad I could help."
 - **App feedback**:
@@ -133,7 +156,8 @@ Feedback includes:
     - Politeness: 96/100
     - Tone: 96/100
 
-**Practice Lesson 4: Sharing opinions**
+**Exercise 4: Sharing opinions**
+
 - **Prompt**: Gently tell your friend she's too young for marriage.
 - **User input**: "I reckon you're a little young to be getting married."
 - **App feedback**:
@@ -143,7 +167,8 @@ Feedback includes:
     - Politeness: 88/100
     - Tone: 84/100
 
-**Practice Lesson 5: Polite corrections**
+**Exercise 5: Polite corrections**
+
 - **Prompt**: Politely correct your friend's calculation mistake.
 - **User input**: "You seem to have made a mistake in this calculation."
 - **App feedback**:
@@ -153,7 +178,8 @@ Feedback includes:
     - Politeness: 88/100
     - Tone: 80/100
 
-**Practice Lesson 6: Responding to inquiries (enthusiastic)**
+**Exercise 6: Responding to inquiries (enthusiastic)**
+
 - **Prompt**: "How are you today?"
 - **User input**: "I'm doing well, thank you. And you?"
 - **App feedback**:
@@ -163,7 +189,8 @@ Feedback includes:
     - Politeness: 100/100
     - Tone: 100/100
 
-**Practice Lesson 7: Responding to inquiries (casual, minimal)**
+**Exercise 7: Responding to inquiries (casual, minimal)**
+
 - **Prompt**: "How are you today?"
 - **User input**: "Not too bad."
 - **App feedback**:
@@ -173,7 +200,8 @@ Feedback includes:
     - Politeness: 60/100
     - Tone: 80/100
 
-**Practice Lesson 10: Responding to inquiries (irrelevant)**
+**Exercise 10: Responding to inquiries (irrelevant)**
+
 - **Prompt**: "How are you today?"
 - **User input**: "I had pizza last night."
 - **App feedback**:
@@ -183,7 +211,8 @@ Feedback includes:
     - Politeness: 80/100
     - Tone: 80/100
 
-**Practice Lesson 11: Responding to inquiries (news)**
+**Exercise 11: Responding to inquiries (news)**
+
 - **Prompt**: "What's new with you?"
 - **User input**: "Not much, just relaxing today."
 - **App feedback**:
@@ -193,7 +222,8 @@ Feedback includes:
     - Politeness: 80/100
     - Tone: 88/100
 
-**Practice Lesson 12: Responding to inquiries (work)**
+**Exercise 12: Responding to inquiries (work)**
+
 - **Prompt**: "How's work going?"
 - **User input**: "It's been busy, but manageable."
 - **App feedback**:
@@ -203,7 +233,8 @@ Feedback includes:
     - Politeness: 80/100
     - Tone: 92/100
 
-**Practice Lesson 13: Responding to inquiries (weekend)**
+**Exercise 13: Responding to inquiries (weekend)**
+
 - **Prompt**: "How was your weekend?"
 - **User input**: "Great! I went hiking and it was refreshing."
 - **App feedback**:
@@ -213,7 +244,8 @@ Feedback includes:
     - Politeness: 88/100
     - Tone: 100/100
 
-**Practice Lesson 2: Responding to inquiries (small talk)**
+**Exercise 2: Responding to inquiries (small talk)**
+
 - **Prompt**: "How have you been?" - someone that you haven't seen in a while asks you.
 - **User input**: "I've been doing well, thanks for asking. How about you?"
 - **App feedback**:

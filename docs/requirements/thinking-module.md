@@ -51,14 +51,14 @@ Feedback includes:
 
 ### Example Practices
 
-**Practice Lesson 1: Sentence Construction**
+**Exercise 1: Sentence Construction**
 - **Required words**: hope, travel, soon
 - **Example learner input**: "I hope to travel soon."
 - **App feedback**:
   - Correctness: 98/100 (Perfect grammar and spelling)
   - Completeness: 100/100 (All words used correctly)
 
-**Practice Lesson 2: Sentence Construction**
+**Exercise 2: Sentence Construction**
 - **Required words**: beautiful, garden, flowers
 - **Example learner input**: "The beautiful flowers in the garden are blooming."
 - **App feedback**:
@@ -118,14 +118,14 @@ Feedback includes:
 
 ### Example Practices
 
-**Practice Lesson 3: Sentence Variation**
+**Exercise 3: Sentence Variation**
 - **Original sentence**: "I really enjoyed the movie."
 - **Example learner input**: "The movie was really enjoyable."
 - **App feedback**:
   - Correctness: 96/100 (Well-formed sentence)
   - Meaning Preservation: 95/100 (Meaning is well preserved with slight nuance change)
 
-**Practice Lesson 4: Sentence Variation**
+**Exercise 4: Sentence Variation**
 - **Original sentence**: "She studied hard for the exam."
 - **Example learner input**: "She prepared thoroughly by studying for the exam."
 - **App feedback**:
@@ -212,7 +212,7 @@ Review the rewritten paragraph and give feedback on correctness and meaning pres
 
 ### Example Practices
 
-**Practice Lesson 5: Paragraph Variation**
+**Exercise 5: Paragraph Variation**
 - **Original paragraph**: "The weather was beautiful. I decided to go for a walk. The park was full of people enjoying the day. I met an old friend there."
 - **Example learner input**: "Beautiful weather inspired me to visit the park, where I unexpectedly encountered an old friend among the many people enjoying the day."
 - **App feedback**:

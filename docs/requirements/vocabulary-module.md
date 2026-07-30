@@ -96,7 +96,7 @@ Feedback includes:
 
 ### Example Practices
 
-**Practice Lesson 1: Sentence Builder**
+**Exercise 1: Sentence Builder**
 - **Target word**: resilient
 - **Context**: workplace email
 - **Example learner input**: "I believe our team is resilient and can overcome this challenge."
@@ -104,7 +104,7 @@ Feedback includes:
   - Correctness: 98/100 (Perfect grammar and spelling)
   - Vocabulary Usage: 95/100 (Word used appropriately in professional context)
 
-**Practice Lesson 2: Sentence Builder**
+**Exercise 2: Sentence Builder**
 - **Target word**: innovative
 - **Context**: casual chat
 - **Example learner input**: "That's such a innovative idea for the project."
@@ -167,7 +167,7 @@ Feedback includes:
 
 ### Example Practices
 
-**Practice Lesson 3: Just One Word**
+**Exercise 3: Just One Word**
 - **Clues**: "endure", "adapt", "tough", "bounce"
 - **Target word**: resilient
 - **App feedback**:
@@ -175,7 +175,7 @@ Feedback includes:
   - Meaning: Able to recover quickly from difficulties
   - Example sentences: "She remained resilient in the face of adversity." / "The resilient community rebuilt after the disaster."
 
-**Practice Lesson 4: Just One Word**
+**Exercise 4: Just One Word**
 - **Clues**: "new ideas", "novel", "creative", "advanced"
 - **Target word**: innovative
 - **App feedback**:
@@ -209,14 +209,14 @@ Feedback includes:
 
 ### Example Practices
 
-**Practice Lesson 5: Flashcards**
+**Exercise 5: Flashcards**
 - **Front**: "Able to recover quickly from difficulties"
 - **Back**: "Resilient"
 - **Example sentences**:
   - "She remained resilient in the face of adversity."
   - "The resilient community rebuilt after the disaster."
 
-**Practice Lesson 6: Flashcards**
+**Exercise 6: Flashcards**
 - **Front**: "Introducing new ideas or methods"
 - **Back**: "Innovative"
 - **Example sentences**:
