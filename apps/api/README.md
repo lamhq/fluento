@@ -22,13 +22,7 @@ PORT=5600
 
 ### Start development server
 
-From the project root, start the API in development mode:
-
-```bash
-pnpm -F api run dev
-```
-
-The API will be available at http://localhost:5600.
+Follow instructions in the root `README.md`.
 
 ### Build for production
 
@@ -51,7 +45,7 @@ pnpm -F api run start
 Check code quality and style issues:
 
 ```bash
-pnpm -F api run lint
+pnpm lint apps/api
 ```
 
 ### Type checking

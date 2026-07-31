@@ -1,6 +1,13 @@
 services:
   db-service:
     image: mongo:8.0
+    command:
+      - --replSet
+      - rs0
+      - --bind_ip_all
+      - --auth
+      - --keyFile
+      - /etc/mongo-keyfile
     ports:
       - '27017:27017'
     environment:
@@ -10,6 +17,7 @@ services:
     volumes:
       - db-data:/data/db
       - ./apps/db:/docker-entrypoint-initdb.d
+      - ./apps/db/mongo-keyfile:/etc/mongo-keyfile:ro
     healthcheck:
       test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping').ok", '--quiet']
       interval: 10s
@@ -26,6 +34,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5600
+      DATABASE_URL: mongodb://root:password@db-service:27017/test?authSource=admin
     healthcheck:
       test: ['CMD', 'node', 'dist/healthcheck.mjs']
       interval: 5s
