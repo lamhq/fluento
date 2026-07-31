@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CommModule } from './comm/comm.module';
 import { configFactory } from './config';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -13,6 +14,7 @@ import { PrismaModule } from './prisma/prisma.module';
       load: [configFactory],
     }),
     PrismaModule,
+    CommModule,
   ],
   controllers: [AppController],
   providers: [AppService],

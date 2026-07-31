@@ -15,6 +15,7 @@ model Exercise {
   topics    String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("exercises")
 }
 
 type Sentence {
