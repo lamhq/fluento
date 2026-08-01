@@ -1,9 +1,9 @@
 ## Rules of Work
 
-1. **Read the documentation first**: Before writing code, review the documentation to gain the necessary context for your work.
-2. **List all documentation used**: At the end, provide a list of all documentation you referenced while completing your work.
-3. **Always run project-specific commands in the root directory** with `pnpm -F <project> exec <command>`.
-4. **Run linting and type checking last**: After writing code, run linting and type checking to ensure your code is valid.
+1. **Read the documentation first**: Review the **Documentation Index** section below to know which documentation is relevant to your work.
+2. **List all documentation used**: At the end, provide a list of the documentation you referenced while completing the work.
+3. **Run workspace commands from the repository root** with `pnpm -F <project> ...`; use `pnpm -F <project> run <script>` for package scripts and `pnpm -F <project> exec <command>` for binaries or CLIs.
+4. **Run linting and type checking last**: After implementing the change, run the relevant linting and type-checking steps to verify the result.
 
 ## Documentation Index
 
@@ -39,3 +39,11 @@ All file paths are relative to the project root.
   - Understand the repository structure
   - Get tech stack information
 - **Location**: `apps/api/README.md`
+
+### Documentation Structure Guide
+
+- **Use when you need to**:
+  - Understand how the documentation folder is organized
+  - Find the right documentation location for new or updated docs
+  - Keep documentation aligned with the current docs structure
+- **Location**: `docs/documentation-structure.md`
