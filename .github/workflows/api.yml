@@ -36,6 +36,9 @@ jobs:
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
 
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
+
       - name: Lint code
         run: pnpm lint apps/api
 
@@ -48,6 +51,9 @@ jobs:
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
+
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
 
       - name: Check types
         run: pnpm -F api run type-check
@@ -62,6 +68,9 @@ jobs:
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
 
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
+
       - name: Run unit tests
         run: pnpm -F api run test
 
@@ -75,6 +84,9 @@ jobs:
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
 
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
+
       - name: Run integration tests
         run: pnpm -F api run test:e2e
 
@@ -87,6 +99,9 @@ jobs:
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
+
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
 
       - name: Build API
         run: pnpm -F api build
