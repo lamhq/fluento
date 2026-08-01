@@ -1,14 +1,14 @@
 import request from 'supertest';
 
 import { findById } from '../../utils/mongodb';
-import { deleteMarker, setupExerciseCrudTests } from './shared';
+import { setUpApiTest } from '../../utils/test';
 
-describe('Exercise CRUD (e2e) - create', () => {
-  const getApp = setupExerciseCrudTests();
+describe('create exercise', () => {
+  const { cleanupMarker, getApp } = setUpApiTest();
 
-  it('create exercise', async () => {
+  it('should add a record in database', async () => {
     const dto = {
-      name: `E2E Exercise ${deleteMarker}`,
+      name: `E2E Exercise ${cleanupMarker}`,
       sentences: [
         {
           content: 'Can you help me with this?',

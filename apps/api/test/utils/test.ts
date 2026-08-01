@@ -2,12 +2,14 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { App } from 'supertest/types';
 
-import { AppModule } from '../../../src/app.module';
-import { connect, deleteMany, disconnect } from '../../utils/mongodb';
+import { AppModule } from '../../src/app.module';
+import { connect, deleteMany, disconnect } from './mongodb';
 
-export const deleteMarker = '#TestExercise';
+export function setUpApiTest() {
+  // create a unique string for clean up db records after each test run
+  const cleanupMarker = `#ApiTest-${Date.now().toString()}`;
 
-export function setupExerciseCrudTests() {
+  // NestJS application instance for testing
   let app!: INestApplication<App>;
 
   beforeAll(async () => {
@@ -16,13 +18,8 @@ export function setupExerciseCrudTests() {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
-
-  afterEach(async () => {
-    await deleteMany('exercises', { name: { $regex: deleteMarker } });
   });
 
   afterAll(async () => {
@@ -30,5 +27,12 @@ export function setupExerciseCrudTests() {
     await disconnect();
   });
 
-  return () => app;
+  afterEach(async () => {
+    await deleteMany('exercises', { name: { $regex: cleanupMarker } });
+  });
+
+  return {
+    getApp: () => app,
+    cleanupMarker,
+  };
 }

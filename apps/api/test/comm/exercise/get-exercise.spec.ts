@@ -1,15 +1,15 @@
 import request from 'supertest';
 
 import { insertMany } from '../../utils/mongodb';
-import { deleteMarker, setupExerciseCrudTests } from './shared';
+import { setUpApiTest } from '../../utils/test';
 
-describe('Exercise CRUD (e2e) - find many', () => {
-  const getApp = setupExerciseCrudTests();
+describe('get exercise', () => {
+  const { cleanupMarker, getApp } = setUpApiTest();
 
-  it('find exercises', async () => {
-    await insertMany('exercises', [
+  it('should return a record from database', async () => {
+    const [seededExerciseId] = await insertMany('exercises', [
       {
-        name: `Seeded exercise ${deleteMarker}`,
+        name: `Seeded exercise ${cleanupMarker}`,
         createdAt: new Date(),
         updatedAt: new Date(),
         sentences: [
@@ -31,15 +31,14 @@ describe('Exercise CRUD (e2e) - find many', () => {
     ]);
 
     const resp = await request(getApp().getHttpServer())
-      .get('/exercises')
+      .get(`/exercises/${seededExerciseId}`)
       .expect(200);
 
     expect(resp.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          name: expect.stringContaining(deleteMarker),
-        }),
-      ]),
+      expect.objectContaining({
+        id: seededExerciseId,
+        name: expect.stringContaining(cleanupMarker),
+      }),
     );
   });
 });

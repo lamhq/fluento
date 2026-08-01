@@ -1,15 +1,15 @@
 import request from 'supertest';
 
 import { findById, insertMany } from '../../utils/mongodb';
-import { deleteMarker, setupExerciseCrudTests } from './shared';
+import { setUpApiTest } from '../../utils/test';
 
-describe('Exercise CRUD (e2e) - delete', () => {
-  const getApp = setupExerciseCrudTests();
+describe('delete exercise', () => {
+  const { cleanupMarker, getApp } = setUpApiTest();
 
-  it('delete exercise', async () => {
+  it('should remove a record from database', async () => {
     const [exerciseId] = await insertMany('exercises', [
       {
-        name: `E2E Exercise ${deleteMarker}`,
+        name: `E2E Exercise ${cleanupMarker}`,
         sentences: [
           {
             content: 'Can you help me with this?',
@@ -37,7 +37,7 @@ describe('Exercise CRUD (e2e) - delete', () => {
     expect(deleteResponse.body).toEqual(
       expect.objectContaining({
         id: exerciseId,
-        name: expect.stringContaining(deleteMarker),
+        name: expect.stringContaining(cleanupMarker),
       }),
     );
 
