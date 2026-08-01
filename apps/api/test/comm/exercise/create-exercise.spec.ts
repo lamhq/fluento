@@ -8,22 +8,21 @@ describe('create exercise', () => {
 
   it('should add a record in database', async () => {
     const dto = {
-      name: `E2E Exercise ${cleanupMarker}`,
-      sentences: [
+      topics: ['Restaurant', cleanupMarker],
+      scenario: 'ordering food in a restaurant',
+      learnerRole: 'customer',
+      counterpartRole: 'waiter',
+      prompts: ['Say that you would like to order a meal.'],
+      expectedResponses: [
         {
-          content: 'Can you help me with this?',
-          style: 'friendly',
-          meaning: 'Bạn có thể giúp tôi với việc này không?',
+          content: 'I would like to order the grilled salmon, please.',
+          style: ['polite', 'simple'],
+        },
+        {
+          content: 'Could I have the chicken curry with rice?',
+          style: ['polite', 'clear'],
         },
       ],
-      prompts: [
-        {
-          content: 'Ask for help politely.',
-          style: 'neutral',
-          meaning: 'Yêu cầu giúp đỡ một cách lịch sự.',
-        },
-      ],
-      topics: ['help', 'polite'],
     };
 
     const resp = await request(getApp().getHttpServer())
@@ -34,10 +33,12 @@ describe('create exercise', () => {
     expect(resp.body).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        name: dto.name,
-        sentences: dto.sentences,
-        prompts: dto.prompts,
         topics: dto.topics,
+        scenario: dto.scenario,
+        learnerRole: dto.learnerRole,
+        counterpartRole: dto.counterpartRole,
+        prompts: dto.prompts,
+        expectedResponses: dto.expectedResponses,
       }),
     );
 
@@ -47,10 +48,12 @@ describe('create exercise', () => {
     expect(savedExercise).not.toBeNull();
     expect(savedExercise).toEqual(
       expect.objectContaining({
-        name: dto.name,
-        sentences: dto.sentences,
-        prompts: dto.prompts,
         topics: dto.topics,
+        scenario: dto.scenario,
+        learnerRole: dto.learnerRole,
+        counterpartRole: dto.counterpartRole,
+        prompts: dto.prompts,
+        expectedResponses: dto.expectedResponses,
       }),
     );
   });

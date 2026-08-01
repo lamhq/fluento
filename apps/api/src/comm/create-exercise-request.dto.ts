@@ -1,18 +1,13 @@
-export class ExerciseSentenceDto {
+export class ExerciseExpectedResponseDto {
   content: string;
-  style: string;
-  meaning?: string;
-}
-
-export class ExercisePromptDto {
-  content: string;
-  style: string;
-  meaning?: string;
+  style: string[];
 }
 
 export class CreateExerciseRequestDto {
-  name: string;
-  sentences: ExerciseSentenceDto[];
-  prompts: ExercisePromptDto[];
   topics: string[];
+  scenario: string;
+  learnerRole: string;
+  counterpartRole: string;
+  prompts: string[];
+  expectedResponses: ExerciseExpectedResponseDto[];
 }

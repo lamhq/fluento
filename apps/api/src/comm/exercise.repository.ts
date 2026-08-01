@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { ExerciseEntity } from './exercise.entity';
@@ -11,15 +10,15 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
 
   async create(data: ExerciseEntity): Promise<ExerciseEntity> {
     const createdExercise = await this.prisma.exercise.create({
-      data: this.toCreateInput(data),
+      data,
     });
 
-    return this.toEntity(createdExercise);
+    return this.dbModelToEntity(createdExercise);
   }
 
   async findAll(): Promise<ExerciseEntity[]> {
     const exercises = await this.prisma.exercise.findMany();
-    return exercises.map((exercise) => this.toEntity(exercise));
+    return exercises.map((exercise) => this.dbModelToEntity(exercise));
   }
 
   async findById(id: string): Promise<ExerciseEntity | null> {
@@ -27,7 +26,7 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
       where: { id },
     });
 
-    return exercise ? this.toEntity(exercise) : null;
+    return exercise ? this.dbModelToEntity(exercise) : null;
   }
 
   async update(
@@ -36,10 +35,10 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
   ): Promise<ExerciseEntity> {
     const updatedExercise = await this.prisma.exercise.update({
       where: { id },
-      data: this.toUpdateInput(data),
+      data,
     });
 
-    return this.toEntity(updatedExercise);
+    return this.dbModelToEntity(updatedExercise);
   }
 
   async delete(id: string): Promise<ExerciseEntity> {
@@ -47,44 +46,28 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
       where: { id },
     });
 
-    return this.toEntity(deletedExercise);
+    return this.dbModelToEntity(deletedExercise);
   }
 
-  private toCreateInput(data: ExerciseEntity): Prisma.ExerciseCreateInput {
-    return {
-      name: data.name,
-      sentences: data.sentences,
-      prompts: data.prompts,
-      topics: data.topics,
-    };
-  }
-
-  private toUpdateInput(
-    data: Partial<ExerciseEntity>,
-  ): Prisma.ExerciseUpdateInput {
-    return {
-      ...(data.name !== undefined ? { name: data.name } : {}),
-      ...(data.sentences !== undefined ? { sentences: data.sentences } : {}),
-      ...(data.prompts !== undefined ? { prompts: data.prompts } : {}),
-      ...(data.topics !== undefined ? { topics: data.topics } : {}),
-    };
-  }
-
-  private toEntity(data: {
+  private dbModelToEntity(data: {
     id: string;
-    name: string;
-    sentences: { content: string; style: string; meaning?: string | null }[];
-    prompts: { content: string; style: string; meaning?: string | null }[];
     topics: string[];
+    scenario: string;
+    learnerRole: string;
+    counterpartRole: string;
+    prompts: string[];
+    expectedResponses: { content: string; style: string[] }[];
     createdAt: Date;
     updatedAt: Date;
   }): ExerciseEntity {
     return {
       id: data.id,
-      name: data.name,
-      sentences: data.sentences,
-      prompts: data.prompts,
       topics: data.topics,
+      scenario: data.scenario,
+      learnerRole: data.learnerRole,
+      counterpartRole: data.counterpartRole,
+      prompts: data.prompts,
+      expectedResponses: data.expectedResponses,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };

@@ -9,30 +9,27 @@ describe('update exercise', () => {
   it('should update a record in database', async () => {
     const [exerciseId] = await insertMany('exercises', [
       {
-        name: `E2E Exercise ${cleanupMarker}`,
-        sentences: [
+        topics: ['Restaurant', cleanupMarker],
+        scenario: 'ordering food in a restaurant',
+        learnerRole: 'customer',
+        counterpartRole: 'waiter',
+        prompts: ['Say that you would like to order a meal.'],
+        expectedResponses: [
           {
-            content: 'Can you help me with this?',
-            style: 'friendly',
-            meaning: 'Bạn có thể giúp tôi với việc này không?',
+            content: 'I would like to order the grilled salmon, please.',
+            style: ['polite', 'simple'],
           },
         ],
-        prompts: [
-          {
-            content: 'Ask for help politely.',
-            style: 'neutral',
-            meaning: 'Yêu cầu giúp đỡ một cách lịch sự.',
-          },
-        ],
-        topics: ['help', 'polite'],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     ]);
 
     const dto = {
-      name: 'E2E Exercise Updated',
-      topics: ['help', 'updated'],
+      topics: ['Job Interview', cleanupMarker],
+      scenario: 'introducing yourself',
+      learnerRole: 'interviewee',
+      counterpartRole: 'interviewer',
     };
     const resp = await request(getApp().getHttpServer())
       .patch(`/exercises/${exerciseId}`)
@@ -42,8 +39,10 @@ describe('update exercise', () => {
     expect(resp.body).toEqual(
       expect.objectContaining({
         id: exerciseId,
-        name: dto.name,
         topics: dto.topics,
+        scenario: dto.scenario,
+        learnerRole: dto.learnerRole,
+        counterpartRole: dto.counterpartRole,
       }),
     );
 
@@ -53,8 +52,10 @@ describe('update exercise', () => {
     expect(updatedExercise?._id.toString()).toBe(exerciseId);
     expect(updatedExercise).toEqual(
       expect.objectContaining({
-        name: dto.name,
         topics: dto.topics,
+        scenario: dto.scenario,
+        learnerRole: dto.learnerRole,
+        counterpartRole: dto.counterpartRole,
       }),
     );
   });

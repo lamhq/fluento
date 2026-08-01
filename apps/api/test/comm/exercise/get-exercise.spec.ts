@@ -9,24 +9,20 @@ describe('get exercise', () => {
   it('should return a record from database', async () => {
     const [seededExerciseId] = await insertMany('exercises', [
       {
-        name: `Seeded exercise ${cleanupMarker}`,
+        topics: ['School', cleanupMarker],
+        scenario: 'asking for explanation',
+        learnerRole: 'student',
+        counterpartRole: 'teacher',
+        prompts: ['Ask the teacher guidance for solving a math problem.'],
+        expectedResponses: [
+          {
+            content:
+              "Could you please help me with this math problem? I'm having trouble understanding it.",
+            style: ['polite', 'respectful'],
+          },
+        ],
         createdAt: new Date(),
         updatedAt: new Date(),
-        sentences: [
-          {
-            content: 'This record was inserted by the test helper.',
-            style: 'neutral',
-            meaning: 'Đây là bản ghi được chèn bằng helper test.',
-          },
-        ],
-        prompts: [
-          {
-            content: 'Reply with a greeting.',
-            style: 'neutral',
-            meaning: 'Trả lời bằng một lời chào.',
-          },
-        ],
-        topics: ['seeded', 'test'],
       },
     ]);
 
@@ -37,7 +33,10 @@ describe('get exercise', () => {
     expect(resp.body).toEqual(
       expect.objectContaining({
         id: seededExerciseId,
-        name: expect.stringContaining(cleanupMarker),
+        topics: expect.arrayContaining(['School', cleanupMarker]),
+        scenario: 'asking for explanation',
+        learnerRole: 'student',
+        counterpartRole: 'teacher',
       }),
     );
   });

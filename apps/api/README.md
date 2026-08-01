@@ -18,6 +18,12 @@ Create a `.env` file in the `apps/api` directory and add any environment variabl
 PORT=5600
 ```
 
+Generate Prisma client:
+
+```bash
+pnpm run prisma:generate
+```
+
 ## Usage
 
 ### Start development server
@@ -29,7 +35,7 @@ Follow instructions in the root `README.md`.
 Build the application for production:
 
 ```bash
-pnpm -F api run build
+pnpm run build
 ```
 
 ### Start production build
@@ -37,7 +43,7 @@ pnpm -F api run build
 Run the built application locally:
 
 ```bash
-pnpm -F api run start
+pnpm run start
 ```
 
 ### Run lint
@@ -53,7 +59,7 @@ pnpm lint apps/api
 Run TypeScript type checking:
 
 ```bash
-pnpm -F api run type-check
+pnpm run type-check
 ```
 
 ### Run tests
@@ -61,13 +67,13 @@ pnpm -F api run type-check
 Run unit tests:
 
 ```bash
-pnpm -F api run test
+pnpm run test
 ```
 
 Run end-to-end tests:
 
 ```bash
-pnpm -F api run test:e2e
+pnpm run test:e2e
 ```
 
 ### Format code
@@ -75,21 +81,7 @@ pnpm -F api run test:e2e
 Format code using Prettier:
 
 ```bash
-pnpm -F api run format
-```
-
-### Manage dependencies
-
-Add a dependency to the API app:
-
-```bash
-pnpm -F api add <package-name>
-```
-
-Remove a dependency from the API app:
-
-```bash
-pnpm -F api remove <package-name>
+pnpm run format
 ```
 
 ## Project Structure

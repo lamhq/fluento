@@ -7,7 +7,7 @@ import { connect, deleteMany, disconnect } from './mongodb';
 
 export function setUpApiTest() {
   // create a unique string for clean up db records after each test run
-  const cleanupMarker = `#ApiTest-${Date.now().toString()}`;
+  const cleanupMarker = `#ApiTest-${Date.now().toString(36)}`;
 
   // NestJS application instance for testing
   let app!: INestApplication<App>;
@@ -28,7 +28,9 @@ export function setUpApiTest() {
   });
 
   afterEach(async () => {
-    await deleteMany('exercises', { name: { $regex: cleanupMarker } });
+    await deleteMany('exercises', {
+      topics: { $elemMatch: { $regex: cleanupMarker } },
+    });
   });
 
   return {

@@ -9,22 +9,17 @@ describe('delete exercise', () => {
   it('should remove a record from database', async () => {
     const [exerciseId] = await insertMany('exercises', [
       {
-        name: `E2E Exercise ${cleanupMarker}`,
-        sentences: [
+        topics: ['Restaurant', cleanupMarker],
+        scenario: 'ordering food in a restaurant',
+        learnerRole: 'customer',
+        counterpartRole: 'waiter',
+        prompts: ['Say that you would like to order a meal.'],
+        expectedResponses: [
           {
-            content: 'Can you help me with this?',
-            style: 'friendly',
-            meaning: 'Bạn có thể giúp tôi với việc này không?',
+            content: 'I would like to order the grilled salmon, please.',
+            style: ['polite', 'simple'],
           },
         ],
-        prompts: [
-          {
-            content: 'Ask for help politely.',
-            style: 'neutral',
-            meaning: 'Yêu cầu giúp đỡ một cách lịch sự.',
-          },
-        ],
-        topics: ['help', 'polite'],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -37,7 +32,8 @@ describe('delete exercise', () => {
     expect(deleteResponse.body).toEqual(
       expect.objectContaining({
         id: exerciseId,
-        name: expect.stringContaining(cleanupMarker),
+        topics: expect.arrayContaining(['Restaurant', cleanupMarker]),
+        scenario: 'ordering food in a restaurant',
       }),
     );
 

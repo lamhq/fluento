@@ -10,10 +10,12 @@ export class ExerciseMapper {
   toResponse(entity: ExerciseEntity): ExerciseResponseDto {
     return {
       id: entity.id,
-      name: entity.name,
-      sentences: entity.sentences,
-      prompts: entity.prompts,
       topics: entity.topics,
+      scenario: entity.scenario,
+      learnerRole: entity.learnerRole,
+      counterpartRole: entity.counterpartRole,
+      prompts: entity.prompts,
+      expectedResponses: entity.expectedResponses,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -22,10 +24,12 @@ export class ExerciseMapper {
   toEntity(data: CreateExerciseRequestDto): ExerciseEntity {
     return {
       id: '',
-      name: data.name,
-      sentences: data.sentences,
-      prompts: data.prompts,
       topics: data.topics,
+      scenario: data.scenario,
+      learnerRole: data.learnerRole,
+      counterpartRole: data.counterpartRole,
+      prompts: data.prompts,
+      expectedResponses: data.expectedResponses,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -33,10 +37,18 @@ export class ExerciseMapper {
 
   toPartialEntity(data: UpdateExerciseRequestDto): Partial<ExerciseEntity> {
     return {
-      ...(data.name !== undefined ? { name: data.name } : {}),
-      ...(data.sentences !== undefined ? { sentences: data.sentences } : {}),
-      ...(data.prompts !== undefined ? { prompts: data.prompts } : {}),
       ...(data.topics !== undefined ? { topics: data.topics } : {}),
+      ...(data.scenario !== undefined ? { scenario: data.scenario } : {}),
+      ...(data.learnerRole !== undefined
+        ? { learnerRole: data.learnerRole }
+        : {}),
+      ...(data.counterpartRole !== undefined
+        ? { counterpartRole: data.counterpartRole }
+        : {}),
+      ...(data.prompts !== undefined ? { prompts: data.prompts } : {}),
+      ...(data.expectedResponses !== undefined
+        ? { expectedResponses: data.expectedResponses }
+        : {}),
     };
   }
 }

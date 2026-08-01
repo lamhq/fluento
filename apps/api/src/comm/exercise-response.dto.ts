@@ -1,17 +1,14 @@
 export class ExerciseResponseDto {
   id: string;
-  name: string;
-  sentences: {
-    content: string;
-    style: string;
-    meaning?: string | null;
-  }[];
-  prompts: {
-    content: string;
-    style: string;
-    meaning?: string | null;
-  }[];
   topics: string[];
+  scenario: string;
+  learnerRole: string;
+  counterpartRole: string;
+  prompts: string[];
+  expectedResponses: {
+    content: string;
+    style: string[];
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }

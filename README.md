@@ -12,11 +12,11 @@ cd fluento
 pnpm install
 ```
 
-For setup instructions specific to each project, see:
+Follow installation instructions in each project:
 
-- `apps/api/README.md`
-- `apps/api-gateway/README.md`
-- `apps/web/README.md`
+- `api`: `apps/api/README.md`
+- `api-gateway`: `apps/api-gateway/README.md`
+- `web`: `apps/web/README.md`
 
 ## Usage
 

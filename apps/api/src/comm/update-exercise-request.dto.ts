@@ -1,11 +1,10 @@
-import {
-  ExercisePromptDto,
-  ExerciseSentenceDto,
-} from './create-exercise-request.dto';
+import { ExerciseExpectedResponseDto } from './create-exercise-request.dto';
 
 export class UpdateExerciseRequestDto {
-  name?: string;
-  sentences?: ExerciseSentenceDto[];
-  prompts?: ExercisePromptDto[];
   topics?: string[];
+  scenario?: string;
+  learnerRole?: string;
+  counterpartRole?: string;
+  prompts?: string[];
+  expectedResponses?: ExerciseExpectedResponseDto[];
 }
