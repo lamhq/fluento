@@ -92,7 +92,7 @@ export default defineConfig(
   // Jest test files
   {
     name: 'Jest test files',
-    files: ['apps/api/**/*.(test|spec).ts(x)?'],
+    files: ['apps/api/**/*.spec.ts'],
     plugins: { jest },
     languageOptions: {
       globals: {
@@ -101,6 +101,7 @@ export default defineConfig(
       },
     },
     rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
       'jest/no-disabled-tests': 'warn',
       'jest/no-focused-tests': 'error',
       'jest/no-identical-title': 'error',
