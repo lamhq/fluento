@@ -7,7 +7,7 @@
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "file": ".github/instructions/commit-message.md"
+      "text": "Maximum length of 54 characters"
     }
   ]
 }
