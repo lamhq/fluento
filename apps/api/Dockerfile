@@ -7,10 +7,14 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 COPY package.json tsconfig.json esbuild.mjs ./
+COPY prisma ./prisma
 COPY src ./src
 
 # Install dependencies
 RUN pnpm install --config.dangerouslyAllowAllBuilds=true
+
+# Generate Prisma client
+RUN pnpm run prisma:generate
 
 # Build the app (bundles into one JS file in dist/)
 RUN npm run build
