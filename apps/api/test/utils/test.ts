@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
+import { ValidateRequestBodyPipe } from '../../src/common/pipes/validate-request-body.pipe';
 import { connect, deleteMany, disconnect } from './mongodb';
 
 export function setUpApiTest() {
@@ -19,6 +20,10 @@ export function setUpApiTest() {
       imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication();
+
+    // auto validate request body
+    app.useGlobalPipes(new ValidateRequestBodyPipe());
+
     await app.init();
   });
 
