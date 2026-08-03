@@ -1,24 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CreateExerciseRequestDto } from './create-exercise-request.dto';
+import { CreateExerciseRequestDto } from '../interface/create-exercise/create-exercise-request.dto';
+import { UpdateExerciseRequestDto } from '../interface/update-exercise/update-exercise-request.dto';
 import { ExerciseEntity } from './exercise.entity';
-import { ExerciseMapper } from './exercise.mapper';
 import {
   EXERCISE_REPOSITORY_PORT,
   type ExerciseRepositoryPort,
 } from './exercise-repository.port';
-import { UpdateExerciseRequestDto } from './update-exercise-request.dto';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @Inject(EXERCISE_REPOSITORY_PORT)
     private readonly repository: ExerciseRepositoryPort,
-    private readonly mapper: ExerciseMapper,
   ) {}
 
   async create(data: CreateExerciseRequestDto): Promise<ExerciseEntity> {
-    return this.repository.create(this.mapper.toEntity(data));
+    return this.repository.create(data.toEntity());
   }
 
   async findAll(): Promise<ExerciseEntity[]> {
@@ -33,7 +31,7 @@ export class ExerciseService {
     id: string,
     data: UpdateExerciseRequestDto,
   ): Promise<ExerciseEntity> {
-    return this.repository.update(id, this.mapper.toPartialEntity(data));
+    return this.repository.update(id, data.toEntity());
   }
 
   async delete(id: string): Promise<ExerciseEntity> {

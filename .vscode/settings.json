@@ -7,7 +7,7 @@
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "text": "Do not exceed 54 characters"
+      "file": ".github/instructions/commit-message.md"
     }
   ]
 }

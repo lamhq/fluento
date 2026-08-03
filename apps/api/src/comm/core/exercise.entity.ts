@@ -11,4 +11,8 @@ export class ExerciseEntity {
   }[];
   createdAt: Date;
   updatedAt: Date;
+
+  constructor(data?: Partial<ExerciseEntity>) {
+    Object.assign(this, data);
+  }
 }

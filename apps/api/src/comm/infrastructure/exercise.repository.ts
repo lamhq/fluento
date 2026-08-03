@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '../prisma/prisma.service';
-import { ExerciseEntity } from './exercise.entity';
-import { ExerciseRepositoryPort } from './exercise-repository.port';
+import { PrismaService } from '../../prisma/prisma.service';
+import { ExerciseEntity } from '../core/exercise.entity';
+import { ExerciseRepositoryPort } from '../core/exercise-repository.port';
 
 @Injectable()
 export class ExerciseRepository implements ExerciseRepositoryPort {

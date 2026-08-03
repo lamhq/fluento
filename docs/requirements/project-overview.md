@@ -6,19 +6,14 @@ Many English learners struggle to achieve fluency despite having a solid underst
 
 True communication requires the ability to think, speak, and write effectively in real-world situations, which traditional learning methods often fail to provide.
 
-
 ## Purpose
 
-Fluento is an application designed to help English learners practice and improve their fluency through interactive exercises and real-world scenarios. 
-
-Unlike conventional apps that focus on teaching rules, Fluento emphasizes practice over theory, giving learners opportunities to apply their knowledge in meaningful contexts.
-
+Fluento is an English practice app that helps learners improve their fluency in communication, articulation, and speaking through interactive exercises and real-world scenarios.
 
 ## Target Audience
 
 - Intermediate learners who already understand grammar and vocabulary but want to become fluent
 - Learners aiming to improve communication skills in professional or social settings
-
 
 ## Core Features
 
@@ -27,10 +22,10 @@ Unlike conventional apps that focus on teaching rules, Fluento emphasizes practi
 3. **Speaking Practice**: practice pronunciation and fluency through shadowing and get feedback on pronunciation and tone
 4. **Vocabulary Practice**: recall and use words through various exercises
 
-
 ## Scope
 
 **In-Scope Deliverables**:
+
 - **Vocabulary Practice Module**: Custom word banks, sentence builders, flashcards, and spaced repetition system
 - **Communication Practice Module**: Simulated conversations with feedback on grammar, pronunciation, and tone
 - **Thinking Practice Module**: Sentence construction, sentence variation, and paragraph rewriting exercises
@@ -40,6 +35,7 @@ Unlike conventional apps that focus on teaching rules, Fluento emphasizes practi
 - **Core Platform Features**: User authentication and progress tracking
 
 **Out-of-Scope**:
+
 - Advanced proficiency testing or certification programs
 - Advanced grammar teaching or complex linguistic analysis
 - Integration with formal educational institutions (future consideration)
@@ -55,6 +51,7 @@ Unlike conventional apps that focus on teaching rules, Fluento emphasizes practi
 ## Risks and Assumptions
 
 **Risks**:
+
 - **Data Quality Impact**: Success depends heavily on exercise quality, relevance, and consistent engagement incentives. Poor quality content will negatively impact learning outcomes
 - **Speech Recognition Accuracy**: Accuracy varies depending on third-party API providers (Microsoft Azure Speech Service, Google Cloud Speech-to-Text, Speechace, etc.). Limitations may affect user experience and learning effectiveness
 - **YouTube Content Restrictions**: YouTube videos may contain ads that interrupt the learning experience and detract from the shadowing practice
@@ -62,6 +59,7 @@ Unlike conventional apps that focus on teaching rules, Fluento emphasizes practi
 - **Integration Complexity**: Third-party API integrations (YouTube, speech recognition services) may introduce technical challenges and dependencies
 
 **Assumptions**:
+
 - Users have basic English knowledge before using the platform
 - Users have reliable internet connection for full functionality
 - Speech recognition technology is sufficiently accurate for learning purposes
