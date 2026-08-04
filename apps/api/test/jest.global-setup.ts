@@ -9,6 +9,7 @@ export default async function globalSetup() {
 }
 
 async function startMockServer() {
+  jest.setTimeout(120000); // 2 minutes
   console.log('Starting mock services...');
 
   // start Docker services using docker-compose
@@ -37,7 +38,7 @@ async function startMockServer() {
     process.env.DATABASE_URL,
     '/docker-entrypoint-initdb.d/init-replica-set.js',
   ]);
-  await new Promise((resolve) => setTimeout(resolve, 5000)); // wait for 5 seconds to ensure the service is up
+  // await new Promise((resolve) => setTimeout(resolve, 5000)); // wait for 5 seconds to ensure the service is up
 
   // const { output, stdout, stderr, exitCode } = await dbContainer.exec([
   // console.log(`Command output: ${output}`);
