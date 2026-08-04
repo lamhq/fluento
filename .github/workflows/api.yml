@@ -77,6 +77,9 @@ jobs:
   integration-test:
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
+    env:
+      # from `apps/api/.env`
+      DATABASE_URL: 'mongodb://root:password@localhost:27017/test?authSource=admin&replicaSet=rs0'
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

@@ -1,13 +1,8 @@
 services:
   db-service:
-    image: mongo:8.0
-    command:
-      - --replSet
-      - rs0
-      - --bind_ip_all
-      - --auth
-      - --keyFile
-      - /etc/mongo-keyfile
+    build:
+      context: ./apps/db
+      dockerfile: Dockerfile
     ports:
       - '27017:27017'
     environment:
@@ -16,10 +11,8 @@ services:
       MONGO_INITDB_DATABASE: test
     volumes:
       - db-data:/data/db
-      - ./apps/db:/docker-entrypoint-initdb.d
-      - ./apps/db/mongo-keyfile:/etc/mongo-keyfile:ro
     healthcheck:
-      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping').ok", '--quiet']
+      test: ['CMD', 'mongo', '--eval', "db.adminCommand('ping').ok", '--quiet']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -34,7 +27,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5600
-      DATABASE_URL: mongodb://root:password@db-service:27017/test?authSource=admin
+      DATABASE_URL: mongodb://root:password@db-service:27017/test?authSource=admin&replicaSet=rs0
     healthcheck:
       test: ['CMD', 'node', 'dist/healthcheck.mjs']
       interval: 5s

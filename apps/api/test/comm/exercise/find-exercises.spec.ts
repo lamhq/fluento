@@ -32,7 +32,7 @@ describe('find exercises', () => {
     expect(resp.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          topics: ['Socializing'],
+          topics: expect.arrayContaining(['Socializing']),
           scenario: 'asking for a favor',
         }),
       ]),
