@@ -9,7 +9,6 @@ export default async function globalSetup() {
 }
 
 async function startMockServer() {
-  jest.setTimeout(120000); // 2 minutes
   console.log('Starting mock services...');
 
   // start Docker services using docker-compose

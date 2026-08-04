@@ -4,6 +4,7 @@
   "testEnvironment": "node",
   "testRegex": ".spec.ts$",
   "globalSetup": "<rootDir>/jest.global-setup.ts",
+  "testTimeout": 120000,
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   }
