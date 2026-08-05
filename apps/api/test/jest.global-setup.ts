@@ -29,14 +29,13 @@ async function startMockServer() {
 
   // initialize replica set for MongoDB
   const dbContainer = environment.getContainer('db-service-1');
-  const { output, stdout, stderr, exitCode } = await dbContainer.exec([
+  const { stdout, stderr, exitCode } = await dbContainer.exec([
     'mongo',
     'mongodb://root:password@localhost:27017/test?authSource=admin',
     '/docker-entrypoint-initdb.d/init-rs.js',
   ]);
 
   // const { output, stdout, stderr, exitCode } = await dbContainer.exec([
-  console.log(`Command output: ${output}`);
   console.log(`Command stdout: ${stdout}`);
   console.log(`Command stderr: ${stderr}`);
   console.log(`Command exit code: ${exitCode.toString()}`);
