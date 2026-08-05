@@ -6,8 +6,8 @@ services:
     ports:
       - '27017:27017'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123123
       MONGO_INITDB_DATABASE: test
     volumes:
       - db-data:/data/db
@@ -27,7 +27,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5600
-      DATABASE_URL: mongodb://root:password@db-service:27017/test?authSource=admin&replicaSet=rs0
+      DATABASE_URL: mongodb://admin:123123@db-service:27017/test?authSource=admin&replicaSet=rs0
     healthcheck:
       test: ['CMD', 'node', 'dist/healthcheck.mjs']
       interval: 5s
