@@ -31,17 +31,7 @@ async function startMockServer() {
   const dbContainer = environment.getContainer('db-service-1');
   const { stdout, stderr, exitCode } = await dbContainer.exec([
     'mongo',
-    '--host',
-    'localhost',
-    '--port',
-    '27017',
-    '-u',
-    'root',
-    '-p',
-    'password',
-    '--authenticationDatabase',
-    'admin',
-    '<',
+    'mongodb://root:password@localhost:27017/test?authSource=admin',
     '/docker-entrypoint-initdb.d/init-rs.js',
   ]);
 
