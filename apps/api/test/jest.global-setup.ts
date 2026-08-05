@@ -28,13 +28,10 @@ async function startMockServer() {
     .up(['db-service']);
 
   // initialize replica set for MongoDB
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL environment variable is not set');
-  }
   const dbContainer = environment.getContainer('db-service-1');
   const { output, stdout, stderr, exitCode } = await dbContainer.exec([
     'mongo',
-    process.env.DATABASE_URL,
+    'mongodb://root:password@localhost:27017/test?authSource=admin',
     '/docker-entrypoint-initdb.d/init-rs.js',
   ]);
 
