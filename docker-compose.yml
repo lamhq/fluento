@@ -1,8 +1,7 @@
 services:
   db-service:
-    build:
-      context: ./apps/db
-      dockerfile: Dockerfile
+    image: mongo:4.2
+    command: ['--replSet', 'rs0', '--bind_ip_all']
     ports:
       - '27017:27017'
     environment:
@@ -11,6 +10,7 @@ services:
       MONGO_INITDB_DATABASE: test
     volumes:
       - db-data:/data/db
+      - ./apps/db:/docker-entrypoint-initdb.d
     healthcheck:
       test: ['CMD', 'mongo', '--eval', "db.adminCommand('ping').ok", '--quiet']
       interval: 10s
