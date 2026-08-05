@@ -51,7 +51,7 @@ The application includes a development proxy that forwards API requests from `/a
 Build the application for production:
 
 ```bash
-pnpm -F web run build
+pnpm run build
 ```
 
 This will compile TypeScript and bundle the application with Vite.
@@ -61,7 +61,7 @@ This will compile TypeScript and bundle the application with Vite.
 Preview the production build locally:
 
 ```bash
-pnpm -F web run start
+pnpm run start
 ```
 
 ### Run lint
@@ -70,7 +70,7 @@ Check code quality and style issues:
 
 ```bash
 # Lint all files in the web app
-pnpm -F web run lint
+pnpm run lint
 ```
 
 ### Type checking
@@ -78,15 +78,15 @@ pnpm -F web run lint
 Run TypeScript type checking:
 
 ```bash
-pnpm -F web run type-check
+pnpm run type-check
 ```
 
 ### Run tests
 
-Run unit and integration tests:
+Run unit tests:
 
 ```bash
-pnpm -F web run test
+pnpm run test
 ```
 
 ### Format code
@@ -94,21 +94,7 @@ pnpm -F web run test
 Format code using Prettier:
 
 ```bash
-pnpm -F web run format
-```
-
-### Manage dependencies
-
-Add a dependency to the web app:
-
-```bash
-pnpm -F web add <package-name>
-```
-
-Remove a dependency from the web app:
-
-```bash
-pnpm -F web remove <package-name>
+pnpm run format
 ```
 
 ## Project Structure

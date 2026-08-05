@@ -1,14 +1,12 @@
-# Communication Practice
+# Communication Practice Module
 
 ## Introduction
 
 Communication practice enables learners to develop conversational skills in realistic scenarios and build confidence in everyday interactions.
 
-
 ## How it works
 
-Learners respond to a prompt then receive feedback from the app.
-
+Learners respond to a prompt and then receive feedback from the app.
 
 ## Accessing the module
 
@@ -20,21 +18,260 @@ Learners respond to a prompt then receive feedback from the app.
      - **My Library Only** (default: off)
      - **Start Practice**: begins session.
 
-
 ## Practice Flow
 
-1. App selects a **practice lesson** based on the configuration.
-2. App displays a prompt of that **practice lesson**
+1. App selects a **Exercise** based on the configuration.
+2. App displays a prompt of that **Exercise**
 3. Learner responds and clicks **Submit**.
 4. App gives feedback about learner's response
 5. Learner chooses:
    - **Retry**: re-answer same prompt.
    - **Next**: move to the next practice.
 
+## Prompt display
 
-## App Feedback
+Template for display exercise prompt in the app:
+
+```
+You're a/an [learner role] [scenario]
+
+[counterpart role] said:
+<bigText>"[prompt]"</bigText>
+
+Response in a [style] manner:
+<input box for user to type their response />
+```
+
+### Example 1: Ordering food in a restaurant
+
+```
+You're a customer ordering food in a restaurant
+
+Waiter said:
+<bigText>"What would you like to order?"</bigText>
+
+Response in a polite manner:
+<input box for user to type their response />
+```
+
+### Example 2: Introducing yourself
+
+```
+You're an interviewee introducing yourself in a job interview
+
+Interviewer said:
+<bigText>"Can you tell me a little about yourself?"</bigText>
+
+Response in a professional manner:
+<input box for user to type their response />
+```
+
+## Feedback display
+
+Template for displaying feedback in the app:
+
+```
+[emoji icon] [total score]. [overall feedback message]
+
+--- if spelling/grammar errors
+Corrected Sentence:
+"[corrected version of learner’s response]"
+
+Fixes:
+- [list of specific grammar/spelling fixes]
+
+---
+
+You can also say:
+- "[expected response 1]"
+- "[expected response 2]"
+- "[expected response 3]"
+```
+
+**Emoji Mapping**:
+
+- 🌟 Excellent (90–100): "🌟 Excellent work! Your response was clear and polished."
+- 👍 Good (75–89): "👍 Good job! A few small issues, but overall strong."
+- 🙂 Fair (60–74): "🙂 Fair effort. Needs improvement in clarity or grammar."
+- ⚠️ Needs Improvement (40–59): "⚠️ Needs improvement. Several errors affected understanding."
+- ❌ Poor (0–39): "❌ Response was unclear or inappropriate for the prompt."
+
+### 🌟 Excellent Example
+
+```
+🌟 95/100. Excellent work! Your response was clear and polished.
+
+---
+
+Corrected Sentence:
+"Let's meet tomorrow to discuss the project."
+
+Fixes:
+- "Lets" → "Let's"
+
+---
+
+You can also say:
+- "I’d be happy to meet tomorrow to talk about the project."
+- "Tomorrow works well for me. Let’s discuss the details then."
+- "Sure, let’s meet tomorrow to go over the project."
+```
+
+### 👍 Good Example
+
+```
+👍 82/100. Good job! A few small issues, but overall strong.
+
+---
+
+Corrected Sentence:
+"I agree with your idea, but we should also consider other options."
+
+Fixes:
+- "I am agree" → "I agree"
+
+---
+
+You can also say:
+- "That’s a good idea. I agree, though we might explore alternatives too."
+- "I agree with you, but let’s think about other possibilities as well."
+- "I like your idea. Maybe we can also consider different approaches."
+```
+
+### 🙂 Fair Example
+
+```
+🙂 68/100. Fair effort. Needs improvement in clarity or grammar.
+
+---
+
+Corrected Sentence:
+"I think this plan is good, but it need more details."
+
+Fixes:
+- "it need" → "it needs"
+
+---
+
+You can also say:
+- "This plan looks good, but it needs more details."
+- "I think the plan is fine, though we should add more specifics."
+- "It’s a good start, but more detail would make it stronger."
+```
+
+### ⚠️ Needs Improvement Example
+
+```
+⚠️ 52/100. Needs improvement. Several errors affected understanding.
+
+---
+
+Corrected Sentence:
+"I don’t understand your idea clearly."
+
+Fixes:
+- "I don’t understand your idea clear" → "I don’t understand your idea clearly"
+
+---
+
+You can also say:
+- "Could you explain your idea more clearly?"
+- "I’m not sure I understand. Can you give more details?"
+- "Can you clarify what you mean by that?"
+```
+
+### ❌ Poor Example
+
+```
+❌ 28/100. Response was unclear or inappropriate for the prompt.
+
+---
+
+Corrected Sentence:
+"I don’t like."
+
+Fixes:
+- Sentence incomplete → "I don’t like that idea."
+
+---
+
+You can also say:
+- "I don’t think that idea will work. Could we try another approach?"
+- "I’m not sure I agree with that suggestion."
+- "That idea may not be the best fit. Let’s consider alternatives."
+```
+
+## Exercise model
+
+An **Exercise** includes:
+
+### Topics
+
+Broad thematic categories that group exercises.
+
+Examples: "Restaurant", "Job Interview", "School", "Socializing".
+
+### Scenario
+
+The specific real-world situation or setting where the conversation happens.
+
+The scenario must fit this template: "You're a/an [learner role] [scenario]".
+
+Examples:
+
+- ordering food in a restaurant
+- introducing yourself in a job interview
+- asking a teacher for help with homework
+- asking a friend for a favor to take you to the airport
+
+### Learner Role
+
+Defines who the learner is in the scenario.
+
+Examples: customer, interviewee, student, person.
+
+### Counterpart Role
+
+Who the learner interacts with.
+
+Examples: waiter, interviewer, teacher, friend.
+
+### Prompts
+
+Initial statements that start the conversation.
+
+Can be:
+
+- A speech that starts the conversation from the counterpart.
+- A prompt that guides the response.
+
+Examples:
+
+- Say that you would like to order a meal (prompt).
+- "Can you tell me a little about yourself?" (speech)
+- Ask the teacher guidance for solving a math problem (prompt).
+- Politely ask your friend to take you to the airport (prompt, cannot be a speech since the learner starts the conversation).
+
+### Expected Responses
+
+The ideal or expected responses to the prompts.
+
+Each expected response includes:
+
+- **Content**: the sentence in speaking form.
+- **Style**: the manner of delivery — tone, politeness, formality, or cultural appropriateness.
+
+Examples:
+
+- "I would like to order the grilled salmon, please." (polite, simple)
+- "Hello, I'm Beck. I have a degree in computer science and have been working in software development for the past five years." (professional, concise)
+- "Could you please help me with this math problem? I'm having trouble understanding it." (polite, respectful)
+- "I was hoping you could give me a lift to the airport" (polite, courteous)
+
+## Feedback model
 
 Feedback includes:
+
 - **Feedback**: overall feedback
 - **Correctness**: check spelling & grammar of learner's response
   - **Score** (x/100)
@@ -55,29 +292,12 @@ Feedback includes:
 - **Alternatives**: alternative responses that are also can be used in the same scenario.
 
 **Considerations**:
+
 - Should **Engagement** be included as a criterion for appropriateness?
 
+## AI prompt
 
-## Data Model
-
-**Practice lessons** contain the following information:
-- **Skill**: what to practice. For example:
-  - asking for help
-  - showing gratitude
-- **Sentences**: sentences for learners to practice. For example:
-  - "I was hoping you could give me a lift to the airport."
-  - "You're welcome! I'm glad I could help."
-- **Prompts**: prompts that lead to the practice sentences, can be:
-  - a **guided prompt** that asks the learner to respond in a specific way, e.g., Politely request to your friend to take you to the airport.
-  - an **opener sentence** with a realistic **scenario**, e.g., "Thank you for your help!" - someone that you helped with a task says this to you.
-- **Topics**: topics that the practice lesson belongs to. For example:
-  - Small talk
-  - Job Interview
-
-
-## Prompts
-
-Prompt for getting feedback on learner's response:
+Prompt sent to AI for getting feedback on learner's response:
 
 ```md
 ## Task
@@ -86,12 +306,13 @@ Review my sentence and give feedback for correctness and relevance to the provid
 
 ## Inputs
 
-- **Prompt:** _Politely request to your friend to take you to the airport_  
-- **Sentence:** "I was hoping you could give me a lift to the airport.”
+- **Prompt:** _Politely request to your friend to take you to the airport_
+- **Sentence:** "I was hoping you could give me a lift to the airport"
 
 ## Feedback structure
 
 Feedback includes:
+
 - **Feedback**: overall feedback
 - **Correctness**: check spelling & grammar of learner's response
   - **Score** (x/100)
@@ -111,114 +332,92 @@ Feedback includes:
     - **Feedback**
 ```
 
-## Example Practices
+## Example Exercises
 
-**Practice Lesson 1: Asking for help**
-- **Prompt**: Politely request to your friend to take you to the airport.
-- **User input**: "I was hoping you could give me a lift to the airport."
-- **App feedback**:
-  - Correctness: 95/100 (Well-structured sentence with good grammar)
-  - Appropriateness: 92/100 (Polite and relevant)
-    - Clarity: 100/100
-    - Politeness: 92/100
-    - Tone: 88/100
+### Example 1: Ordering food in a restaurant
 
-**Practice Lesson 3: Showing gratitude**
-- **Prompt**: "Thank you for your help!" - someone that you helped with a task says this to you.
-- **User input**: "You're welcome! I'm glad I could help."
-- **App feedback**:
-  - Correctness: 96/100 (Correct grammar and punctuation)
-  - Appropriateness: 95/100 (Warm and appropriate response)
-    - Clarity: 100/100
-    - Politeness: 96/100
-    - Tone: 96/100
+```json
+{
+  "topic": "Restaurant",
+  "scenario": "ordering food in a restaurant",
+  "learnerRole": "customer",
+  "counterpartRole": "waiter",
+  "prompts": ["Say that you would like to order a meal."],
+  "expectedResponses": [
+    {
+      "content": "I would like to order the grilled salmon, please.",
+      "style": ["polite", "simple"]
+    },
+    {
+      "content": "Could I have the chicken curry with rice?",
+      "style": ["polite", "clear"]
+    }
+  ]
+}
+```
 
-**Practice Lesson 4: Sharing opinions**
-- **Prompt**: Gently tell your friend she's too young for marriage.
-- **User input**: "I reckon you're a little young to be getting married."
-- **App feedback**:
-  - Correctness: 92/100 (Conversational and grammatically correct)
-  - Appropriateness: 88/100 (Good balance of honesty and politeness)
-    - Clarity: 96/100
-    - Politeness: 88/100
-    - Tone: 84/100
+### Example 2: Introducing yourself
 
-**Practice Lesson 5: Polite corrections**
-- **Prompt**: Politely correct your friend's calculation mistake.
-- **User input**: "You seem to have made a mistake in this calculation."
-- **App feedback**:
-  - Correctness: 94/100 (Clear and grammatically sound)
-  - Appropriateness: 89/100 (Diplomatic and constructive)
-    - Clarity: 96/100
-    - Politeness: 88/100
-    - Tone: 80/100
+```json
+{
+  "topic": "Job Interview",
+  "scenario": "introducing yourself",
+  "learnerRole": "interviewee",
+  "counterpartRole": "interviewer",
+  "prompts": ["\"Can you tell me a little about yourself?\""],
+  "expectedResponses": [
+    {
+      "content": "Hello, I'm Beck. I have a degree in computer science and have been working in software development for the past five years.",
+      "style": ["professional", "concise"]
+    },
+    {
+      "content": "My name is Sarah. I recently graduated with a degree in marketing and completed an internship where I focused on digital campaigns.",
+      "style": ["professional", "confident"]
+    }
+  ]
+}
+```
 
-**Practice Lesson 6: Responding to inquiries (enthusiastic)**
-- **Prompt**: "How are you today?"
-- **User input**: "I'm doing well, thank you. And you?"
-- **App feedback**:
-  - Correctness: 98/100 (Polished grammar and punctuation)
-  - Appropriateness: 100/100 (Excellent, engaging response)
-    - Clarity: 100/100
-    - Politeness: 100/100
-    - Tone: 100/100
+### Example 3: Asking for explanation
 
-**Practice Lesson 7: Responding to inquiries (casual, minimal)**
-- **Prompt**: "How are you today?"
-- **User input**: "Not too bad."
-- **App feedback**:
-  - Correctness: 90/100 (Casual but correct)
-  - Appropriateness: 77/100 (Good but flat tone)
-    - Clarity: 92/100
-    - Politeness: 60/100
-    - Tone: 80/100
+```json
+{
+  "topic": "School",
+  "scenario": "asking for explanation",
+  "learnerRole": "student",
+  "counterpartRole": "teacher",
+  "prompts": ["Ask the teacher guidance for solving a math problem."],
+  "expectedResponses": [
+    {
+      "content": "Could you please help me with this math problem? I'm having trouble understanding it.",
+      "style": ["polite", "respectful"]
+    },
+    {
+      "content": "I'm struggling with this equation. Could you explain how to solve it?",
+      "style": ["polite", "curious"]
+    }
+  ]
+}
+```
 
-**Practice Lesson 10: Responding to inquiries (irrelevant)**
-- **Prompt**: "How are you today?"
-- **User input**: "I had pizza last night."
-- **App feedback**:
-  - Correctness: 92/100 (Correct spelling and grammar)
-  - Appropriateness: 0/100 (Irrelevant — doesn't answer the prompt)
-    - Clarity: 100/100
-    - Politeness: 80/100
-    - Tone: 80/100
+### Example 4: Asking for a favor
 
-**Practice Lesson 11: Responding to inquiries (news)**
-- **Prompt**: "What's new with you?"
-- **User input**: "Not much, just relaxing today."
-- **App feedback**:
-  - Correctness: 96/100 (Well-formed casual response)
-  - Appropriateness: 88/100 (Strong casual response)
-    - Clarity: 96/100
-    - Politeness: 80/100
-    - Tone: 88/100
-
-**Practice Lesson 12: Responding to inquiries (work)**
-- **Prompt**: "How's work going?"
-- **User input**: "It's been busy, but manageable."
-- **App feedback**:
-  - Correctness: 97/100 (Clear, well-structured sentence)
-  - Appropriateness: 91/100 (Professional and honest)
-    - Clarity: 100/100
-    - Politeness: 80/100
-    - Tone: 92/100
-
-**Practice Lesson 13: Responding to inquiries (weekend)**
-- **Prompt**: "How was your weekend?"
-- **User input**: "Great! I went hiking and it was refreshing."
-- **App feedback**:
-  - Correctness: 98/100 (Excellent grammar and detail)
-  - Appropriateness: 96/100 (Excellent, engaging response)
-    - Clarity: 100/100
-    - Politeness: 88/100
-    - Tone: 100/100
-
-**Practice Lesson 2: Responding to inquiries (small talk)**
-- **Prompt**: "How have you been?" - someone that you haven't seen in a while asks you.
-- **User input**: "I've been doing well, thanks for asking. How about you?"
-- **App feedback**:
-  - Correctness: 98/100 (Excellent grammar and spelling)
-  - Appropriateness: 100/100 (Excellent, engaging response)
-    - Clarity: 100/100
-    - Politeness: 100/100
-    - Tone: 100/100
+```json
+{
+  "topic": "Socializing",
+  "scenario": "asking for a favor",
+  "learnerRole": "person",
+  "counterpartRole": "friend",
+  "prompts": ["Politely ask your friend to take you to the airport."],
+  "expectedResponses": [
+    {
+      "content": "I was hoping you could give me a lift to the airport.",
+      "style": ["polite", "courteous"]
+    },
+    {
+      "content": "Would you mind driving me to the airport tomorrow morning?",
+      "style": ["friendly", "considerate"]
+    }
+  ]
+}
+```

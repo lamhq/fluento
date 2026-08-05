@@ -2,12 +2,12 @@ import serverlessExpress from '@codegenie/serverless-express';
 import type { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { RequestListener } from 'http';
 
-import { getNestApp } from './app';
+import { createNestApp } from './app';
 
 let server: APIGatewayProxyHandler | undefined;
 
 async function bootstrap(): Promise<APIGatewayProxyHandler> {
-  const app = await getNestApp();
+  const app = await createNestApp();
   await app.init();
 
   const expressApp = app.getHttpAdapter().getInstance() as RequestListener;

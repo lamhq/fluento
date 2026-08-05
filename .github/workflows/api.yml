@@ -36,6 +36,9 @@ jobs:
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
 
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
+
       - name: Lint code
         run: pnpm lint apps/api
 
@@ -48,6 +51,9 @@ jobs:
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
+
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
 
       - name: Check types
         run: pnpm -F api run type-check
@@ -62,18 +68,27 @@ jobs:
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
 
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
+
       - name: Run unit tests
         run: pnpm -F api run test
 
   integration-test:
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
+    env:
+      # from `apps/api/.env`
+      DATABASE_URL: 'mongodb://admin:123123@localhost:27017/test?authSource=admin&replicaSet=rs0'
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
+
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
 
       - name: Run integration tests
         run: pnpm -F api run test:e2e
@@ -87,6 +102,9 @@ jobs:
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
+
+      - name: Generate Prisma client
+        run: pnpm -F api run prisma:generate
 
       - name: Build API
         run: pnpm -F api build

@@ -1,4 +1,23 @@
 services:
+  db-service:
+    image: mongo:4.2
+    command: ['--replSet', 'rs0', '--bind_ip_all']
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123123
+      MONGO_INITDB_DATABASE: test
+    volumes:
+      - db-data:/data/db
+      - ./apps/db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD', 'mongo', '--eval', "db.adminCommand('ping').ok", '--quiet']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
   api-service:
     build:
       context: ./apps/api
@@ -8,12 +27,16 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5600
+      DATABASE_URL: mongodb://admin:123123@db-service:27017/test?authSource=admin&replicaSet=rs0
     healthcheck:
       test: ['CMD', 'node', 'dist/healthcheck.mjs']
       interval: 5s
       timeout: 1s
       retries: 10
       start_period: 3s
+    depends_on:
+      db-service:
+        condition: service_healthy
 
   api-gateway:
     build:
@@ -77,3 +100,4 @@ services:
 
 volumes:
   auth_data:
+  db-data:
