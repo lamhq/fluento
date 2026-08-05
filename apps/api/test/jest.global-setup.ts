@@ -32,20 +32,21 @@ async function startMockServer() {
     throw new Error('DATABASE_URL environment variable is not set');
   }
   const dbContainer = environment.getContainer('db-service-1');
-  await dbContainer.exec([
+  const { output, stdout, stderr, exitCode } = await dbContainer.exec([
     'mongo',
     process.env.DATABASE_URL,
-    '/docker-entrypoint-initdb.d/init-replica-set.js',
+    '/docker-entrypoint-initdb.d/init-rs.js',
   ]);
-  // await new Promise((resolve) => setTimeout(resolve, 5000)); // wait for 5 seconds to ensure the service is up
 
   // const { output, stdout, stderr, exitCode } = await dbContainer.exec([
-  // console.log(`Command output: ${output}`);
-  // console.log(`Command stdout: ${stdout}`);
-  // console.log(`Command stderr: ${stderr}`);
-  // console.log(`Command exit code: ${exitCode.toString()}`);
+  console.log(`Command output: ${output}`);
+  console.log(`Command stdout: ${stdout}`);
+  console.log(`Command stderr: ${stderr}`);
+  console.log(`Command exit code: ${exitCode.toString()}`);
 
   // const logs = await dbContainer.logs();
   // logs.on('data', (line: Buffer | string) => process.stdout.write(line));
   // logs.on('err', (line: Buffer | string) => process.stderr.write(line));
+
+  // await new Promise((resolve) => setTimeout(resolve, 5000)); // wait for 5 seconds to ensure the service is up
 }

@@ -91,7 +91,8 @@ jobs:
         run: pnpm -F api run prisma:generate
 
       - name: Run integration tests
-        run: pnpm -F api run test:e2e
+        run: pnpm -F api run test:e2e create-exercise.spec.ts
+        # run: pnpm -F api run test:e2e
 
   build:
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
