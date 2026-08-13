@@ -9,14 +9,20 @@ This document explains items in the `docs` directory, where all project document
 ```text
 docs/
 ├── documentation-structure.md
+├── project-overview.md
 ├── requirements/
-│   ├── project-overview.md
-│   ├── comm-module.md
-│   ├── articulation-module.md
-│   ├── speaking.md
-│   └── vocabulary-module.md
-└── implementation/
-    └── api/
+│   ├── communication/
+│   │   ├── practice-communication.md
+│   │   └── bulk-add-exercises.md
+│   ├── articulation/
+│   ├── speaking/
+│   │   └── practice-speaking.md
+│   └── vocabulary/
+└── design/
+    └── web/
+        ├── communication/
+        │   └── practice-communication.md
+
 ```
 
 ### `docs/requirements/`
