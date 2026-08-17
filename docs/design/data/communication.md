@@ -1,77 +1,300 @@
-# Communication Module Data Model
+# Communication Module Database Design
 
-## Exercise model
+## Introduction
 
-An **Exercise** includes:
+This document describes the database design for the Communication module.
 
-### Topics
+## Logical Model
 
-Broad thematic categories that group exercises.
+```mermaid
+erDiagram
+    CommunicationExercise ||--o{ LearnerExercisePractice : has
+    CommunicationExercise ||--o{ ExercisePrompt : contains
+    CommunicationExercise ||--o{ ExpectedResponse : has
+    CommunicationExercise }o--o{ Topic : categorized_by
+    CommunicationExercise ||--o{ ResponseSubmission : receives
 
-Examples: "Restaurant", "Job Interview", "School", "Socializing".
+    ResponseSubmission ||--|| EvaluationFeedback : produces
+    EvaluationFeedback ||--|| CorrectnessEvaluation : includes
+    EvaluationFeedback ||--|| AppropriatenessEvaluation : includes
 
-### Scenario
+    Topic {
+        string id
+        string name
+        datetime createdAt
+    }
 
-The specific real-world situation or setting where the conversation happens.
+    CommunicationExercise {
+        string id
+        string scenario
+        string learnerRole
+        string counterpartRole
+        datetime createdAt
+        datetime updatedAt
+    }
 
-The scenario must fit this template: "You're a/an [learner role] [scenario]".
+    ExercisePrompt {
+        string id
+        string exerciseId
+        string content
+        string kind
+    }
 
-Examples:
+    ExpectedResponse {
+        string id
+        string exerciseId
+        string content
+        string[] style
+    }
 
-- ordering food in a restaurant
-- introducing yourself in a job interview
-- asking a teacher for help with homework
-- asking a friend for a favor to take you to the airport
+    LearnerExercisePractice {
+        string id
+        string learnerId
+        string exerciseId
+        int practiceCount
+        datetime lastPracticeAt
+    }
 
-### Learner Role
+    ResponseSubmission {
+        string id
+        string learnerId
+        string exerciseId
+        string response
+        datetime createdAt
+    }
 
-Defines who the learner is in the scenario.
+    EvaluationFeedback {
+        string id
+        string responseSubmissionId
+        string feedback
+        int score
+        datetime createdAt
+    }
 
-Examples: customer, interviewee, student, person.
+    CorrectnessEvaluation {
+        string id
+        string feedbackId
+        int score
+        string feedback
+        string[] fixes
+        string correctedSentence
+    }
 
-### Counterpart Role
+    AppropriatenessEvaluation {
+        string id
+        string feedbackId
+        int score
+        string feedback
+        int clarityScore
+        string clarityFeedback
+        int politenessScore
+        string politenessFeedback
+        int toneScore
+        string toneFeedback
+    }
+```
 
-Who the learner interacts with.
+### CommunicationExercise
 
-Examples: waiter, interviewer, teacher, friend.
+Represents a reusable scenario-based communication exercise for practice.
 
-### Prompts
+**Attributes:**
 
-Initial statements that start the conversation.
+| Attribute Name  | Type     | Description                                                 |
+| --------------- | -------- | ----------------------------------------------------------- |
+| id              | String   | Unique exercise identifier.                                 |
+| scenario        | String   | Real-world situation the learner is expected to respond to. |
+| learnerRole     | String   | Role played by the learner in the scenario.                 |
+| counterpartRole | String   | Role played by the other participant in the scenario.       |
+| createdAt       | DateTime | When the exercise was created.                              |
+| updatedAt       | DateTime | When the exercise was last updated.                         |
 
-Can be:
+**Relationships:**
 
-- A speech that starts the conversation from the counterpart.
-- A prompt that guides the response.
+| Related Entity          | Type         | Cardinality | Description                                                         |
+| ----------------------- | ------------ | ----------- | ------------------------------------------------------------------- |
+| ExercisePrompt          | One-to-Many  | 1..*        | An exercise contains one or more prompts or counterpart utterances. |
+| ExpectedResponse        | One-to-Many  | 1..*        | An exercise defines one or more valid target responses.             |
+| Topic                   | Many-to-Many | _.._        | An exercise can belong to one or more topic categories.             |
+| LearnerExercisePractice | One-to-Many  | 1..*        | The exercise can be practiced by many learners over time.           |
+| ResponseSubmission      | One-to-Many  | 1..*        | Multiple learner attempts may be stored for the same exercise.      |
 
-Examples:
+### Topic
 
-- Say that you would like to order a meal (prompt).
-- "Can you tell me a little about yourself?" (speech)
-- Ask the teacher guidance for solving a math problem (prompt).
-- Politely ask your friend to take you to the airport (prompt, cannot be a speech since the learner starts the conversation).
+Represents a thematic category used for grouping and filtering exercises.
 
-### Expected Responses
+**Attributes:**
 
-The ideal or expected responses to the prompts.
+| Attribute Name | Type     | Description                                              |
+| -------------- | -------- | -------------------------------------------------------- |
+| id             | String   | Unique topic identifier.                                 |
+| name           | String   | Topic label, such as Restaurant, School, or Socializing. |
+| createdAt      | DateTime | Timestamp when the topic was created.                    |
 
-Each expected response includes:
+**Relationships:**
 
-- **Content**: the sentence in speaking form.
-- **Style**: the manner of delivery — tone, politeness, formality, or cultural appropriateness.
+| Related Entity        | Type         | Cardinality | Description                                                                              |
+| --------------------- | ------------ | ----------- | ---------------------------------------------------------------------------------------- |
+| CommunicationExercise | Many-to-Many | _.._        | A topic can be associated with many exercises, and an exercise can have multiple topics. |
 
-Examples:
+### ExercisePrompt
 
-- "I would like to order the grilled salmon, please." (polite, simple)
-- "Hello, I'm Beck. I have a degree in computer science and have been working in software development for the past five years." (professional, concise)
-- "Could you please help me with this math problem? I'm having trouble understanding it." (polite, respectful)
-- "I was hoping you could give me a lift to the airport" (polite, courteous)
+Stores the prompt text or counterpart utterance that initiates the exercise.
 
-### Example 1: Ordering food in a restaurant
+**Attributes:**
+
+| Attribute Name | Type   | Description                                                              |
+| -------------- | ------ | ------------------------------------------------------------------------ |
+| id             | String | Unique prompt identifier.                                                |
+| exerciseId     | String | Owning exercise.                                                         |
+| content        | String | Prompt text shown to the learner.                                        |
+| kind           | String | Indicates whether the content is a learner prompt or counterpart speech. |
+
+**Relationships:**
+
+| Related Entity        | Type        | Cardinality | Description                          |
+| --------------------- | ----------- | ----------- | ------------------------------------ |
+| CommunicationExercise | Many-to-One | *..1        | Each prompt belongs to one exercise. |
+
+### ExpectedResponse
+
+Represents an ideal or acceptable response to a prompt.
+
+**Attributes:**
+
+| Attribute Name | Type     | Description                                                       |
+| -------------- | -------- | ----------------------------------------------------------------- |
+| id             | String   | Unique expected-response identifier.                              |
+| exerciseId     | String   | Owning exercise.                                                  |
+| content        | String   | Model answer or reference response.                               |
+| style          | String[] | Tone or delivery traits, such as polite, simple, or professional. |
+
+**Relationships:**
+
+| Related Entity        | Type        | Cardinality | Description                                     |
+| --------------------- | ----------- | ----------- | ----------------------------------------------- |
+| CommunicationExercise | Many-to-One | *..1        | Each expected response belongs to one exercise. |
+
+### LearnerExercisePractice
+
+Tracks per-learner exercise practice state and repetition behavior.
+
+**Attributes:**
+
+| Attribute Name | Type     | Description                                                    |
+| -------------- | -------- | -------------------------------------------------------------- |
+| id             | String   | Unique learner-practice record identifier.                     |
+| learnerId      | String   | Identifier of the learner associated with the practice record. |
+| exerciseId     | String   | Exercise associated with the practice record.                  |
+| practiceCount  | Integer  | Number of times the learner has practiced the exercise.        |
+| lastPracticeAt | DateTime | Timestamp of the learner’s most recent practice attempt.       |
+
+**Relationships:**
+
+| Related Entity        | Type        | Cardinality | Description                                   |
+| --------------------- | ----------- | ----------- | --------------------------------------------- |
+| CommunicationExercise | Many-to-One | *..1        | Each practice record belongs to one exercise. |
+
+### ResponseSubmission
+
+Stores a learner’s submitted response and the associated exercise context.
+
+**Attributes:**
+
+| Attribute Name | Type     | Description                                           |
+| -------------- | -------- | ----------------------------------------------------- |
+| id             | String   | Unique submission identifier.                         |
+| learnerId      | String   | Identifier of the learner who submitted the response. |
+| exerciseId     | String   | Exercise to which the response belongs.               |
+| response       | String   | Learner’s trimmed response text before evaluation.    |
+| createdAt      | DateTime | Timestamp of submission.                              |
+
+**Relationships:**
+
+| Related Entity        | Type        | Cardinality | Description                                   |
+| --------------------- | ----------- | ----------- | --------------------------------------------- |
+| CommunicationExercise | Many-to-One | *..1        | Each submission belongs to one exercise.      |
+| EvaluationFeedback    | One-to-One  | 1..1        | Each submission receives a single evaluation. |
+
+### EvaluationFeedback
+
+Represents the AI-generated feedback from evaluating a learner response.
+
+**Attributes:**
+
+| Attribute Name       | Type     | Description                             |
+| -------------------- | -------- | --------------------------------------- |
+| id                   | String   | Unique evaluation identifier.           |
+| responseSubmissionId | String   | Related learner submission.             |
+| feedback             | String   | Summary of the learner’s result.        |
+| score                | Integer  | Overall evaluation score from 0 to 100. |
+| createdAt            | DateTime | Timestamp when evaluation was created.  |
+
+**Relationships:**
+
+| Related Entity            | Type       | Cardinality | Description                                             |
+| ------------------------- | ---------- | ----------- | ------------------------------------------------------- |
+| ResponseSubmission        | One-to-One | 1..1        | Each response has exactly one evaluation record.        |
+| CorrectnessEvaluation     | One-to-One | 1..1        | Correctness details are attached to the evaluation.     |
+| AppropriatenessEvaluation | One-to-One | 1..1        | Appropriateness details are attached to the evaluation. |
+
+### CorrectnessEvaluation
+
+Captures grammar, spelling, and correction feedback for the submitted response.
+
+**Attributes:**
+
+| Attribute Name    | Type     | Description                                       |
+| ----------------- | -------- | ------------------------------------------------- |
+| id                | String   | Unique correctness record identifier.             |
+| feedbackId        | String   | Owning evaluation result.                         |
+| score             | Integer  | Score between 0 and 100.                          |
+| feedback          | String   | Feedback about correctness, grammar, or spelling. |
+| fixes             | String[] | Suggested grammar or spelling corrections.        |
+| correctedSentence | String   | Cleaned-up corrected version of the response.     |
+
+**Relationships:**
+
+| Related Entity     | Type        | Cardinality | Description                                        |
+| ------------------ | ----------- | ----------- | -------------------------------------------------- |
+| EvaluationFeedback | Many-to-One | *..1        | Each correctness record belongs to one evaluation. |
+
+### AppropriatenessEvaluation
+
+Measures relevance and quality of the response in the conversation context.
+
+**Attributes:**
+
+| Attribute Name     | Type    | Description                               |
+| ------------------ | ------- | ----------------------------------------- |
+| id                 | String  | Unique appropriateness record identifier. |
+| feedbackId         | String  | Owning evaluation result.                 |
+| score              | Integer | Overall appropriateness score.            |
+| feedback           | String  | Overall evaluation message.               |
+| clarityScore       | Integer | Score for clarity.                        |
+| clarityFeedback    | String  | Explanation of clarity assessment.        |
+| politenessScore    | Integer | Score for politeness.                     |
+| politenessFeedback | String  | Explanation of politeness assessment.     |
+| toneScore          | Integer | Score for tone appropriateness.           |
+| toneFeedback       | String  | Explanation of tone assessment.           |
+
+**Relationships:**
+
+| Related Entity     | Type        | Cardinality | Description                                            |
+| ------------------ | ----------- | ----------- | ------------------------------------------------------ |
+| EvaluationFeedback | Many-to-One | *..1        | Each appropriateness record belongs to one evaluation. |
+
+## Physical Model
+
+### Collection: `communication_exercises`
+
+This collection stores reusable communication exercises.
 
 ```json
 {
-  "topic": "Restaurant",
+  "_id": "64f5c1d2a9b4e2f1d3c4b5a6",
+  "id": "ex_123",
+  "topics": ["Restaurant", "Ordering"],
   "scenario": "ordering food in a restaurant",
   "learnerRole": "customer",
   "counterpartRole": "waiter",
@@ -85,99 +308,200 @@ Examples:
       "content": "Could I have the chicken curry with rice?",
       "style": ["polite", "clear"]
     }
-  ]
+  ],
+  "createdAt": "2026-08-13T10:00:00Z",
+  "updatedAt": "2026-08-13T10:00:00Z"
 }
 ```
 
-### Example 2: Introducing yourself
+**Key design decisions:**
+
+- `topics` is stored as an array to support `topics` filtering without a join.
+- `prompts` is a string array so the client can render all exercise instructions in order.
+- `expectedResponses` is embedded as an array of objects because the response payload is always shown with the exercise.
+
+**Indexes:**
+
+| Index          | Purpose                                              |
+| -------------- | ---------------------------------------------------- |
+| `topics_index` | Filter exercises by topic values in `GET /exercises` |
+
+**Constraints:**
+
+- `expectedResponses.style` should be normalized to lowercase values such as `polite`, `clear`, `simple`, and `formal`.
+
+### Collection: `response_submissions`
+
+This collection stores each learner attempt and the resulting evaluation.
 
 ```json
 {
-  "topic": "Job Interview",
-  "scenario": "introducing yourself",
-  "learnerRole": "interviewee",
-  "counterpartRole": "interviewer",
-  "prompts": ["\"Can you tell me a little about yourself?\""],
-  "expectedResponses": [
-    {
-      "content": "Hello, I'm Beck. I have a degree in computer science and have been working in software development for the past five years.",
-      "style": ["professional", "concise"]
+  "_id": "64f5d8a6c2ed4a7f82024b91",
+  "learnerId": "lear_42",
+  "exerciseId": "ex_123",
+  "response": "Lets meet tomorrow to discuss the project.",
+  "score": 95,
+  "feedback": "Excellent work. Your response is clear, polite, and appropriate for the scenario.",
+  "createdAt": "2026-08-13T11:05:00Z",
+  "correctness": {
+    "score": 95,
+    "feedback": "Your response is grammatically correct, with one minor contraction improvement.",
+    "correctedSentence": "Let's meet tomorrow to discuss the project.",
+    "fixes": ["Use the contraction form: 'Let's' instead of 'Lets'."]
+  },
+  "appropriateness": {
+    "score": 95,
+    "feedback": "The response is relevant to the prompt and matches the tone expected in the scenario.",
+    "clarity": {
+      "score": 96,
+      "feedback": "The message is easy to understand and free of ambiguity."
     },
-    {
-      "content": "My name is Sarah. I recently graduated with a degree in marketing and completed an internship where I focused on digital campaigns.",
-      "style": ["professional", "confident"]
+    "politeness": {
+      "score": 97,
+      "feedback": "The response shows courtesy and respects the other person."
+    },
+    "tone": {
+      "score": 94,
+      "feedback": "The tone is friendly and appropriate for a conversation in this context."
     }
-  ]
+  }
 }
 ```
 
-### Example 3: Asking for explanation
+**Indexes:**
+
+| Index                        | Purpose                                             |
+| ---------------------------- | --------------------------------------------------- |
+| `learnerId_index`            | Fetch learner history or recent attempts            |
+| `learnerId_exerciseId_index` | Find the learner's practice count and retry history |
+| `createdAt_index`            | Sort by most recent submission                      |
+
+**Constraints:**
+
+- The `response` field should be trimmed before persistence and validation should reject empty strings.
+
+### Collection: `learner_exercise_practices`
+
+This collection records each learner’s practice statistics, enabling sorting the exercises by last practice date or by practice count.
 
 ```json
 {
-  "topic": "School",
-  "scenario": "asking for explanation",
-  "learnerRole": "student",
-  "counterpartRole": "teacher",
-  "prompts": ["Ask the teacher guidance for solving a math problem."],
-  "expectedResponses": [
-    {
-      "content": "Could you please help me with this math problem? I'm having trouble understanding it.",
-      "style": ["polite", "respectful"]
-    },
-    {
-      "content": "I'm struggling with this equation. Could you explain how to solve it?",
-      "style": ["polite", "curious"]
-    }
-  ]
+  "_id": "64f5d8a6c2ed4a7f82024b92",
+  "learnerId": "lear_42",
+  "exerciseId": "ex_123",
+  "practiceCount": 2,
+  "lastPracticeAt": "2026-08-13T11:15:00Z"
 }
 ```
 
-### Example 4: Asking for a favor
+**Indexes:**
 
-```json
-{
-  "topic": "Socializing",
-  "scenario": "asking for a favor",
-  "learnerRole": "person",
-  "counterpartRole": "friend",
-  "prompts": ["Politely ask your friend to take you to the airport."],
-  "expectedResponses": [
-    {
-      "content": "I was hoping you could give me a lift to the airport.",
-      "style": ["polite", "courteous"]
-    },
-    {
-      "content": "Would you mind driving me to the airport tomorrow morning?",
-      "style": ["friendly", "considerate"]
-    }
-  ]
-}
+| Index                        | Purpose                                              |
+| ---------------------------- | ---------------------------------------------------- |
+| `learnerId_exerciseId_index` | Ensure a single practice record per learner/exercise |
+
+**Constraints:**
+
+- Each `learner_exercise_practices` record must have a unique `(learnerId, exerciseId)` pair. The same exercise may have different `practiceCount` values for different learners.
+- `practiceCount` is incremented atomically per learner per exercise after each successful submission.
+- `lastPracticeAt` is updated to the timestamp of the most recent successful practice.
+
+## Seed sample data
+
+```javascript
+// Insert sample exercises
+db.getCollection('communication_exercises').insertMany([
+  {
+    id: 'ex_101',
+    scenario: 'ordering coffee',
+    learnerRole: 'customer',
+    counterpartRole: 'barista',
+    prompts: ['Order a coffee politely.'],
+    createdAt: new Date('2026-08-13T10:00:00Z'),
+    updatedAt: new Date('2026-08-13T10:00:00Z'),
+  },
+  {
+    id: 'ex_102',
+    scenario: 'booking a hotel room',
+    learnerRole: 'guest',
+    counterpartRole: 'receptionist',
+    prompts: ['Ask for a room reservation.'],
+    createdAt: new Date('2026-08-13T10:00:00Z'),
+    updatedAt: new Date('2026-08-13T10:00:00Z'),
+  },
+]);
+
+// Insert sample learner practice counts
+db.getCollection('learner_exercise_practices').insertMany([
+  {
+    learnerId: 'lear_1',
+    exerciseId: 'ex_101',
+    practiceCount: 2,
+    lastPracticeAt: new Date('2026-08-13T11:10:00Z'),
+  },
+  {
+    learnerId: 'lear_1',
+    exerciseId: 'ex_102',
+    practiceCount: 0,
+    lastPracticeAt: null,
+  },
+  {
+    learnerId: 'lear_2',
+    exerciseId: 'ex_101',
+    practiceCount: 1,
+    lastPracticeAt: new Date('2026-08-13T10:45:00Z'),
+  },
+]);
 ```
 
-## Feedback model
+## Get exercises for practice
 
-Feedback includes:
+Retrieve exercises ordered by recency of practice, favors unattempted exercises first:
 
-- **Feedback**: overall feedback message
-- **Correctness**: check spelling & grammar of learner's response
-  - **Score** (x/100)
-  - **Feedback**: correctness feedback
-  - **Grammar/spelling fixes**
-  - **Corrected sentence**
-- **Appropriateness**: check response is relevant with the prompt
-  - **Score** (x/100): `0` if the response is irrelevant with the prompt, otherwise it's the average of clarity, politeness, and tone scores.
-  - **Clarity**: Is the response easy to understand and free of ambiguity?
-    - **Score** (x/100)
-    - **Feedback**
-  - **Politeness**: Does it show courtesy or acknowledge the other person?
-    - **Score** (x/100)
-    - **Feedback**
-  - **Tone**: Does the emotional tone fit the situation (friendly, professional, humorous)?
-    - **Score** (x/100)
-    - **Feedback**
-- **Alternatives**: alternative responses that are also can be used in the same scenario.
+```javascript
+db.getCollection('communication_exercises').aggregate([
+  {
+    $lookup: {
+      from: 'learner_exercise_practices',
+      let: { exId: '$id' },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ['$exerciseId', '$$exId'] },
+                { $eq: ['$learnerId', 'lear_1'] },
+              ],
+            },
+          },
+        },
+        { $project: { practiceCount: 1, lastPracticeAt: 1 } },
+      ],
+      as: 'practiceData',
+    },
+  },
+  {
+    $addFields: {
+      practiceCount: {
+        $ifNull: [{ $arrayElemAt: ['$practiceData.practiceCount', 0] }, 0],
+      },
+      lastPracticeAt: {
+        $ifNull: [{ $arrayElemAt: ['$practiceData.lastPracticeAt', 0] }, null],
+      },
+    },
+  },
+  {
+    $sort: {
+      lastPracticeAt: 1,
+    },
+  },
+]);
+```
 
-**Considerations**:
+## Changelog
 
-- Should **Engagement** be included as a criterion for appropriateness?
+| Version | Date       | Changes                                                                                                                                                                                                         |
+| ------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0     | 2026-08-14 | Initial communication data model based on the requirement and API specifications for exercise retrieval, practice repetition logic, and response evaluation.                                                    |
+| 1.1     | 2026-08-14 | Removed the Learner entity, removed prompt ordering and practice timestamps, renamed response fields, removed duplicated alternatives from evaluation feedback, and added overall score to evaluation feedback. |
+| 1.2     | 2026-08-14 | Added the MongoDB physical model, collection-level schema examples, index strategy, and integrity rules aligned with the `GET /exercises` and `POST /exercises/{exerciseId}/responses` APIs.                    |

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document explains items in the `docs` directory, where all project documentation is stored.
+This document describes the structure of the `docs` directory, which contains all documentation for the project.
 
 ## Folder Structure
 
@@ -11,34 +11,38 @@ docs/
 ├── documentation-structure.md
 ├── project-overview.md
 ├── requirements/
-│   ├── communication/
-│   │   ├── practice-communication.md
-│   │   └── bulk-add-exercises.md
+│   └── communication/
+│       └── practice-communication.md
+├── design/
+│   ├── api/
+│   │   └── communication/
+│   │       ├── get-exercises.md
+│   │       └── submit-response.md
+│   ├── data/
+│   │   └── communication.md
+│   └── web/
+│       └── communication/
+│           └── practice-communication.md
+├── implementation/
+│   └── api/
+│       └── prisma.md
+├── ideas/
 │   ├── articulation/
-│   ├── speaking/
-│   │   └── practice-speaking.md
-│   └── vocabulary/
-└── design/
-    └── web/
-        ├── communication/
-        │   └── practice-communication.md
-
+│   │   ├── par-var.md
+│   │   ├── sen-con.md
+│   │   └── sen-var.md
+│   ├── speaking.md
+│   └── vocabulary.md
 ```
 
-### `docs/requirements/`
+- `project-overview.md`: Project Overview Document, with high-level product context, vision, and goals.
+- `requirements/`: Feature Specification Documents, organized by module. Each document defines a feature in detail.
+- `design/api/`: API Specification Documents, organized by module. Each document describes an API.
+- `design/web/`: UI Specification Documents, organized by module. Each document describes a screen.
+- `design/data/`: Data Model Documents. Each document describes the data model of a module.
+- `implementation/`: Reserved for future implementation details and technical documentation.
+- `ideas/`: Brainstorming notes and exploratory concepts.
 
-Contains product requirements, feature definitions, and user-facing module behavior.
+## Available Modules
 
-- `project-overview.md`: High-level overview of the Fluento product. Includes goals, audience, scope, and risks.
-
-- `comm-module.md`: Describes the communication practice module, including the communication practice flow, exercise structure, feedback model.
-
-- `articulation-module.md`: Describes the articulation practice module, including sentence construction, sentence variation, paragraph variation, feedback criteria.
-
-- `speaking.md`: Describes the speaking practice module, including shadowing-based pronunciation practice, audio playback, recording, and pronunciation feedback.
-
-- `vocabulary-module.md`: Describes the vocabulary practice module, including Sentence Builder exercises, Just One Word, Flashcards, vocabulary data structure.
-
-### `docs/implementation/`
-
-Contains documents that capture technical guidance and coding patterns, recipes.
+- **communication**: managing communication exercises, including retrieving exercises and submitting responses.

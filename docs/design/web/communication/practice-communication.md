@@ -99,15 +99,12 @@ After submission:
   - The response must not be empty after trimming whitespace.
   - The response should be submitted as plain text.
   - Maximum length is 150 characters.
-- **Exercise selection**:
-  - Saved exercise IDs are kept for 24 hours.
-  - Exercise IDs older than 24 hours are removed automatically.
 
 ## Dependencies & Integration
 
 - **Get exercises API**:
   - return a list of exercises.
-  - allow specifying sort order, including practiced count order.
+  - allow specifying sort order, including last practice order.
   - allow specifying a limit and offset for pagination.
 - **Submit response API**:
   - accept a response for evaluation.
@@ -151,5 +148,4 @@ After submission:
 ## Analytics & Tracking
 
 - Track screen view when the practice communication screen loads.
-- Track exercise selection events, including exercise ID and source of selection.
 - Track response submission success and failure events.

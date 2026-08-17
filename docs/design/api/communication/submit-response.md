@@ -45,8 +45,9 @@ Submit a learner's written response in an exercise for evaluation and return act
 {
   "id": "resp_456",
   "exerciseId": "ex_123",
-  "originalResponse": "Lets meet tomorrow to discuss the project.",
+  "response": "Lets meet tomorrow to discuss the project.",
   "feedback": "Excellent work. Your response is clear, polite, and appropriate for the scenario.",
+  "score": 95,
   "correctness": {
     "score": 95,
     "feedback": "Your response is grammatically correct, with one minor contraction improvement.",

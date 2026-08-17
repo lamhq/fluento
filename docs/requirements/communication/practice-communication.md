@@ -18,7 +18,6 @@
 - Let learners type and submit a response.
 - Evaluate the response and show feedback.
 - Support retry and next-exercise flow.
-- Avoid repeated exercises for 24 hours.
 
 ### Exclusions
 
@@ -30,37 +29,34 @@
 
 - Learner account for personalized exercise tracking.
 - Feedback service (using AI) to score learner responses.
-- Technology for synchronizing practiced exercises between client apps.
 
 ## User Flow
 
 1. The learner opens the Communication section from the app menu.
-2. The app loads the Practice Communication screen and fetches the least-practiced available exercises.
+2. The app loads the Practice Communication screen and fetches an exercise to practice.
 3. The screen displays the selected scenario prompt, role context, and response input area.
 4. The learner types a response and submits it.
 5. The app sends the response to the backend for evaluation.
 6. The app displays feedback, including an overall score, suggested corrections, and example responses.
 7. The learner can either retry the same exercise or move to a new one.
 
-Note: practice count is per learner; the same exercise can be practiced by multiple learners with different counts.
-
 ```mermaid
 flowchart TD
-    A[Open Communication] --> B[Fetch least-practiced exercise]
+    A[Open Communication] --> B[Fetch exercise]
     B --> C[Display prompt and input]
     C --> D[Submit response]
     D --> E[Evaluate response]
     E --> F[Show feedback]
     F --> G{Learner action}
     G -->|Retry| H[Clear input and reset feedback]
-    G -->|Next| I[Fetch next least-practiced exercise]
+    G -->|Next| I[Fetch next exercise]
     I --> C
 ```
 
 ## Acceptance Criteria
 
 - The app shows the Practice Communication screen when selected.
-- The app fetches exercises in least-practiced order, one at a time.
+- The app fetches an exercise to practice, one at a time.
 - The prompt includes scenario context, counterpart text, and input area.
 - The app validates the learner response before sending it.
 - The app shows feedback with a score and actionable suggestions.
@@ -87,28 +83,19 @@ flowchart TD
 - The app keeps the response and shows an error message.
 - The learner can retry without losing typed text.
 
-### Duplicate exercise selection
-
-- If an exercise is already practiced, the app skips it.
-- The learner does not see it again until the TTL expires.
-
 ## Edge Cases
 
 - The learner submits only whitespace or very short text.
 - The learner double-taps submit; the app blocks duplicates.
 - Exercise data is missing required fields.
 - The learner leaves during evaluation and returns later.
-- The TTL expires after 24 hours; the exercise becomes eligible again.
 - The learner changes devices; recent state remains synced.
-- All returned exercises are already practiced; the app still selects the least-practiced one.
 
 ## Exercise Selection Logic
 
-The app tracks previously shown exercise IDs for the current learner within the same 24-hour period.
+For each exercise, the app tracks the last time it was practiced. The selection logic prioritizes exercises that have not been practiced recently.
 
-After fetching exercises, the app gets the first exercise that is not in the current learner's practiced set to avoid repeating the same exercise.
-
-If all fetched exercises are in the practiced set, the app picks the first one (accept repetition rather than showing nothing).
+The app fetches exercises from the backend API, which supports sorting by `lastPracticeAt` and filtering by topic.
 
 ## Getting Feedback
 

@@ -20,12 +20,12 @@ Retrieve a list of practice exercises available to a learner.
 
 ### Query Parameters
 
-| **Name** | **Type** | **Required** | **Description**                                                                                       |
-| -------- | -------- | ------------ | ----------------------------------------------------------------------------------------------------- |
-| sort     | string   | No           | Sort order for the result set. Supported values: `practicedCount`, `createdAt`. Default: `createdAt`. |
-| limit    | integer  | No           | Maximum number of exercises to return. Default: `20`.                                                 |
-| offset   | integer  | No           | Number of exercises to skip for pagination. Default: `0`.                                             |
-| topics   | string[] | No           | Optional filter by exercise topics, such as `Restaurant`, `School`, or `Socializing`.                 |
+| **Name** | **Type** | **Required** | **Description**                                                                                            |
+| -------- | -------- | ------------ | ---------------------------------------------------------------------------------------------------------- |
+| sort     | string   | No           | Sort order for the result set. Supported values: `lastPracticeAt`, `createdAt`. Default: `lastPracticeAt`. |
+| limit    | integer  | No           | Maximum number of exercises to return. Default: `20`.                                                      |
+| offset   | integer  | No           | Number of exercises to skip for pagination. Default: `0`.                                                  |
+| topics   | string[] | No           | Optional filter by exercise topics, such as `Restaurant`, `School`, or `Socializing`.                      |
 
 ### Response
 
@@ -35,7 +35,7 @@ Retrieve a list of practice exercises available to a learner.
 [
   {
     "id": "ex_123",
-    "practiceCount": 12,
+    "lastPracticeAt": "2026-08-13T09:30:00Z",
     "topics": ["Restaurant"],
     "scenario": "ordering food in a restaurant",
     "learnerRole": "customer",
@@ -79,7 +79,9 @@ Retrieve a list of practice exercises available to a learner.
 
 - **Exercise Retrieval:** Return a list of communication exercises that are available to the authenticated learner.
 - **Paging Support:** Support `limit` and `offset` to paginate results without returning the full exercise set at once.
-- **Sorting Support:** Support ordering exercises by `practicedCount` or `createdAt` as required by the practice screen.
+- **Sorting Support:** Support ordering exercises by:
+  - `lastPracticeAt`: the time the current learner practiced them
+  - `createdAt`: the time they were added
 - **Topic Filtering:** Allow filtering by one or more topic values when the client needs a narrower set of scenarios.
 - **Authentication Enforcement:** Only authenticated learners can access the exercise list.
 
@@ -95,4 +97,4 @@ Retrieve a list of practice exercises available to a learner.
 | **Date**   | **Version** | **Changes**                                                                                        |
 | ---------- | ----------- | -------------------------------------------------------------------------------------------------- |
 | 2026-08-13 | v1.0        | Initial release of the `GET /exercises` endpoint for communication practice scenarios.             |
-| 2026-08-13 | v1.1        | Added sorting support, including `practicedCount`, and pagination parameters `limit` and `offset`. |
+| 2026-08-13 | v1.1        | Added sorting support, including `lastPracticeAt`, and pagination parameters `limit` and `offset`. |
