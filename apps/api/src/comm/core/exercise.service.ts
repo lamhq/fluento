@@ -7,12 +7,20 @@ import {
   EXERCISE_REPOSITORY_PORT,
   type ExerciseRepositoryPort,
 } from './exercise-repository.port';
+import { LearnerExerciseEntity } from './learner-exercise.entity';
+import {
+  LEARNER_EXERCISE_REPOSITORY_PORT,
+  type LearnerExerciseQuery,
+  type LearnerExerciseRepositoryPort,
+} from './learner-exercise-repository.port';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @Inject(EXERCISE_REPOSITORY_PORT)
     private readonly repository: ExerciseRepositoryPort,
+    @Inject(LEARNER_EXERCISE_REPOSITORY_PORT)
+    private readonly learnerExerciseRepository: LearnerExerciseRepositoryPort,
   ) {}
 
   async create(data: CreateExerciseRequestDto): Promise<ExerciseEntity> {
@@ -21,6 +29,12 @@ export class ExerciseService {
 
   async findAll(): Promise<ExerciseEntity[]> {
     return this.repository.findAll();
+  }
+
+  async findPracticeExercises(
+    params: LearnerExerciseQuery,
+  ): Promise<LearnerExerciseEntity[]> {
+    return this.learnerExerciseRepository.findAll(params);
   }
 
   async findById(id: string): Promise<ExerciseEntity | null> {

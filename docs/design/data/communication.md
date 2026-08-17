@@ -286,7 +286,7 @@ Measures relevance and quality of the response in the conversation context.
 
 ## Physical Model
 
-### Collection: `communication_exercises`
+### Collection: `exercises`
 
 This collection stores reusable communication exercises.
 
@@ -410,44 +410,68 @@ This collection records each learner’s practice statistics, enabling sorting t
 
 ```javascript
 // Insert sample exercises
-db.getCollection('communication_exercises').insertMany([
+db.getCollection('exercises').deleteMany({});
+db.getCollection('exercises').insertMany([
   {
-    id: 'ex_101',
+    _id: ObjectId('6a8134985ed2456c91a10b4d'),
+    topics: ['Restaurant'],
     scenario: 'ordering coffee',
     learnerRole: 'customer',
     counterpartRole: 'barista',
     prompts: ['Order a coffee politely.'],
+    expectedResponses: [
+      {
+        content: 'I would like a cappuccino, please.',
+        style: ['polite', 'simple'],
+      },
+      {
+        content: 'Could I have a latte with almond milk?',
+        style: ['polite', 'clear'],
+      },
+    ],
     createdAt: new Date('2026-08-13T10:00:00Z'),
     updatedAt: new Date('2026-08-13T10:00:00Z'),
   },
   {
-    id: 'ex_102',
+    _id: ObjectId('6a8134985ed2456c91a10b4e'),
+    topics: ['Hotel'],
     scenario: 'booking a hotel room',
     learnerRole: 'guest',
     counterpartRole: 'receptionist',
     prompts: ['Ask for a room reservation.'],
+    expectedResponses: [
+      {
+        content: 'I would like to book a double room for two nights.',
+        style: ['polite', 'simple'],
+      },
+      {
+        content: 'Could you please reserve a single room for me?',
+        style: ['polite', 'clear'],
+      },
+    ],
     createdAt: new Date('2026-08-13T10:00:00Z'),
     updatedAt: new Date('2026-08-13T10:00:00Z'),
   },
 ]);
 
 // Insert sample learner practice counts
+db.getCollection('learner_exercise_practices').deleteMany({});
 db.getCollection('learner_exercise_practices').insertMany([
   {
     learnerId: 'lear_1',
-    exerciseId: 'ex_101',
+    exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
     practiceCount: 2,
     lastPracticeAt: new Date('2026-08-13T11:10:00Z'),
   },
   {
     learnerId: 'lear_1',
-    exerciseId: 'ex_102',
+    exerciseId: ObjectId('6a8134985ed2456c91a10b4e'),
     practiceCount: 0,
     lastPracticeAt: null,
   },
   {
     learnerId: 'lear_2',
-    exerciseId: 'ex_101',
+    exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
     practiceCount: 1,
     lastPracticeAt: new Date('2026-08-13T10:45:00Z'),
   },
@@ -459,11 +483,11 @@ db.getCollection('learner_exercise_practices').insertMany([
 Retrieve exercises ordered by recency of practice, favors unattempted exercises first:
 
 ```javascript
-db.getCollection('communication_exercises').aggregate([
+db.getCollection('exercises').aggregate([
   {
     $lookup: {
       from: 'learner_exercise_practices',
-      let: { exId: '$id' },
+      let: { exId: '$_id' },
       pipeline: [
         {
           $match: {
