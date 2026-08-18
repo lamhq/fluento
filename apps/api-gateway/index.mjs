@@ -26,7 +26,7 @@ const publicRoute = process.env.PUBLIC_ROUTE
 // Initialize and start server
 async function startServer() {
   try {
-    // Healthcheck endpoint
+    // Register healthcheck endpoint
     app.get('/api-gtw-health', (req, res) => {
       res.status(200).json({ status: 'ok', message: 'API Gateway healthy' });
     });
@@ -55,8 +55,9 @@ async function startServer() {
         rateLimit: false,
         jwksUri: jwksUri,
       }),
-      algorithms: ['RS256'], // Keycloak typically uses RS256
       audience: clientId, // replace with your client_id if needed
+      algorithms: ['RS256'], // Keycloak typically uses RS256
+      requestProperty: 'user', // name of the property in the request object where the payload is set
     });
 
     // Exclude public routes
@@ -64,8 +65,17 @@ async function startServer() {
       checkJwt = checkJwt.unless({ path: [publicRoute, '/api-gtw-health'] });
     }
 
-    // Apply JWT validation middleware
+    // Register JWT validation middleware
     app.use(checkJwt);
+
+    // Forward claims as headers
+    app.use((req, res, next) => {
+      if (req.user) {
+        req.headers['x-user-id'] = req.user.sub; // user ID, see `aws_cognito_identity_provider`
+        req.headers['x-user-email'] = req.user.email; // user email
+      }
+      next();
+    });
 
     // Error handling middleware for JWT errors
     app.use(function (err, req, res, next) {

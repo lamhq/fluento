@@ -47,6 +47,11 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   integration_method     = "POST"
   payload_format_version = "2.0"
   integration_uri        = var.lambda_function_arn
+
+  request_parameters = {
+    "overwrite:header.x-user-id" = "$context.authorizer.claims.sub"
+    "overwrite:header.x-user-email"   = "$context.authorizer.claims.email"
+  }
 }
 
 # Default routes (catch-all for all HTTP methods and paths)

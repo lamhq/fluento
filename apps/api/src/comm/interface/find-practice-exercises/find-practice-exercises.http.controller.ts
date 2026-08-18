@@ -2,6 +2,7 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Headers,
   ParseArrayPipe,
   ParseIntPipe,
   Query,
@@ -17,12 +18,16 @@ export class FindPracticeExercisesHttpController {
 
   @Get('practice-exercises')
   async findPracticeExercises(
+    @Headers('x-user-id') userId: string,
+    @Headers('x-email') email: string,
     @Query('sort') sort?: 'lastPracticeAt' | 'createdAt',
     @Query('dir') dir?: 'asc' | 'desc',
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
   ): Promise<PracticeExerciseResponseDto[]> {
+    console.log(`User ID: ${userId}`);
+    console.log(`Email: ${email}`);
     const params: LearnerExerciseQuery = {
       learnerId: 'lear_1', // Replace with actual learner ID from authentication context
       sort,

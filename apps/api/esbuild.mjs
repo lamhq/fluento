@@ -11,12 +11,7 @@ await build({
   sourcemap: true,
   minify: true,
   legalComments: 'none',
-  external: [
-    '@nestjs/microservices',
-    '@nestjs/websockets/socket-module',
-    'class-validator',
-    'class-transformer',
-  ],
+  external: ['@nestjs/microservices', '@nestjs/websockets/socket-module'],
   plugins: [
     esbuildPluginDecorator({
       tsconfigPath: 'tsconfig.json',

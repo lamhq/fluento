@@ -5,10 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to API (Nest)",
+      "name": "Debug API",
       "request": "attach",
       "address": "localhost",
       "port": 9229,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+    {
+      "name": "Debug API Gateway",
+      "request": "attach",
+      "address": "localhost",
+      "port": 9230,
       "restart": true,
       "skipFiles": ["<node_internals>/**"],
       "type": "node"

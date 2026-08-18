@@ -55,8 +55,8 @@ resource "aws_cognito_identity_provider" "google_provider" {
 # Cognito User Pool Client
 # ============================================================================
 
-resource "aws_cognito_user_pool_client" "public_client" {
-  name                         = "${var.name}-public-client"
+resource "aws_cognito_user_pool_client" "web_client" {
+  name                         = "${var.name}-web-client"
   user_pool_id                 = aws_cognito_user_pool.user_pool.id
   supported_identity_providers = ["Google"]
   generate_secret              = false
