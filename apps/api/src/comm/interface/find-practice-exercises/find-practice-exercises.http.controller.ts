@@ -19,7 +19,7 @@ export class FindPracticeExercisesHttpController {
   @Get('practice-exercises')
   async findPracticeExercises(
     @Headers('x-user-id') userId: string,
-    @Headers('x-email') email: string,
+    @Headers('x-user-email') email: string,
     @Query('sort') sort?: 'lastPracticeAt' | 'createdAt',
     @Query('dir') dir?: 'asc' | 'desc',
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,

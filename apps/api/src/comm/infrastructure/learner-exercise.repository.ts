@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InputJsonValue } from '@prisma/client/runtime/library';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, PipelineStage, Types } from 'mongoose';
 
-import { DateEJSON, ObjectIdEJSON } from '../../common/types/mongo';
-import { PrismaService } from '../../prisma/prisma.service';
 import { LearnerExerciseEntity } from '../core/learner-exercise.entity';
 import type { LearnerExerciseQuery } from '../core/learner-exercise-repository.port';
 import { LearnerExerciseRepositoryPort } from '../core/learner-exercise-repository.port';
+import { Exercise } from './schemas/exercise.schema';
 
 interface RawLearnerExercise {
-  _id: ObjectIdEJSON;
+  _id: Types.ObjectId;
   topics: string[];
   scenario: string;
   learnerRole: string;
@@ -19,14 +19,16 @@ interface RawLearnerExercise {
     style: string[];
   }[];
   practiceCount: number;
-  lastPracticeAt: DateEJSON | null;
-  createdAt: DateEJSON;
-  updatedAt: DateEJSON;
+  lastPracticeAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 @Injectable()
 export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
+  ) {}
 
   async findAll(
     params: LearnerExerciseQuery,
@@ -40,7 +42,7 @@ export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort 
       topics,
     } = params;
 
-    const pipeline: InputJsonValue[] = [];
+    const pipeline: PipelineStage[] = [];
 
     if (topics && topics.length > 0) {
       pipeline.push({
@@ -93,9 +95,7 @@ export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort 
       pipeline.push({ $limit: limit });
     }
 
-    const results = await this.prisma.exercise.aggregateRaw({
-      pipeline,
-    });
+    const results = await this.exerciseModel.aggregate(pipeline).exec();
 
     if (!Array.isArray(results)) {
       return [];
@@ -110,18 +110,16 @@ export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort 
     }
 
     return new LearnerExerciseEntity({
-      id: item._id.$oid,
+      id: item._id.toString(),
       topics: item.topics,
       scenario: item.scenario,
       learnerRole: item.learnerRole,
       counterpartRole: item.counterpartRole,
       prompts: item.prompts,
       expectedResponses: item.expectedResponses,
-      createdAt: new Date(item.createdAt.$date),
-      updatedAt: new Date(item.updatedAt.$date),
-      lastPracticeAt: item.lastPracticeAt
-        ? new Date(item.lastPracticeAt.$date)
-        : null,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      lastPracticeAt: item.lastPracticeAt,
       practiceCount: item.practiceCount,
     });
   }

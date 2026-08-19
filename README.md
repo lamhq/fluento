@@ -100,12 +100,6 @@ Run an npm script in a specific project:
 pnpm -F web run build
 ```
 
-Run an executable in a specific project:
-
-```bash
-# run prisma to generate the client in the `api` project
-pnpm -F api exec prisma generate
-```
 
 ## Repository Structure
 
