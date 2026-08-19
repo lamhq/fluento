@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommModule } from './comm/comm.module';
 import { configFactory } from './config';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { configFactory } from './config';
       }),
       inject: [ConfigService],
     }),
+    UserModule,
     CommModule,
   ],
   controllers: [AppController],
