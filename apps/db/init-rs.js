@@ -10,16 +10,29 @@ print('Creating collections...');
 db = db.getSiblingDB('test');
 db.createCollection('exercises');
 db.createCollection('learner_exercise_practices');
+db.createCollection('users');
 
+print('Seeding data...');
 const exercisesCol = db.getCollection('exercises');
 const practicesCol = db.getCollection('learner_exercise_practices');
-
+const usersCol = db.getCollection('users');
 const exerciseId1 = ObjectId('65f000000000000000000001');
 const exerciseId2 = ObjectId('65f000000000000000000002');
+const userId = ObjectId('65f000000000000000000003');
 const now = new Date();
 
 exercisesCol.deleteMany({ _id: { $in: [exerciseId1, exerciseId2] } });
 practicesCol.deleteMany({ exerciseId: { $in: [exerciseId1, exerciseId2] } });
+usersCol.deleteMany({ email: 'test@example.com' });
+
+usersCol.insertOne({
+  _id: userId,
+  email: 'test@example.com',
+  name: 'Test User',
+  avatarUrl: null,
+  createdAt: now,
+  updatedAt: now,
+});
 
 exercisesCol.insertMany([
   {
@@ -52,7 +65,7 @@ exercisesCol.insertMany([
 
 practicesCol.insertMany([
   {
-    learnerId: 'lear_1',
+    learnerId: userId,
     exerciseId: exerciseId1,
     practiceCount: 3,
     lastPracticeAt: new Date('2026-08-10T09:00:00Z'),
@@ -60,7 +73,7 @@ practicesCol.insertMany([
     updatedAt: now,
   },
   {
-    learnerId: 'lear_1',
+    learnerId: userId,
     exerciseId: exerciseId2,
     practiceCount: 0,
     lastPracticeAt: null,

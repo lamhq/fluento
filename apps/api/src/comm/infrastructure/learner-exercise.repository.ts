@@ -60,7 +60,7 @@ export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort 
               $expr: {
                 $and: [
                   { $eq: ['$exerciseId', '$$exId'] },
-                  { $eq: ['$learnerId', learnerId] },
+                  { $eq: ['$learnerId', new Types.ObjectId(learnerId)] },
                 ],
               },
             },

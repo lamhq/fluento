@@ -3,7 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type ExerciseDocument = HydratedDocument<Exercise>;
 
-@Schema()
+@Schema({ _id: false })
 export class ExpectedResponse {
   @Prop({ required: true })
   content: string;
