@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { insertMany } from '../../utils/mongodb';
+import { deleteMany, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('get exercise', () => {
@@ -39,5 +39,11 @@ describe('get exercise', () => {
         counterpartRole: 'teacher',
       }),
     );
+  });
+
+  afterEach(async () => {
+    await deleteMany('exercises', {
+      topics: { $elemMatch: { $regex: cleanupMarker } },
+    });
   });
 });

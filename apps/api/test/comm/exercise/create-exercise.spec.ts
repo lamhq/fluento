@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { findById } from '../../utils/mongodb';
+import { deleteMany, findById } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('create exercise', () => {
@@ -56,5 +56,11 @@ describe('create exercise', () => {
         expectedResponses: dto.expectedResponses,
       }),
     );
+  });
+
+  afterEach(async () => {
+    await deleteMany('exercises', {
+      topics: { $elemMatch: { $regex: cleanupMarker } },
+    });
   });
 });

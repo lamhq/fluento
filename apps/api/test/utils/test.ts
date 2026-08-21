@@ -4,7 +4,7 @@ import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
 import { ValidateRequestBodyPipe } from '../../src/common/pipes/validate-request-body.pipe';
-import { connect, deleteMany, disconnect } from './mongodb';
+import { connect, deleteMany, disconnect, insert } from './mongodb';
 
 export function setUpApiTest() {
   // create a unique string for clean up db records after each test run
@@ -12,34 +12,40 @@ export function setUpApiTest() {
 
   // NestJS application instance for testing
   let app!: INestApplication<App>;
+  let user!: { email: string; id: string };
 
   beforeAll(async () => {
+    // connect to database
     await connect();
 
+    // create a test user in database
+    const email = `learner-${cleanupMarker}@example.com`;
+    const insertedUser = await insert('users', { email });
+    user = { email, id: insertedUser._id.toString() };
+
+    // create NestJS app
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication();
-
-    // auto validate request body
     app.useGlobalPipes(new ValidateRequestBodyPipe());
-
     await app.init();
   });
 
   afterAll(async () => {
+    // close NestJS application
     await app.close();
-    await disconnect();
-  });
 
-  afterEach(async () => {
-    await deleteMany('exercises', {
-      topics: { $elemMatch: { $regex: cleanupMarker } },
-    });
+    // clean up database
+    await deleteMany('users', { email: user.email });
+
+    // disconnect from database
+    await disconnect();
   });
 
   return {
     getApp: () => app,
+    getUser: () => user,
     cleanupMarker,
   };
 }

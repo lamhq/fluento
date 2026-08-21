@@ -1,19 +1,31 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommModule } from './comm/comm.module';
 import { configFactory } from './config';
-import { PrismaModule } from './prisma/prisma.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60,
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configFactory],
     }),
-    PrismaModule,
+    MongooseModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.getOrThrow<string>('database.url'),
+      }),
+      inject: [ConfigService],
+    }),
+    UserModule,
     CommModule,
   ],
   controllers: [AppController],

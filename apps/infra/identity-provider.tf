@@ -11,12 +11,12 @@ module "cognito" {
   pre_sign_up_fn_arn   = module.pre_signup.function_arn
   pre_sign_up_fn_name  = module.pre_signup.function_name
   callback_urls = [
-    "http://localhost:5601/auth/callback",
-    "https://${var.domain}/auth/callback"
+    "http://localhost:5601/auth/signed-in",
+    "https://${var.domain}/auth/signed-in"
   ]
   logout_urls = [
-    "http://localhost:5601/auth/signout",
-    "https://${var.domain}/auth/signout"
+    "http://localhost:5601/auth/signed-out",
+    "https://${var.domain}/auth/signed-out"
   ]
 }
 

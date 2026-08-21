@@ -18,7 +18,7 @@ module "api_service" {
   timeout  = 15
 
   environment_variables = {
-    DB_URI             = module.mongodb_cluster.connection_string
+    DATABASE_URL       = module.mongodb_cluster.connection_string
     AWS_S3_BUCKET      = module.app_storage.bucket_id
     AWS_CLOUDFRONT_URL = "https://${var.domain}"
     NO_COLOR           = "true"

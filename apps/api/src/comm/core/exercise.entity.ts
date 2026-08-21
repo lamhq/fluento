@@ -9,8 +9,8 @@ export class ExerciseEntity {
     content: string;
     style: string[];
   }[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   constructor(data?: Partial<ExerciseEntity>) {
     Object.assign(this, data);

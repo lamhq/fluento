@@ -18,12 +18,6 @@ Create a `.env` file in the `apps/api` directory and add any environment variabl
 PORT=5600
 ```
 
-Generate Prisma client:
-
-```bash
-pnpm run prisma:generate
-```
-
 ## Usage
 
 ### Start development server
