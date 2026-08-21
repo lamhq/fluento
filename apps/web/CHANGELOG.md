@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/lamhq/fluento/compare/web-v1.0.0...web-v1.1.0) (2026-08-21)
+
+
+### Features
+
+* **api:** implement CRUD api for communication exercise ([#8](https://github.com/lamhq/fluento/issues/8)) ([eeb54e7](https://github.com/lamhq/fluento/commit/eeb54e749b1cc28658addba2c83dedf475ed2f65))
+* set up base structure for web app ([#6](https://github.com/lamhq/fluento/issues/6)) ([cdde4df](https://github.com/lamhq/fluento/commit/cdde4df613847afccb51ae014202064b59720068))
+
 ## 1.0.0 (2026-07-25)
 
 
