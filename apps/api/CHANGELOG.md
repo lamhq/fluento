@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/lamhq/fluento/compare/api-v1.0.0...api-v1.1.0) (2026-08-21)
+
+
+### Features
+
+* **api:** implement CRUD api for communication exercise ([#8](https://github.com/lamhq/fluento/issues/8)) ([eeb54e7](https://github.com/lamhq/fluento/commit/eeb54e749b1cc28658addba2c83dedf475ed2f65))
+* implement API get practice exercises ([#11](https://github.com/lamhq/fluento/issues/11)) ([b7a542a](https://github.com/lamhq/fluento/commit/b7a542a668de542edcda4c0798f7749908a55d95))
+
 ## 1.0.0 (2026-07-25)
 
 
