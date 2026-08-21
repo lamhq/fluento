@@ -1,4 +1,4 @@
-import { LearnerExerciseEntity } from '../core/learner-exercise.entity';
+import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 
 export class PracticeExerciseResponseDto {
   id: string;
@@ -19,7 +19,7 @@ export class PracticeExerciseResponseDto {
   }
 
   static fromEntity(
-    entity: LearnerExerciseEntity,
+    entity: PracticeExerciseEntity,
   ): PracticeExerciseResponseDto {
     return new PracticeExerciseResponseDto({
       id: entity.id,

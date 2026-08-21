@@ -10,7 +10,7 @@ import {
 import type { UserEntity } from '../../../user/core/user.entity';
 import { User } from '../../../user/interface/user.decorator';
 import { ExerciseService } from '../../core/exercise.service';
-import { LearnerExerciseQuery } from '../../core/learner-exercise-repository.port';
+import { PracticeExerciseQuery } from '../../core/practice-exercise-repository.port';
 import { PracticeExerciseResponseDto } from '../practice-exercise-response.dto';
 
 @Controller('learners')
@@ -26,7 +26,7 @@ export class FindPracticeExercisesHttpController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
   ): Promise<PracticeExerciseResponseDto[]> {
-    const params: LearnerExerciseQuery = {
+    const params: PracticeExerciseQuery = {
       learnerId: user.id,
       sort,
       dir,

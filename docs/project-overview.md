@@ -1,14 +1,16 @@
 # Project Overview
 
-## The Problem
+## Introduction
 
-Many English learners struggle to achieve fluency despite having a solid understanding of grammar and vocabulary.
+Fluento is an app that helps users practice and improve their English skills.
 
-True communication requires the ability to think, speak, and write effectively in real-world situations, which traditional learning methods often fail to provide.
+It offers interactive exercises. Learners can submit responses and receive personalized feedback to strengthen skills and identify areas for improvement.
 
-## Purpose
+## Why Fluento?
 
-Fluento is an English practice app that helps learners improve their fluency in communication, articulation, and speaking through interactive exercises and real-world scenarios.
+Many English learners struggle with fluency despite knowing grammar and vocabulary.
+
+The challenge is turning knowledge into natural communication. Fluento solves this with realistic, practice-driven exercises that train the brain to apply language skills in everyday conversations.
 
 ## Target Audience
 

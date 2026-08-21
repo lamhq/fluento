@@ -1,10 +1,10 @@
 import { ExerciseEntity } from './exercise.entity';
 
-export class LearnerExerciseEntity extends ExerciseEntity {
+export class PracticeExerciseEntity extends ExerciseEntity {
   lastPracticeAt?: Date | null;
   practiceCount: number;
 
-  constructor(data?: Partial<LearnerExerciseEntity>) {
+  constructor(data?: Partial<PracticeExerciseEntity>) {
     super(data);
     Object.assign(this, data);
   }

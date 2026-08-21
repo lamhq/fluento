@@ -12,7 +12,7 @@ export class UserMiddleware implements NestMiddleware {
     const email = req.headers['x-user-email'];
 
     if (typeof email === 'string' && email) {
-      const user = await this.userService.findOne({ email });
+      const user = await this.userService.findOneByEmail(email);
       if (user) {
         req.user = user;
       }

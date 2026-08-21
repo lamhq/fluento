@@ -3,17 +3,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { ExerciseService } from './core/exercise.service';
 import { EXERCISE_REPOSITORY_PORT } from './core/exercise-repository.port';
-import { LEARNER_EXERCISE_REPOSITORY_PORT } from './core/learner-exercise-repository.port';
+import { PRACTICE_EXERCISE_REPOSITORY_PORT } from './core/practice-exercise-repository.port';
 import { ExerciseRepository } from './infrastructure/exercise.repository';
-import { LearnerExerciseRepository } from './infrastructure/learner-exercise.repository';
+import { PracticeExerciseRepository } from './infrastructure/practice-exercise.repository';
 import {
   Exercise,
   ExerciseSchema,
 } from './infrastructure/schemas/exercise.schema';
 import {
-  ExercisePractice,
-  ExercisePracticeSchema,
-} from './infrastructure/schemas/exercise-practice.schema';
+  LearnerExercise,
+  LearnerExerciseSchema,
+} from './infrastructure/schemas/learner-exercise.schema';
 import { CreateExerciseHttpController } from './interface/create-exercise/create-exercise.http.controller';
 import { DeleteExerciseHttpController } from './interface/delete-exercise/delete-exercise.http.controller';
 import { FindExercisesHttpController } from './interface/find-exercises/find-exercises.http.controller';
@@ -25,7 +25,7 @@ import { UpdateExerciseHttpController } from './interface/update-exercise/update
   imports: [
     MongooseModule.forFeature([
       { name: Exercise.name, schema: ExerciseSchema },
-      { name: ExercisePractice.name, schema: ExercisePracticeSchema },
+      { name: LearnerExercise.name, schema: LearnerExerciseSchema },
     ]),
   ],
   controllers: [
@@ -38,11 +38,11 @@ import { UpdateExerciseHttpController } from './interface/update-exercise/update
   ],
   providers: [
     ExerciseService,
-    LearnerExerciseRepository,
+    PracticeExerciseRepository,
     ExerciseRepository,
     {
-      provide: LEARNER_EXERCISE_REPOSITORY_PORT,
-      useExisting: LearnerExerciseRepository,
+      provide: PRACTICE_EXERCISE_REPOSITORY_PORT,
+      useExisting: PracticeExerciseRepository,
     },
     {
       provide: EXERCISE_REPOSITORY_PORT,

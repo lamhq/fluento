@@ -78,8 +78,8 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
       counterpartRole: data.counterpartRole,
       prompts: data.prompts,
       expectedResponses: data.expectedResponses,
-      createdAt: data.createdAt ?? new Date(),
-      updatedAt: data.updatedAt ?? new Date(),
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
   }
 }

@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
-import { LearnerExerciseEntity } from '../core/learner-exercise.entity';
-import type { LearnerExerciseQuery } from '../core/learner-exercise-repository.port';
-import { LearnerExerciseRepositoryPort } from '../core/learner-exercise-repository.port';
+import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
+import type { PracticeExerciseQuery } from '../core/practice-exercise-repository.port';
+import { PracticeExerciseRepositoryPort } from '../core/practice-exercise-repository.port';
 import { Exercise } from './schemas/exercise.schema';
 
-interface RawLearnerExercise {
+interface RawPracticeExercise {
   _id: Types.ObjectId;
   topics: string[];
   scenario: string;
@@ -25,14 +25,14 @@ interface RawLearnerExercise {
 }
 
 @Injectable()
-export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort {
+export class PracticeExerciseRepository implements PracticeExerciseRepositoryPort {
   constructor(
     @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
   ) {}
 
   async findAll(
-    params: LearnerExerciseQuery,
-  ): Promise<LearnerExerciseEntity[]> {
+    params: PracticeExerciseQuery,
+  ): Promise<PracticeExerciseEntity[]> {
     const {
       learnerId,
       sort = 'lastPracticeAt',
@@ -104,12 +104,12 @@ export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort 
     return results.map((result) => this.dbModelToEntity(result));
   }
 
-  private dbModelToEntity(item: unknown): LearnerExerciseEntity {
-    if (!this.isLearnerExercise(item)) {
+  private dbModelToEntity(item: unknown): PracticeExerciseEntity {
+    if (!this.isPracticeExercise(item)) {
       throw new Error('Invalid database model: missing _id field');
     }
 
-    return new LearnerExerciseEntity({
+    return new PracticeExerciseEntity({
       id: item._id.toString(),
       topics: item.topics,
       scenario: item.scenario,
@@ -124,7 +124,7 @@ export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort 
     });
   }
 
-  private isLearnerExercise(data: unknown): data is RawLearnerExercise {
+  private isPracticeExercise(data: unknown): data is RawPracticeExercise {
     return (data as { _id?: unknown })._id !== undefined;
   }
 }

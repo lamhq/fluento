@@ -1,0 +1,20 @@
+import { PracticeExerciseEntity } from './practice-exercise.entity';
+
+export const PRACTICE_EXERCISE_REPOSITORY_PORT = Symbol(
+  'PracticeExerciseRepositoryPort',
+);
+
+export type PracticeExerciseSortField = 'lastPracticeAt' | 'createdAt';
+
+export interface PracticeExerciseQuery {
+  learnerId: string;
+  sort?: PracticeExerciseSortField;
+  dir?: 'asc' | 'desc';
+  limit?: number;
+  offset?: number;
+  topics?: string[];
+}
+
+export interface PracticeExerciseRepositoryPort {
+  findAll(params: PracticeExerciseQuery): Promise<PracticeExerciseEntity[]>;
+}

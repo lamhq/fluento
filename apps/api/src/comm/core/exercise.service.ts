@@ -7,20 +7,20 @@ import {
   EXERCISE_REPOSITORY_PORT,
   type ExerciseRepositoryPort,
 } from './exercise-repository.port';
-import { LearnerExerciseEntity } from './learner-exercise.entity';
+import { PracticeExerciseEntity } from './practice-exercise.entity';
 import {
-  LEARNER_EXERCISE_REPOSITORY_PORT,
-  type LearnerExerciseQuery,
-  type LearnerExerciseRepositoryPort,
-} from './learner-exercise-repository.port';
+  PRACTICE_EXERCISE_REPOSITORY_PORT,
+  type PracticeExerciseQuery,
+  type PracticeExerciseRepositoryPort,
+} from './practice-exercise-repository.port';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @Inject(EXERCISE_REPOSITORY_PORT)
     private readonly repository: ExerciseRepositoryPort,
-    @Inject(LEARNER_EXERCISE_REPOSITORY_PORT)
-    private readonly learnerExerciseRepository: LearnerExerciseRepositoryPort,
+    @Inject(PRACTICE_EXERCISE_REPOSITORY_PORT)
+    private readonly practiceExerciseRepository: PracticeExerciseRepositoryPort,
   ) {}
 
   async create(data: CreateExerciseRequestDto): Promise<ExerciseEntity> {
@@ -32,9 +32,9 @@ export class ExerciseService {
   }
 
   async findPracticeExercises(
-    params: LearnerExerciseQuery,
-  ): Promise<LearnerExerciseEntity[]> {
-    return this.learnerExerciseRepository.findAll(params);
+    params: PracticeExerciseQuery,
+  ): Promise<PracticeExerciseEntity[]> {
+    return this.practiceExerciseRepository.findAll(params);
   }
 
   async findById(id: string): Promise<ExerciseEntity | null> {
