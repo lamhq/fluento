@@ -124,6 +124,13 @@ export default defineConfig(
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    rules: {
+      // for Shadcn components
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
   },
 
   // Prettier - must be last
