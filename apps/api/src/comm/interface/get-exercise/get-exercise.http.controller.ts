@@ -3,7 +3,7 @@ import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { ExerciseService } from '../../core/exercise.service';
 import { ExerciseResponseDto } from '../exercise-response.dto';
 
-@Controller('exercises')
+@Controller('manage/exercises')
 export class GetExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 

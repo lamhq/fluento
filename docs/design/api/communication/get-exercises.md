@@ -7,9 +7,9 @@ Retrieve a list of practice exercises available to a learner.
 ## Contract
 
 - **Type:** REST
-- **Signatures:** `GET /exercises`
+- **Signatures:** `GET /practice/exercises`
 - **Authentication:** OAuth 2.0 with Bearer token
-- **Versioning Strategy:** URI versioning using `/v1`
+- **Versioning Strategy:** No explicit version prefix in the current route definition
 
 ### Request Headers
 
@@ -96,5 +96,5 @@ Retrieve a list of practice exercises available to a learner.
 
 | **Date**   | **Version** | **Changes**                                                                                        |
 | ---------- | ----------- | -------------------------------------------------------------------------------------------------- |
-| 2026-08-13 | v1.0        | Initial release of the `GET /exercises` endpoint for communication practice scenarios.             |
+| 2026-08-13 | v1.0        | Initial release of the endpoint for communication practice scenarios.                              |
 | 2026-08-13 | v1.1        | Added sorting support, including `lastPracticeAt`, and pagination parameters `limit` and `offset`. |

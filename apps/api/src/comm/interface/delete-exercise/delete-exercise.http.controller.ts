@@ -3,7 +3,7 @@ import { Controller, Delete, Param } from '@nestjs/common';
 import { ExerciseService } from '../../core/exercise.service';
 import { ExerciseResponseDto } from '../exercise-response.dto';
 
-@Controller('exercises')
+@Controller('manage/exercises')
 export class DeleteExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 

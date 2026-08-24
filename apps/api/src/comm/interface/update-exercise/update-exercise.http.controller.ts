@@ -4,7 +4,7 @@ import { ExerciseService } from '../../core/exercise.service';
 import { ExerciseResponseDto } from '../exercise-response.dto';
 import { UpdateExerciseRequestDto } from './update-exercise-request.dto';
 
-@Controller('exercises')
+@Controller('manage/exercises')
 export class UpdateExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
