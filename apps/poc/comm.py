@@ -35,7 +35,7 @@ class CorrectnessFeedback(BaseModel):
 
 class AppropriatenessFeedback(BaseModel):
     """Appropriateness assessment of the response."""
-    score: int = Field(description="Overall appropriateness score (0-100)")
+    feedback: str = Field(description="Overall appropriateness feedback. Max 20 words.")
     clarity: ClarityFeedback
     politeness: PoliteFeedback
     tone: ToneFeedback

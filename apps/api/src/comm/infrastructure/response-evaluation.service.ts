@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createAgent } from 'langchain';
+import { createAgent, providerStrategy } from 'langchain';
 import { z } from 'zod';
 
 import { ExerciseEntity } from '../core/exercise.entity';
@@ -17,7 +17,7 @@ export class ResponseEvaluationService implements ResponseEvaluationServicePort 
     const agent = createAgent({
       model: 'openai:gpt-4.1-nano-2025-04-14',
       tools: [],
-      responseFormat: FeedbackEvaluationSchema,
+      responseFormat: providerStrategy(FeedbackEvaluationSchema),
     });
 
     const result = await agent.invoke({
