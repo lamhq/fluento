@@ -19,6 +19,11 @@ export const DATA_MUTATION_ROUTE = '/data-mutation';
 export const PROTECTED_ROUTE = '/protected';
 
 /**
+ * Practice page
+ */
+export const PRACTICE_ROUTE = '/practice';
+
+/**
  * Where user is redirected after signing in on Identity Provider's page
  * This route contains an authorization code which is used to exchange for an access token
  */

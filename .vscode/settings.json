@@ -5,6 +5,12 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
       "file": ".github/instructions/commit-message.md"

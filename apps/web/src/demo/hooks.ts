@@ -5,7 +5,7 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 
-import { useApiClient } from './api';
+import { useApiClient } from '../api';
 
 const SERVER_DATA = ['server-data'];
 

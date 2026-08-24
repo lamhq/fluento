@@ -99,33 +99,44 @@ pnpm run format
 
 ## Project Structure
 
+Application root:
+
 ```
 apps/web/
-├── src/                           # Source code
-│   ├── api/                       # API client module
-│   ├── auth/                      # Authentication logic and OIDC integration
-│   ├── common/                    # Common pages, components, utilities
-│   ├── demo/                      # Pages and components for demo purposes
-│   ├── error/                     # Error handling module
-│   ├── App.tsx                    # Root application component
-│   ├── main.tsx                   # Application entry point
-│   ├── routes.ts                  # Route definitions
-│   ├── constants.ts               # Application constants
-│   ├── utils.ts                   # Utility functions
-│   ├── hooks.ts                   # Custom React hooks used by the application
-│   ├── global.css                 # Global styles
-│   └── vite-env.d.ts              # Vite environment type definitions
-├── public/                        # Static assets
-├── docker/                        # For building container with Docker
-│   ├── entrypoint.sh              # Docker entrypoint script
-│   └── nginx.conf.template        # Nginx configuration for production
-├── Dockerfile                     # Docker image definition
-├── vite.config.ts                 # Vite configuration
-├── tsconfig.json                  # Final TypeScript configuration
-├── tsconfig.app.json              # TypeScript configuration for `src/*`
-├── tsconfig.node.json             # TypeScript configuration for `vite.config.ts`
+├── .env.example                   # Example environment config
+├── CHANGELOG.md                   # Package changelog
+├── Dockerfile                     # Container image definition
+├── README.md                      # App documentation
+├── components.json                # Shadcn/ui component config
+├── docker/                        # Docker runtime files
 ├── index.html                     # HTML template
-└── package.json                   # Project dependencies and scripts
+├── package.json                   # Project scripts and dependencies
+├── public/                        # Static assets
+├── src/                           # Source code
+├── tsconfig.app.json              # TypeScript config for `src/*`
+├── tsconfig.node.json             # TypeScript config for `vite.config.ts`
+├── tsconfig.json                  # Final TypeScript configuration
+└── vite.config.ts                 # Vite configuration
+```
+
+`apps/web/src/`:
+
+```
+apps/web/src/
+├── api/                           # API client instance
+├── auth/                          # Authentication utilities
+├── error/                         # Error handling utilities
+├── common/                        # Shared utilities and components
+├── shadcn/                        # Shadcn UI generated codes
+├── demo/                          # Demo module
+├── comm/                          # Communication module
+├── main.tsx                       # App entry point
+├── App.tsx                        # Root component
+├── routes.ts                      # Route definitions
+├── constants.ts                   # Shared constants
+├── global.css                     # Global styles
+├── utils.ts                       # Shared helper functions
+└── vite-env.d.ts                  # Vite type definitions
 ```
 
 ## Tech Stack

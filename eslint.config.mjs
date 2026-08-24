@@ -126,6 +126,16 @@ export default defineConfig(
     ],
   },
 
+  {
+    name: 'Shadcn UI generated files',
+    files: ['apps/web/src/shadcn/**/*.{ts,tsx}'],
+    rules: {
+      'simple-import-sort/imports': 'off',
+      'simple-import-sort/exports': 'off',
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+
   // Prettier - must be last
   {
     ...eslintConfigPrettier,

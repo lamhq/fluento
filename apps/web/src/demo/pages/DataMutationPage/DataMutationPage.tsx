@@ -1,5 +1,5 @@
 import { useErrorHandler } from '../../../error';
-import { useUpdateServerData } from '../../../hooks';
+import { useUpdateServerData } from '../../hooks';
 
 export default function DataMutationPage() {
   const { mutateAsync, isPending } = useUpdateServerData();
