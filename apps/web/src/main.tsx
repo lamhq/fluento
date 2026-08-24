@@ -8,9 +8,9 @@ import { BrowserRouter } from 'react-router';
 import { ApiClientProvider, createApiClient } from './api';
 import App from './App';
 import { AuthProvider, initializeAuth } from './auth';
-import { LAST_ROUTE_KEY } from './constants';
+import { LAST_ROUTE_KEY } from './common/constants';
+import { getAbsoluteURL, getEnv } from './common/utils';
 import { SIGN_IN_REDIRECT_ROUTE, SIGN_OUT_REDIRECT_ROUTE } from './routes';
-import { getAbsoluteURL, getEnv } from './utils';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60_000, retry: false } },

@@ -1,8 +1,8 @@
 import { Link, Navigate } from 'react-router';
 
 import { useAuth } from '../../../auth';
-import { LAST_ROUTE_KEY } from '../../../constants';
 import { HOME_ROUTE } from '../../../routes';
+import { LAST_ROUTE_KEY } from '../../constants';
 
 export default function SignInCallbackPage() {
   const auth = useAuth();

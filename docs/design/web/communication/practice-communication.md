@@ -14,7 +14,7 @@
 
 ```text
 +---------------------------------------------------------------+
-| Practice Communication                                        |
+| Ordering food in a restaurant                                 |
 |---------------------------------------------------------------|
 | You're a customer ordering food in a restaurant               |
 |                                                               |

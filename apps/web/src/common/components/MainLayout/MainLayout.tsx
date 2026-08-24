@@ -8,8 +8,10 @@ import {
   DATA_FETCHING_ROUTE,
   DATA_MUTATION_ROUTE,
   HOME_ROUTE,
+  PRACTICE_ROUTE,
   PROTECTED_ROUTE,
 } from '../../../routes';
+import ErrorBoundary from '../ErrorBoundary';
 
 export default function MainLayout() {
   const { isAuthenticated } = useAuth();
@@ -20,7 +22,7 @@ export default function MainLayout() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <h1 className="text-2xl font-bold text-blue-600">Fluento</h1>
             </div>
             <ul className="hidden md:flex gap-8 items-center">
@@ -134,6 +136,17 @@ export default function MainLayout() {
                     Data Mutation
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to={PRACTICE_ROUTE}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
+                  >
+                    Practice Page
+                  </NavLink>
+                </li>
                 {isAuthenticated && (
                   <li className="pt-2 border-t border-gray-200">
                     <SignOutButton />
@@ -147,8 +160,10 @@ export default function MainLayout() {
 
       {/* Main Content */}
       <main className="flex-1 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-          <Outlet />
+        <div className="max-w-7xl mx-auto p-2 md:p-4 lg:p-8">
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </div>
       </main>
     </div>

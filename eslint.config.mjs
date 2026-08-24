@@ -124,12 +124,15 @@ export default defineConfig(
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+  },
+
+  {
+    name: 'Shadcn UI generated files',
+    files: ['apps/web/src/shadcn/**/*.{ts,tsx}'],
     rules: {
-      // for Shadcn components
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'simple-import-sort/imports': 'off',
+      'simple-import-sort/exports': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
 
