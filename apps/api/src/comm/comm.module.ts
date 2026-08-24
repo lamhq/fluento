@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { ExerciseService } from './core/exercise.service';
-import { EXERCISE_REPOSITORY_PORT } from './core/exercise-repository.port';
-import { PRACTICE_EXERCISE_REPOSITORY_PORT } from './core/practice-exercise-repository.port';
-import { RESPONSE_SUBMISSION_REPOSITORY_PORT } from './core/response-submission-repository.port';
+import { EXERCISE_REPOSITORY } from './core/exercise-repository.port';
+import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise-repository.port';
+import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation-service.port';
+import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission-repository.port';
 import { ExerciseRepository } from './infrastructure/exercise.repository';
 import { PracticeExerciseRepository } from './infrastructure/practice-exercise.repository';
+import { ResponseEvaluationService } from './infrastructure/response-evaluation.service';
 import { ResponseSubmissionRepository } from './infrastructure/response-submission.repository';
 import {
   Exercise,
@@ -50,17 +52,22 @@ import { UpdateExerciseHttpController } from './interface/update-exercise/update
     PracticeExerciseRepository,
     ExerciseRepository,
     ResponseSubmissionRepository,
+    ResponseEvaluationService,
     {
-      provide: PRACTICE_EXERCISE_REPOSITORY_PORT,
+      provide: PRACTICE_EXERCISE_REPOSITORY,
       useExisting: PracticeExerciseRepository,
     },
     {
-      provide: EXERCISE_REPOSITORY_PORT,
+      provide: EXERCISE_REPOSITORY,
       useExisting: ExerciseRepository,
     },
     {
-      provide: RESPONSE_SUBMISSION_REPOSITORY_PORT,
+      provide: RESPONSE_SUBMISSION_REPOSITORY,
       useExisting: ResponseSubmissionRepository,
+    },
+    {
+      provide: RESPONSE_EVALUATION_SERVICE,
+      useExisting: ResponseEvaluationService,
     },
   ],
 })

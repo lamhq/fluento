@@ -1,7 +1,7 @@
 import { PracticeExerciseEntity } from './practice-exercise.entity';
 
-export const PRACTICE_EXERCISE_REPOSITORY_PORT = Symbol(
-  'PracticeExerciseRepositoryPort',
+export const PRACTICE_EXERCISE_REPOSITORY = Symbol(
+  'PracticeExerciseRepository',
 );
 
 export type PracticeExerciseSortField = 'lastPracticeAt' | 'createdAt';

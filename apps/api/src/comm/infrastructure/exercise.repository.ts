@@ -4,7 +4,7 @@ import { Model, Types } from 'mongoose';
 
 import { ExerciseEntity } from '../core/exercise.entity';
 import { ExerciseRepositoryPort } from '../core/exercise-repository.port';
-import { Exercise } from './schemas/exercise.schema';
+import { Exercise, ExerciseDocument } from './schemas/exercise.schema';
 
 @Injectable()
 export class ExerciseRepository implements ExerciseRepositoryPort {
@@ -59,17 +59,7 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
     return this.dbModelToEntity(deletedExercise);
   }
 
-  private dbModelToEntity(data: {
-    _id: Types.ObjectId;
-    topics: string[];
-    scenario: string;
-    learnerRole: string;
-    counterpartRole: string;
-    prompts: string[];
-    expectedResponses: { content: string; style: string[] }[];
-    createdAt?: Date;
-    updatedAt?: Date;
-  }): ExerciseEntity {
+  private dbModelToEntity(data: ExerciseDocument): ExerciseEntity {
     return {
       id: data._id.toString(),
       topics: data.topics,

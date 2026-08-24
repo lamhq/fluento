@@ -86,14 +86,12 @@ export class ResponseSubmission {
   @Prop({ type: ResponseSubmissionAppropriateness, required: true })
   appropriateness: ResponseSubmissionAppropriateness;
 
-  @Prop({ type: [String], default: [] })
-  alternatives: string[];
-
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export const ResponseSubmissionSchema =
   SchemaFactory.createForClass(ResponseSubmission);
+
 ResponseSubmissionSchema.index({ learnerId: 1, exerciseId: 1 });
 ResponseSubmissionSchema.index({ createdAt: -1 });

@@ -27,7 +27,6 @@ export class ResponseSubmissionEntity {
       feedback: string;
     };
   };
-  alternatives: string[];
   createdAt?: Date;
   updatedAt?: Date;
 
