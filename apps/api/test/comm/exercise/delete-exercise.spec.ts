@@ -26,7 +26,7 @@ describe('delete exercise', () => {
     ]);
 
     const deleteResponse = await request(getApp().getHttpServer())
-      .delete(`/exercises/${exerciseId}`)
+      .delete(`/manage/exercises/${exerciseId}`)
       .expect(200);
 
     expect(deleteResponse.body).toEqual(

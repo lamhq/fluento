@@ -26,7 +26,7 @@ describe('create exercise', () => {
     };
 
     const resp = await request(getApp().getHttpServer())
-      .post('/exercises')
+      .post('/manage/exercises')
       .send(dto)
       .expect(201);
 

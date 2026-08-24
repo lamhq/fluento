@@ -17,4 +17,9 @@ export interface PracticeExerciseQuery {
 
 export interface PracticeExerciseRepositoryPort {
   findAll(params: PracticeExerciseQuery): Promise<PracticeExerciseEntity[]>;
+  upsertPractice(params: {
+    learnerId: string;
+    exerciseId: string;
+    practicedAt?: Date;
+  }): Promise<void>;
 }

@@ -32,7 +32,7 @@ describe('update exercise', () => {
       counterpartRole: 'interviewer',
     };
     const resp = await request(getApp().getHttpServer())
-      .patch(`/exercises/${exerciseId}`)
+      .patch(`/manage/exercises/${exerciseId}`)
       .send(dto)
       .expect(200);
 
