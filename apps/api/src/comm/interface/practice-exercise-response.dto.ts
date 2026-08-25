@@ -13,6 +13,8 @@ export class PracticeExerciseResponseDto {
   }[];
   lastPracticeAt?: Date | null;
   practiceCount: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   constructor(data?: Partial<PracticeExerciseResponseDto>) {
     Object.assign(this, data);
@@ -31,6 +33,8 @@ export class PracticeExerciseResponseDto {
       expectedResponses: entity.expectedResponses,
       lastPracticeAt: entity.lastPracticeAt,
       practiceCount: entity.practiceCount,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     });
   }
 }

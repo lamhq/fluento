@@ -16,6 +16,15 @@ import ErrorBoundary from '../ErrorBoundary';
 export default function MainLayout() {
   const { isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems = [
+    { label: 'Home', to: HOME_ROUTE },
+    { label: 'Protected Page', to: PROTECTED_ROUTE },
+    { label: 'Data Fetching', to: DATA_FETCHING_ROUTE },
+    { label: 'Data Mutation', to: DATA_MUTATION_ROUTE },
+    { label: 'Practice Page', to: PRACTICE_ROUTE },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -26,38 +35,16 @@ export default function MainLayout() {
               <h1 className="text-2xl font-bold text-blue-600">Fluento</h1>
             </div>
             <ul className="hidden md:flex gap-8 items-center">
-              <li>
-                <NavLink
-                  to={HOME_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={PROTECTED_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Protected Page
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={DATA_FETCHING_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Data Fetching
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={DATA_MUTATION_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Data Mutation
-                </NavLink>
-              </li>
+              {menuItems.map(({ label, to }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                  >
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
               {isAuthenticated && (
                 <li>
                   <SignOutButton />
@@ -92,61 +79,19 @@ export default function MainLayout() {
           {isMenuOpen && (
             <div className="md:hidden pb-4 border-t border-gray-200">
               <ul className="flex flex-col gap-3 pt-4">
-                <li>
-                  <NavLink
-                    to={HOME_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Home
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={PROTECTED_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Protected Page
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={DATA_FETCHING_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Data Fetching
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={DATA_MUTATION_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Data Mutation
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={PRACTICE_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Practice Page
-                  </NavLink>
-                </li>
+                {menuItems.map(({ label, to }) => (
+                  <li key={to}>
+                    <NavLink
+                      to={to}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
+                    >
+                      {label}
+                    </NavLink>
+                  </li>
+                ))}
                 {isAuthenticated && (
                   <li className="pt-2 border-t border-gray-200">
                     <SignOutButton />
