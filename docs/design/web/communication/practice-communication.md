@@ -22,23 +22,25 @@
 | "What would you like to order?"                               |
 |                                                               |
 | Response in a polite manner:                                  |
-| [ textarea for learner response ]                             |
-|                                                               |
-| [ Submit ]  [ Retry ]  [ Next ]                               |
+| [ input for learner response ]                                |
+|---------------------------------------------------------------|
+|                     [ Submit ]  [ Next ]                      |
 +---------------------------------------------------------------+
 
 After submission:
 
 +------------------------------------------------------------------+
-| 🌟 95/100. Excellent work! Your response was clear and polished. |
+| 🌟 Excellent work!                                           95% |
+|------------------------------------------------------------------|
+| Your response was clear and polished.                            |
 |                                                                  |
-| Corrected Sentence:                                              |
+| Corrected sentence:                                              |
 | "Let's meet tomorrow to discuss the project."                    |
 |                                                                  |
-| Fixes:                                                           |
+| What to improve:                                                 |
 | - "Lets" → "Let's"                                               |
 |                                                                  |
-| You can also say:                                                |
+| You can say:                                                     |
 | - "I'd be happy to meet tomorrow to talk about the project."     |
 | - "Tomorrow works well for me. Let's discuss the details then."  |
 | - "Sure, let's meet tomorrow to go over the project."            |
@@ -60,7 +62,8 @@ After submission:
   - Retry response (shown after submission).
   - Move to next exercise (shown after submission).
 - **Feedback panel** (after submission):
-  - Score value with icon and status message.
+  - A feedback icon and status message appear together in the header.
+  - The numeric score sits on the far right of the header.
   - Corrected sentence, if available.
   - Specific grammar or phrasing improvements.
   - Suggested alternative responses.

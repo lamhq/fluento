@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useErrorHandler } from '../../../error';
 import type { PracticeExercise, SubmitResponse } from '../../hooks';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
+import { normalizeLearnerResponse } from './utils';
 
 const practiceFormSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
@@ -29,9 +30,10 @@ export function usePracticeForm({ exercise }: { exercise: PracticeExercise }) {
   const handleError = useErrorHandler();
   const handleSubmit = form.handleSubmit(async (values) => {
     try {
+      const normalizedResponse = normalizeLearnerResponse(values.response);
       const result = await submitResponse({
         exerciseId: exercise.id,
-        response: values.response,
+        response: normalizedResponse,
       });
       setFeedback(result);
     } catch (error) {

@@ -14,7 +14,7 @@ export default function Button({
   'aria-busy': ariaBusy,
   ...props
 }: ButtonProps) {
-  const isDisabled = disabled ?? isLoading;
+  const isDisabled = isLoading || disabled;
 
   return (
     <BaseButton

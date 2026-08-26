@@ -10,11 +10,9 @@ export default function useErrorHandler(): ErrorHandlerFunction {
   const { signIn } = useAuth();
 
   const handleError = async (error: unknown) => {
-    const { title, description, errorCode, errorMessage } = getErrorInfo(error);
-    const message = `${title}. ${description}`;
+    const { code, message } = getErrorInfo(error);
 
-    console.error(errorMessage);
-    if (errorCode === 'UNAUTHORIZED_ACCESS') {
+    if (code === 'UNAUTHORIZED_ACCESS') {
       // TODO: Show a toast notification with the error message
       console.log('show alert:', message);
       await signIn();
@@ -22,6 +20,9 @@ export default function useErrorHandler(): ErrorHandlerFunction {
       // TODO: Show a toast notification with the error message
       console.log('show toast:', message);
     }
+
+    // TODO: send to error tracking service
+    console.error(error);
   };
 
   return handleError;

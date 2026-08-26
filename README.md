@@ -124,7 +124,7 @@ Examples:
 pnpm -F web run build
 
 # run Shadcn UI CLI in the `web` project
-pnpm -F web exec shadcn-ui add button
+pnpm -F web exec shadcn add button
 ```
 
 ## Repository Structure
