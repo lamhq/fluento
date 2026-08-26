@@ -1,4 +1,9 @@
-import { queryOptions, useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { useApiClient } from '../api';
@@ -8,7 +13,7 @@ import { type PracticeExercise, type SubmitResponse } from './types';
 export { PracticeExerciseSchema, SubmitResponseSchema } from './schemas';
 export type { PracticeExercise, SubmitResponse } from './types';
 
-export const PRACTICE_EXERCISES_QUERY_KEY = ['practice-page', 'exercises'];
+const PRACTICE_EXERCISES_QUERY_KEY = ['practice-page', 'exercises'];
 
 export function usePracticeExercise(): PracticeExercise | null {
   const apiClient = useApiClient();
@@ -73,7 +78,12 @@ export function useSubmitResponse() {
     },
   });
 
-  return {
-    submitResponse: mutation.mutateAsync,
+  return mutation.mutateAsync;
+}
+
+export function useResetPracticeExercise() {
+  const queryClient = useQueryClient();
+  return () => {
+    void queryClient.invalidateQueries({ queryKey: PRACTICE_EXERCISES_QUERY_KEY });
   };
 }

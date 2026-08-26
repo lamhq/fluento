@@ -18,43 +18,41 @@ Follow installation instructions in each project:
 - `api-gateway`: `apps/api-gateway/README.md`
 - `web`: `apps/web/README.md`
 
-## Usage
+## Start applications
 
-### Start applications
-
-1. Start required 3rd-party services using Docker Compose:
+Start required Docker services (wait 3 seconds for each service to be ready):
 
 ```bash
-# start MongoDB, required for the `api` service
+# start Docker (macOS)
+open -a Docker
+
+# start database service (MongoDB)
 docker compose up -d db-service
 
-# start Keycloak, required for the `api-gateway` and `web` services
+# start authentication service (Keycloak)
 docker compose up -d auth-service
 ```
 
-2. Stop running applications (optional):
+Start `web` app (port 5601, need to start Docker services first):
 
 ```bash
+pnpx turbo web#dev
+```
+
+Start `api` app (port 5600, need to start Docker services first):
+
+```bash
+pnpx turbo api#dev
+```
+
+Stop running applications:
+
+```bash
+# stop web, api, api gateway
 lsof -ti tcp:5601 -i tcp:5600 -i tcp:5602 | xargs -n 1 kill -9
 ```
 
-3. Start the `web` app (api-gateway and api are automatically started):
-
-```bash
-npx turbo web#dev
-```
-
-The `web` app will be available at http://localhost:5601 .
-
-4. Or start only the `api` service:
-
-```bash
-npx turbo api#dev
-```
-
-The API will be available at http://localhost:5600 .
-
-### Run Lint
+## Run Lint
 
 Lint all files:
 
@@ -65,11 +63,17 @@ pnpm run lint
 Lint a specific project:
 
 ```bash
+pnpx eslint apps/<project>
+```
+
+Examples:
+
+```bash
 # lint the `web` project
 pnpx eslint apps/web
 ```
 
-### Manage dependencies
+## Manage dependencies
 
 Install all dependencies:
 
@@ -80,39 +84,56 @@ pnpm install
 Add a dependency to a specific project:
 
 ```bash
-# add `lodash` to the `web` project
-pnpm -F web add lodash
+pnpm -F <project> add <dependency>
 ```
 
 Remove a dependency from a specific project:
 
 ```bash
+pnpm -F <project> remove <dependency>
+```
+
+Examples:
+
+```bash
+# add `lodash` to the `web` project
+pnpm -F web add lodash
+
 # remove `lodash` from the `web` project
 pnpm -F web remove lodash
 ```
 
-## Execute commands in projects
+## Execute commands
 
-Run an npm script in a specific project:
+Run a script defined in project's `package.json`:
 
 ```bash
-# run the `build` script in the `web` project
-pnpm -F web run build
+pnpm -F <project> run <script>
 ```
 
+Run a locally installed package binary:
+
+```bash
+pnpm -F <project> exec <command>
+```
+
+Examples:
+
+```bash
+# run `build` in `web` project
+pnpm -F web run build
+
+# run Shadcn UI CLI in the `web` project
+pnpm -F web exec shadcn-ui add button
+```
 
 ## Repository Structure
 
-This repository follows the [Turborepo workspace structure](https://c.lamhq.com/se/development/tools/turborepo/workspace-structure.md). Here's the layout:
+This repository follows the [Turborepo workspace structure](https://c.lamhq.com/se/development/tools/turborepo/workspace-structure.md).
 
 ```
-├── apps/               # Runnable projects
-│   ├── api/
-│   ├── api-gateway/
-│   ├── auth/
-│   ├── infra/
-│   ├── poc/
-│   └── web/
+├── apps/                   # Runnable projects
+│   └── {project}/          # See `Available Projects` section below
 ├── docs/                   # Project documentation
 ├── commitlint.config.mjs   # Commit message linting rules
 ├── eslint.config.mjs       # ESLint configuration
@@ -123,7 +144,7 @@ This repository follows the [Turborepo workspace structure](https://c.lamhq.com/
 └── package.json            # Root package scripts and dev dependencies
 ```
 
-For details about each project's structure, refer to the Project Structure section in its README.md file.
+For the structure of each monorepo project, refer to `apps/{project}/README.md` file.
 
 ## Available Projects
 
@@ -140,14 +161,14 @@ For details about each project's structure, refer to the Project Structure secti
 
 This project includes a `docker-compose.yml` file, allowing you to run and test all applications without additional setup.
 
-The following services are defined in the `docker-compose.yml` file:
+Services in the `docker-compose.yml` file:
 
-| Service        | Port | Description                                                                                         |
-| -------------- | ---- | --------------------------------------------------------------------------------------------------- |
-| `web-service`  | 5601 | React/Vite frontend application. Serves the user interface and communicates with the api-gateway.   |
-| `api-gateway`  | 5602 | Express.js gateway that routes requests to the api-service and handles authentication via Keycloak. |
-| `api-service`  | 5600 | NestJS REST API that provides core business logic and data processing.                              |
-| `auth-service` | 8080 | Keycloak identity provider for authentication and authorization (OpenID Connect).                   |
+| Service Name   | Port | Description                                                              |
+| -------------- | ---- | ------------------------------------------------------------------------ |
+| `web-service`  | 5601 | Display the web interface, communicates with the api-gateway.            |
+| `api-gateway`  | 5602 | Route requests to the `api-service`, also validate API request           |
+| `api-service`  | 5600 | Handle business logic and data processing.                               |
+| `auth-service` | 8080 | Identity provider for authentication and authorization (OpenID Connect). |
 
 **Request Flow**:
 

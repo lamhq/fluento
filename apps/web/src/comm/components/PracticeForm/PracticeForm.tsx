@@ -17,8 +17,10 @@ import {
   InputGroupTextarea,
 } from '@/components/ui/input-group';
 
+import SubmitButton from '../../../common/components/Button';
 import type { PracticeExercise } from '../../hooks';
 import { usePracticeForm } from './usePracticeForm';
+import { getFeedbackScoreIcon } from './utils';
 
 export interface PracticeFormProps {
   exercise: PracticeExercise;
@@ -26,16 +28,22 @@ export interface PracticeFormProps {
 
 export default function PracticeForm({ exercise }: PracticeFormProps) {
   const {
-    form,
-    handleSubmit,
     prompt,
     counterpart,
     scenario,
     learnerRole,
+    form,
     response,
     feedback,
-    next,
+    handleSubmit,
+    handleNext,
   } = usePracticeForm({ exercise });
+  const isSubmitting = form.formState.isSubmitting;
+  const submitButtonLabel = isSubmitting
+    ? 'Processing...'
+    : feedback
+      ? 'Retry'
+      : 'Submit';
 
   return (
     <>
@@ -87,18 +95,16 @@ export default function PracticeForm({ exercise }: PracticeFormProps) {
         </CardContent>
 
         <CardFooter className="flex justify-center gap-2">
-          <Button
+          <SubmitButton
             type="submit"
             form="practice-form"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            disabled={!form.formState.isValid}
+            isLoading={isSubmitting}
           >
-            Submit
-          </Button>
-          <Button type="button" variant="secondary" className="hidden">
-            Retry
-          </Button>
+            {submitButtonLabel}
+          </SubmitButton>
           {feedback && (
-            <Button type="button" variant="outline" onClick={next}>
+            <Button type="button" variant="outline" onClick={handleNext}>
               Next
             </Button>
           )}
@@ -106,31 +112,44 @@ export default function PracticeForm({ exercise }: PracticeFormProps) {
       </Card>
 
       {feedback && (
-        <div className="mt-6">
-          <Alert>
-            <AlertTitle>🌟 {feedback.score}/100.</AlertTitle>
-            <AlertDescription>{feedback.feedback}</AlertDescription>
+        <div className="mt-6 rounded-none border bg-muted/30 p-4 shadow-sm">
+          <Alert className="border-0 bg-transparent p-0 text-sm">
+            <AlertTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
+              <span>{getFeedbackScoreIcon(feedback.score)}</span>
+              <span>{Math.round(feedback.score)}%</span>
+            </AlertTitle>
+            <AlertDescription className="mt-2 text-sm text-foreground/80">
+              {feedback.feedback}
+            </AlertDescription>
           </Alert>
 
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-4">
             {feedback.correctness.fixes.length > 0 && (
-              <>
-                <p>Corrected Sentence:</p>
-                <p>&quot;{feedback.correctness.correctedSentence}&quot;</p>
+              <div className="space-y-2 rounded-none border bg-background/60 p-3">
+                <p className="text-sm font-semibold text-foreground">
+                  Corrected sentence:
+                </p>
+                <blockquote className="border-l-2 border-primary/60 pl-3 text-sm italic text-foreground/80">
+                  &quot;{feedback.correctness.correctedSentence}&quot;
+                </blockquote>
 
-                <p className="mt-2">Fixes:</p>
-                <ul className="list-disc list-inside">
-                  {feedback.correctness.fixes.map((fix) => (
-                    <li key={fix}>{fix}</li>
-                  ))}
-                </ul>
-              </>
+                <div className="space-y-2 pt-2">
+                  <p className="text-sm font-semibold text-foreground">
+                    What to improve:
+                  </p>
+                  <ul className="list-disc space-y-1 pl-5 text-sm text-foreground/80">
+                    {feedback.correctness.fixes.map((fix) => (
+                      <li key={fix}>{fix}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             )}
 
             {exercise.expectedResponses.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="font-semibold">Here're what you can say:</p>
-                <ul className="list-disc list-inside space-y-1">
+              <div className="space-y-2 rounded-none border bg-background/60 p-3">
+                <p className="text-sm font-semibold text-foreground">You can say:</p>
+                <ul className="list-disc space-y-1 pl-5 text-sm text-foreground/80">
                   {exercise.expectedResponses.map((expectedResponse, index) => (
                     <li key={`alternative-${index.toString()}`}>
                       {expectedResponse.content}

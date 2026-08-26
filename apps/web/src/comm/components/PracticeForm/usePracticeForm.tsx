@@ -1,13 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useErrorHandler } from '../../../error';
 import type { PracticeExercise, SubmitResponse } from '../../hooks';
-import { useSubmitResponse } from '../../hooks';
-import { PRACTICE_EXERCISES_QUERY_KEY } from '../../hooks';
+import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 
 const practiceFormSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
@@ -18,7 +16,7 @@ type PracticeFormValues = z.infer<typeof practiceFormSchema>;
 export function usePracticeForm({ exercise }: { exercise: PracticeExercise }) {
   const prompt = exercise.prompts[0];
   const counterpart = exercise.counterpartRole;
-  const { submitResponse } = useSubmitResponse();
+  const submitResponse = useSubmitResponse();
   const form = useForm<PracticeFormValues>({
     resolver: zodResolver(practiceFormSchema),
     defaultValues: {
@@ -40,11 +38,11 @@ export function usePracticeForm({ exercise }: { exercise: PracticeExercise }) {
       void handleError(error);
     }
   });
-  const queryClient = useQueryClient();
-  const next = () => {
+  const resetPracticeExercises = useResetPracticeExercise();
+  const handleNext = () => {
     form.reset();
     setFeedback(null);
-    void queryClient.invalidateQueries({ queryKey: PRACTICE_EXERCISES_QUERY_KEY });
+    resetPracticeExercises();
   };
 
   return {
@@ -56,6 +54,6 @@ export function usePracticeForm({ exercise }: { exercise: PracticeExercise }) {
     learnerRole: exercise.learnerRole,
     response,
     feedback,
-    next,
+    handleNext,
   };
 }
