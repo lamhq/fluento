@@ -1,16 +1,25 @@
-Read the documentation before starting work.
+## Rules of work
 
-List all documents you read to complete your task.
+1. Always read documentation first
+2. Always ask for clarification if the task is unclear
+3. List all documents you've referenced
 
-The table below lists tasks and their corresponding documentation:
+## Tasks
 
-| Task                                  | Document to read    | Location                          |
-| ------------------------------------- | ------------------- | --------------------------------- |
-| Start/stop applications               | Repository Guide    | `README.md`                       |
-| Run commands (lint, type check, ...)  | Repository Guide    | `README.md`                       |
-| Run package binaries (Shadcn UI, ...) | Repository Guide    | `README.md`                       |
-| Manage dependencies                   | Repository Guide    | `README.md`                       |
-| Understand project structure          | Repository Guide    | `README.md`                       |
-| Know available projects               | Repository Guide    | `README.md`                       |
-| Understand Docker Compose file        | Repository Guide    | `README.md`                       |
-| Find project documentation            | Documentation Index | `docs/documentation-structure.md` |
+The table below lists tasks with the documentation guide to complete them:
+
+| Task                                  | Document to read |
+| ------------------------------------- | ---------------- |
+| Start/stop applications               | Project Guide    |
+| Run commands (lint, type check, ...)  | Project Guide    |
+| Run package binaries (Shadcn UI, ...) | Project Guide    |
+| Manage dependencies                   | Project Guide    |
+| Understand project structure          | Project Guide    |
+| Know available projects               | Project Guide    |
+| Understand Docker Compose file        | Project Guide    |
+
+## Documentation Location
+
+| Document      | Location    |
+| ------------- | ----------- |
+| Project Guide | `README.md` |

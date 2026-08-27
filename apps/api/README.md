@@ -1,100 +1,165 @@
-# API Application
+# API
 
 ## Introduction
 
-This is the backend service for the Fluento project. It is built with NestJS, TypeScript, and Node.js, and serves as the API layer for the web application.
+API service for the project. It is built with NestJS, TypeScript, and Node.js. Deployable as AWS Lambda function or standalone container.
+
+## Prerequisites
+
+- macOS or Linux (for development and deployment)
+- Node.js v22 (to match with AWS Lambda runtime)
+- AWS CLI v2.22.x and configured AWS credentials (for manual deployment)
+- Docker (for local development)
+- MongoDB 4.2 or later
 
 ## Installation
 
-From the root of the project, install dependencies:
+:::note
+All commands should be executed in the root directory
+:::
+
+Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-Create a `.env` file in the `apps/api` directory and add any environment variables required by your local setup. A typical example is:
+Create `.env` file by copying from the example config then fill in the required values:
 
 ```bash
-PORT=5600
+cp apps/api/.env.example apps/api/.env
 ```
 
-## Usage
+## Getting Started
 
-### Start development server
-
-Follow instructions in the root `README.md`.
-
-### Build for production
-
-Build the application for production:
+Start the database service first:
 
 ```bash
-pnpm run build
+# start Docker (macOS)
+open -a Docker
+
+# start database service (MongoDB)
+docker compose up -d db-service
 ```
 
-### Start production build
-
-Run the built application locally:
+Start the API application in development mode:
 
 ```bash
-pnpm run start
+pnpx turbo run api#dev
 ```
 
-### Run lint
+The API will be available at `http://localhost:5600`.
 
-Check code quality and style issues:
+## Testing
+
+```bash
+# Unit tests
+pnpm -F api run test
+
+# API tests
+pnpm -F api run test:e2e
+```
+
+## Code Quality
+
+Lint the codebase:
 
 ```bash
 pnpm lint apps/api
 ```
 
-### Type checking
-
-Run TypeScript type checking:
+Perform type checks:
 
 ```bash
-pnpm run type-check
+pnpm -F api run type-check
 ```
 
-### Run tests
+## Deploy
 
-Run unit tests:
+Create the production build at `apps/api/dist/`:
 
 ```bash
-pnpm run test
+pnpm -F api run build
 ```
 
-Run end-to-end tests:
+Create the deployment package:
 
 ```bash
-pnpm run test:e2e
+cd apps/api/dist/ && zip -r ../../../api.zip . && cd ../../../
 ```
 
-### Format code
-
-Format code using Prettier:
+Update the lambda function and wait for the update to complete (replace `{env}` with the target environment, e.g., `dev`, `prod`):
 
 ```bash
-pnpm run format
+aws lambda update-function-code \
+  --function-name fluento-{env}-api-handler \
+  --zip-file fileb://api.zip \
+  --region ap-southeast-1
+
+aws lambda wait function-updated \
+  --function-name fluento-{env}-api-handler \
+  --region ap-southeast-1
 ```
+
+Clean up:
+
+```bash
+rm api.zip
+```
+
+## Manage dependencies
+
+```bash
+pnpm -F api add <dependency>
+pnpm -F api remove <dependency>
+```
+
+## Troubleshooting
+
+### Get logs
+
+Get runtime logs from AWS Lambda for debugging:
+
+```bash
+aws logs tail /aws/lambda/fluento-dev-api-handler --since 10m
+```
+
+### Port Already in Use
+
+If port 5600 is already in use:
+
+```bash
+# Find and kill process using the port
+lsof -ti tcp:5600 | xargs kill -9
+```
+
+Or change the `PORT` in `.env`.
+
+### Database Connection Issues
+
+Ensure MongoDB service is running:
+
+```bash
+docker compose up -d db-service
+```
+
+Check the `DATABASE_URL` environment variable is correctly configured.
 
 ## Project Structure
 
 ```text
 apps/api/
 ├── src/                           # Application source code
-│   ├── app.controller.ts         # Main controller
-│   ├── app.module.ts             # Root application module
-│   ├── app.service.ts            # Core service logic
-│   ├── app.ts                    # Nest application factory
-│   ├── lambda.ts                 # AWS Lambda entry point
-│   ├── healthcheck.mjs           # Healthcheck script
-│   └── main.ts                   # Application entry point
-├── test/                          # End-to-end tests
+│   ├── healthcheck.mjs            # Healthcheck script
+│   ├── app.ts                     # Nest application factory
+│   ├── lambda.ts                  # AWS Lambda entry point
+│   └── main.ts                    # Application entry point
+├── test/                          # API tests
 ├── Dockerfile                     # Docker image definition
 ├── esbuild.mjs                    # Build configuration for esbuild
 ├── nest-cli.json                  # Nest CLI configuration
 ├── tsconfig.json                  # TypeScript configuration
+├── CHANGELOG.md                   # Release notes and version history
 └── package.json                   # Project dependencies and scripts
 ```
 
@@ -109,3 +174,4 @@ apps/api/
 | Supertest  | HTTP endpoint testing        |
 | esbuild    | Fast application bundling    |
 | Docker     | Containerization             |
+| AWS Lambda | Serverless function runtime  |
