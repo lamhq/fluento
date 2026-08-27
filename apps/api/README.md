@@ -42,6 +42,13 @@ pnpx turbo run api#dev
 
 The API will be available at `http://localhost:5600`.
 
+To start the production build locally:
+
+```bash
+pnpm -F api run build
+pnpm -F api run start
+```
+
 ## Testing
 
 ```bash
@@ -91,7 +98,7 @@ rm api.zip
 
 ## Troubleshooting
 
-### Get logs
+### Get AWS Lambda logs
 
 Get runtime logs from AWS Lambda for debugging:
 
@@ -150,3 +157,20 @@ apps/api/
 | esbuild    | Fast application bundling    |
 | Docker     | Containerization             |
 | AWS Lambda | Serverless function runtime  |
+
+## Architecture Decision Records
+
+### Disable esbuild minification for NestJS Builds
+
+**Context**:
+
+The API is built with NestJS, which relies on decorator metadata and runtime reflection to register modules, controllers, and providers. During bundling, minifying the output changed class names and metadata in ways the dependency injection container could not resolve, causing startup failures.
+
+**Decision**:
+
+We will keep esbuild minification disabled for the API build by setting `minify: false` in the build configuration.
+
+**Consequences**:
+
+- Positive: NestJS starts reliably, dependency injection resolves correctly, and runtime behavior remains stable.
+- Negative: The generated bundle is larger than a minified build, but the reliability tradeoff is preferred for this application.

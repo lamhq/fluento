@@ -18,10 +18,15 @@ module "api_service" {
   timeout  = 15
 
   environment_variables = {
-    DATABASE_URL       = module.mongodb_cluster.connection_string
-    AWS_S3_BUCKET      = module.app_storage.bucket_id
-    AWS_CLOUDFRONT_URL = "https://${var.domain}"
-    NO_COLOR           = "true"
+    DATABASE_URL        = module.mongodb_cluster.connection_string
+    AWS_S3_BUCKET       = module.app_storage.bucket_id
+    AWS_CLOUDFRONT_URL  = "https://${var.domain}"
+    OPENAI_API_KEY      = var.openai_api_key
+    LANGSMITH_TRACING   = "true"
+    LANGSMITH_ENDPOINT  = var.langsmith_endpoint
+    LANGSMITH_API_KEY   = var.langsmith_api_key
+    LANGSMITH_PROJECT   = var.langsmith_project
+    NO_COLOR            = "true"
   }
 
   iam_policy_statements = [

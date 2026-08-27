@@ -9,7 +9,7 @@ await build({
   target: 'node22',
   bundle: true,
   sourcemap: true,
-  minify: true,
+  minify: false,
   legalComments: 'none',
   external: ['@nestjs/microservices', '@nestjs/websockets/socket-module'],
   plugins: [

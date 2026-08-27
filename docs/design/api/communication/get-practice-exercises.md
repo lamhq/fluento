@@ -1,4 +1,4 @@
-# Get Exercises API
+# Get Practice Exercises API
 
 ## Introduction
 
@@ -17,6 +17,7 @@ Retrieve a list of practice exercises available to a learner.
 | ------------- | ---------------- |
 | Authorization | Bearer `<token>` |
 | Accept        | application/json |
+| x-user-email  | test@example.com |
 
 ### Query Parameters
 
