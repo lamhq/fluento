@@ -8,15 +8,12 @@
 
 The table below lists tasks with the documentation guide to complete them:
 
-| Task                                  | Document to read |
-| ------------------------------------- | ---------------- |
-| Start/stop applications               | Project Guide    |
-| Run commands (lint, type check, ...)  | Project Guide    |
-| Run package binaries (Shadcn UI, ...) | Project Guide    |
-| Manage dependencies                   | Project Guide    |
-| Understand project structure          | Project Guide    |
-| Know available projects               | Project Guide    |
-| Understand Docker Compose file        | Project Guide    |
+| Task                           | Document to read |
+| ------------------------------ | ---------------- |
+| Manage dependencies            | Project Guide    |
+| Understand project structure   | Project Guide    |
+| Know available projects        | Project Guide    |
+| Understand Docker Compose file | Project Guide    |
 
 ## Documentation Location
 

@@ -2,100 +2,78 @@
 
 ## Introduction
 
-This is the React-based frontend application for the Fluento project. It's a modern web application built with Vite, React 19, TypeScript, and Tailwind CSS.
+Web application for the project, built with React, Vite, TypeScript, Tailwind CSS, and Shadcn/ui.
 
 ## Installation
 
-From the root of the project, install dependencies:
+:::note
+All commands should be executed in the root directory
+:::
+
+Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-Create a `.env` file in the `apps/web` directory by copying from the example file:
+Create `.env` file, then fill in the required values:
 
 ```bash
-cp .env.example .env
+cp apps/web/.env.example apps/web/.env
 ```
 
-Then update the values in `.env` based on your environment:
+## Getting Started
 
-| Variable              | Description                                             | Default                            |
-| --------------------- | ------------------------------------------------------- | ---------------------------------- |
-| `VITE_OIDC_AUTHORITY` | URL of the OpenID Connect (OIDC) authority server       | `http://localhost:8080/realms/app` |
-| `VITE_OIDC_CLIENT_ID` | Client ID registered with the OIDC provider             | `web-client`                       |
-| `VITE_API_BASE_URL`   | Base URL for API requests (can be relative or absolute) | `/api`                             |
-
-## Usage
-
-### Start development server
-
-From the project root, start the web application in development mode:
+Start the required services first:
 
 ```bash
-pnpm dev
+# start Docker (macOS)
+open -a Docker
+
+# start required local services
+docker compose up -d auth-service api-gateway
 ```
 
-Then open http://localhost:5601 in your browser.
-
-Alternatively, from the `apps/web` directory:
+Start the web application (the api app is automatically started by Turborepo)
 
 ```bash
-pnpm run dev
+pnpx turbo run web#dev
 ```
 
-The application includes a development proxy that forwards API requests from `/api` to the API gateway running on `http://localhost:5602`.
+The web app will be available at `http://localhost:5601`.
 
-### Build for production
+## Deploy
 
-Build the application for production:
+Prepare the `.env.<env>` file for the target environment (e.g., `.env.dev`, `.env.prod`).
+
+Create the build at `apps/web/dist/`:
 
 ```bash
-pnpm run build
+pnpm -F web run build --mode <env>
 ```
 
-This will compile TypeScript and bundle the application with Vite.
+- `<env>`: The environment to deploy to: `dev`, `prod`.
 
-### Preview production build
-
-Preview the production build locally:
+Deploy the build to runtime environment:
 
 ```bash
-pnpm run start
+aws s3 sync apps/web/dist/ s3://<s3-bucket>/web \
+  --delete \
+  --region <region>
+
+aws cloudfront create-invalidation \
+  --distribution-id <cloudfront-distribution-id> \
+  --paths "/index.html" \
+  --region <region>
 ```
 
-### Run lint
-
-Check code quality and style issues:
-
-```bash
-# Lint all files in the web app
-pnpm run lint
-```
-
-### Type checking
-
-Run TypeScript type checking:
-
-```bash
-pnpm run type-check
-```
-
-### Run tests
-
-Run unit tests:
-
-```bash
-pnpm run test
-```
-
-### Format code
-
-Format code using Prettier:
-
-```bash
-pnpm run format
-```
+- `<s3-bucket>`: The S3 bucket name of the target environment
+  - for `dev`: `fluento-dev-heron`
+  - for `prod`: `fluento-prod-longhorn`
+- `<cloudfront-distribution-id>`: The CloudFront distribution ID of the target environment
+  - for `dev`: `E14RMK4CW69PS1`
+  - for `prod`: `ERJB4PD7UCXWK`
+- `<region>`: The AWS region of the target environment. Use `ap-southeast-1` for both `dev` and `prod`
 
 ## Project Structure
 

@@ -50,9 +50,9 @@ Purpose: enable Google login for the application.
 1. Create a Google Cloud project
 2. Create an OAuth 2.0 client ID with:
    - Type: `Web application`
-   - Name: `{project}-{environment}`
+   - Name: `<project>-<env>`
 3. Copy the client ID and client secret
-4. Fill them in `apps/infra/config/{environment}.tfvars`
+4. Fill them in `apps/infra/config/<env>.tfvars`
 
 ### Cloudflare
 
@@ -116,37 +116,37 @@ All commands should be executed in the `apps/infra` directory.
 Select the workspace for the environment you want to deploy:
 
 ```bash
-terraform workspace select -or-create {environment}
+terraform workspace select -or-create <env>
 ```
 
 Review the planned changes before applying them:
 
 ```bash
-terraform plan -var-file=config/{environment}.tfvars
+terraform plan -var-file=config/<env>.tfvars
 ```
 
 Apply infrastructure changes (create or update):
 
 ```bash
-terraform apply -var-file=config/{environment}.tfvars -auto-approve
+terraform apply -var-file=config/<env>.tfvars -auto-approve
 ```
 
 :::caution
 Always review output of `terraform plan` before running `terraform apply` to avoid unintended consequences.
 :::
 
-## Post Creation
+## Post Environment Creation
 
 After creating the environment (`terraform apply`), follow these steps to finish OIDC setup for Google login:
 
 ### Update OAuth Client
 
 1. In **Google Auth Platform** → **Clients**, select a client from the list
-2. Set **Authorized JavaScript origins** to `https://{cognito-domain}`
-3. Set **Authorized redirect URIs** to `https://{cognito-domain}/oauth2/idpresponse`
+2. Set **Authorized JavaScript origins** to `https://<cognito-domain>`
+3. Set **Authorized redirect URIs** to `https://<cognito-domain>/oauth2/idpresponse`
 
 :::note
-`{cognito-domain}` is in the format `{project}-{environment}.auth.{region}.amazoncognito.com`
+`<cognito-domain>` is in the format `<project>-<env>.auth.<region>.amazoncognito.com`
 :::
 
 ### Update GCP Branding

@@ -4,14 +4,6 @@
 
 API service for the project. It is built with NestJS, TypeScript, and Node.js. Deployable as AWS Lambda function or standalone container.
 
-## Prerequisites
-
-- macOS or Linux (for development and deployment)
-- Node.js v22 (to match with AWS Lambda runtime)
-- AWS CLI v2.22.x and configured AWS credentials (for manual deployment)
-- Docker (for local development)
-- MongoDB 4.2 or later
-
 ## Installation
 
 :::note
@@ -24,7 +16,7 @@ Install dependencies:
 pnpm install
 ```
 
-Create `.env` file by copying from the example config then fill in the required values:
+Create `.env` file, then fill in the required values:
 
 ```bash
 cp apps/api/.env.example apps/api/.env
@@ -60,20 +52,6 @@ pnpm -F api run test
 pnpm -F api run test:e2e
 ```
 
-## Code Quality
-
-Lint the codebase:
-
-```bash
-pnpm lint apps/api
-```
-
-Perform type checks:
-
-```bash
-pnpm -F api run type-check
-```
-
 ## Deploy
 
 Create the production build at `apps/api/dist/`:
@@ -88,30 +66,27 @@ Create the deployment package:
 cd apps/api/dist/ && zip -r ../../../api.zip . && cd ../../../
 ```
 
-Update the lambda function and wait for the update to complete (replace `{env}` with the target environment, e.g., `dev`, `prod`):
+Update the lambda function and wait for the update to complete:
 
 ```bash
 aws lambda update-function-code \
-  --function-name fluento-{env}-api-handler \
+  --function-name fluento-<env>-api-handler \
   --zip-file fileb://api.zip \
   --region ap-southeast-1
 
 aws lambda wait function-updated \
-  --function-name fluento-{env}-api-handler \
+  --function-name fluento-<env>-api-handler \
   --region ap-southeast-1
 ```
+
+:::note
+Replace `<env>` with the target environment (`dev`, `prod`)
+:::
 
 Clean up:
 
 ```bash
 rm api.zip
-```
-
-## Manage dependencies
-
-```bash
-pnpm -F api add <dependency>
-pnpm -F api remove <dependency>
 ```
 
 ## Troubleshooting

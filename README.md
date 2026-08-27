@@ -4,6 +4,18 @@
 
 This is the Git repository for the Fluento project, a full-stack web application built as a monorepo using Turborepo and pnpm workspaces.
 
+## Prerequisites
+
+- macOS or Linux as development environment
+- Docker (for development)
+- Node.js v22 (to match with runtime environment)
+- pnpm v8
+
+For manual deployment:
+
+- AWS CLI v2.22.x
+- AWS credentials
+
 ## Installation
 
 ```bash
@@ -18,59 +30,23 @@ Follow installation instructions in each project:
 - `api-gateway`: `apps/api-gateway/README.md`
 - `web`: `apps/web/README.md`
 
-## Start applications
-
-Start required Docker services (wait 3 seconds for each service to be ready):
+## Testing
 
 ```bash
-# start Docker (macOS)
-open -a Docker
-
-# start database service (MongoDB)
-docker compose up -d db-service
-
-# start authentication service (Keycloak)
-docker compose up -d auth-service
-```
-
-Start `web` app (port 5601, need to start Docker services first):
-
-```bash
-pnpx turbo web#dev
-```
-
-Start `api` app (port 5600, need to start Docker services first):
-
-```bash
-pnpx turbo api#dev
-```
-
-Stop running applications:
-
-```bash
-# stop web, api, api gateway
-lsof -ti tcp:5601 -i tcp:5600 -i tcp:5602 | xargs -n 1 kill -9
+# Unit tests
+pnpm -F <project> run test
 ```
 
 ## Run Lint
 
-Lint all files:
-
 ```bash
-pnpm run lint
+pnpm -F <project> run lint
 ```
 
-Lint a specific project:
+## Run type checks
 
 ```bash
-pnpx eslint apps/<project>
-```
-
-Examples:
-
-```bash
-# lint the `web` project
-pnpx eslint apps/web
+pnpm -F <project> run type-check
 ```
 
 ## Manage dependencies
@@ -133,7 +109,7 @@ This repository follows the [Turborepo workspace structure](https://c.lamhq.com/
 
 ```
 ├── apps/                   # Runnable projects
-│   └── {project}/          # See `Available Projects` section below
+│   └── <project>/          # See `Available Projects` section
 ├── docs/                   # Project documentation
 ├── commitlint.config.mjs   # Commit message linting rules
 ├── eslint.config.mjs       # ESLint configuration
@@ -144,7 +120,7 @@ This repository follows the [Turborepo workspace structure](https://c.lamhq.com/
 └── package.json            # Root package scripts and dev dependencies
 ```
 
-For the structure of each monorepo project, refer to `apps/{project}/README.md` file.
+For the structure of each monorepo project, refer to `apps/<project>/README.md` file.
 
 ## Available Projects
 
