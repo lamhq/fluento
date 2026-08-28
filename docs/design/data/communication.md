@@ -26,12 +26,15 @@ erDiagram
 
     CommunicationExercise {
         string id
+        string status
         string scenario
         string learnerRole
         string counterpartRole
         datetime createdAt
         datetime updatedAt
     }
+
+    %% status must be one of: active, archived
 
     ExercisePrompt {
         string id
@@ -100,14 +103,15 @@ Represents a reusable scenario-based communication exercise for practice.
 
 **Attributes:**
 
-| Attribute Name  | Type     | Description                                                 |
-| --------------- | -------- | ----------------------------------------------------------- |
-| id              | String   | Unique exercise identifier.                                 |
-| scenario        | String   | Real-world situation the learner is expected to respond to. |
-| learnerRole     | String   | Role played by the learner in the scenario.                 |
-| counterpartRole | String   | Role played by the other participant in the scenario.       |
-| createdAt       | DateTime | When the exercise was created.                              |
-| updatedAt       | DateTime | When the exercise was last updated.                         |
+| Attribute Name  | Type     | Description                                                            |
+| --------------- | -------- | ---------------------------------------------------------------------- |
+| id              | String   | Unique exercise identifier.                                            |
+| status          | String   | Lifecycle state of the exercise. Allowed values: `active`, `archived`. |
+| scenario        | String   | Real-world situation the learner is expected to respond to.            |
+| learnerRole     | String   | Role played by the learner in the scenario.                            |
+| counterpartRole | String   | Role played by the other participant in the scenario.                  |
+| createdAt       | DateTime | When the exercise was created.                                         |
+| updatedAt       | DateTime | When the exercise was last updated.                                    |
 
 **Relationships:**
 

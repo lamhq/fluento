@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0](https://github.com/lamhq/fluento/compare/api-v1.0.0...api-v1.1.0) (2026-08-28)
+
+
+### Features
+
+* add exercise status field ([#14](https://github.com/lamhq/fluento/issues/14)) ([a2e4174](https://github.com/lamhq/fluento/commit/a2e41749b36e719756aedab31a23ee972c736ad3))
+* **api:** implement CRUD api for communication exercise ([#8](https://github.com/lamhq/fluento/issues/8)) ([eeb54e7](https://github.com/lamhq/fluento/commit/eeb54e749b1cc28658addba2c83dedf475ed2f65))
+* implement API get practice exercises ([#11](https://github.com/lamhq/fluento/issues/11)) ([b7a542a](https://github.com/lamhq/fluento/commit/b7a542a668de542edcda4c0798f7749908a55d95))
+* practice communication page ([#13](https://github.com/lamhq/fluento/issues/13)) ([1bca383](https://github.com/lamhq/fluento/commit/1bca383cb1d1daa3e367f041cf377f8f3f468e0c))
+
 ## 1.0.0 (2026-07-25)
 
 

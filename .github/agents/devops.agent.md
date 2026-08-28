@@ -7,8 +7,7 @@ argument-hint: Provide a DevOps-related task, question, or scenario (e.g., "depl
 
 ## Rules of work
 
-1. Always read documentation below to complete your tasks:
-   - `apps/infra/README.md`
-2. Only scan code files when documentation is insufficient to complete your tasks.
-3. Summarize infrastructure changes for review before applying them.
-4. Ask for user confirmation before applying infrastructure changes
+- Always read documents below before working:
+  - `apps/infra/README.md`
+- Summarize infrastructure changes for review before applying them.
+- Ask for user confirmation before applying infrastructure changes

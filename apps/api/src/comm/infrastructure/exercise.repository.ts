@@ -62,6 +62,7 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
   private dbModelToEntity(data: ExerciseDocument): ExerciseEntity {
     return {
       id: data._id.toString(),
+      status: data.status,
       topics: data.topics,
       scenario: data.scenario,
       learnerRole: data.learnerRole,

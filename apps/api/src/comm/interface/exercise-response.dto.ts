@@ -2,6 +2,7 @@ import { ExerciseEntity } from '../core/exercise.entity';
 
 export class ExerciseResponseDto {
   id: string;
+  status: string;
   topics: string[];
   scenario: string;
   learnerRole: string;
@@ -21,6 +22,7 @@ export class ExerciseResponseDto {
   static fromEntity(entity: ExerciseEntity): ExerciseResponseDto {
     return new ExerciseResponseDto({
       id: entity.id,
+      status: entity.status,
       topics: entity.topics,
       scenario: entity.scenario,
       learnerRole: entity.learnerRole,

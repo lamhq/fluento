@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
+import { ExerciseStatus } from '../../core/exercise.entity';
+
 export type ExerciseDocument = HydratedDocument<Exercise>;
 
 @Schema({ _id: false })
@@ -17,6 +19,13 @@ export const ExpectedResponseSchema =
 
 @Schema({ timestamps: true, collection: 'exercises' })
 export class Exercise {
+  @Prop({
+    type: String,
+    enum: Object.values(ExerciseStatus),
+    default: ExerciseStatus.Active,
+  })
+  status: ExerciseStatus;
+
   @Prop({ type: [String], default: [] })
   topics: string[];
 

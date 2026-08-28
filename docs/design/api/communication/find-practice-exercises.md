@@ -1,4 +1,4 @@
-# Get Practice Exercises API
+# Find Practice Exercises API
 
 ## Introduction
 
@@ -24,11 +24,13 @@ Retrieve a list of practice exercises available to a learner.
 | **Name** | **Type** | **Required** | **Description**                                                                                            |
 | -------- | -------- | ------------ | ---------------------------------------------------------------------------------------------------------- |
 | sort     | string   | No           | Sort order for the result set. Supported values: `lastPracticeAt`, `createdAt`. Default: `lastPracticeAt`. |
-| limit    | integer  | No           | Maximum number of exercises to return. Default: `20`.                                                      |
+| limit    | integer  | No           | Maximum number of exercises to return. Default: `10`.                                                      |
 | offset   | integer  | No           | Number of exercises to skip for pagination. Default: `0`.                                                  |
 | topics   | string[] | No           | Optional filter by exercise topics, such as `Restaurant`, `School`, or `Socializing`.                      |
 
 ### Response
+
+> `status` is internal and omitted from practice responses.
 
 **Success (200 OK):**
 
@@ -78,7 +80,7 @@ Retrieve a list of practice exercises available to a learner.
 
 ## Functional Requirements
 
-- **Exercise Retrieval:** Return a list of communication exercises that are available to the authenticated learner.
+- **Exercise Retrieval:** Return only active exercises that are available to the authenticated learner.
 - **Paging Support:** Support `limit` and `offset` to paginate results without returning the full exercise set at once.
 - **Sorting Support:** Support ordering exercises by:
   - `lastPracticeAt`: the time the current learner practiced them
@@ -95,7 +97,8 @@ Retrieve a list of practice exercises available to a learner.
 
 ## Changelog
 
-| **Date**   | **Version** | **Changes**                                                                                        |
-| ---------- | ----------- | -------------------------------------------------------------------------------------------------- |
-| 2026-08-13 | v1.0        | Initial release of the endpoint for communication practice scenarios.                              |
-| 2026-08-13 | v1.1        | Added sorting support, including `lastPracticeAt`, and pagination parameters `limit` and `offset`. |
+| **Date**   | **Version** | **Changes**                                                                                                                    |
+| ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-08-13 | v1.0        | Initial release of the endpoint for communication practice scenarios.                                                          |
+| 2026-08-13 | v1.1        | Added sorting support, including `lastPracticeAt`, and pagination parameters `limit` and `offset`.                             |
+| 2026-08-28 | v1.2        | Restricted learner-facing practice responses to active exercises only; archived exercises are filtered out from this endpoint. |

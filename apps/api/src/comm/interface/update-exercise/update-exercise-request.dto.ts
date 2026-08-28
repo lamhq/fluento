@@ -1,16 +1,21 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 
-import { ExerciseEntity } from '../../core/exercise.entity';
+import { ExerciseEntity, ExerciseStatus } from '../../core/exercise.entity';
 import { ExerciseExpectedResponseDto } from '../create-exercise/create-exercise-request.dto';
 
 export class UpdateExerciseRequestDto {
+  @IsNotEmpty()
+  @IsEnum(ExerciseStatus)
+  status: ExerciseStatus;
+
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -46,6 +51,7 @@ export class UpdateExerciseRequestDto {
 
   toEntity(): Partial<ExerciseEntity> {
     return new ExerciseEntity({
+      status: this.status,
       topics: this.topics,
       scenario: this.scenario,
       learnerRole: this.learnerRole,
