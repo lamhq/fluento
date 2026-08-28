@@ -26,7 +26,7 @@ describe('find exercises', () => {
     ]);
 
     const resp = await request(getApp().getHttpServer())
-      .get('/exercises')
+      .get('/manage/exercises')
       .expect(200);
 
     expect(resp.body).toEqual(

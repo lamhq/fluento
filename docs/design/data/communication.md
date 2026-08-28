@@ -322,9 +322,9 @@ This collection stores reusable communication exercises.
 
 **Indexes:**
 
-| Index          | Purpose                                              |
-| -------------- | ---------------------------------------------------- |
-| `topics_index` | Filter exercises by topic values in `GET /exercises` |
+| Index          | Purpose                                                        |
+| -------------- | -------------------------------------------------------------- |
+| `topics_index` | Filter exercises by topic values in Get Practice Exercises API |
 
 **Constraints:**
 
@@ -528,4 +528,4 @@ db.getCollection('exercises').aggregate([
 | ------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1.0     | 2026-08-14 | Initial communication data model based on the requirement and API specifications for exercise retrieval, practice repetition logic, and response evaluation.                                                    |
 | 1.1     | 2026-08-14 | Removed the Learner entity, removed prompt ordering and practice timestamps, renamed response fields, removed duplicated alternatives from evaluation feedback, and added overall score to evaluation feedback. |
-| 1.2     | 2026-08-14 | Added the MongoDB physical model, collection-level schema examples, index strategy, and integrity rules aligned with the `GET /exercises` and `POST /exercises/{exerciseId}/responses` APIs.                    |
+| 1.2     | 2026-08-14 | Added the MongoDB physical model, collection-level schema examples, index strategy.                                                                                                                             |

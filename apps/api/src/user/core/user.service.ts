@@ -4,14 +4,14 @@ import type { Cache } from 'cache-manager';
 
 import type { UserEntity } from './user.entity';
 import {
-  USER_REPOSITORY_PORT,
+  USER_REPOSITORY,
   type UserRepositoryPort,
 } from './user-repository.port';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(USER_REPOSITORY_PORT)
+    @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,

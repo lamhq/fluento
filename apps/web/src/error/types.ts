@@ -12,10 +12,8 @@ export type ErrorCode =
   | 'SERVER_PROCESSING_ERROR';
 
 export interface ErrorInfo {
-  title: string;
-  description: string;
-  errorCode: ErrorCode;
-  errorMessage: string;
+  code: ErrorCode;
+  message: string;
 }
 
 /**

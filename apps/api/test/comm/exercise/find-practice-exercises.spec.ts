@@ -37,7 +37,7 @@ describe('find practice exercises', () => {
     });
 
     const resp = await request(getApp().getHttpServer())
-      .get('/learners/practice-exercises')
+      .get('/practice/exercises')
       .set('x-user-email', userEmail)
       .expect(200);
 

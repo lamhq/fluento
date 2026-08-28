@@ -1,6 +1,6 @@
 import { ExerciseEntity } from './exercise.entity';
 
-export const EXERCISE_REPOSITORY_PORT = Symbol('ExerciseRepositoryPort');
+export const EXERCISE_REPOSITORY = Symbol('ExerciseRepository');
 
 export interface ExerciseRepositoryPort {
   create(data: ExerciseEntity): Promise<ExerciseEntity>;

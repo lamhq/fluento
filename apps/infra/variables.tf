@@ -42,6 +42,34 @@ variable "google_client_secret" {
 }
 
 # ============================================================================
+# API service environment variables
+# ============================================================================
+
+variable "openai_api_key" {
+  type        = string
+  description = "OpenAI API key used by the API service"
+  sensitive   = true
+}
+
+variable "langsmith_endpoint" {
+  type        = string
+  description = "LangSmith endpoint used by the API service"
+  default     = "https://apac.api.smith.langchain.com"
+}
+
+variable "langsmith_api_key" {
+  type        = string
+  description = "LangSmith API key used by the API service"
+  sensitive   = true
+}
+
+variable "langsmith_project" {
+  type        = string
+  description = "LangSmith project name used by the API service"
+  default     = "fluento"
+}
+
+# ============================================================================
 # CI/CD
 # ============================================================================
 

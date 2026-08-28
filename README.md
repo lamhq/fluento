@@ -4,6 +4,18 @@
 
 This is the Git repository for the Fluento project, a full-stack web application built as a monorepo using Turborepo and pnpm workspaces.
 
+## Prerequisites
+
+- macOS or Linux as development environment
+- Docker (for development)
+- Node.js v22 (to match with runtime environment)
+- pnpm v8
+
+For manual deployment:
+
+- AWS CLI v2.22.x
+- AWS credentials
+
 ## Installation
 
 ```bash
@@ -18,101 +30,13 @@ Follow installation instructions in each project:
 - `api-gateway`: `apps/api-gateway/README.md`
 - `web`: `apps/web/README.md`
 
-## Usage
-
-### Start applications
-
-1. Start required 3rd-party services using Docker Compose:
-
-```bash
-# start MongoDB, required for the `api` service
-docker compose up -d db-service
-
-# start Keycloak, required for the `api-gateway` and `web` services
-docker compose up -d auth-service
-```
-
-2. Stop running applications (optional):
-
-```bash
-lsof -ti tcp:5601 -i tcp:5600 -i tcp:5602 | xargs -n 1 kill -9
-```
-
-3. Start the `web` app (api-gateway and api are automatically started):
-
-```bash
-npx turbo web#dev
-```
-
-The `web` app will be available at http://localhost:5601 .
-
-4. Or start only the `api` service:
-
-```bash
-npx turbo api#dev
-```
-
-The API will be available at http://localhost:5600 .
-
-### Run Lint
-
-Lint all files:
-
-```bash
-pnpm run lint
-```
-
-Lint a specific project:
-
-```bash
-# lint the `web` project
-pnpx eslint apps/web
-```
-
-### Manage dependencies
-
-Install all dependencies:
-
-```bash
-pnpm install
-```
-
-Add a dependency to a specific project:
-
-```bash
-# add `lodash` to the `web` project
-pnpm -F web add lodash
-```
-
-Remove a dependency from a specific project:
-
-```bash
-# remove `lodash` from the `web` project
-pnpm -F web remove lodash
-```
-
-## Execute commands in projects
-
-Run an npm script in a specific project:
-
-```bash
-# run the `build` script in the `web` project
-pnpm -F web run build
-```
-
-
 ## Repository Structure
 
-This repository follows the [Turborepo workspace structure](https://c.lamhq.com/se/development/tools/turborepo/workspace-structure.md). Here's the layout:
+This repository follows the [Turborepo workspace structure](https://c.lamhq.com/se/development/tools/turborepo/workspace-structure.md).
 
 ```
-├── apps/               # Runnable projects
-│   ├── api/
-│   ├── api-gateway/
-│   ├── auth/
-│   ├── infra/
-│   ├── poc/
-│   └── web/
+├── apps/                   # Runnable projects
+│   └── <project>/          # See `Available Projects` section
 ├── docs/                   # Project documentation
 ├── commitlint.config.mjs   # Commit message linting rules
 ├── eslint.config.mjs       # ESLint configuration
@@ -123,7 +47,7 @@ This repository follows the [Turborepo workspace structure](https://c.lamhq.com/
 └── package.json            # Root package scripts and dev dependencies
 ```
 
-For details about each project's structure, refer to the Project Structure section in its README.md file.
+For the structure of each monorepo project, refer to `apps/<project>/README.md` file.
 
 ## Available Projects
 
@@ -140,14 +64,14 @@ For details about each project's structure, refer to the Project Structure secti
 
 This project includes a `docker-compose.yml` file, allowing you to run and test all applications without additional setup.
 
-The following services are defined in the `docker-compose.yml` file:
+Services in the `docker-compose.yml` file:
 
-| Service        | Port | Description                                                                                         |
-| -------------- | ---- | --------------------------------------------------------------------------------------------------- |
-| `web-service`  | 5601 | React/Vite frontend application. Serves the user interface and communicates with the api-gateway.   |
-| `api-gateway`  | 5602 | Express.js gateway that routes requests to the api-service and handles authentication via Keycloak. |
-| `api-service`  | 5600 | NestJS REST API that provides core business logic and data processing.                              |
-| `auth-service` | 8080 | Keycloak identity provider for authentication and authorization (OpenID Connect).                   |
+| Service Name   | Port | Description                                                              |
+| -------------- | ---- | ------------------------------------------------------------------------ |
+| `web-service`  | 5601 | Display the web interface, communicates with the api-gateway.            |
+| `api-gateway`  | 5602 | Route requests to the `api-service`, also validate API request           |
+| `api-service`  | 5600 | Handle business logic and data processing.                               |
+| `auth-service` | 8080 | Identity provider for authentication and authorization (OpenID Connect). |
 
 **Request Flow**:
 

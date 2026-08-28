@@ -13,11 +13,11 @@ import { ExerciseService } from '../../core/exercise.service';
 import { PracticeExerciseQuery } from '../../core/practice-exercise-repository.port';
 import { PracticeExerciseResponseDto } from '../practice-exercise-response.dto';
 
-@Controller('learners')
+@Controller('practice/exercises')
 export class FindPracticeExercisesHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
-  @Get('practice-exercises')
+  @Get()
   async findPracticeExercises(
     @User() user: UserEntity,
     @Query('sort') sort?: 'lastPracticeAt' | 'createdAt',

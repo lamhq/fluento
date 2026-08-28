@@ -18,7 +18,14 @@ const __dirname = path.dirname(__filename);
 export default defineConfig(
   // Global ignores
   {
-    ignores: ['.turbo/**', '**/*.js', '**/dist', '**/build', '**/node_modules'],
+    ignores: [
+      '.turbo/**',
+      '**/*.js',
+      '**/dist',
+      '**/build',
+      '**/node_modules',
+      'apps/web/src/shadcn',
+    ],
   },
 
   // JavaScript
@@ -124,16 +131,6 @@ export default defineConfig(
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
-  },
-
-  {
-    name: 'Shadcn UI generated files',
-    files: ['apps/web/src/shadcn/**/*.{ts,tsx}'],
-    rules: {
-      'simple-import-sort/imports': 'off',
-      'simple-import-sort/exports': 'off',
-      'react-refresh/only-export-components': 'off',
-    },
   },
 
   // Prettier - must be last

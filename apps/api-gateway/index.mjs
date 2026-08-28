@@ -25,92 +25,110 @@ const publicRoute = process.env.PUBLIC_ROUTE
 
 // Initialize and start server
 async function startServer() {
+  // Register healthcheck endpoint
+  app.get('/api-gtw-health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'API Gateway healthy' });
+  });
+
+  // Fetch OIDC discovery configuration
+  let discoveryResponse;
   try {
-    // Register healthcheck endpoint
-    app.get('/api-gtw-health', (req, res) => {
-      res.status(200).json({ status: 'ok', message: 'API Gateway healthy' });
-    });
-
-    // Fetch OIDC discovery configuration
-    let discoveryResponse;
-    try {
-      discoveryResponse = await fetch(discoveryUrl);
-      if (!discoveryResponse.ok) throw new Error(discoveryResponse.statusText);
-    } catch (error) {
-      throw new Error(`Failed to fetch discovery endpoint: ${error.message}`);
-    }
-
-    // Check jwksUri exists
-    const discoveryConfig = await discoveryResponse.json();
-    const jwksUri = discoveryConfig.jwks_uri;
-    if (!jwksUri) throw new Error('Missing jwks_uri in discovery configuration');
-    console.log(`Loaded jwks_uri: ${jwksUri}`);
-
-    // Initialize JWT validation middleware
-    // https://www.npmjs.com/package/express-jwt
-    let checkJwt = expressjwt({
-      // Dynamically provide signing key based on kid in the header and JWKs from Keycloak
-      secret: jwksRsa.expressJwtSecret({
-        cache: true,
-        rateLimit: false,
-        jwksUri: jwksUri,
-      }),
-      audience: clientId, // replace with your client_id if needed
-      algorithms: ['RS256'], // Keycloak typically uses RS256
-      requestProperty: 'user', // name of the property in the request object where the payload is set
-    });
-
-    // Exclude public routes
-    if (publicRoute) {
-      checkJwt = checkJwt.unless({ path: [publicRoute, '/api-gtw-health'] });
-    }
-
-    // Register JWT validation middleware
-    app.use(checkJwt);
-
-    // Forward claims as headers
-    app.use((req, res, next) => {
-      if (req.user) {
-        req.headers['x-user-id'] = req.user.sub; // user ID, see `aws_cognito_identity_provider`
-        req.headers['x-user-email'] = req.user.email; // user email
-      }
-      next();
-    });
-
-    // Error handling middleware for JWT errors
-    app.use(function (err, req, res, next) {
-      if (err.name === 'UnauthorizedError') {
-        res.status(401).send(err.message);
-      } else {
-        next(err);
-      }
-    });
-
-    // Proxy all requests if JWT is valid
-    app.use(
-      '/',
-      createProxyMiddleware({
-        target: target,
-        changeOrigin: true,
-        onProxyReq: (proxyReq, req, res) => {
-          console.log(`Proxying request: ${req.method} ${req.originalUrl}`);
-        },
-        onError: (err, req, res) => {
-          console.error('Proxy error:', err);
-          res.status(500).send('Proxy error');
-        },
-      }),
-    );
-
-    app.listen(port, () => {
-      console.log(
-        `Proxy server running at http://localhost:${port}, forwarding to ${target}`,
-      );
-    });
+    discoveryResponse = await fetch(discoveryUrl);
+    if (!discoveryResponse.ok) throw new Error(discoveryResponse.statusText);
   } catch (error) {
-    console.error('Failed to start server:', error.message);
-    process.exit(1);
+    throw new Error(`Failed to fetch discovery endpoint: ${error.message}`);
   }
+
+  // Check jwksUri exists
+  const discoveryConfig = await discoveryResponse.json();
+  const jwksUri = discoveryConfig.jwks_uri;
+  if (!jwksUri) throw new Error('Missing jwks_uri in discovery configuration');
+  console.log(`Loaded jwks_uri: ${jwksUri}`);
+
+  // Initialize JWT validation middleware
+  // https://www.npmjs.com/package/express-jwt
+  let checkJwt = expressjwt({
+    // Dynamically provide signing key based on kid in the header and JWKs from Keycloak
+    secret: jwksRsa.expressJwtSecret({
+      cache: true,
+      rateLimit: false,
+      jwksUri: jwksUri,
+    }),
+    audience: clientId, // replace with your client_id if needed
+    algorithms: ['RS256'], // Keycloak typically uses RS256
+    requestProperty: 'user', // name of the property in the request object where the payload is set
+  });
+
+  // Exclude public routes
+  if (publicRoute) {
+    checkJwt = checkJwt.unless({ path: [publicRoute, '/api-gtw-health'] });
+  }
+
+  // Register JWT validation middleware
+  app.use(checkJwt);
+
+  // Forward claims as headers
+  app.use((req, res, next) => {
+    if (req.user) {
+      req.headers['x-user-id'] = req.user.sub; // user ID, see `aws_cognito_identity_provider`
+      req.headers['x-user-email'] = req.user.email; // user email
+    }
+    next();
+  });
+
+  // Error handling middleware for JWT errors
+  app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+      res.status(401).send(err.message);
+    } else {
+      next(err);
+    }
+  });
+
+  // Proxy all requests if JWT is valid
+  app.use(
+    '/',
+    createProxyMiddleware({
+      target: target,
+      changeOrigin: true,
+      onProxyReq: (proxyReq, req, res) => {
+        console.log(`Proxying request: ${req.method} ${req.originalUrl}`);
+      },
+      onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+        res.status(500).send('Proxy error');
+      },
+    }),
+  );
+
+  app.listen(port, () => {
+    console.log(
+      `Proxy server running at http://localhost:${port}, forwarding to ${target}`,
+    );
+  });
 }
 
-startServer();
+function runWithRetry(fn, maxRetries = 3, baseDelay = 1000) {
+  return new Promise(async (resolve, reject) => {
+    let attempt = 0;
+
+    while (attempt <= maxRetries) {
+      try {
+        const result = await fn();
+        return resolve(result);
+      } catch (err) {
+        if (attempt === maxRetries) {
+          return reject(err);
+        }
+        const delay = baseDelay * Math.pow(2, attempt); // exponential backoff
+        console.warn(`Start failed: ${err.message}. Retrying in ${delay}ms...`);
+        await new Promise((res) => setTimeout(res, delay));
+        attempt++;
+      }
+    }
+  });
+}
+
+runWithRetry(startServer)
+  .then((result) => console.log('API Gateway started'))
+  .catch((err) => console.error('API Gateway failed to start:', err.message));

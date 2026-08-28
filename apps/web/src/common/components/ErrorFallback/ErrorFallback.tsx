@@ -1,5 +1,8 @@
 import { type FallbackProps } from 'react-error-boundary';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+
 import { useAuth } from '../../../auth';
 import { getErrorInfo } from '../../../error';
 
@@ -9,11 +12,12 @@ import { getErrorInfo } from '../../../error';
  */
 export default function ErrorFallback(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
-  const { title, description, errorCode } = getErrorInfo(error);
+  const { message, code } = getErrorInfo(error);
   const { signIn } = useAuth();
-  const actionLabel = errorCode === 'UNAUTHORIZED_ACCESS' ? 'Sign In' : 'Try Again';
+  const actionLabel = code === 'UNAUTHORIZED_ACCESS' ? 'Sign In' : 'Try Again';
+
   const handleAction = () => {
-    if (errorCode === 'UNAUTHORIZED_ACCESS') {
+    if (code === 'UNAUTHORIZED_ACCESS') {
       void signIn();
     } else {
       resetErrorBoundary();
@@ -21,23 +25,21 @@ export default function ErrorFallback(props: FallbackProps) {
   };
 
   return (
-    <div role="alert" style={{ padding: '2rem', textAlign: 'center' }}>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <button
-        onClick={handleAction}
-        style={{
-          marginTop: '1rem',
-          padding: '0.5rem 1rem',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
-      >
-        {actionLabel}
-      </button>
-    </div>
+    <Alert
+      variant="destructive"
+      className="max-w-lg mx-auto border-destructive/20 bg-destructive/5 shadow-sm"
+    >
+      <AlertTitle className="text-base font-semibold">Error</AlertTitle>
+
+      <AlertDescription className="mt-2 text-sm text-muted-foreground">
+        {message}
+      </AlertDescription>
+
+      <div className="mt-4 flex justify-center">
+        <Button type="button" onClick={handleAction} variant="destructive">
+          {actionLabel}
+        </Button>
+      </div>
+    </Alert>
   );
 }

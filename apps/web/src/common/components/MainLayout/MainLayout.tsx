@@ -1,6 +1,9 @@
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink } from 'react-router';
-import { Outlet } from 'react-router';
+import { NavLink, Outlet } from 'react-router';
+
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 import { useAuth } from '../../../auth';
 import SignOutButton from '../../../common/components/SignOutButton';
@@ -16,139 +19,90 @@ import ErrorBoundary from '../ErrorBoundary';
 export default function MainLayout() {
   const { isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems = [
+    { label: 'Home', to: HOME_ROUTE },
+    { label: 'Protected Page', to: PROTECTED_ROUTE },
+    { label: 'Data Fetching', to: DATA_FETCHING_ROUTE },
+    { label: 'Data Mutation', to: DATA_MUTATION_ROUTE },
+    { label: 'Practice Page', to: PRACTICE_ROUTE },
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <nav className="supports-backdrop-filter:bg-background/60 border-b border-border bg-background/95 shadow-sm backdrop-blur">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between gap-4">
             <div className="shrink-0">
-              <h1 className="text-2xl font-bold text-blue-600">Fluento</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-primary">
+                Fluento
+              </h1>
             </div>
-            <ul className="hidden md:flex gap-8 items-center">
-              <li>
-                <NavLink
-                  to={HOME_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={PROTECTED_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Protected Page
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={DATA_FETCHING_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Data Fetching
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={DATA_MUTATION_ROUTE}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Data Mutation
-                </NavLink>
-              </li>
+
+            <ul className="hidden items-center gap-2 md:flex">
+              {menuItems.map(({ label, to }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) =>
+                      cn(
+                        'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                        isActive
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                      )
+                    }
+                  >
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
               {isAuthenticated && (
                 <li>
                   <SignOutButton />
                 </li>
               )}
             </ul>
-            {/* Mobile menu button */}
-            <button
-              onClick={() => {
-                setIsMenuOpen(!isMenuOpen);
-              }}
-              className="md:hidden p-2 text-gray-700 hover:text-blue-600"
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
               aria-label="Toggle menu"
+              onClick={() => {
+                setIsMenuOpen((current) => !current);
+              }}
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
+              {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </Button>
           </div>
 
-          {/* Mobile menu */}
           {isMenuOpen && (
-            <div className="md:hidden pb-4 border-t border-gray-200">
-              <ul className="flex flex-col gap-3 pt-4">
-                <li>
-                  <NavLink
-                    to={HOME_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Home
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={PROTECTED_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Protected Page
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={DATA_FETCHING_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Data Fetching
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={DATA_MUTATION_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Data Mutation
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={PRACTICE_ROUTE}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
-                    className="block text-gray-700 hover:text-blue-600 font-medium transition-colors py-2"
-                  >
-                    Practice Page
-                  </NavLink>
-                </li>
+            <div className="border-t border-border pb-4 md:hidden">
+              <ul className="flex flex-col gap-2 pt-4">
+                {menuItems.map(({ label, to }) => (
+                  <li key={to}>
+                    <NavLink
+                      to={to}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      className={({ isActive }) =>
+                        cn(
+                          'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                          isActive
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                        )
+                      }
+                    >
+                      {label}
+                    </NavLink>
+                  </li>
+                ))}
                 {isAuthenticated && (
-                  <li className="pt-2 border-t border-gray-200">
+                  <li className="pt-2">
                     <SignOutButton />
                   </li>
                 )}
@@ -158,9 +112,8 @@ export default function MainLayout() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="flex-1 w-full">
-        <div className="max-w-7xl mx-auto p-2 md:p-4 lg:p-8">
+        <div className="mx-auto max-w-7xl p-2 md:p-4 lg:p-8">
           <ErrorBoundary>
             <Outlet />
           </ErrorBoundary>

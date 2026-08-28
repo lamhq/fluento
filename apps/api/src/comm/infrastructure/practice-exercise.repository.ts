@@ -104,6 +104,32 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
     return results.map((result) => this.dbModelToEntity(result));
   }
 
+  async upsertPractice(params: {
+    learnerId: string;
+    exerciseId: string;
+    practicedAt?: Date;
+  }): Promise<void> {
+    const { learnerId, exerciseId, practicedAt = new Date() } = params;
+
+    await this.exerciseModel.db
+      .collection('learner_exercise_practices')
+      .updateOne(
+        {
+          learnerId: new Types.ObjectId(learnerId),
+          exerciseId: new Types.ObjectId(exerciseId),
+        },
+        {
+          $set: {
+            learnerId: new Types.ObjectId(learnerId),
+            exerciseId: new Types.ObjectId(exerciseId),
+            lastPracticeAt: practicedAt,
+          },
+          $inc: { practiceCount: 1 },
+        },
+        { upsert: true },
+      );
+  }
+
   private dbModelToEntity(item: unknown): PracticeExerciseEntity {
     if (!this.isPracticeExercise(item)) {
       throw new Error('Invalid database model: missing _id field');
