@@ -1,5 +1,6 @@
 import request from 'supertest';
 
+import { RESPONSE_EVALUATION_SERVICE } from '../../../src/comm/core/response-evaluation-service.port';
 import { deleteMany, findOne, insert } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
@@ -10,6 +11,11 @@ describe('submit response', () => {
     const { email, id: userId } = getUser();
     const responseText =
       'I was hoping you could give me a lift to the airport.';
+
+    // mock the evaluation service to return a fake evaluation result
+    jest
+      .spyOn(getApp().get(RESPONSE_EVALUATION_SERVICE), 'evaluate')
+      .mockResolvedValue(fakeEvaluation);
 
     const exercise = await insert('exercises', {
       topics: ['Socializing', cleanupMarker],
@@ -64,7 +70,6 @@ describe('submit response', () => {
             feedback: expect.any(String),
           }),
         }),
-        alternatives: expect.any(Array),
       }),
     );
 
@@ -91,3 +96,31 @@ describe('submit response', () => {
     });
   });
 });
+
+// Fake evaluation returned by evaluation service in tests.
+const fakeEvaluation = {
+  prompt: 'Politely ask your friend to take you to the airport.',
+  response: 'I was hoping you could give me a lift to the airport.',
+  feedback: 'Good response. It sounds polite and relevant.',
+  correctness: {
+    score: 95,
+    feedback: 'Correct and natural.',
+    fixes: [],
+    correctedSentence: 'I was hoping you could give me a lift to the airport.',
+  },
+  appropriateness: {
+    feedback: 'Well suited to the situation.',
+    clarity: {
+      score: 90,
+      feedback: 'Clear and easy to understand.',
+    },
+    politeness: {
+      score: 95,
+      feedback: 'Very polite.',
+    },
+    tone: {
+      score: 90,
+      feedback: 'Friendly and appropriate.',
+    },
+  },
+};

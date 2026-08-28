@@ -8,7 +8,7 @@ describe('getErrorInfo', () => {
 
     expect(result).toEqual({
       code: 'UNKNOWN_ERROR',
-      message: 'Something broke',
+      message: 'Something went wrong. Please try reloading.',
     });
   });
 });
