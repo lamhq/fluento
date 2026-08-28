@@ -49,14 +49,44 @@ pnpm -F api run build
 pnpm -F api run start
 ```
 
-## Testing
+## Useful commands
+
+Run tests:
 
 ```bash
-# Unit tests
+# run all tests
 pnpm -F api run test
 
-# API tests
+# run API tests
 pnpm -F api run test:e2e
+```
+
+Run lint:
+
+```bash
+pnpm -F api run lint
+```
+
+Run type check:
+
+```bash
+pnpm -F api run type-check
+```
+
+Manage dependencies:
+
+```bash
+# Add a dependency
+pnpm -F api add <dependency>
+
+# Remove a dependency
+pnpm -F api remove <dependency>
+```
+
+Run a locally installed package binary:
+
+```bash
+pnpm -F api exec <command>
 ```
 
 ## Deploy

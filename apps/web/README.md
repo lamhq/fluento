@@ -54,7 +54,7 @@ pnpm -F web run test
 pnpm -F web run test src/comm/components/PracticeForm/utils.test
 ```
 
-Run Lint:
+Run lint:
 
 ```bash
 pnpm -F web run lint
