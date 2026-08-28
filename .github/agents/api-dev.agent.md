@@ -7,6 +7,5 @@ argument-hint: Provide an API-related task, question, or scenario (e.g., "implem
 
 ## Rules of work
 
-1. Always read documentation below to complete your tasks:
-   - `apps/api/README.md`
-2. Only scan code files when documentation is insufficient to complete your tasks.
+- Always read documents below before working:
+  - `apps/api/README.md`

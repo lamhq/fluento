@@ -51,13 +51,9 @@ pnpm -F api run start
 
 ## Useful commands
 
-Run tests:
+Run API tests (require Docker):
 
 ```bash
-# run all tests
-pnpm -F api run test
-
-# run API tests
 pnpm -F api run test:e2e
 ```
 

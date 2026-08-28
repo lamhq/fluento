@@ -8,37 +8,33 @@ This document describes the structure of the `docs` directory, which contains al
 
 ```text
 docs/
-├── documentation-structure.md
 ├── project-overview.md
-├── requirements/
-│   └── communication/
-│       └── practice-communication.md
-├── design/
-│   ├── api/
-│   │   └── communication/
-│   │       ├── get-exercises.md
-│   │       └── submit-response.md
-│   ├── data/
-│   │   └── communication.md
-│   └── web/
-│       └── communication/
-│           └── practice-communication.md
 ├── ideas/
-│   ├── articulation/
-│   │   ├── par-var.md
-│   │   ├── sen-con.md
-│   │   └── sen-var.md
-│   ├── speaking.md
-│   └── vocabulary.md
+├── requirements/
+└── design/
+    ├── api/
+    ├── data/
+    └── web/
 ```
 
-- `project-overview.md`: Project Overview Document, covering the high-level product context, goals, and direction.
-- `ideas/`: Brainstorming notes, exploratory concepts, and early-stage product or language-learning ideas.
-- `requirements/`: Feature Specification Documents, organized by module. Each document describes a product requirement or user-facing feature.
-- `design/api/`: API Specification Documents, organized by module. Each document describes the contract and behavior for a related API endpoint or flow.
-- `design/web/`: UI Specification Documents, organized by module. Each document describes a screen or interaction pattern for the frontend.
-- `design/data/`: Data Model Documents. Each document describes the data shape and relationships for a module.
+| Document                       | Description                                                             | Location                                       |
+| ------------------------------ | ----------------------------------------------------------------------- | ---------------------------------------------- |
+| Project Overview Document      | Provides a high-level overview of the project                           | `docs/project-overview.md`                     |
+| Feature Idea Document          | Brainstorming notes for incoming release features                       | `docs/ideas/{module}/{feature-name}.md`        |
+| Feature Specification Document | Describes a feature in detail from the end-user's perspective           | `docs/requirements/{module}/{feature-name}.md` |
+| API Specification Document     | Describes an API so developers can implement and integrate it correctly | `docs/design/api/{module}/{api-name}.md`       |
+| UI Specification Document      | Describes a single screen of a software application                     | `docs/design/web/{module}/{screen-name}.md`    |
+| Database Design Document       | Describes the database design of a module                               | `docs/design/data/{module}.md`                 |
+
+`{module}` is a placeholder for the module name.
 
 ## Available Modules
 
-- **communication**: managing communication exercises, including retrieving exercises, practicing responses, and submitting answers.
+The system is divided into several modules, each responsible for a specific aspect of the application.
+
+Here're the available modules:
+
+- **communication**:
+  - manage exercises: list, import, add, update, create, delete exercises
+  - display exercise for practicing
+  - return feedback for learner's response

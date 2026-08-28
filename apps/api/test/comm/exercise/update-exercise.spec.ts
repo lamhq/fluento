@@ -26,6 +26,7 @@ describe('update exercise', () => {
     ]);
 
     const dto = {
+      status: 'active',
       topics: ['Job Interview', cleanupMarker],
       scenario: 'introducing yourself',
       learnerRole: 'interviewee',
@@ -39,6 +40,7 @@ describe('update exercise', () => {
     expect(resp.body).toEqual(
       expect.objectContaining({
         id: exerciseId,
+        status: dto.status,
         topics: dto.topics,
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
@@ -52,6 +54,7 @@ describe('update exercise', () => {
     expect(updatedExercise?._id.toString()).toBe(exerciseId);
     expect(updatedExercise).toEqual(
       expect.objectContaining({
+        status: dto.status,
         topics: dto.topics,
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,

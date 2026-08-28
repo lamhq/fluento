@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
+import { ExerciseStatus } from '../core/exercise.entity';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 import type { PracticeExerciseQuery } from '../core/practice-exercise-repository.port';
 import { PracticeExerciseRepositoryPort } from '../core/practice-exercise-repository.port';
@@ -9,6 +10,7 @@ import { Exercise } from './schemas/exercise.schema';
 
 interface RawPracticeExercise {
   _id: Types.ObjectId;
+  status: ExerciseStatus;
   topics: string[];
   scenario: string;
   learnerRole: string;
@@ -43,12 +45,17 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
     } = params;
 
     const pipeline: PipelineStage[] = [];
+    const matchStage: Record<string, unknown> = {
+      status: ExerciseStatus.Active,
+    };
 
     if (topics && topics.length > 0) {
-      pipeline.push({
-        $match: { topics: { $in: topics } },
-      });
+      matchStage.topics = { $in: topics };
     }
+
+    pipeline.push({
+      $match: matchStage,
+    });
 
     pipeline.push({
       $lookup: {
@@ -137,6 +144,7 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
 
     return new PracticeExerciseEntity({
       id: item._id.toString(),
+      status: item.status,
       topics: item.topics,
       scenario: item.scenario,
       learnerRole: item.learnerRole,

@@ -1,5 +1,11 @@
+export enum ExerciseStatus {
+  Active = 'active',
+  Archived = 'archived',
+}
+
 export class ExerciseEntity {
   id: string;
+  status: ExerciseStatus;
   topics: string[];
   scenario: string;
   learnerRole: string;
