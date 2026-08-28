@@ -2,7 +2,7 @@
 
 ## Introduction
 
-- **Description:** Learners practice realistic conversations and get instant feedback.
+- **Description:** Allow learners to practice realistic conversations and get instant feedback.
 - **User Goal:** Build confidence and fluency in everyday communication.
 
 ## User Story

@@ -7,6 +7,5 @@ argument-hint: Provide a web-related task, question, or scenario (e.g., "impleme
 
 ## Rules of work
 
-1. Always read documentation below to complete your tasks:
-   - `apps/web/README.md`
-2. Only scan code files when documentation is insufficient to complete your tasks.
+- Always read documents below before working:
+  - `apps/web/README.md`

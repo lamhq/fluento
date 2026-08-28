@@ -30,6 +30,8 @@ Retrieve a list of practice exercises available to a learner.
 
 ### Response
 
+> `status` is internal and omitted from practice responses.
+
 **Success (200 OK):**
 
 ```json
