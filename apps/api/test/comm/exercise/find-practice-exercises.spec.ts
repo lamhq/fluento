@@ -12,6 +12,7 @@ describe('find practice exercises', () => {
 
     const [exerciseId] = await insertMany('exercises', [
       {
+        status: 'active',
         topics: ['Socializing', cleanupMarker],
         scenario: 'asking for a favor',
         learnerRole: 'person',

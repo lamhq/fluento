@@ -8,6 +8,7 @@ describe('create exercise', () => {
 
   it('should add a record in database', async () => {
     const dto = {
+      status: 'active',
       topics: ['Restaurant', cleanupMarker],
       scenario: 'ordering food in a restaurant',
       learnerRole: 'customer',
@@ -33,6 +34,7 @@ describe('create exercise', () => {
     expect(resp.body).toEqual(
       expect.objectContaining({
         id: expect.any(String),
+        status: dto.status,
         topics: dto.topics,
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
@@ -48,6 +50,7 @@ describe('create exercise', () => {
     expect(savedExercise).not.toBeNull();
     expect(savedExercise).toEqual(
       expect.objectContaining({
+        status: dto.status,
         topics: dto.topics,
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
@@ -56,6 +59,42 @@ describe('create exercise', () => {
         expectedResponses: dto.expectedResponses,
       }),
     );
+  });
+
+  it('should accept archived status and reject invalid values', async () => {
+    const archivedDto = {
+      status: 'archived',
+      topics: ['Restaurant', cleanupMarker],
+      scenario: 'ordering food in a restaurant',
+      learnerRole: 'customer',
+      counterpartRole: 'waiter',
+      prompts: ['Say that you would like to order a meal.'],
+      expectedResponses: [
+        {
+          content: 'I would like to order the grilled salmon, please.',
+          style: ['polite', 'simple'],
+        },
+      ],
+    };
+
+    const resp = await request(getApp().getHttpServer())
+      .post('/manage/exercises')
+      .send(archivedDto)
+      .expect(201);
+
+    expect(resp.body).toEqual(
+      expect.objectContaining({
+        status: 'archived',
+      }),
+    );
+
+    await request(getApp().getHttpServer())
+      .post('/manage/exercises')
+      .send({
+        ...archivedDto,
+        status: 'draft',
+      })
+      .expect(400);
   });
 
   afterEach(async () => {

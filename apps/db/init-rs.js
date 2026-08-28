@@ -37,6 +37,7 @@ usersCol.insertOne({
 exercisesCol.insertMany([
   {
     _id: exerciseId1,
+    status: 'active',
     topics: ['ordering-food'],
     scenario: 'Ordering coffee at a cafe',
     learnerRole: 'customer',
@@ -50,6 +51,7 @@ exercisesCol.insertMany([
   },
   {
     _id: exerciseId2,
+    status: 'archived',
     topics: ['small-talk'],
     scenario: 'Making small talk with a coworker',
     learnerRole: 'employee',
