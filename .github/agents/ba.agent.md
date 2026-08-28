@@ -16,12 +16,14 @@ The table below lists tasks along with the required document to read:
 
 | Task                                 | Document                             |
 | ------------------------------------ | ------------------------------------ |
-| Write Feature Specification Document | Feature Specification Document Guide |
 | Find documentation                   | Documentation Structure              |
+| Write Feature Specification Document | Feature Specification Document Guide |
+| Write Feature Specification Document | Feature Idea Document                |
 
 ## Documents Location
 
 | Document                             | Location                                             |
 | ------------------------------------ | ---------------------------------------------------- |
-| Feature Specification Document Guide | http://localhost:4173/se/process/requirements/fsd.md |
 | Documentation Structure              | `docs/documentation-structure.md`                    |
+| Feature Idea Document                | `docs/ideas/{module}/{feature-name}.md`              |
+| Feature Specification Document Guide | http://localhost:4173/se/process/requirements/fsd.md |

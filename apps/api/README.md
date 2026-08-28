@@ -49,40 +49,19 @@ pnpm -F api run build
 pnpm -F api run start
 ```
 
-## Useful commands
+## Run end-to-end tests
 
-Run API tests (require Docker):
+Run all end-to-end tests (require Docker):
 
 ```bash
-pnpm -F api run test:e2e
+pnpm -F api test:e2e
 ```
 
-Run lint:
+Run end-to-end tests for specific files:
 
 ```bash
-pnpm -F api run lint
-```
-
-Run type check:
-
-```bash
-pnpm -F api run type-check
-```
-
-Manage dependencies:
-
-```bash
-# Add a dependency
-pnpm -F api add <dependency>
-
-# Remove a dependency
-pnpm -F api remove <dependency>
-```
-
-Run a locally installed package binary:
-
-```bash
-pnpm -F api exec <command>
+pnpm -F api test:e2e <pattern>
+# pnpm -F api test:e2e delete-exercise.spec.ts
 ```
 
 ## Deploy

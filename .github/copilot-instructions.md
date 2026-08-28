@@ -11,9 +11,13 @@ The table below lists tasks along with the required document to read:
 
 | Task                         | Document    |
 | ---------------------------- | ----------- |
-| Manage dependencies          | Root README |
 | Understand project structure | Root README |
 | Identify available projects  | Root README |
+| Run lint                     | Root README |
+| Run type check               | Root README |
+| Run unit tests               | Root README |
+| Run package's binary         | Root README |
+| Manage dependencies          | Root README |
 | Review Docker Compose file   | Root README |
 
 ## Documents Location
