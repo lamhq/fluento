@@ -55,6 +55,47 @@ describe('find practice exercises', () => {
     );
   });
 
+  it('should hide archived exercises and default to a 10-item page', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
+    const exercises = Array.from({ length: 11 }, (_, index) => ({
+      status: index === 0 ? 'archived' : 'active',
+      topics: ['Socializing', cleanupMarker],
+      scenario: `practice scenario ${index.toString()}`,
+      learnerRole: 'person',
+      counterpartRole: 'friend',
+      prompts: ['Say hello.'],
+      expectedResponses: [
+        {
+          content: 'Hello!',
+          style: ['friendly'],
+        },
+      ],
+      createdAt: new Date(Date.now() + index * 1000),
+      updatedAt: new Date(Date.now() + index * 1000),
+    }));
+
+    const insertedIds = await insertMany('exercises', exercises);
+
+    for (const exerciseId of insertedIds.slice(1)) {
+      await insert('learner_exercise_practices', {
+        learnerId: new Types.ObjectId(userId),
+        exerciseId: new Types.ObjectId(exerciseId),
+        practiceCount: 1,
+        lastPracticeAt: new Date(Date.now() + 1000),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    const resp = await request(getApp().getHttpServer())
+      .get('/practice/exercises')
+      .set('x-user-email', userEmail)
+      .expect(200);
+
+    expect(resp.body).toHaveLength(10);
+  });
+
   afterEach(async () => {
     const { id: userId } = getUser();
     await deleteMany('learner_exercise_practices', {

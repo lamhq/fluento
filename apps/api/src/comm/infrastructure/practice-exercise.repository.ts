@@ -45,12 +45,17 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
     } = params;
 
     const pipeline: PipelineStage[] = [];
+    const matchStage: Record<string, unknown> = {
+      status: ExerciseStatus.Active,
+    };
 
     if (topics && topics.length > 0) {
-      pipeline.push({
-        $match: { topics: { $in: topics } },
-      });
+      matchStage.topics = { $in: topics };
     }
+
+    pipeline.push({
+      $match: matchStage,
+    });
 
     pipeline.push({
       $lookup: {
