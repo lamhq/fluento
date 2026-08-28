@@ -197,3 +197,18 @@ infra/
     ├── mongodb-cluster/       # MongoDB Atlas cluster module
     └── s3/                    # S3 bucket module
 ```
+
+## Tech Stack
+
+| Technology         | Purpose                                           |
+| ------------------ | ------------------------------------------------- |
+| Terraform          | Infrastructure as Code for the whole platform     |
+| AWS Lambda         | Runs the API handler and Cognito pre-sign-up hook |
+| Amazon API Gateway | Exposes the backend HTTP API securely             |
+| Amazon CloudFront  | CDN and edge delivery for the web app             |
+| Amazon S3          | Hosts static web assets and application storage   |
+| Amazon Cognito     | User authentication and OAuth/OIDC flows          |
+| MongoDB Atlas      | Managed database for application data             |
+| Cloudflare         | DNS and domain/certificate management             |
+| GitHub             | Repository hosting, and CI/CD platform            |
+| Google OAuth       | External identity provider for Cognito login      |

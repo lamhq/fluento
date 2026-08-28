@@ -119,15 +119,18 @@ apps/web/src/
 
 ## Tech Stack
 
-| Technology   | Purpose                       |
-| ------------ | ----------------------------- |
-| React 19     | UI library                    |
-| Vite         | Build tool and dev server     |
-| TypeScript   | Type-safe JavaScript          |
-| Tailwind     | Utility-first CSS framework   |
-| Shadcn/ui    | Component library             |
-| React Router | Client-side routing           |
-| React Query  | Server state management       |
-| OIDC Client  | OpenID Connect authentication |
-| Axios        | HTTP client for API requests  |
-| Vitest       | Unit and integration testing  |
+| Technology            | Purpose                       |
+| --------------------- | ----------------------------- |
+| React 19              | UI library                    |
+| Vite                  | Build tool and dev server     |
+| TypeScript            | Type-safe JavaScript          |
+| Tailwind CSS          | Utility-first CSS framework   |
+| Shadcn/ui             | Component library             |
+| React Router          | Client-side routing           |
+| React Query           | Server state management       |
+| OIDC                  | OpenID Connect authentication |
+| Axios                 | HTTP client for API requests  |
+| Vitest                | Unit and integration testing  |
+| React Hook Form       | Form state management         |
+| React Testing Library | Component testing             |
+| Zod                   | Schema validation             |

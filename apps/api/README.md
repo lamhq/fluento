@@ -174,7 +174,9 @@ apps/api/
 | Supertest  | HTTP endpoint testing        |
 | esbuild    | Fast application bundling    |
 | Docker     | Containerization             |
-| AWS Lambda | Serverless function runtime  |
+| LangChain  | LLM orchestration            |
+| Mongoose   | MongoDB object modeling      |
+| MongoDB    | Database                     |
 
 ## Architecture Decision Records
 
