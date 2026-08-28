@@ -40,4 +40,8 @@ module "api_service" {
       Resource = "${module.app_storage.bucket_arn}/media/reports/*"
     }
   ]
+
+  layers = [
+    module.api_layer.layer_version_arn
+  ]
 }

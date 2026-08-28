@@ -70,17 +70,30 @@ pnpm -F api run build
 Create the deployment package:
 
 ```bash
-cd apps/api/dist/ && zip -r ../../../api.zip . && cd ../../../
+# go to the build output directory
+cd apps/api/dist/
+
+# remove unnecessary files
+rm main.js main.js.map
+
+# create a zip in the root directory
+zip -r ../../../api.zip .
+
+# go back to the root directory
+cd ../../../
 ```
 
 Update the lambda function and wait for the update to complete:
 
 ```bash
+# update the lambda function
 aws lambda update-function-code \
   --function-name fluento-<env>-api-handler \
   --zip-file fileb://api.zip \
-  --region ap-southeast-1
+  --region ap-southeast-1 \
+  --no-cli-pager
 
+# wait for the update to complete
 aws lambda wait function-updated \
   --function-name fluento-<env>-api-handler \
   --region ap-southeast-1
@@ -174,3 +187,16 @@ We will keep esbuild minification disabled for the API build by setting `minify:
 
 - Positive: NestJS starts reliably, dependency injection resolves correctly, and runtime behavior remains stable.
 - Negative: The generated bundle is larger than a minified build, but the reliability tradeoff is preferred for this application.
+
+### Package `@langchain/openai` in a Lambda Layer
+
+**Context**:  
+LangChain loads `@langchain/openai` via dynamic imports, which fail in the bundled Lambda since `node_modules` isn’t shipped.
+
+**Decision**:  
+Install `@langchain/openai` in `node_modules` and ship that directory as a dedicated Lambda layer.
+
+**Consequences**:
+
+- **Positive**: OpenAI integrations work without resolution errors.
+- **Negative**: Adds an extra deployment artifact (the layer).

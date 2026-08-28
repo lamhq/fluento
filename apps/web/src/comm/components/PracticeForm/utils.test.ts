@@ -11,5 +11,9 @@ describe('normalizeLearnerResponse', () => {
     expect(normalizeLearnerResponse('i want a coffee. please')).toBe(
       'I want a coffee. Please.',
     );
+
+    expect(normalizeLearnerResponse('it was great. thanks')).toBe(
+      'It was great. Thanks.',
+    );
   });
 });

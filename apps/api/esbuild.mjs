@@ -11,7 +11,11 @@ await build({
   sourcemap: true,
   minify: false,
   legalComments: 'none',
-  external: ['@nestjs/microservices', '@nestjs/websockets/socket-module'],
+  external: [
+    '@nestjs/microservices',
+    '@nestjs/websockets/socket-module',
+    '@langchain/openai',
+  ],
   plugins: [
     esbuildPluginDecorator({
       tsconfigPath: 'tsconfig.json',

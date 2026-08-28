@@ -10,13 +10,13 @@ The table below lists tasks with the documentation guide to complete them:
 
 | Task                           | Document to read |
 | ------------------------------ | ---------------- |
-| Manage dependencies            | Project Guide    |
-| Understand project structure   | Project Guide    |
-| Know available projects        | Project Guide    |
-| Understand Docker Compose file | Project Guide    |
+| Manage dependencies            | Root README      |
+| Understand project structure   | Root README      |
+| Know available projects        | Root README      |
+| Understand Docker Compose file | Root README      |
 
 ## Documentation Location
 
-| Document      | Location    |
-| ------------- | ----------- |
-| Project Guide | `README.md` |
+| Document    | Location    |
+| ----------- | ----------- |
+| Root README | `README.md` |
