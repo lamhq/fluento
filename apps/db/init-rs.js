@@ -10,19 +10,24 @@ print('Creating collections...');
 db = db.getSiblingDB('test');
 db.createCollection('exercises');
 db.createCollection('learner_exercise_practices');
+db.createCollection('topics');
 db.createCollection('users');
 
 print('Seeding data...');
 const exercisesCol = db.getCollection('exercises');
 const practicesCol = db.getCollection('learner_exercise_practices');
+const topicsCol = db.getCollection('topics');
 const usersCol = db.getCollection('users');
 const exerciseId1 = ObjectId('65f000000000000000000001');
 const exerciseId2 = ObjectId('65f000000000000000000002');
 const userId = ObjectId('65f000000000000000000003');
 const now = new Date();
 
+const topicNames = ['Restaurant', 'Socializing', 'Travel', 'School'];
+
 exercisesCol.deleteMany({ _id: { $in: [exerciseId1, exerciseId2] } });
 practicesCol.deleteMany({ exerciseId: { $in: [exerciseId1, exerciseId2] } });
+topicsCol.deleteMany({ name: { $in: topicNames } });
 usersCol.deleteMany({ email: 'test@example.com' });
 
 usersCol.insertOne({
@@ -34,11 +39,20 @@ usersCol.insertOne({
   updatedAt: now,
 });
 
+topicsCol.insertMany(
+  topicNames.map((name) => ({
+    name,
+    createdAt: now,
+    updatedAt: now,
+  })),
+);
+
 exercisesCol.insertMany([
   {
     _id: exerciseId1,
+    userId,
     status: 'active',
-    topics: ['ordering-food'],
+    topics: ['Restaurant'],
     scenario: 'Ordering coffee at a cafe',
     learnerRole: 'customer',
     counterpartRole: 'barista',
@@ -51,8 +65,9 @@ exercisesCol.insertMany([
   },
   {
     _id: exerciseId2,
+    userId,
     status: 'archived',
-    topics: ['small-talk'],
+    topics: ['Socializing'],
     scenario: 'Making small talk with a coworker',
     learnerRole: 'employee',
     counterpartRole: 'coworker',

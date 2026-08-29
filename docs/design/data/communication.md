@@ -26,6 +26,7 @@ erDiagram
 
     CommunicationExercise {
         string id
+        string userId
         string status
         string scenario
         string learnerRole
@@ -106,6 +107,7 @@ Represents a reusable scenario-based communication exercise for practice.
 | Attribute Name  | Type     | Description                                                            |
 | --------------- | -------- | ---------------------------------------------------------------------- |
 | id              | String   | Unique exercise identifier.                                            |
+| userId          | String   | Identifier of the user who owns or created the exercise.               |
 | status          | String   | Lifecycle state of the exercise. Allowed values: `active`, `archived`. |
 | scenario        | String   | Real-world situation the learner is expected to respond to.            |
 | learnerRole     | String   | Role played by the learner in the scenario.                            |

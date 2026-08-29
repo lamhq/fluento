@@ -17,6 +17,8 @@ docs/
     └── web/
 ```
 
+## Document Types
+
 | Document                       | Description                                                             | Location                                       |
 | ------------------------------ | ----------------------------------------------------------------------- | ---------------------------------------------- |
 | Project Overview Document      | Provides a high-level overview of the project                           | `docs/project-overview.md`                     |

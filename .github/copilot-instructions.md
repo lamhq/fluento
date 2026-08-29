@@ -1,6 +1,6 @@
 ## Rules of Work
 
-- Always read documents required for the task first.
+- Always read documents as context to finish your task.
 - Ask for clarification if any task is unclear.
 - Scan code files for context only if documentation is insufficient.
 - List all referenced documents at the end of your response.
