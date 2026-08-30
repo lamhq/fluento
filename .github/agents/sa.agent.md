@@ -7,27 +7,22 @@ argument-hint: Provide a software architect-related task, question, or scenario 
 
 ## Rules of Work
 
-- Only read and write documentation files. Do not modify code files.
+Follow these rules for every task:
 
-## Tasks and Documents
+- Only read and write documentation files.
+- Do not modify code files.
 
-The table below lists tasks along with the required document to read:
+## Tasks
 
-| Task                             | Document                  |
-| -------------------------------- | ------------------------- |
-| Find documentation               | Documentation Structure   |
-| Write UI Specification Document  | UI Specification Guide    |
-| Write UI Specification Document  | Database Design Document  |
-| Write API Specification Document | API Specification Guide   |
-| Write API Specification Document | Database Design Document  |
-| Write API Specification Document | UI Specification Document |
+All tasks and the relevant documents to read for context:
 
-## Documents Location
-
-| Document                  | Location                                            |
-| ------------------------- | --------------------------------------------------- |
-| Documentation Structure   | `docs/documentation-structure.md`                   |
-| UI Specification Document | `docs/design/{web}/{screen-name}.md`                |
-| Database Design Document  | `docs/design/data/{module}.md`                      |
-| UI Specification Guide    | http://localhost:4173/se/process/design/ui-spec.md  |
-| API Specification Guide   | http://localhost:4173/se/process/design/api-spec.md |
+| Task                             | Document                       |
+| -------------------------------- | ------------------------------ |
+| Find documentation               | Documentation Structure        |
+| Write UI Specification Document  | UI Specification Guide         |
+| Write UI Specification Document  | Feature Specification Document |
+| Write UI Specification Document  | Database Design Document       |
+| Write API Specification Document | API Specification Guide        |
+| Write API Specification Document | UI Specification Document      |
+| Write API Specification Document | Database Design Document       |
+| Write API Specification Document | API Design Standard            |

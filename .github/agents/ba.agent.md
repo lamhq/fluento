@@ -7,22 +7,17 @@ argument-hint: Provide a business analyst-related task, question, or scenario (e
 
 ## Rules of Work
 
-- Only read and write documentation files. Do not modify code files.
+Follow these rules for every task:
 
-## Tasks and Documents
+- Only read and write documentation files.
+- Do not modify code files.
 
-The table below lists tasks along with the required document to read:
+## Tasks
+
+All tasks and the relevant documents to read for context:
 
 | Task                                 | Document                    |
 | ------------------------------------ | --------------------------- |
 | Find documentation                   | Documentation Structure     |
 | Write Feature Specification Document | Feature Idea Document       |
 | Write Feature Specification Document | Feature Specification Guide |
-
-## Documents Location
-
-| Document                    | Location                                                      |
-| --------------------------- | ------------------------------------------------------------- |
-| Documentation Structure     | `docs/documentation-structure.md`                             |
-| Feature Idea Document       | `docs/ideas/{module}/{feature-name}.md`                       |
-| Feature Specification Guide | http://localhost:4173/se/process/requirements/feature-spec.md |

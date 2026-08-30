@@ -8,16 +8,15 @@ Submit a learner's written response in an exercise for evaluation and return act
 
 - **Type:** REST
 - **Signatures:** `POST /comm/exercises/<exerciseId>/responses`
-- **Authentication:** OAuth 2.0 with Bearer token
 - **Versioning Strategy:** URI versioning using `/v1`
 
 ### Request Headers
 
-| **Name**      | **Value**        |
-| ------------- | ---------------- |
-| Authorization | Bearer `<token>` |
-| Content-Type  | application/json |
-| Accept        | application/json |
+| **Name**     | **Value**          |
+| ------------ | ------------------ |
+| User-Email   | `test@example.com` |
+| Content-Type | application/json   |
+| Accept       | application/json   |
 
 ### Path Parameters
 
@@ -87,15 +86,6 @@ Submit a learner's written response in an exercise for evaluation and return act
 }
 ```
 
-**Error (401 Unauthorized):**
-
-```json
-{
-  "code": "UNAUTHORIZED",
-  "message": "Invalid or missing authentication token"
-}
-```
-
 **Error (404 Not Found):**
 
 ```json
@@ -125,7 +115,7 @@ Submit a learner's written response in an exercise for evaluation and return act
 
 ## Functional Requirements
 
-- **Authentication Enforcement:** Require the learner to be authenticated.
+- **User Identification:** Use the `User-Email` header to identify which learner is submitting the response.
 - **Validation:** Reject empty or whitespace-only submissions before evaluation.
 - **Context Matching:** Evaluate the response to the exercise scenario, learner role, and counterpart role.
 - **AI-Based Evaluation:** Use AI service for scoring, return overall feedback and corrected sentences or fix suggestions.
@@ -135,7 +125,7 @@ Submit a learner's written response in an exercise for evaluation and return act
 ## Non-Functional Requirements
 
 - **Performance:** Complete evaluations within 3 seconds under normal traffic, including validation and feedback generation.
-- **Security:** Traffic must use HTTPS and JWT or equivalent bearer-token validation.
+- **Security:** All traffic must use HTTPS.
 - **Scalability:** Support concurrent learners without slower standard response times.
 
 ## Changelog
