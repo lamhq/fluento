@@ -134,6 +134,7 @@ Represents a thematic category used for grouping and filtering exercises.
 | Attribute Name | Type     | Description                                              |
 | -------------- | -------- | -------------------------------------------------------- |
 | id             | String   | Unique topic identifier.                                 |
+| userId         | String   | Identifier of the user who owns or created the topic.    |
 | name           | String   | Topic label, such as Restaurant, School, or Socializing. |
 | createdAt      | DateTime | Timestamp when the topic was created.                    |
 

@@ -6,6 +6,8 @@ import { EXERCISE_REPOSITORY } from './core/exercise-repository.port';
 import { LEARNER_EXERCISE_REPOSITORY } from './core/learner-exercise-repository.port';
 import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation-service.port';
 import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission-repository.port';
+import { TopicService } from './core/topic.service';
+import { TOPIC_REPOSITORY } from './core/topic-repository.port';
 import { ExerciseRepository } from './infrastructure/exercise.repository';
 import { LearnerExerciseRepository } from './infrastructure/learner-exercise.repository';
 import { ResponseEvaluationService } from './infrastructure/response-evaluation.service';
@@ -22,10 +24,13 @@ import {
   ResponseSubmission,
   ResponseSubmissionSchema,
 } from './infrastructure/schemas/response-submission.schema';
+import { Topic, TopicSchema } from './infrastructure/schemas/topic.schema';
+import { TopicRepository } from './infrastructure/topic.repository';
 import { CreateExerciseHttpController } from './interface/create-exercise.http.controller';
 import { DeleteExerciseHttpController } from './interface/delete-exercise.http.controller';
 import { FindExercisesHttpController } from './interface/find-exercises.http.controller';
 import { FindPracticeExercisesHttpController } from './interface/find-practice-exercises.http.controller';
+import { FindTopicsHttpController } from './interface/find-topics.http.controller';
 import { GetExerciseHttpController } from './interface/get-exercise.http.controller';
 import { SubmitResponseHttpController } from './interface/submit-response.http.controller';
 import { UpdateExerciseHttpController } from './interface/update-exercise.http.controller';
@@ -36,12 +41,14 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
       { name: Exercise.name, schema: ExerciseSchema },
       { name: LearnerExercise.name, schema: LearnerExerciseSchema },
       { name: ResponseSubmission.name, schema: ResponseSubmissionSchema },
+      { name: Topic.name, schema: TopicSchema },
     ]),
   ],
   controllers: [
     CreateExerciseHttpController,
     FindExercisesHttpController,
     FindPracticeExercisesHttpController,
+    FindTopicsHttpController,
     GetExerciseHttpController,
     SubmitResponseHttpController,
     UpdateExerciseHttpController,
@@ -49,8 +56,10 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
   ],
   providers: [
     ExerciseService,
+    TopicService,
     LearnerExerciseRepository,
     ExerciseRepository,
+    TopicRepository,
     ResponseSubmissionRepository,
     ResponseEvaluationService,
     {
@@ -60,6 +69,10 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
     {
       provide: EXERCISE_REPOSITORY,
       useExisting: ExerciseRepository,
+    },
+    {
+      provide: TOPIC_REPOSITORY,
+      useExisting: TopicRepository,
     },
     {
       provide: RESPONSE_SUBMISSION_REPOSITORY,
