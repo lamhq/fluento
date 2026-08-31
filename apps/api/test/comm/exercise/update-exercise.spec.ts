@@ -34,6 +34,14 @@ describe('update exercise', () => {
       scenario: 'introducing yourself',
       learnerRole: 'interviewee',
       counterpartRole: 'interviewer',
+      prompts: ['Introduce yourself briefly and explain your experience.'],
+      expectedResponses: [
+        {
+          content:
+            'Hi, I am a software engineer with five years of experience.',
+          style: ['confident', 'clear'],
+        },
+      ],
     };
     const resp = await request(getApp().getHttpServer())
       .patch(`/manage/exercises/${exerciseId}`)
@@ -49,6 +57,8 @@ describe('update exercise', () => {
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
         counterpartRole: dto.counterpartRole,
+        prompts: dto.prompts,
+        expectedResponses: dto.expectedResponses,
       }),
     );
 
@@ -63,6 +73,8 @@ describe('update exercise', () => {
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
         counterpartRole: dto.counterpartRole,
+        prompts: dto.prompts,
+        expectedResponses: dto.expectedResponses,
       }),
     );
   });
