@@ -30,7 +30,7 @@ describe('get exercise', () => {
     ]);
 
     const resp = await request(getApp().getHttpServer())
-      .get(`/manage/exercises/${seededExerciseId}`)
+      .get(`/v1/manage/exercises/${seededExerciseId}`)
       .set('x-user-email', userEmail)
       .expect(200);
 

@@ -44,7 +44,7 @@ describe('update exercise', () => {
       ],
     };
     const resp = await request(getApp().getHttpServer())
-      .patch(`/manage/exercises/${exerciseId}`)
+      .patch(`/v1/manage/exercises/${exerciseId}`)
       .set('x-user-email', userEmail)
       .send(dto)
       .expect(200);

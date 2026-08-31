@@ -34,7 +34,7 @@ describe('submit response', () => {
     });
 
     const resp = await request(getApp().getHttpServer())
-      .post(`/comm/exercises/${exercise._id.toString()}/responses`)
+      .post(`/v1/comm/exercises/${exercise._id.toString()}/responses`)
       .set('x-user-email', email)
       .send({
         response: responseText,

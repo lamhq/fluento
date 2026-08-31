@@ -28,7 +28,7 @@ describe('create exercise', () => {
     };
 
     const resp = await request(getApp().getHttpServer())
-      .post('/manage/exercises')
+      .post('/v1/manage/exercises')
       .set('x-user-email', userEmail)
       .send(dto)
       .expect(201);
@@ -83,7 +83,7 @@ describe('create exercise', () => {
     const { email: userEmail } = getUser();
 
     const resp = await request(getApp().getHttpServer())
-      .post('/manage/exercises')
+      .post('/v1/manage/exercises')
       .set('x-user-email', userEmail)
       .send(archivedDto)
       .expect(201);
@@ -95,7 +95,7 @@ describe('create exercise', () => {
     );
 
     await request(getApp().getHttpServer())
-      .post('/manage/exercises')
+      .post('/v1/manage/exercises')
       .set('x-user-email', getUser().email)
       .send({
         ...archivedDto,

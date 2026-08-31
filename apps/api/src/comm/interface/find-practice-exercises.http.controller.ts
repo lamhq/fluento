@@ -8,11 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
 import { ExerciseService } from '../core/exercise.service';
 import { PracticeExerciseResponseDto } from './practice-exercise-response.dto';
 
-@Controller('practice/exercises')
+@Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
 export class FindPracticeExercisesHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}

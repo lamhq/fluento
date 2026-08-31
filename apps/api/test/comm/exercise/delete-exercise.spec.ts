@@ -29,7 +29,7 @@ describe('delete exercise', () => {
     ]);
 
     const deleteResponse = await request(getApp().getHttpServer())
-      .delete(`/manage/exercises/${exerciseId}`)
+      .delete(`/v1/manage/exercises/${exerciseId}`)
       .set('x-user-email', userEmail)
       .expect(200);
 
