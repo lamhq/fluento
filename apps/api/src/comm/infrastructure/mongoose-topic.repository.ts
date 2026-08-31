@@ -3,14 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { TopicEntity } from '../core/topic.entity';
-import {
-  TopicQuery,
-  TopicRepository as TopicRepositoryContract,
-} from '../core/topic.repository';
+import { TopicQuery, TopicRepository } from '../core/topic.repository';
 import { Topic, TopicDocument } from './schemas/topic.schema';
 
 @Injectable()
-export class TopicRepository implements TopicRepositoryContract {
+export class MongooseTopicRepository implements TopicRepository {
   constructor(
     @InjectModel(Topic.name) private readonly topicModel: Model<Topic>,
   ) {}

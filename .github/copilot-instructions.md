@@ -6,6 +6,21 @@ Follow these rules for every task:
 - Read code files only if documentation is insufficient.
 - At the end of the response, list every document referenced while working.
 
+## Tasks
+
+All tasks and the relevant documents to read for context:
+
+| Task                         | Document    |
+| ---------------------------- | ----------- |
+| Understand project structure | Root README |
+| Identify available projects  | Root README |
+| Run lint                     | Root README |
+| Run type check               | Root README |
+| Run unit tests               | Root README |
+| Run package's binary         | Root README |
+| Manage dependencies          | Root README |
+| Review Docker Compose file   | Root README |
+
 ## Document List
 
 Project documents and their purposes:
@@ -60,18 +75,3 @@ Everything in the project (including documents) is organized into modules. Each 
   - add, update, and delete exercises
   - display exercises for practice
   - return feedback for learner's answers
-
-## Tasks
-
-All tasks and the relevant documents to read for context:
-
-| Task                         | Document    |
-| ---------------------------- | ----------- |
-| Understand project structure | Root README |
-| Identify available projects  | Root README |
-| Run lint                     | Root README |
-| Run type check               | Root README |
-| Run unit tests               | Root README |
-| Run package's binary         | Root README |
-| Manage dependencies          | Root README |
-| Review Docker Compose file   | Root README |

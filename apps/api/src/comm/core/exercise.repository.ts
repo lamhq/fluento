@@ -12,7 +12,7 @@ export interface ExerciseQuery {
   limit?: number;
 }
 
-export interface ExerciseRepositoryPort {
+export interface ExerciseRepository {
   create(data: Omit<ExerciseEntity, 'id'>): Promise<ExerciseEntity>;
   findAllPaginated(query: ExerciseQuery): Promise<[number, ExerciseEntity[]]>;
   findById(id: string): Promise<ExerciseEntity | null>;

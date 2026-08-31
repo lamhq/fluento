@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import type { UserEntity } from '../core/user.entity';
-import { UserQuery, UserRepositoryPort } from '../core/user-repository.port';
+import { UserQuery, UserRepository } from '../core/user.repository';
 import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
-export class UserRepository implements UserRepositoryPort {
+export class MongooseUserRepository implements UserRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}

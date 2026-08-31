@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { RESPONSE_EVALUATION_SERVICE } from '../../../src/comm/core/response-evaluation-service.port';
+import { RESPONSE_EVALUATION_SERVICE } from '../../../src/comm/core/response-evaluation.service';
 import { deleteMany, findOne, insert } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 

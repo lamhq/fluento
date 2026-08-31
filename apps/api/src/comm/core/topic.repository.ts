@@ -6,6 +6,6 @@ export interface TopicQuery {
   userId: string;
 }
 
-export interface TopicRepositoryPort {
+export interface TopicRepository {
   findAll(query: TopicQuery): Promise<TopicEntity[]>;
 }

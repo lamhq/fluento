@@ -18,7 +18,7 @@ export interface PaginatedPracticeExerciseResult {
   hasPrevious: boolean;
 }
 
-export interface LearnerExerciseRepositoryPort {
+export interface LearnerExerciseRepository {
   /*
    * Finds all practice exercises for a given learner with optional filtering and sorting.
    */

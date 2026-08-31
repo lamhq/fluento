@@ -5,16 +5,13 @@ import {
   type ContextService,
 } from '../../common/core/context.service';
 import { TopicEntity } from './topic.entity';
-import {
-  TOPIC_REPOSITORY,
-  type TopicRepositoryPort,
-} from './topic-repository.port';
+import { TOPIC_REPOSITORY, type TopicRepository } from './topic.repository';
 
 @Injectable()
 export class TopicService {
   constructor(
     @Inject(TOPIC_REPOSITORY)
-    private readonly repository: TopicRepositoryPort,
+    private readonly repository: TopicRepository,
     @Inject(CONTEXT_SERVICE)
     private readonly contextService: ContextService,
   ) {}

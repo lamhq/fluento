@@ -55,7 +55,7 @@ export type FeedbackEvaluation = z.infer<typeof FeedbackEvaluationSchema>;
 
 export const RESPONSE_EVALUATION_SERVICE = Symbol('ResponseEvaluationService');
 
-export interface ResponseEvaluationServicePort {
+export interface ResponseEvaluationService {
   evaluate(
     exercise: ExerciseEntity,
     response: string,

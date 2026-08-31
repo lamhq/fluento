@@ -5,11 +5,11 @@ import { z } from 'zod';
 import { ExerciseEntity } from '../core/exercise.entity';
 import {
   FeedbackEvaluationSchema,
-  type ResponseEvaluationServicePort,
-} from '../core/response-evaluation-service.port';
+  type ResponseEvaluationService,
+} from '../core/response-evaluation.service';
 
 @Injectable()
-export class ResponseEvaluationService implements ResponseEvaluationServicePort {
+export class OpenAIEvaluationService implements ResponseEvaluationService {
   async evaluate(
     exercise: ExerciseEntity,
     response: string,

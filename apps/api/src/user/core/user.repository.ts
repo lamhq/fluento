@@ -4,6 +4,6 @@ export type UserQuery = Partial<Pick<UserEntity, 'email'>>;
 
 export const USER_REPOSITORY = Symbol('UserRepository');
 
-export interface UserRepositoryPort {
+export interface UserRepository {
   findOne(query: UserQuery): Promise<UserEntity | null>;
 }

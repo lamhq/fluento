@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
 import { ExerciseStatus } from '../core/exercise.entity';
-import type { PracticeExerciseQuery } from '../core/learner-exercise-repository.port';
+import type { PracticeExerciseQuery } from '../core/learner-exercise.repository';
 import {
-  LearnerExerciseRepositoryPort,
+  LearnerExerciseRepository,
   PaginatedPracticeExerciseResult,
-} from '../core/learner-exercise-repository.port';
+} from '../core/learner-exercise.repository';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 import { Exercise } from './schemas/exercise.schema';
 import { LearnerExercise } from './schemas/learner-exercise.schema';
@@ -31,7 +31,7 @@ interface RawPracticeExercise {
 }
 
 @Injectable()
-export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort {
+export class MongooseLearnerExerciseRepository implements LearnerExerciseRepository {
   constructor(
     @InjectModel(Exercise.name)
     private readonly exerciseModel: Model<Exercise>,

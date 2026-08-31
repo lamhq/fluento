@@ -14,35 +14,35 @@ import { UpdateExerciseRequestDto } from '../interface/update-exercise-request.d
 import { ExerciseEntity } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,
-  type ExerciseRepositoryPort,
-} from './exercise-repository.port';
+  type ExerciseRepository,
+} from './exercise.repository';
 import {
   LEARNER_EXERCISE_REPOSITORY,
-  type LearnerExerciseRepositoryPort,
+  type LearnerExerciseRepository,
   type PaginatedPracticeExerciseResult,
   type PracticeExerciseQuery,
-} from './learner-exercise-repository.port';
+} from './learner-exercise.repository';
 import {
   RESPONSE_EVALUATION_SERVICE,
-  type ResponseEvaluationServicePort,
-} from './response-evaluation-service.port';
+  type ResponseEvaluationService,
+} from './response-evaluation.service';
 import { ResponseSubmissionEntity } from './response-submission.entity';
 import {
   RESPONSE_SUBMISSION_REPOSITORY,
-  type ResponseSubmissionRepositoryPort,
-} from './response-submission-repository.port';
+  type ResponseSubmissionRepository,
+} from './response-submission.repository';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @Inject(EXERCISE_REPOSITORY)
-    private readonly repository: ExerciseRepositoryPort,
+    private readonly repository: ExerciseRepository,
     @Inject(LEARNER_EXERCISE_REPOSITORY)
-    private readonly practiceExerciseRepository: LearnerExerciseRepositoryPort,
+    private readonly practiceExerciseRepository: LearnerExerciseRepository,
     @Inject(RESPONSE_SUBMISSION_REPOSITORY)
-    private readonly responseSubmissionRepository: ResponseSubmissionRepositoryPort,
+    private readonly responseSubmissionRepository: ResponseSubmissionRepository,
     @Inject(RESPONSE_EVALUATION_SERVICE)
-    private readonly responseEvaluationService: ResponseEvaluationServicePort,
+    private readonly responseEvaluationService: ResponseEvaluationService,
     @Inject(CONTEXT_SERVICE)
     private readonly contextService: ContextService,
   ) {}

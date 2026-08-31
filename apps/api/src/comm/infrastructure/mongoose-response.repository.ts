@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { ResponseSubmissionEntity } from '../core/response-submission.entity';
-import { ResponseSubmissionRepositoryPort } from '../core/response-submission-repository.port';
+import { ResponseSubmissionRepository } from '../core/response-submission.repository';
 import {
   ResponseSubmission,
   ResponseSubmissionDocument,
 } from './schemas/response-submission.schema';
 
 @Injectable()
-export class ResponseSubmissionRepository implements ResponseSubmissionRepositoryPort {
+export class MongooseResponseRepository implements ResponseSubmissionRepository {
   constructor(
     @InjectModel(ResponseSubmission.name)
     private readonly responseSubmissionModel: Model<ResponseSubmission>,

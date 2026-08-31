@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { EXERCISE_REPOSITORY } from './core/exercise.repository';
 import { ExerciseService } from './core/exercise.service';
-import { EXERCISE_REPOSITORY } from './core/exercise-repository.port';
-import { LEARNER_EXERCISE_REPOSITORY } from './core/learner-exercise-repository.port';
-import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation-service.port';
-import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission-repository.port';
+import { LEARNER_EXERCISE_REPOSITORY } from './core/learner-exercise.repository';
+import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation.service';
+import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission.repository';
+import { TOPIC_REPOSITORY } from './core/topic.repository';
 import { TopicService } from './core/topic.service';
-import { TOPIC_REPOSITORY } from './core/topic-repository.port';
-import { ExerciseRepository } from './infrastructure/exercise.repository';
-import { LearnerExerciseRepository } from './infrastructure/learner-exercise.repository';
-import { ResponseEvaluationService } from './infrastructure/response-evaluation.service';
-import { ResponseSubmissionRepository } from './infrastructure/response-submission.repository';
+import { MongooseExerciseRepository } from './infrastructure/mongoose-exercise.repository';
+import { MongooseLearnerExerciseRepository } from './infrastructure/mongoose-learner-exercise.repository';
+import { MongooseResponseRepository } from './infrastructure/mongoose-response.repository';
+import { MongooseTopicRepository } from './infrastructure/mongoose-topic.repository';
+import { OpenAIEvaluationService } from './infrastructure/openai-evaluation.service';
 import {
   Exercise,
   ExerciseSchema,
@@ -25,7 +26,6 @@ import {
   ResponseSubmissionSchema,
 } from './infrastructure/schemas/response-submission.schema';
 import { Topic, TopicSchema } from './infrastructure/schemas/topic.schema';
-import { TopicRepository } from './infrastructure/topic.repository';
 import { CreateExerciseHttpController } from './interface/create-exercise.http.controller';
 import { DeleteExerciseHttpController } from './interface/delete-exercise.http.controller';
 import { FindExercisesHttpController } from './interface/find-exercises.http.controller';
@@ -57,30 +57,30 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
   providers: [
     ExerciseService,
     TopicService,
-    LearnerExerciseRepository,
-    ExerciseRepository,
-    TopicRepository,
-    ResponseSubmissionRepository,
-    ResponseEvaluationService,
+    MongooseLearnerExerciseRepository,
+    MongooseExerciseRepository,
+    MongooseTopicRepository,
+    MongooseResponseRepository,
+    OpenAIEvaluationService,
     {
       provide: LEARNER_EXERCISE_REPOSITORY,
-      useExisting: LearnerExerciseRepository,
+      useExisting: MongooseLearnerExerciseRepository,
     },
     {
       provide: EXERCISE_REPOSITORY,
-      useExisting: ExerciseRepository,
+      useExisting: MongooseExerciseRepository,
     },
     {
       provide: TOPIC_REPOSITORY,
-      useExisting: TopicRepository,
+      useExisting: MongooseTopicRepository,
     },
     {
       provide: RESPONSE_SUBMISSION_REPOSITORY,
-      useExisting: ResponseSubmissionRepository,
+      useExisting: MongooseResponseRepository,
     },
     {
       provide: RESPONSE_EVALUATION_SERVICE,
-      useExisting: ResponseEvaluationService,
+      useExisting: OpenAIEvaluationService,
     },
   ],
 })

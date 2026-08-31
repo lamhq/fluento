@@ -3,14 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, SortOrder, Types } from 'mongoose';
 
 import { ExerciseEntity } from '../core/exercise.entity';
-import {
-  ExerciseQuery,
-  ExerciseRepositoryPort,
-} from '../core/exercise-repository.port';
+import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository';
 import { Exercise, ExerciseDocument } from './schemas/exercise.schema';
 
 @Injectable()
-export class ExerciseRepository implements ExerciseRepositoryPort {
+export class MongooseExerciseRepository implements ExerciseRepository {
   constructor(
     @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
   ) {}

@@ -4,6 +4,6 @@ export const RESPONSE_SUBMISSION_REPOSITORY = Symbol(
   'ResponseSubmissionRepository',
 );
 
-export interface ResponseSubmissionRepositoryPort {
+export interface ResponseSubmissionRepository {
   create(data: ResponseSubmissionEntity): Promise<ResponseSubmissionEntity>;
 }
