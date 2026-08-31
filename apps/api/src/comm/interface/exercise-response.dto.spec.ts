@@ -27,7 +27,6 @@ describe('ExerciseResponseDto', () => {
     expect(dto).toBeInstanceOf(ExerciseResponseDto);
     expect(dto).toEqual({
       id: 'exercise-1',
-      userId: 'user-1',
       status: ExerciseStatus.Active,
       topics: ['greetings'],
       scenario: 'Introductions',
