@@ -1,8 +1,6 @@
 import { PracticeExerciseEntity } from './practice-exercise.entity';
 
-export const PRACTICE_EXERCISE_REPOSITORY = Symbol(
-  'PracticeExerciseRepository',
-);
+export const LEARNER_EXERCISE_REPOSITORY = Symbol('LearnerExerciseRepository');
 
 export type PracticeExerciseSortField = 'lastPracticeAt' | 'createdAt';
 
@@ -14,13 +12,13 @@ export interface PracticeExerciseQuery {
   topics?: string[];
 }
 
-export interface PracticeExerciseRepositoryPort {
+export interface LearnerExerciseRepositoryPort {
   /*
    * Finds all practice exercises for a given learner with optional filtering and sorting.
    */
-  findAll(
-    learnerId: string,
-    query: PracticeExerciseQuery,
+  findExercisesForUser(
+    userId: string,
+    query?: PracticeExerciseQuery,
   ): Promise<PracticeExerciseEntity[]>;
 
   /*

@@ -7,10 +7,20 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { ExerciseEntity, ExerciseStatus } from '../../core/exercise.entity';
-import { ExerciseExpectedResponseDto } from '../create-exercise/create-exercise-request.dto';
+import { ExerciseEntity, ExerciseStatus } from '../core/exercise.entity';
 
-export class UpdateExerciseRequestDto {
+export class ExerciseExpectedResponseDto {
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  style: string[];
+}
+
+export class CreateExerciseRequestDto {
   @IsNotEmpty()
   @IsEnum(ExerciseStatus)
   status: ExerciseStatus;

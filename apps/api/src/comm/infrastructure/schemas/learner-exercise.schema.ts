@@ -5,8 +5,8 @@ export type LearnerExerciseDocument = HydratedDocument<LearnerExercise>;
 
 @Schema({ timestamps: true, collection: 'learner_exercise_practices' })
 export class LearnerExercise {
-  @Prop({ required: true })
-  userId: string;
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Exercise', required: true })
   exerciseId: Types.ObjectId;

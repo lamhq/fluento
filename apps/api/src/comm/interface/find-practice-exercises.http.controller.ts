@@ -5,37 +5,36 @@ import {
   ParseArrayPipe,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
-import type { UserEntity } from '../../../user/core/user.entity';
-import { User } from '../../../user/interface/user.decorator';
-import { ExerciseService } from '../../core/exercise.service';
-import { PracticeExerciseQuery } from '../../core/practice-exercise-repository.port';
-import { PracticeExerciseResponseDto } from '../practice-exercise-response.dto';
+import { RequireUser } from '../../common/interface/require-user.guard';
+import { ExerciseService } from '../core/exercise.service';
+import { PracticeExerciseResponseDto } from './practice-exercise-response.dto';
 
 @Controller('practice/exercises')
+@UseGuards(RequireUser)
 export class FindPracticeExercisesHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
   @Get()
-  async findPracticeExercises(
-    @User() user: UserEntity,
+  async findExercisesForUser(
     @Query('sort') sort?: 'lastPracticeAt' | 'createdAt',
     @Query('dir') dir?: 'asc' | 'desc',
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
   ): Promise<PracticeExerciseResponseDto[]> {
-    const params: PracticeExerciseQuery = {
-      learnerId: user.id,
-      sort,
-      dir,
-      limit,
-      offset,
-      topics,
-    };
-
-    const exercises = await this.exerciseService.findPracticeExercises(params);
+    const exercises = await this.exerciseService.findExercisesForUser(
+      undefined, // current user is inferred from context
+      {
+        sort,
+        dir,
+        limit,
+        offset,
+        topics,
+      },
+    );
     return exercises.map((exercise) =>
       PracticeExerciseResponseDto.fromEntity(exercise),
     );

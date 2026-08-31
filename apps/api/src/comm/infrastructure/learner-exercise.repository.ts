@@ -3,10 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
 import { ExerciseStatus } from '../core/exercise.entity';
+import type { PracticeExerciseQuery } from '../core/learner-exercise-repository.port';
+import { LearnerExerciseRepositoryPort } from '../core/learner-exercise-repository.port';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
-import type { PracticeExerciseQuery } from '../core/practice-exercise-repository.port';
-import { PracticeExerciseRepositoryPort } from '../core/practice-exercise-repository.port';
 import { Exercise } from './schemas/exercise.schema';
+import { LearnerExercise } from './schemas/learner-exercise.schema';
 
 interface RawPracticeExercise {
   _id: Types.ObjectId;
@@ -27,14 +28,17 @@ interface RawPracticeExercise {
 }
 
 @Injectable()
-export class PracticeExerciseRepository implements PracticeExerciseRepositoryPort {
+export class LearnerExerciseRepository implements LearnerExerciseRepositoryPort {
   constructor(
-    @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
+    @InjectModel(Exercise.name)
+    private readonly exerciseModel: Model<Exercise>,
+    @InjectModel(LearnerExercise.name)
+    private readonly learnerExerciseModel: Model<LearnerExercise>,
   ) {}
 
-  async findAll(
-    learnerId: string,
-    query: PracticeExerciseQuery,
+  async findExercisesForUser(
+    userId: string,
+    query?: PracticeExerciseQuery,
   ): Promise<PracticeExerciseEntity[]> {
     const {
       sort = 'lastPracticeAt',
@@ -42,7 +46,7 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
       limit = 20,
       offset = 0,
       topics,
-    } = query;
+    } = query ?? {};
 
     const pipeline: PipelineStage[] = [];
     const matchStage: Record<string, unknown> = {
@@ -67,7 +71,7 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
               $expr: {
                 $and: [
                   { $eq: ['$exerciseId', '$$exId'] },
-                  { $eq: ['$userId', new Types.ObjectId(learnerId)] },
+                  { $eq: ['$userId', new Types.ObjectId(userId)] },
                 ],
               },
             },
@@ -113,24 +117,26 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
 
   async upsertPractice(userId: string, exerciseId: string): Promise<void> {
     const practicedAt = new Date();
+    const objectUserId = new Types.ObjectId(userId);
+    const objectExerciseId = new Types.ObjectId(exerciseId);
 
-    await this.exerciseModel.db
-      .collection('learner_exercise_practices')
-      .updateOne(
+    await this.learnerExerciseModel
+      .findOneAndUpdate(
         {
-          userId: new Types.ObjectId(userId),
-          exerciseId: new Types.ObjectId(exerciseId),
+          userId: objectUserId,
+          exerciseId: objectExerciseId,
         },
         {
           $set: {
-            userId: new Types.ObjectId(userId),
-            exerciseId: new Types.ObjectId(exerciseId),
+            userId: objectUserId,
+            exerciseId: objectExerciseId,
             lastPracticeAt: practicedAt,
           },
           $inc: { practiceCount: 1 },
         },
-        { upsert: true },
-      );
+        { upsert: true, new: true, setDefaultsOnInsert: true },
+      )
+      .exec();
   }
 
   private dbModelToEntity(item: unknown): PracticeExerciseEntity {
