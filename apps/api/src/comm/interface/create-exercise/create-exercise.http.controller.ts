@@ -1,10 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 
+import { RequireUser } from '../../../common/interface/require-user.guard';
 import { ExerciseService } from '../../core/exercise.service';
 import { ExerciseResponseDto } from '../exercise-response.dto';
 import { CreateExerciseRequestDto } from './create-exercise-request.dto';
 
 @Controller('manage/exercises')
+@UseGuards(RequireUser)
 export class CreateExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 

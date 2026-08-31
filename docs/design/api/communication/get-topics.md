@@ -7,7 +7,7 @@ Retrieve a list of topics created by the user for categorizing and filtering com
 ## Contract
 
 - **Type:** REST
-- **Signature:** `GET /v1/communication/topics`
+- **Signature:** `GET /v1/practice/topics`
 - **Versioning Strategy:** URL path versioning with `/v1/` prefix
 
 ### Request Headers

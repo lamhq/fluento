@@ -28,7 +28,7 @@ export class ResponseSubmissionRepository implements ResponseSubmissionRepositor
   ): ResponseSubmissionEntity {
     return new ResponseSubmissionEntity({
       id: data._id.toString(),
-      learnerId: data.learnerId,
+      userId: data.userId,
       exerciseId: data.exerciseId,
       response: data.response,
       score: data.score,

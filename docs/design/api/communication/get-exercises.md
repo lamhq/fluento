@@ -7,7 +7,7 @@ Retrieve a paginated, filterable, and sortable list of exercises owned by the cu
 ## Contract
 
 - **Type:** REST
-- **Signature:** `GET /v1/communication/exercises`
+- **Signature:** `GET /v1/manage/exercises`
 - **Versioning Strategy:** URL path versioning with `/v1/` prefix
 
 ### Request Headers

@@ -33,16 +33,16 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
   ) {}
 
   async findAll(
-    params: PracticeExerciseQuery,
+    learnerId: string,
+    query: PracticeExerciseQuery,
   ): Promise<PracticeExerciseEntity[]> {
     const {
-      learnerId,
       sort = 'lastPracticeAt',
       dir = 'asc',
       limit = 20,
       offset = 0,
       topics,
-    } = params;
+    } = query;
 
     const pipeline: PipelineStage[] = [];
     const matchStage: Record<string, unknown> = {
@@ -67,7 +67,7 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
               $expr: {
                 $and: [
                   { $eq: ['$exerciseId', '$$exId'] },
-                  { $eq: ['$learnerId', new Types.ObjectId(learnerId)] },
+                  { $eq: ['$userId', new Types.ObjectId(learnerId)] },
                 ],
               },
             },
@@ -111,23 +111,19 @@ export class PracticeExerciseRepository implements PracticeExerciseRepositoryPor
     return results.map((result) => this.dbModelToEntity(result));
   }
 
-  async upsertPractice(params: {
-    learnerId: string;
-    exerciseId: string;
-    practicedAt?: Date;
-  }): Promise<void> {
-    const { learnerId, exerciseId, practicedAt = new Date() } = params;
+  async upsertPractice(userId: string, exerciseId: string): Promise<void> {
+    const practicedAt = new Date();
 
     await this.exerciseModel.db
       .collection('learner_exercise_practices')
       .updateOne(
         {
-          learnerId: new Types.ObjectId(learnerId),
+          userId: new Types.ObjectId(userId),
           exerciseId: new Types.ObjectId(exerciseId),
         },
         {
           $set: {
-            learnerId: new Types.ObjectId(learnerId),
+            userId: new Types.ObjectId(userId),
             exerciseId: new Types.ObjectId(exerciseId),
             lastPracticeAt: practicedAt,
           },

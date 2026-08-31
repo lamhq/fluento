@@ -7,7 +7,6 @@ export const PRACTICE_EXERCISE_REPOSITORY = Symbol(
 export type PracticeExerciseSortField = 'lastPracticeAt' | 'createdAt';
 
 export interface PracticeExerciseQuery {
-  learnerId: string;
   sort?: PracticeExerciseSortField;
   dir?: 'asc' | 'desc';
   limit?: number;
@@ -16,10 +15,16 @@ export interface PracticeExerciseQuery {
 }
 
 export interface PracticeExerciseRepositoryPort {
-  findAll(params: PracticeExerciseQuery): Promise<PracticeExerciseEntity[]>;
-  upsertPractice(params: {
-    learnerId: string;
-    exerciseId: string;
-    practicedAt?: Date;
-  }): Promise<void>;
+  /*
+   * Finds all practice exercises for a given learner with optional filtering and sorting.
+   */
+  findAll(
+    learnerId: string,
+    query: PracticeExerciseQuery,
+  ): Promise<PracticeExerciseEntity[]>;
+
+  /*
+   * Record learner practice for a given exercise.
+   */
+  upsertPractice(userId: string, exerciseId: string): Promise<void>;
 }

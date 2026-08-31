@@ -7,7 +7,7 @@ Submit a learner's written response in an exercise for evaluation and return act
 ## Contract
 
 - **Type:** REST
-- **Signatures:** `POST /comm/exercises/<exerciseId>/responses`
+- **Signature:** `POST /v1/practice/exercises/<exerciseId>/responses`
 - **Versioning Strategy:** URI versioning using `/v1`
 
 ### Request Headers

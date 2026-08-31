@@ -82,7 +82,7 @@ exercisesCol.insertMany([
 
 practicesCol.insertMany([
   {
-    learnerId: userId,
+    userId,
     exerciseId: exerciseId1,
     practiceCount: 3,
     lastPracticeAt: new Date('2026-08-10T09:00:00Z'),
@@ -90,7 +90,7 @@ practicesCol.insertMany([
     updatedAt: now,
   },
   {
-    learnerId: userId,
+    userId,
     exerciseId: exerciseId2,
     practiceCount: 0,
     lastPracticeAt: null,

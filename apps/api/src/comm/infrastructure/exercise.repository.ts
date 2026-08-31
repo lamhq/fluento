@@ -3,7 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
 import { ExerciseEntity } from '../core/exercise.entity';
-import { ExerciseRepositoryPort } from '../core/exercise-repository.port';
+import {
+  ExerciseQuery,
+  ExerciseRepositoryPort,
+} from '../core/exercise-repository.port';
 import { Exercise, ExerciseDocument } from './schemas/exercise.schema';
 
 @Injectable()
@@ -18,8 +21,9 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
     return this.dbModelToEntity(createdExercise);
   }
 
-  async findAll(): Promise<ExerciseEntity[]> {
-    const exercises = await this.exerciseModel.find().exec();
+  async findAll(query: ExerciseQuery): Promise<ExerciseEntity[]> {
+    const filter = query.userId ? { userId: query.userId } : {};
+    const exercises = await this.exerciseModel.find(filter).exec();
     return exercises.map((exercise) => this.dbModelToEntity(exercise));
   }
 
@@ -62,6 +66,7 @@ export class ExerciseRepository implements ExerciseRepositoryPort {
   private dbModelToEntity(data: ExerciseDocument): ExerciseEntity {
     return {
       id: data._id.toString(),
+      userId: data.userId,
       status: data.status,
       topics: data.topics,
       scenario: data.scenario,

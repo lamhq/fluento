@@ -19,6 +19,9 @@ export const ExpectedResponseSchema =
 
 @Schema({ timestamps: true, collection: 'exercises' })
 export class Exercise {
+  @Prop({ required: true })
+  userId: string;
+
   @Prop({
     type: String,
     enum: Object.values(ExerciseStatus),

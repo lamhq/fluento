@@ -7,7 +7,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 ## Contract
 
 - **Type:** REST
-- **Signature:** `GET /v1/communication/practice-exercises`
+- **Signature:** `GET /v1/practice/exercises`
 - **Versioning Strategy:** URL path versioning with `/v1/` prefix
 
 ### Request Headers

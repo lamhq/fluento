@@ -52,8 +52,11 @@ export class CreateExerciseRequestDto {
   @Type(() => ExerciseExpectedResponseDto)
   expectedResponses: ExerciseExpectedResponseDto[];
 
-  toEntity(): ExerciseEntity {
-    return new ExerciseEntity({
+  toEntity(): Omit<
+    ExerciseEntity,
+    'id' | 'userId' | 'createdAt' | 'updatedAt'
+  > {
+    return {
       status: this.status,
       topics: this.topics,
       scenario: this.scenario,
@@ -61,6 +64,6 @@ export class CreateExerciseRequestDto {
       counterpartRole: this.counterpartRole,
       prompts: this.prompts,
       expectedResponses: this.expectedResponses,
-    });
+    };
   }
 }

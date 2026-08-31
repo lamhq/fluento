@@ -1,9 +1,11 @@
-import { Controller, Delete, Param } from '@nestjs/common';
+import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 
+import { RequireUser } from '../../../common/interface/require-user.guard';
 import { ExerciseService } from '../../core/exercise.service';
 import { ExerciseResponseDto } from '../exercise-response.dto';
 
 @Controller('manage/exercises')
+@UseGuards(RequireUser)
 export class DeleteExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 

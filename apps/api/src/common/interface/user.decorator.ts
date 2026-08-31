@@ -4,16 +4,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import type { RequestWithUser } from './request-with-user';
+import type { AppRequest } from './app-request';
 
 export const User = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest<RequestWithUser>();
-    const { user } = request;
+    const request = ctx.switchToHttp().getRequest<AppRequest>();
+    const { userId } = request;
 
-    if (!user) {
+    if (!userId) {
       throw new UnauthorizedException('User not found in request');
     }
-    return user;
+    return userId;
   },
 );
