@@ -4,11 +4,17 @@ export const EXERCISE_REPOSITORY = Symbol('ExerciseRepository');
 
 export interface ExerciseQuery {
   userId?: string;
+  scenario?: string;
+  topics?: string[];
+  status?: 'active' | 'archived' | 'all';
+  sort?: string;
+  offset?: number;
+  limit?: number;
 }
 
 export interface ExerciseRepositoryPort {
   create(data: Omit<ExerciseEntity, 'id'>): Promise<ExerciseEntity>;
-  findAll(query: ExerciseQuery): Promise<ExerciseEntity[]>;
+  findAllPaginated(query: ExerciseQuery): Promise<[number, ExerciseEntity[]]>;
   findById(id: string): Promise<ExerciseEntity | null>;
   update(id: string, data: Partial<ExerciseEntity>): Promise<ExerciseEntity>;
   delete(id: string): Promise<ExerciseEntity>;

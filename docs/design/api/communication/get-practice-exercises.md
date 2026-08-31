@@ -23,7 +23,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 | -------- | -------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | topics   | string   | No           | Filter exercises by one or more topics (e.g., `?topics=Restaurant&topics=School`). Use OR condition.                                                                                                     |
 | sort     | string   | No           | Multi-column sort order using camelCase field names. Use dash prefix (`-`) for descending order (e.g., `-practicedAt,createdAt`). Default: `-practicedAt`. Supported fields: `practicedAt`, `createdAt`. |
-| offset   | integer  | No           | Number of items to skip for pagination. Default: `0`.                                                                                                                                                    |
+| cursor   | string   | No           | Opaque cursor token returned by the previous page. Omit for the first page.                                                                                                                              |
 | limit    | integer  | No           | Maximum number of items per response. Maximum 50. Default: `10`.                                                                                                                                         |
 
 ### Response
@@ -32,9 +32,6 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 
 ```json
 {
-  "total": 42,
-  "offset": 0,
-  "limit": 10,
   "items": [
     {
       "id": "ex_123",
@@ -43,6 +40,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
       "createdAt": "2026-08-13T10:00:00Z",
       "updatedAt": "2026-08-13T10:00:00Z",
       "practicedAt": "2026-08-13T09:30:00Z",
+      "practiceCount": 5,
       "learnerRole": "customer",
       "counterpartRole": "waiter",
       "prompts": ["Say that you would like to order a meal."],
@@ -74,7 +72,13 @@ Retrieve a paginated list of exercises available to a learner for practice, with
         }
       ]
     }
-  ]
+  ],
+  "pagination": {
+    "nextCursor": "ex_124",
+    "previousCursor": null,
+    "hasNext": true,
+    "hasPrevious": false
+  }
 }
 ```
 
@@ -102,7 +106,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 
 - **User Identification:** Use the `User-Email` header to identify the learner making the request.
 - **Exercise Retrieval:** Return only active exercises.
-- **Paging Support:** Support `limit` and `offset` to paginate results without returning the full exercise set at once.
+- **Paging Support:** Support `limit` and `cursor` to paginate results without returning the full exercise set at once.
 - **Sorting Support:** Support ordering exercises by:
   - `practicedAt`: the time the current learner practiced them
   - `createdAt`: the time they were added
@@ -122,3 +126,4 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 | 2026-08-13 | v1.0        | Initial release of the endpoint for communication practice scenarios.                                                          |
 | 2026-08-13 | v1.1        | Added sorting support, including `practicedAt`, and pagination parameters `limit` and `offset`.                                |
 | 2026-08-28 | v1.2        | Restricted learner-facing practice responses to active exercises only; archived exercises are filtered out from this endpoint. |
+| 2026-08-31 | v1.3        | Migrated pagination to the cursor-based contract using `cursor` and `pagination` metadata.                                     |

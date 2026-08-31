@@ -2,14 +2,20 @@ import { PracticeExerciseEntity } from './practice-exercise.entity';
 
 export const LEARNER_EXERCISE_REPOSITORY = Symbol('LearnerExerciseRepository');
 
-export type PracticeExerciseSortField = 'lastPracticeAt' | 'createdAt';
-
 export interface PracticeExerciseQuery {
-  sort?: PracticeExerciseSortField;
-  dir?: 'asc' | 'desc';
+  sort?: string;
   limit?: number;
+  cursor?: string;
   offset?: number;
   topics?: string[];
+}
+
+export interface PaginatedPracticeExerciseResult {
+  items: PracticeExerciseEntity[];
+  nextCursor: string | null;
+  previousCursor: string | null;
+  hasNext: boolean;
+  hasPrevious: boolean;
 }
 
 export interface LearnerExerciseRepositoryPort {
@@ -19,7 +25,7 @@ export interface LearnerExerciseRepositoryPort {
   findExercisesForUser(
     userId: string,
     query?: PracticeExerciseQuery,
-  ): Promise<PracticeExerciseEntity[]>;
+  ): Promise<PaginatedPracticeExerciseResult>;
 
   /*
    * Record learner practice for a given exercise.

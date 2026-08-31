@@ -6,12 +6,13 @@ import { setUpApiTest } from '../../utils/test';
 describe('find exercises', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
-  it('should return exercises from database', async () => {
+  it('should return a paginated exercise list from the database', async () => {
     const { email: userEmail, id: userId } = getUser();
 
     await insertMany('exercises', [
       {
         userId,
+        status: 'active',
         topics: ['Socializing', cleanupMarker],
         scenario: 'asking for a favor',
         learnerRole: 'person',
@@ -34,13 +35,21 @@ describe('find exercises', () => {
       .expect(200);
 
     expect(resp.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          topics: expect.arrayContaining(['Socializing']),
-          scenario: 'asking for a favor',
-          id: expect.any(String),
-        }),
-      ]),
+      expect.objectContaining({
+        total: expect.any(Number),
+        offset: 0,
+        limit: 10,
+        items: expect.arrayContaining([
+          expect.objectContaining({
+            topics: expect.arrayContaining(['Socializing']),
+            scenario: 'asking for a favor',
+            status: 'active',
+            id: expect.any(String),
+            learnerRole: 'person',
+            counterpartRole: 'friend',
+          }),
+        ]),
+      }),
     );
   });
 

@@ -19,9 +19,9 @@ import {
 import {
   LEARNER_EXERCISE_REPOSITORY,
   type LearnerExerciseRepositoryPort,
+  type PaginatedPracticeExerciseResult,
   type PracticeExerciseQuery,
 } from './learner-exercise-repository.port';
-import { PracticeExerciseEntity } from './practice-exercise.entity';
 import {
   RESPONSE_EVALUATION_SERVICE,
   type ResponseEvaluationServicePort,
@@ -54,17 +54,44 @@ export class ExerciseService {
     });
   }
 
-  async findAll(): Promise<ExerciseEntity[]> {
+  async findAllPaginated(
+    query: {
+      scenario?: string;
+      topics?: string[];
+      status?: 'active' | 'archived' | 'all';
+      sort?: string;
+      offset?: number;
+      limit?: number;
+    } = {},
+  ): Promise<{
+    total: number;
+    offset: number;
+    limit: number;
+    items: ExerciseEntity[];
+  }> {
     // TODO: admin should be able to see all exercises
-    return this.repository.findAll({
-      userId: this.contextService.getUserIdOrThrow(),
+    const userId = this.contextService.getUserIdOrThrow();
+    const offset = query.offset ?? 0;
+    const limit = query.limit ?? 10;
+    const [total, items] = await this.repository.findAllPaginated({
+      ...query,
+      userId,
+      offset,
+      limit,
     });
+
+    return {
+      total,
+      offset,
+      limit,
+      items,
+    };
   }
 
   async findExercisesForUser(
     userId?: string,
     query?: PracticeExerciseQuery,
-  ): Promise<PracticeExerciseEntity[]> {
+  ): Promise<PaginatedPracticeExerciseResult> {
     const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
     return this.practiceExerciseRepository.findExercisesForUser(
       currentUserId,

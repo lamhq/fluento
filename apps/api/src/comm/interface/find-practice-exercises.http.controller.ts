@@ -20,24 +20,37 @@ export class FindPracticeExercisesHttpController {
 
   @Get()
   async findExercisesForUser(
-    @Query('sort') sort?: 'lastPracticeAt' | 'createdAt',
-    @Query('dir') dir?: 'asc' | 'desc',
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
+    @Query('sort') sort?: 'practicedAt' | 'createdAt',
+    @Query('cursor') cursor?: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
-  ): Promise<PracticeExerciseResponseDto[]> {
-    const exercises = await this.exerciseService.findExercisesForUser(
-      undefined, // current user is inferred from context
-      {
+  ): Promise<{
+    items: PracticeExerciseResponseDto[];
+    pagination: {
+      nextCursor: string | null;
+      previousCursor: string | null;
+      hasNext: boolean;
+      hasPrevious: boolean;
+    };
+  }> {
+    const { items, nextCursor, previousCursor, hasNext, hasPrevious } =
+      await this.exerciseService.findExercisesForUser(undefined, {
         sort,
-        dir,
         limit,
-        offset,
+        cursor,
         topics,
+      });
+
+    return {
+      items: items.map((exercise) =>
+        PracticeExerciseResponseDto.fromEntity(exercise),
+      ),
+      pagination: {
+        nextCursor,
+        previousCursor,
+        hasNext,
+        hasPrevious,
       },
-    );
-    return exercises.map((exercise) =>
-      PracticeExerciseResponseDto.fromEntity(exercise),
-    );
+    };
   }
 }

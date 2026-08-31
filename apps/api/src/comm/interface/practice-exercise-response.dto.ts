@@ -4,6 +4,10 @@ export class PracticeExerciseResponseDto {
   id: string;
   topics: string[];
   scenario: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  practicedAt?: Date | null;
+  practiceCount: number;
   learnerRole: string;
   counterpartRole: string;
   prompts: string[];
@@ -11,10 +15,6 @@ export class PracticeExerciseResponseDto {
     content: string;
     style: string[];
   }[];
-  lastPracticeAt?: Date | null;
-  practiceCount: number;
-  createdAt?: Date;
-  updatedAt?: Date;
 
   constructor(data?: Partial<PracticeExerciseResponseDto>) {
     Object.assign(this, data);
@@ -27,14 +27,14 @@ export class PracticeExerciseResponseDto {
       id: entity.id,
       topics: entity.topics,
       scenario: entity.scenario,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+      practicedAt: entity.lastPracticeAt ?? null,
+      practiceCount: entity.practiceCount,
       learnerRole: entity.learnerRole,
       counterpartRole: entity.counterpartRole,
       prompts: entity.prompts,
       expectedResponses: entity.expectedResponses,
-      lastPracticeAt: entity.lastPracticeAt,
-      practiceCount: entity.practiceCount,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
     });
   }
 }
