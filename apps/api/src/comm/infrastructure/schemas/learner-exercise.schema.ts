@@ -5,8 +5,8 @@ export type LearnerExerciseDocument = HydratedDocument<LearnerExercise>;
 
 @Schema({ timestamps: true, collection: 'learner_exercise_practices' })
 export class LearnerExercise {
-  @Prop({ required: true })
-  learnerId: string;
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Exercise', required: true })
   exerciseId: Types.ObjectId;
@@ -23,4 +23,4 @@ export class LearnerExercise {
 
 export const LearnerExerciseSchema =
   SchemaFactory.createForClass(LearnerExercise);
-LearnerExerciseSchema.index({ learnerId: 1, exerciseId: 1 }, { unique: true });
+LearnerExerciseSchema.index({ userId: 1, exerciseId: 1 }, { unique: true });

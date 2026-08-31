@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, VersioningType } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { App } from 'supertest/types';
 
@@ -28,6 +28,11 @@ export function setUpApiTest() {
       imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication();
+    app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: '1',
+      prefix: 'v',
+    });
     app.useGlobalPipes(new ValidateRequestBodyPipe());
     await app.init();
   });

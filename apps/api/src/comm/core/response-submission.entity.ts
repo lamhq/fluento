@@ -1,6 +1,6 @@
 export class ResponseSubmissionEntity {
   id: string;
-  learnerId: string;
+  userId: string;
   exerciseId: string;
   response: string;
   score: number;

@@ -4,11 +4,14 @@ import { deleteMany, findById, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('delete exercise', () => {
-  const { cleanupMarker, getApp } = setUpApiTest();
+  const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should remove a record from database', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
     const [exerciseId] = await insertMany('exercises', [
       {
+        userId,
         topics: ['Restaurant', cleanupMarker],
         scenario: 'ordering food in a restaurant',
         learnerRole: 'customer',
@@ -26,7 +29,8 @@ describe('delete exercise', () => {
     ]);
 
     const deleteResponse = await request(getApp().getHttpServer())
-      .delete(`/manage/exercises/${exerciseId}`)
+      .delete(`/v1/manage/exercises/${exerciseId}`)
+      .set('x-user-email', userEmail)
       .expect(200);
 
     expect(deleteResponse.body).toEqual(

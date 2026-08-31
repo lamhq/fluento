@@ -42,62 +42,6 @@ pnpx turbo run web#dev
 
 The web app will be available at `http://localhost:5601`.
 
-## Useful commands
-
-Run tests:
-
-```bash
-# run all tests
-pnpm -F web run test
-
-# run a specific test file (files are relative to `apps/web/`)
-pnpm -F web run test src/comm/components/PracticeForm/utils.test
-```
-
-Run lint:
-
-```bash
-pnpm -F web run lint
-```
-
-Run type check:
-
-```bash
-pnpm -F web run type-check
-```
-
-Manage dependencies:
-
-```bash
-# Add a dependency
-pnpm -F web add <dependency>
-
-# Remove a dependency
-pnpm -F web remove <dependency>
-```
-
-Run a locally installed package binary:
-
-```bash
-pnpm -F web exec <command>
-```
-
-Examples:
-
-```bash
-# run `build` in `web` project
-pnpm -F web run build
-
-# add `lodash` to the `web` project
-pnpm -F web add lodash
-
-# remove `lodash` from the `web` project
-pnpm -F web remove lodash
-
-# run Shadcn UI CLI in the `web` project
-pnpm -F web exec shadcn add button
-```
-
 ## Deploy
 
 Prepare the `.env.<env>` file for the target environment (e.g., `.env.dev`, `.env.prod`).
@@ -175,15 +119,18 @@ apps/web/src/
 
 ## Tech Stack
 
-| Technology   | Purpose                       |
-| ------------ | ----------------------------- |
-| React 19     | UI library                    |
-| Vite         | Build tool and dev server     |
-| TypeScript   | Type-safe JavaScript          |
-| Tailwind     | Utility-first CSS framework   |
-| Shadcn/ui    | Component library             |
-| React Router | Client-side routing           |
-| React Query  | Server state management       |
-| OIDC Client  | OpenID Connect authentication |
-| Axios        | HTTP client for API requests  |
-| Vitest       | Unit and integration testing  |
+| Technology            | Purpose                       |
+| --------------------- | ----------------------------- |
+| React 19              | UI library                    |
+| Vite                  | Build tool and dev server     |
+| TypeScript            | Type-safe JavaScript          |
+| Tailwind CSS          | Utility-first CSS framework   |
+| Shadcn/ui             | Component library             |
+| React Router          | Client-side routing           |
+| React Query           | Server state management       |
+| OIDC                  | OpenID Connect authentication |
+| Axios                 | HTTP client for API requests  |
+| Vitest                | Unit and integration testing  |
+| React Hook Form       | Form state management         |
+| React Testing Library | Component testing             |
+| Zod                   | Schema validation             |

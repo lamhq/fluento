@@ -95,4 +95,4 @@ flowchart TD
 
 For each exercise, the app tracks the last time it was practiced. The selection logic prioritizes exercises that have not been practiced recently.
 
-The app fetches exercises from the backend API, which supports sorting by `lastPracticeAt` and filtering by topic.
+The app fetches exercises from the backend API, which supports sorting by `practicedAt` (descending) and filtering by topic.

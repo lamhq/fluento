@@ -1,10 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { USER_REPOSITORY } from './core/user.repository';
 import { UserService } from './core/user.service';
-import { USER_REPOSITORY } from './core/user-repository.port';
+import { MongooseUserRepository } from './infrastructure/mongoose-user.repository';
 import { User, UserSchema } from './infrastructure/schemas/user.schema';
-import { UserRepository } from './infrastructure/user.repository';
 import { UserMiddleware } from './interface/user.middleware';
 
 @Module({
@@ -13,10 +13,10 @@ import { UserMiddleware } from './interface/user.middleware';
   ],
   providers: [
     UserService,
-    UserRepository,
+    MongooseUserRepository,
     {
       provide: USER_REPOSITORY,
-      useExisting: UserRepository,
+      useExisting: MongooseUserRepository,
     },
     UserMiddleware,
   ],

@@ -3,16 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { Cache } from 'cache-manager';
 
 import type { UserEntity } from './user.entity';
-import {
-  USER_REPOSITORY,
-  type UserRepositoryPort,
-} from './user-repository.port';
+import { USER_REPOSITORY, type UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryPort,
+    private readonly userRepository: UserRepository,
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
   ) {}

@@ -5,6 +5,7 @@ export enum ExerciseStatus {
 
 export class ExerciseEntity {
   id: string;
+  userId: string;
   status: ExerciseStatus;
   topics: string[];
   scenario: string;

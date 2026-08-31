@@ -26,6 +26,7 @@ erDiagram
 
     CommunicationExercise {
         string id
+        string userId
         string status
         string scenario
         string learnerRole
@@ -52,7 +53,7 @@ erDiagram
 
     LearnerExercisePractice {
         string id
-        string learnerId
+        string userId
         string exerciseId
         int practiceCount
         datetime lastPracticeAt
@@ -60,7 +61,7 @@ erDiagram
 
     ResponseSubmission {
         string id
-        string learnerId
+        string userId
         string exerciseId
         string response
         datetime createdAt
@@ -106,6 +107,7 @@ Represents a reusable scenario-based communication exercise for practice.
 | Attribute Name  | Type     | Description                                                            |
 | --------------- | -------- | ---------------------------------------------------------------------- |
 | id              | String   | Unique exercise identifier.                                            |
+| userId          | String   | Identifier of the user who owns or created the exercise.               |
 | status          | String   | Lifecycle state of the exercise. Allowed values: `active`, `archived`. |
 | scenario        | String   | Real-world situation the learner is expected to respond to.            |
 | learnerRole     | String   | Role played by the learner in the scenario.                            |
@@ -132,6 +134,7 @@ Represents a thematic category used for grouping and filtering exercises.
 | Attribute Name | Type     | Description                                              |
 | -------------- | -------- | -------------------------------------------------------- |
 | id             | String   | Unique topic identifier.                                 |
+| userId         | String   | Identifier of the user who owns or created the topic.    |
 | name           | String   | Topic label, such as Restaurant, School, or Socializing. |
 | createdAt      | DateTime | Timestamp when the topic was created.                    |
 
@@ -188,7 +191,7 @@ Tracks per-learner exercise practice state and repetition behavior.
 | Attribute Name | Type     | Description                                                    |
 | -------------- | -------- | -------------------------------------------------------------- |
 | id             | String   | Unique learner-practice record identifier.                     |
-| learnerId      | String   | Identifier of the learner associated with the practice record. |
+| userId         | String   | Identifier of the learner associated with the practice record. |
 | exerciseId     | String   | Exercise associated with the practice record.                  |
 | practiceCount  | Integer  | Number of times the learner has practiced the exercise.        |
 | lastPracticeAt | DateTime | Timestamp of the learner’s most recent practice attempt.       |
@@ -208,7 +211,7 @@ Stores a learner’s submitted response and the associated exercise context.
 | Attribute Name | Type     | Description                                           |
 | -------------- | -------- | ----------------------------------------------------- |
 | id             | String   | Unique submission identifier.                         |
-| learnerId      | String   | Identifier of the learner who submitted the response. |
+| userId         | String   | Identifier of the learner who submitted the response. |
 | exerciseId     | String   | Exercise to which the response belongs.               |
 | response       | String   | Learner’s trimmed response text before evaluation.    |
 | createdAt      | DateTime | Timestamp of submission.                              |
@@ -341,7 +344,7 @@ This collection stores each learner attempt and the resulting evaluation.
 ```json
 {
   "_id": "64f5d8a6c2ed4a7f82024b91",
-  "learnerId": "lear_42",
+  "userId": "lear_42",
   "exerciseId": "ex_123",
   "response": "Lets meet tomorrow to discuss the project.",
   "score": 95,
@@ -374,11 +377,11 @@ This collection stores each learner attempt and the resulting evaluation.
 
 **Indexes:**
 
-| Index                        | Purpose                                             |
-| ---------------------------- | --------------------------------------------------- |
-| `learnerId_index`            | Fetch learner history or recent attempts            |
-| `learnerId_exerciseId_index` | Find the learner's practice count and retry history |
-| `createdAt_index`            | Sort by most recent submission                      |
+| Index                     | Purpose                                             |
+| ------------------------- | --------------------------------------------------- |
+| `userId_index`            | Fetch learner history or recent attempts            |
+| `userId_exerciseId_index` | Find the learner's practice count and retry history |
+| `createdAt_index`         | Sort by most recent submission                      |
 
 **Constraints:**
 
@@ -391,7 +394,7 @@ This collection records each learner’s practice statistics, enabling sorting t
 ```json
 {
   "_id": "64f5d8a6c2ed4a7f82024b92",
-  "learnerId": "lear_42",
+  "userId": "lear_42",
   "exerciseId": "ex_123",
   "practiceCount": 2,
   "lastPracticeAt": "2026-08-13T11:15:00Z"
@@ -400,13 +403,13 @@ This collection records each learner’s practice statistics, enabling sorting t
 
 **Indexes:**
 
-| Index                        | Purpose                                              |
-| ---------------------------- | ---------------------------------------------------- |
-| `learnerId_exerciseId_index` | Ensure a single practice record per learner/exercise |
+| Index                     | Purpose                                              |
+| ------------------------- | ---------------------------------------------------- |
+| `userId_exerciseId_index` | Ensure a single practice record per learner/exercise |
 
 **Constraints:**
 
-- Each `learner_exercise_practices` record must have a unique `(learnerId, exerciseId)` pair. The same exercise may have different `practiceCount` values for different learners.
+- Each `learner_exercise_practices` record must have a unique `(userId, exerciseId)` pair. The same exercise may have different `practiceCount` values for different learners.
 - `practiceCount` is incremented atomically per learner per exercise after each successful submission.
 - `lastPracticeAt` is updated to the timestamp of the most recent successful practice.
 
@@ -462,19 +465,19 @@ db.getCollection('exercises').insertMany([
 db.getCollection('learner_exercise_practices').deleteMany({});
 db.getCollection('learner_exercise_practices').insertMany([
   {
-    learnerId: 'lear_1',
+    userId: 'lear_1',
     exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
     practiceCount: 2,
     lastPracticeAt: new Date('2026-08-13T11:10:00Z'),
   },
   {
-    learnerId: 'lear_1',
+    userId: 'lear_1',
     exerciseId: ObjectId('6a8134985ed2456c91a10b4e'),
     practiceCount: 0,
     lastPracticeAt: null,
   },
   {
-    learnerId: 'lear_2',
+    userId: 'lear_2',
     exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
     practiceCount: 1,
     lastPracticeAt: new Date('2026-08-13T10:45:00Z'),
@@ -498,7 +501,7 @@ db.getCollection('exercises').aggregate([
             $expr: {
               $and: [
                 { $eq: ['$exerciseId', '$$exId'] },
-                { $eq: ['$learnerId', 'lear_1'] },
+                { $eq: ['$userId', 'lear_1'] },
               ],
             },
           },

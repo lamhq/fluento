@@ -7,10 +7,9 @@
     "dev": "vite --port 5601",
     "build": "vite build",
     "start": "vite preview --port 5601",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "type-check": "tsc -b --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "test": "vitest"
+    "test": "vitest --run"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

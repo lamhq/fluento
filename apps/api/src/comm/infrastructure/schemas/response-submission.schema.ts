@@ -66,7 +66,7 @@ export class ResponseSubmissionAppropriateness {
 @Schema({ timestamps: true, collection: 'response_submissions' })
 export class ResponseSubmission {
   @Prop({ required: true })
-  learnerId: string;
+  userId: string;
 
   @Prop({ required: true })
   exerciseId: string;
@@ -93,5 +93,5 @@ export class ResponseSubmission {
 export const ResponseSubmissionSchema =
   SchemaFactory.createForClass(ResponseSubmission);
 
-ResponseSubmissionSchema.index({ learnerId: 1, exerciseId: 1 });
+ResponseSubmissionSchema.index({ userId: 1, exerciseId: 1 });
 ResponseSubmissionSchema.index({ createdAt: -1 });

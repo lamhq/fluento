@@ -5,6 +5,7 @@ describe('ExerciseResponseDto', () => {
   it('maps an entity into a response DTO', () => {
     const entity: ExerciseEntity = {
       id: 'exercise-1',
+      userId: 'user-1',
       status: ExerciseStatus.Active,
       topics: ['greetings'],
       scenario: 'Introductions',

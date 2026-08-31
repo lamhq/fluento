@@ -5,8 +5,8 @@ export function normalizeLearnerResponse(response: string): string {
   }
 
   const sentences = trimmed
-    .split(/(?<=[.!?])\s+|\s*\.\s*|\s*\?\s*|\s*!\s*/)
-    .map((sentence) => sentence.trim())
+    .match(/[^.!?]+(?:[.!?]+|$)/g)
+    ?.map((sentence) => sentence.trim())
     .filter(Boolean)
     .map((sentence) => {
       const cleaned = sentence.replace(/\s+/g, ' ');
@@ -14,10 +14,15 @@ export function normalizeLearnerResponse(response: string): string {
         return cleaned;
       }
 
-      return `${cleaned.charAt(0).toUpperCase()}${cleaned.slice(1)}`;
+      const withPronounCapitalization = cleaned.replace(/\bi\b/g, 'I');
+      return `${withPronounCapitalization.charAt(0).toUpperCase()}${withPronounCapitalization.slice(1)}`;
     });
 
-  const normalized = sentences.join('. ');
+  if (!sentences || sentences.length === 0) {
+    return '';
+  }
+
+  const normalized = sentences.join(' ');
   if (!/[.!?]$/.test(normalized)) {
     return `${normalized}.`;
   }

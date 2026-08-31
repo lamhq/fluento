@@ -4,9 +4,10 @@ import { deleteMany, findById } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('create exercise', () => {
-  const { cleanupMarker, getApp } = setUpApiTest();
+  const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should add a record in database', async () => {
+    const { email: userEmail, id: userId } = getUser();
     const dto = {
       status: 'active',
       topics: ['Restaurant', cleanupMarker],
@@ -27,7 +28,8 @@ describe('create exercise', () => {
     };
 
     const resp = await request(getApp().getHttpServer())
-      .post('/manage/exercises')
+      .post('/v1/manage/exercises')
+      .set('x-user-email', userEmail)
       .send(dto)
       .expect(201);
 
@@ -50,6 +52,7 @@ describe('create exercise', () => {
     expect(savedExercise).not.toBeNull();
     expect(savedExercise).toEqual(
       expect.objectContaining({
+        userId: userId,
         status: dto.status,
         topics: dto.topics,
         scenario: dto.scenario,
@@ -77,8 +80,11 @@ describe('create exercise', () => {
       ],
     };
 
+    const { email: userEmail } = getUser();
+
     const resp = await request(getApp().getHttpServer())
-      .post('/manage/exercises')
+      .post('/v1/manage/exercises')
+      .set('x-user-email', userEmail)
       .send(archivedDto)
       .expect(201);
 
@@ -89,7 +95,8 @@ describe('create exercise', () => {
     );
 
     await request(getApp().getHttpServer())
-      .post('/manage/exercises')
+      .post('/v1/manage/exercises')
+      .set('x-user-email', getUser().email)
       .send({
         ...archivedDto,
         status: 'draft',

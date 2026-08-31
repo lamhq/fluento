@@ -5,76 +5,146 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { CreateExerciseRequestDto } from '../interface/create-exercise/create-exercise-request.dto';
-import { UpdateExerciseRequestDto } from '../interface/update-exercise/update-exercise-request.dto';
+import {
+  CONTEXT_SERVICE,
+  type ContextService,
+} from '../../common/core/context.service';
+import { CreateExerciseRequestDto } from '../interface/create-exercise-request.dto';
+import { UpdateExerciseRequestDto } from '../interface/update-exercise-request.dto';
 import { ExerciseEntity } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,
-  type ExerciseRepositoryPort,
-} from './exercise-repository.port';
-import { PracticeExerciseEntity } from './practice-exercise.entity';
+  type ExerciseRepository,
+} from './exercise.repository';
 import {
-  PRACTICE_EXERCISE_REPOSITORY,
+  LEARNER_EXERCISE_REPOSITORY,
+  type LearnerExerciseRepository,
+  type PaginatedPracticeExerciseResult,
   type PracticeExerciseQuery,
-  type PracticeExerciseRepositoryPort,
-} from './practice-exercise-repository.port';
+} from './learner-exercise.repository';
 import {
   RESPONSE_EVALUATION_SERVICE,
-  type ResponseEvaluationServicePort,
-} from './response-evaluation-service.port';
+  type ResponseEvaluationService,
+} from './response-evaluation.service';
 import { ResponseSubmissionEntity } from './response-submission.entity';
 import {
   RESPONSE_SUBMISSION_REPOSITORY,
-  type ResponseSubmissionRepositoryPort,
-} from './response-submission-repository.port';
+  type ResponseSubmissionRepository,
+} from './response-submission.repository';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @Inject(EXERCISE_REPOSITORY)
-    private readonly repository: ExerciseRepositoryPort,
-    @Inject(PRACTICE_EXERCISE_REPOSITORY)
-    private readonly practiceExerciseRepository: PracticeExerciseRepositoryPort,
+    private readonly repository: ExerciseRepository,
+    @Inject(LEARNER_EXERCISE_REPOSITORY)
+    private readonly practiceExerciseRepository: LearnerExerciseRepository,
     @Inject(RESPONSE_SUBMISSION_REPOSITORY)
-    private readonly responseSubmissionRepository: ResponseSubmissionRepositoryPort,
+    private readonly responseSubmissionRepository: ResponseSubmissionRepository,
     @Inject(RESPONSE_EVALUATION_SERVICE)
-    private readonly responseEvaluationService: ResponseEvaluationServicePort,
+    private readonly responseEvaluationService: ResponseEvaluationService,
+    @Inject(CONTEXT_SERVICE)
+    private readonly contextService: ContextService,
   ) {}
 
   async create(data: CreateExerciseRequestDto): Promise<ExerciseEntity> {
-    return this.repository.create(data.toEntity());
+    return this.repository.create({
+      ...data.toEntity(),
+      userId: this.contextService.getUserIdOrThrow(),
+    });
   }
 
-  async findAll(): Promise<ExerciseEntity[]> {
-    return this.repository.findAll();
+  async findAllPaginated(
+    query: {
+      scenario?: string;
+      topics?: string[];
+      status?: 'active' | 'archived' | 'all';
+      sort?: string;
+      offset?: number;
+      limit?: number;
+    } = {},
+  ): Promise<{
+    total: number;
+    offset: number;
+    limit: number;
+    items: ExerciseEntity[];
+  }> {
+    // TODO: admin should be able to see all exercises
+    const userId = this.contextService.getUserIdOrThrow();
+    const offset = query.offset ?? 0;
+    const limit = query.limit ?? 10;
+    const [total, items] = await this.repository.findAllPaginated({
+      ...query,
+      userId,
+      offset,
+      limit,
+    });
+
+    return {
+      total,
+      offset,
+      limit,
+      items,
+    };
   }
 
-  async findPracticeExercises(
-    params: PracticeExerciseQuery,
-  ): Promise<PracticeExerciseEntity[]> {
-    return this.practiceExerciseRepository.findAll(params);
+  async findExercisesForUser(
+    userId?: string,
+    query?: PracticeExerciseQuery,
+  ): Promise<PaginatedPracticeExerciseResult> {
+    const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
+    return this.practiceExerciseRepository.findExercisesForUser(
+      currentUserId,
+      query,
+    );
   }
 
   async findById(id: string): Promise<ExerciseEntity | null> {
-    return this.repository.findById(id);
+    const exercise = await this.repository.findById(id);
+
+    if (!exercise) {
+      return null;
+    }
+
+    const userId = this.contextService.getUserIdOrThrow();
+
+    if (exercise.userId !== userId) {
+      throw new NotFoundException(`Exercise with id ${id} not found`);
+    }
+
+    return exercise;
   }
 
   async update(
     id: string,
     data: UpdateExerciseRequestDto,
   ): Promise<ExerciseEntity> {
+    const userId = this.contextService.getUserIdOrThrow();
+    const exercise = await this.repository.findById(id);
+
+    if (exercise?.userId !== userId) {
+      throw new NotFoundException(`Exercise with id ${id} not found`);
+    }
+
     return this.repository.update(id, data.toEntity());
   }
 
   async delete(id: string): Promise<ExerciseEntity> {
+    const userId = this.contextService.getUserIdOrThrow();
+    const exercise = await this.repository.findById(id);
+
+    if (exercise?.userId !== userId) {
+      throw new NotFoundException(`Exercise with id ${id} not found`);
+    }
+
     return this.repository.delete(id);
   }
 
   async submitResponse(
     exerciseId: string,
-    learnerId: string,
     response: string,
   ): Promise<ResponseSubmissionEntity> {
+    const userId = this.contextService.getUserIdOrThrow();
     const trimmedResponse = response.trim();
     if (!trimmedResponse) {
       throw new BadRequestException(
@@ -101,7 +171,7 @@ export class ExerciseService {
 
     const submission = await this.responseSubmissionRepository.create(
       new ResponseSubmissionEntity({
-        learnerId,
+        userId: userId,
         exerciseId,
         response: trimmedResponse,
         score: overallScore,
@@ -114,10 +184,7 @@ export class ExerciseService {
       }),
     );
 
-    await this.practiceExerciseRepository.upsertPractice({
-      learnerId,
-      exerciseId,
-    });
+    await this.practiceExerciseRepository.upsertPractice(userId, exerciseId);
 
     return submission;
   }
