@@ -4,11 +4,14 @@ import { deleteMany, findById, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('update exercise', () => {
-  const { cleanupMarker, getApp } = setUpApiTest();
+  const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should update a record in database', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
     const [exerciseId] = await insertMany('exercises', [
       {
+        userId,
         topics: ['Restaurant', cleanupMarker],
         scenario: 'ordering food in a restaurant',
         learnerRole: 'customer',
@@ -34,6 +37,7 @@ describe('update exercise', () => {
     };
     const resp = await request(getApp().getHttpServer())
       .patch(`/manage/exercises/${exerciseId}`)
+      .set('x-user-email', userEmail)
       .send(dto)
       .expect(200);
 

@@ -4,11 +4,14 @@ import { deleteMany, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('find exercises', () => {
-  const { cleanupMarker, getApp } = setUpApiTest();
+  const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should return exercises from database', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
     await insertMany('exercises', [
       {
+        userId,
         topics: ['Socializing', cleanupMarker],
         scenario: 'asking for a favor',
         learnerRole: 'person',
@@ -27,6 +30,7 @@ describe('find exercises', () => {
 
     const resp = await request(getApp().getHttpServer())
       .get('/manage/exercises')
+      .set('x-user-email', userEmail)
       .expect(200);
 
     expect(resp.body).toEqual(
@@ -34,6 +38,7 @@ describe('find exercises', () => {
         expect.objectContaining({
           topics: expect.arrayContaining(['Socializing']),
           scenario: 'asking for a favor',
+          id: expect.any(String),
         }),
       ]),
     );

@@ -29,7 +29,7 @@ describe('find practice exercises', () => {
       },
     ]);
     await insert('learner_exercise_practices', {
-      learnerId: new Types.ObjectId(userId),
+      userId: new Types.ObjectId(userId),
       exerciseId: new Types.ObjectId(exerciseId),
       practiceCount: 2,
       lastPracticeAt: new Date('2024-01-15T12:00:00.000Z'),
@@ -79,7 +79,7 @@ describe('find practice exercises', () => {
 
     for (const exerciseId of insertedIds.slice(1)) {
       await insert('learner_exercise_practices', {
-        learnerId: new Types.ObjectId(userId),
+        userId: new Types.ObjectId(userId),
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
         lastPracticeAt: new Date(Date.now() + 1000),
@@ -99,7 +99,7 @@ describe('find practice exercises', () => {
   afterEach(async () => {
     const { id: userId } = getUser();
     await deleteMany('learner_exercise_practices', {
-      learnerId: new Types.ObjectId(userId),
+      userId: new Types.ObjectId(userId),
     });
     await deleteMany('exercises', {
       topics: { $elemMatch: { $regex: cleanupMarker } },

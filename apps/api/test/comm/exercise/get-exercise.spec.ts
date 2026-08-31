@@ -4,11 +4,14 @@ import { deleteMany, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('get exercise', () => {
-  const { cleanupMarker, getApp } = setUpApiTest();
+  const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should return a record from database', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
     const [seededExerciseId] = await insertMany('exercises', [
       {
+        userId,
         topics: ['School', cleanupMarker],
         scenario: 'asking for explanation',
         learnerRole: 'student',
@@ -28,6 +31,7 @@ describe('get exercise', () => {
 
     const resp = await request(getApp().getHttpServer())
       .get(`/manage/exercises/${seededExerciseId}`)
+      .set('x-user-email', userEmail)
       .expect(200);
 
     expect(resp.body).toEqual(

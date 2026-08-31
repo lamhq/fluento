@@ -74,13 +74,13 @@ describe('submit response', () => {
     );
 
     const storedSubmission = await findOne('response_submissions', {
-      learnerId: userId,
+      userId: userId,
       exerciseId: exercise._id.toString(),
     });
 
     expect(storedSubmission).toEqual(
       expect.objectContaining({
-        learnerId: userId,
+        userId: userId,
         exerciseId: exercise._id.toString(),
         response: responseText,
       }),
