@@ -68,12 +68,7 @@ Submit a learner's written response in an exercise for evaluation and return act
       "score": 94,
       "feedback": "The tone is friendly and appropriate for a conversation in this context."
     }
-  },
-  "alternatives": [
-    "I'd be happy to meet tomorrow to talk about the project.",
-    "Tomorrow works well for me. Let's discuss the details then.",
-    "Sure, let's meet tomorrow to go over the project."
-  ]
+  }
 }
 ```
 

@@ -138,7 +138,7 @@ describe('find practice exercises', () => {
     expect(resp.body.items).toHaveLength(2);
     expect(
       resp.body.items.every(
-        (item: { id: string }) => item.id !== archivedExerciseId,
+        (item: { id: string }) => item.id !== archivedExerciseId._id.toString(),
       ),
     ).toBe(true);
     expect(

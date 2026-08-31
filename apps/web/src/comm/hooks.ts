@@ -4,13 +4,16 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { z } from 'zod';
 
 import { useApiClient } from '../api';
-import { PracticeExerciseSchema, SubmitResponseSchema } from './schemas';
+import { PracticeExercisesResponseSchema, SubmitResponseSchema } from './schemas';
 import { type PracticeExercise, type SubmitResponse } from './types';
 
-export { PracticeExerciseSchema, SubmitResponseSchema } from './schemas';
+export {
+  PracticeExerciseSchema,
+  PracticeExercisesResponseSchema,
+  SubmitResponseSchema,
+} from './schemas';
 export type { PracticeExercise, SubmitResponse } from './types';
 
 const PRACTICE_EXERCISES_QUERY_KEY = ['practice-page', 'exercises'];
@@ -22,22 +25,19 @@ export function usePracticeExercise(): PracticeExercise | null {
       queryKey: PRACTICE_EXERCISES_QUERY_KEY,
       queryFn: async () => {
         try {
-          const response = await apiClient.get('/practice/exercises', {
+          const response = await apiClient.get('/v1/practice/exercises', {
             params: {
-              sort: 'lastPracticeAt',
-              dir: 'asc',
+              sort: '-practicedAt',
               limit: 1,
-              offset: 0,
             },
           });
 
-          const ApiResponseSchema = z.array(PracticeExerciseSchema);
-          const parsed = ApiResponseSchema.safeParse(response.data);
+          const parsed = PracticeExercisesResponseSchema.safeParse(response.data);
           if (!parsed.success) {
             throw new Error('Invalid exercise response from server.');
           }
 
-          return parsed.data;
+          return parsed.data.items;
         } catch (error) {
           if (error instanceof Error) {
             throw error;
@@ -63,7 +63,7 @@ export function useSubmitResponse() {
       response: string;
     }): Promise<SubmitResponse> => {
       const result = await apiClient.post(
-        `/comm/exercises/${exerciseId}/responses`,
+        `/v1/practice/exercises/${exerciseId}/responses`,
         {
           response,
         },
