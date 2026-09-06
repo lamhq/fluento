@@ -28,18 +28,10 @@ describe('delete exercise', () => {
       },
     ]);
 
-    const deleteResponse = await request(getApp().getHttpServer())
+    await request(getApp().getHttpServer())
       .delete(`/v1/manage/exercises/${exerciseId}`)
       .set('x-user-email', userEmail)
-      .expect(200);
-
-    expect(deleteResponse.body).toEqual(
-      expect.objectContaining({
-        id: exerciseId,
-        topics: expect.arrayContaining(['Restaurant', cleanupMarker]),
-        scenario: 'ordering food in a restaurant',
-      }),
-    );
+      .expect(204);
 
     const deletedExercise = await findById('exercises', exerciseId);
 

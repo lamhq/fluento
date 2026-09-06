@@ -1,4 +1,10 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 
 import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
@@ -11,6 +17,7 @@ export class FindTopicsHttpController {
   constructor(private readonly topicService: TopicService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   async findTopicsForUser(): Promise<TopicResponseDto[]> {
     const topics = await this.topicService.findTopicsForUser();
     return topics.map((topic) => TopicResponseDto.fromEntity(topic));

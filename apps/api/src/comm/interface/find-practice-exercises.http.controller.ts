@@ -2,6 +2,8 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  HttpCode,
+  HttpStatus,
   ParseArrayPipe,
   ParseIntPipe,
   Query,
@@ -19,6 +21,7 @@ export class FindPracticeExercisesHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   async findExercisesForUser(
     @Query('sort') sort?: 'practicedAt' | 'createdAt',
     @Query('cursor') cursor?: string,

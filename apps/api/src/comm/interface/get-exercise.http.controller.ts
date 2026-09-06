@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   UseGuards,
@@ -17,6 +19,7 @@ export class GetExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async findById(@Param('id') id: string): Promise<ExerciseResponseDto> {
     const exercise = await this.exerciseService.findById(id);
 

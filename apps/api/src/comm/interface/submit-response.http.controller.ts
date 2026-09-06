@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 
 import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
@@ -11,6 +19,7 @@ export class SubmitResponseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
   @Post(':exerciseId/responses')
+  @HttpCode(HttpStatus.CREATED)
   async submitResponse(
     @Param('exerciseId') exerciseId: string,
     @Body() body: SubmitResponseRequestDto,
