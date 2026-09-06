@@ -26,7 +26,7 @@ erDiagram
 
     CommunicationExercise {
         string id
-        string userId
+        ObjectId userId
         string status
         string scenario
         string learnerRole
@@ -53,15 +53,15 @@ erDiagram
 
     LearnerExercisePractice {
         string id
-        string userId
+      ObjectId userId
         string exerciseId
         int practiceCount
-        datetime lastPracticeAt
+      datetime | null lastPracticeAt
     }
 
     ResponseSubmission {
         string id
-        string userId
+      ObjectId userId
         string exerciseId
         string response
         datetime createdAt
@@ -107,7 +107,7 @@ Represents a reusable scenario-based communication exercise for practice.
 | Attribute Name  | Type     | Description                                                            |
 | --------------- | -------- | ---------------------------------------------------------------------- |
 | id              | String   | Unique exercise identifier.                                            |
-| userId          | String   | Identifier of the user who owns or created the exercise.               |
+| userId          | ObjectId | Identifier of the user who owns or created the exercise.               |
 | status          | String   | Lifecycle state of the exercise. Allowed values: `active`, `archived`. |
 | scenario        | String   | Real-world situation the learner is expected to respond to.            |
 | learnerRole     | String   | Role played by the learner in the scenario.                            |
@@ -131,12 +131,12 @@ Represents a thematic category used for grouping and filtering exercises.
 
 **Attributes:**
 
-| Attribute Name | Type     | Description                                              |
-| -------------- | -------- | -------------------------------------------------------- |
-| id             | String   | Unique topic identifier.                                 |
-| userId         | String   | Identifier of the user who owns or created the topic.    |
-| name           | String   | Topic label, such as Restaurant, School, or Socializing. |
-| createdAt      | DateTime | Timestamp when the topic was created.                    |
+| Attribute Name | Type     | Description                                                    |
+| -------------- | -------- | -------------------------------------------------------------- |
+| id             | String   | Unique topic identifier.                                       |
+| userId         | ObjectId | Optional identifier of the user who owns or created the topic. |
+| name           | String   | Topic label, such as Restaurant, School, or Socializing.       |
+| createdAt      | DateTime | Timestamp when the topic was created.                          |
 
 **Relationships:**
 
@@ -188,13 +188,13 @@ Tracks per-learner exercise practice state and repetition behavior.
 
 **Attributes:**
 
-| Attribute Name | Type     | Description                                                    |
-| -------------- | -------- | -------------------------------------------------------------- |
-| id             | String   | Unique learner-practice record identifier.                     |
-| userId         | String   | Identifier of the learner associated with the practice record. |
-| exerciseId     | String   | Exercise associated with the practice record.                  |
-| practiceCount  | Integer  | Number of times the learner has practiced the exercise.        |
-| lastPracticeAt | DateTime | Timestamp of the learner’s most recent practice attempt.       |
+| Attribute Name | Type     | Description                                                       |
+| -------------- | -------- | ----------------------------------------------------------------- |
+| id             | String   | Unique learner-practice record identifier.                        |
+| userId         | ObjectId | Identifier of the learner associated with the practice record.    |
+| exerciseId     | String   | Exercise associated with the practice record.                     |
+| practiceCount  | Integer  | Number of times the learner has practiced the exercise.           |
+| lastPracticeAt | DateTime | Nullable timestamp of the learner’s most recent practice attempt. |
 
 **Relationships:**
 
@@ -211,7 +211,7 @@ Stores a learner’s submitted response and the associated exercise context.
 | Attribute Name | Type     | Description                                           |
 | -------------- | -------- | ----------------------------------------------------- |
 | id             | String   | Unique submission identifier.                         |
-| userId         | String   | Identifier of the learner who submitted the response. |
+| userId         | ObjectId | Identifier of the learner who submitted the response. |
 | exerciseId     | String   | Exercise to which the response belongs.               |
 | response       | String   | Learner’s trimmed response text before evaluation.    |
 | createdAt      | DateTime | Timestamp of submission.                              |
@@ -391,10 +391,10 @@ This collection stores each learner attempt and the resulting evaluation.
 
 This collection records each learner’s practice statistics, enabling sorting the exercises by last practice date or by practice count.
 
-```json
+```javascript
 {
   "_id": "64f5d8a6c2ed4a7f82024b92",
-  "userId": "lear_42",
+  "userId": ObjectId('65f000000000000000000003'),
   "exerciseId": "ex_123",
   "practiceCount": 2,
   "lastPracticeAt": "2026-08-13T11:15:00Z"
@@ -465,19 +465,19 @@ db.getCollection('exercises').insertMany([
 db.getCollection('learner_exercise_practices').deleteMany({});
 db.getCollection('learner_exercise_practices').insertMany([
   {
-    userId: 'lear_1',
+    userId: ObjectId('65f000000000000000000003'),
     exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
     practiceCount: 2,
     lastPracticeAt: new Date('2026-08-13T11:10:00Z'),
   },
   {
-    userId: 'lear_1',
+    userId: ObjectId('65f000000000000000000003'),
     exerciseId: ObjectId('6a8134985ed2456c91a10b4e'),
     practiceCount: 0,
     lastPracticeAt: null,
   },
   {
-    userId: 'lear_2',
+    userId: ObjectId('65f000000000000000000004'),
     exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
     practiceCount: 1,
     lastPracticeAt: new Date('2026-08-13T10:45:00Z'),

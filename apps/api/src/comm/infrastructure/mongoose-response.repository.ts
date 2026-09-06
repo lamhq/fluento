@@ -28,8 +28,8 @@ export class MongooseResponseRepository implements ResponseSubmissionRepository 
   ): ResponseSubmissionEntity {
     return new ResponseSubmissionEntity({
       id: data._id.toString(),
-      userId: data.userId,
-      exerciseId: data.exerciseId,
+      userId: data.userId.toString(),
+      exerciseId: data.exerciseId.toString(),
       response: data.response,
       score: data.score,
       feedback: data.feedback,

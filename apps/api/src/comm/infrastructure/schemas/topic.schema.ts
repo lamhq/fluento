@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export type TopicDocument = HydratedDocument<Topic>;
 
 @Schema({ timestamps: true, collection: 'topics' })
 export class Topic {
-  @Prop({ required: true, index: true })
-  userId: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  userId?: mongoose.Types.ObjectId;
 
   @Prop({ required: true, index: true })
   name: string;

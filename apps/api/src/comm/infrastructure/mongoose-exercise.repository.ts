@@ -76,7 +76,7 @@ export class MongooseExerciseRepository implements ExerciseRepository {
     const filter: FilterQuery<Exercise> = {};
 
     if (query.userId) {
-      filter.userId = query.userId;
+      filter.userId = new Types.ObjectId(query.userId);
     }
 
     if (query.status && query.status !== 'all') {
@@ -117,7 +117,7 @@ export class MongooseExerciseRepository implements ExerciseRepository {
   private dbModelToEntity(data: ExerciseDocument): ExerciseEntity {
     return {
       id: data._id.toString(),
-      userId: data.userId,
+      userId: data.userId.toString(),
       status: data.status,
       topics: data.topics,
       scenario: data.scenario,

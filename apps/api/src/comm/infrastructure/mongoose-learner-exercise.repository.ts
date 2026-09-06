@@ -43,7 +43,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
     userId: string,
     query?: PracticeExerciseQuery,
   ): Promise<PaginatedPracticeExerciseResult> {
-    const { sort = '-practicedAt', limit = 10, cursor, topics } = query ?? {};
+    const { sort = '-practicedAt', limit = 10, after, topics } = query ?? {};
 
     const matchStage: Record<string, unknown> = {
       status: ExerciseStatus.Active,
@@ -97,15 +97,15 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
     let keysetFilter: Record<string, unknown> = {};
     let cursorData: RawPracticeExercise | null = null;
 
-    if (cursor) {
+    if (after) {
       try {
         // Fetch the cursor item to get its sort key values
-        const cursorItem = await this.exerciseModel.findById(cursor).exec();
+        const cursorItem = await this.exerciseModel.findById(after).exec();
         if (cursorItem) {
           // Reconstruct the full item with practice data
           const fullCursorItem = await this.exerciseModel
             .aggregate<RawPracticeExercise>([
-              { $match: { _id: new Types.ObjectId(cursor) } },
+              { $match: { _id: new Types.ObjectId(after) } },
               ...basePipeline,
             ])
             .exec();
@@ -151,14 +151,14 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
       nextCursor = pageItems[pageItems.length - 1]._id.toString();
     }
 
-    const previousCursor = cursor && pageItems.length > 0 ? cursor : null;
+    const previousCursor = after && pageItems.length > 0 ? after : null;
 
     return {
       items: pageItems.map((result) => this.dbModelToEntity(result)),
       nextCursor,
       previousCursor,
       hasNext,
-      hasPrevious: !!cursor,
+      hasPrevious: !!after,
     };
   }
 

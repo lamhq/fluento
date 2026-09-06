@@ -1,6 +1,6 @@
 export class TopicEntity {
   id: string;
-  userId: string;
+  userId?: string;
   name: string;
   createdAt?: Date;
   updatedAt?: Date;

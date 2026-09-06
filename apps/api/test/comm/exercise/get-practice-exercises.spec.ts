@@ -31,7 +31,7 @@ describe('find practice exercises', () => {
       },
     ]);
     await insert('learner_exercise_practices', {
-      userId: new Types.ObjectId(userId),
+      userId,
       exerciseId: new Types.ObjectId(exerciseId),
       practiceCount: 2,
       lastPracticeAt: new Date('2024-01-15T12:00:00.000Z'),
@@ -68,12 +68,10 @@ describe('find practice exercises', () => {
             ]),
           }),
         ]),
-        pagination: expect.objectContaining({
-          nextCursor: null,
-          previousCursor: null,
-          hasNext: false,
-          hasPrevious: false,
-        }),
+        nextCursor: null,
+        previousCursor: null,
+        hasNext: false,
+        hasPrevious: false,
       }),
     );
   });
@@ -120,7 +118,7 @@ describe('find practice exercises', () => {
 
     for (const exerciseId of activeExerciseIds) {
       await insert('learner_exercise_practices', {
-        userId: new Types.ObjectId(userId),
+        userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
         lastPracticeAt: new Date(),
@@ -170,7 +168,7 @@ describe('find practice exercises', () => {
 
     for (const exerciseId of insertedIds) {
       await insert('learner_exercise_practices', {
-        userId: new Types.ObjectId(userId),
+        userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
         lastPracticeAt: new Date(Date.now() + 1000),
@@ -187,22 +185,22 @@ describe('find practice exercises', () => {
       .expect(200);
 
     expect(firstPageResp.body.items).toHaveLength(10);
-    expect(firstPageResp.body.pagination.hasNext).toBe(true);
-    expect(firstPageResp.body.pagination.hasPrevious).toBe(false);
-    expect(firstPageResp.body.pagination.previousCursor).toBeNull();
-    const nextCursor = firstPageResp.body.pagination.nextCursor;
+    expect(firstPageResp.body.hasNext).toBe(true);
+    expect(firstPageResp.body.hasPrevious).toBe(false);
+    expect(firstPageResp.body.previousCursor).toBeNull();
+    const nextCursor = firstPageResp.body.nextCursor;
 
     // Get second page using nextCursor
     const secondPageResp = await request(getApp().getHttpServer())
       .get('/v1/practice/exercises')
-      .query({ limit: 10, cursor: nextCursor })
+      .query({ limit: 10, after: nextCursor })
       .set('x-user-email', userEmail)
       .expect(200);
 
     expect(secondPageResp.body.items).toHaveLength(5);
-    expect(secondPageResp.body.pagination.hasNext).toBe(false);
-    expect(secondPageResp.body.pagination.hasPrevious).toBe(true);
-    expect(secondPageResp.body.pagination.previousCursor).toEqual(nextCursor);
+    expect(secondPageResp.body.hasNext).toBe(false);
+    expect(secondPageResp.body.hasPrevious).toBe(true);
+    expect(secondPageResp.body.previousCursor).toEqual(nextCursor);
   });
 
   it('should move across multiple pages using nextCursor', async () => {
@@ -229,7 +227,7 @@ describe('find practice exercises', () => {
 
     for (const exerciseId of insertedIds) {
       await insert('learner_exercise_practices', {
-        userId: new Types.ObjectId(userId),
+        userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
         lastPracticeAt: new Date(Date.now() + 1000),
@@ -246,36 +244,32 @@ describe('find practice exercises', () => {
       .expect(200);
 
     expect(page1.body.items).toHaveLength(10);
-    expect(page1.body.pagination.hasPrevious).toBe(false);
-    expect(page1.body.pagination.hasNext).toBe(true);
+    expect(page1.body.hasPrevious).toBe(false);
+    expect(page1.body.hasNext).toBe(true);
 
     // Get second page
     const page2 = await request(getApp().getHttpServer())
       .get('/v1/practice/exercises')
-      .query({ limit: 10, cursor: page1.body.pagination.nextCursor })
+      .query({ limit: 10, after: page1.body.nextCursor })
       .set('x-user-email', userEmail)
       .expect(200);
 
     expect(page2.body.items).toHaveLength(10);
-    expect(page2.body.pagination.hasPrevious).toBe(true);
-    expect(page2.body.pagination.hasNext).toBe(true);
-    expect(page2.body.pagination.previousCursor).toEqual(
-      page1.body.pagination.nextCursor,
-    );
+    expect(page2.body.hasPrevious).toBe(true);
+    expect(page2.body.hasNext).toBe(true);
+    expect(page2.body.previousCursor).toEqual(page1.body.nextCursor);
 
     // Get third page
     const page3 = await request(getApp().getHttpServer())
       .get('/v1/practice/exercises')
-      .query({ limit: 10, cursor: page2.body.pagination.nextCursor })
+      .query({ limit: 10, after: page2.body.nextCursor })
       .set('x-user-email', userEmail)
       .expect(200);
 
     expect(page3.body.items).toHaveLength(5);
-    expect(page3.body.pagination.hasPrevious).toBe(true);
-    expect(page3.body.pagination.hasNext).toBe(false);
-    expect(page3.body.pagination.previousCursor).toEqual(
-      page2.body.pagination.nextCursor,
-    );
+    expect(page3.body.hasPrevious).toBe(true);
+    expect(page3.body.hasNext).toBe(false);
+    expect(page3.body.previousCursor).toEqual(page2.body.nextCursor);
   });
 
   it('should return full page when all items fit', async () => {
@@ -303,7 +297,7 @@ describe('find practice exercises', () => {
 
     for (const exerciseId of insertedIds) {
       await insert('learner_exercise_practices', {
-        userId: new Types.ObjectId(userId),
+        userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
         lastPracticeAt: new Date(Date.now() + 1000),
@@ -320,11 +314,11 @@ describe('find practice exercises', () => {
 
     // Should have items that fit exactly in one page (accounting for seed data)
     expect(resp.body.items).toHaveLength(10);
-    expect(resp.body.pagination.hasPrevious).toBe(false);
-    expect(resp.body.pagination.previousCursor).toBeNull();
+    expect(resp.body.hasPrevious).toBe(false);
+    expect(resp.body.previousCursor).toBeNull();
     // With exactly 10 items and limit 10, there should be no next page
-    expect(resp.body.pagination.hasNext).toBe(false);
-    expect(resp.body.pagination.nextCursor).toBeNull();
+    expect(resp.body.hasNext).toBe(false);
+    expect(resp.body.nextCursor).toBeNull();
   });
 
   it('should return empty list when user has no practice', async () => {
@@ -340,9 +334,8 @@ describe('find practice exercises', () => {
     // Should return items (structure validation, not count validation)
     expect(resp.body.items).toBeDefined();
     expect(Array.isArray(resp.body.items)).toBe(true);
-    expect(resp.body.pagination).toBeDefined();
-    expect(resp.body.pagination.hasPrevious).toBe(false);
-    expect(resp.body.pagination.previousCursor).toBeNull();
+    expect(resp.body.hasPrevious).toBe(false);
+    expect(resp.body.previousCursor).toBeNull();
   });
 
   it('should handle cursor at last item correctly', async () => {
@@ -370,7 +363,7 @@ describe('find practice exercises', () => {
 
     for (const exerciseId of insertedIds) {
       await insert('learner_exercise_practices', {
-        userId: new Types.ObjectId(userId),
+        userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
         lastPracticeAt: new Date(Date.now() + 1000),
@@ -388,14 +381,14 @@ describe('find practice exercises', () => {
 
     // All 5 items fit in one page, so no next cursor
     expect(resp.body.items.length).toBeLessThanOrEqual(10);
-    expect(resp.body.pagination.hasPrevious).toBe(false);
-    expect(resp.body.pagination.previousCursor).toBeNull();
+    expect(resp.body.hasPrevious).toBe(false);
+    expect(resp.body.previousCursor).toBeNull();
   });
 
   afterEach(async () => {
     const { id: userId } = getUser();
     await deleteMany('learner_exercise_practices', {
-      userId: new Types.ObjectId(userId),
+      userId,
     });
     await deleteMany('exercises', {
       topics: { $elemMatch: { $regex: cleanupMarker } },

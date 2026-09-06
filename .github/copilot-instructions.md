@@ -21,7 +21,7 @@ All tasks and the relevant documents to read for context:
 | Manage dependencies          | Root README |
 | Review Docker Compose file   | Root README |
 
-## Document List
+## Documents
 
 Project documents and their purposes:
 

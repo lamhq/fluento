@@ -18,8 +18,8 @@ export class FindTopicsHttpController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findTopicsForUser(): Promise<TopicResponseDto[]> {
-    const topics = await this.topicService.findTopicsForUser();
+  async findAll(): Promise<TopicResponseDto[]> {
+    const topics = await this.topicService.findAll();
     return topics.map((topic) => TopicResponseDto.fromEntity(topic));
   }
 }

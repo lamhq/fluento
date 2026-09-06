@@ -18,6 +18,7 @@ describe('submit response', () => {
       .mockResolvedValue(fakeEvaluation);
 
     const exercise = await insert('exercises', {
+      userId,
       topics: ['Socializing', cleanupMarker],
       scenario: 'asking for a favor',
       learnerRole: 'person',
@@ -75,21 +76,22 @@ describe('submit response', () => {
 
     const storedSubmission = await findOne('response_submissions', {
       userId: userId,
-      exerciseId: exercise._id.toString(),
+      exerciseId: exercise._id,
     });
 
     expect(storedSubmission).toEqual(
       expect.objectContaining({
         userId: userId,
-        exerciseId: exercise._id.toString(),
+        exerciseId: exercise._id,
         response: responseText,
       }),
     );
   });
 
   afterEach(async () => {
+    const { id: userId } = getUser();
     await deleteMany('response_submissions', {
-      exerciseId: { $regex: cleanupMarker },
+      userId: userId,
     });
     await deleteMany('exercises', {
       topics: { $elemMatch: { $regex: cleanupMarker } },

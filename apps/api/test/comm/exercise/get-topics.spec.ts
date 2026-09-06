@@ -9,11 +9,10 @@ describe('get topics', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   beforeEach(async () => {
-    const { id: userId } = getUser();
-    await deleteMany('topics', { userId });
+    await deleteMany('topics', {});
   });
 
-  it('should return topics for the current user sorted by name ascending', async () => {
+  it('should return all topics sorted by name ascending', async () => {
     const { email: userEmail, id: userId } = getUser();
 
     await insertMany('topics', [
@@ -49,10 +48,11 @@ describe('get topics', () => {
       .set('x-user-email', userEmail)
       .expect(200);
 
-    expect(resp.body).toHaveLength(4);
+    expect(resp.body).toHaveLength(5);
     expect(resp.body.map((topic: { name: string }) => topic.name)).toEqual([
       'Communication',
       'Grammar',
+      'Secret',
       'Speaking',
       'Vocabulary',
     ]);
@@ -82,16 +82,20 @@ describe('get topics', () => {
       .expect(401);
   });
 
-  it("should not allow users to view another user's topics", async () => {
+  it('should return topics regardless of their user', async () => {
     const { email: userEmail, id: userId } = getUser();
     const otherUser = await insert('users', {
       email: `other-${cleanupMarker}@example.com`,
     });
 
     await insertMany('topics', [
-      { userId, name: 'Mine', createdAt: new Date('2026-01-10T08:00:00Z') },
       {
-        userId: otherUser._id.toString(),
+        userId,
+        name: 'Mine',
+        createdAt: new Date('2026-01-10T08:00:00Z'),
+      },
+      {
+        userId: otherUser._id,
         name: 'Theirs',
         createdAt: new Date('2026-01-10T08:10:00Z'),
       },
@@ -102,15 +106,10 @@ describe('get topics', () => {
       .set('x-user-email', userEmail)
       .expect(200);
 
-    expect(resp.body).toEqual([
-      expect.objectContaining({
-        name: 'Mine',
-        id: expect.any(String),
-        createdAt: expect.any(String),
-      }),
-    ]);
+    expect(resp.body).toHaveLength(2);
     expect(resp.body.map((topic: { name: string }) => topic.name)).toEqual([
       'Mine',
+      'Theirs',
     ]);
   });
 });

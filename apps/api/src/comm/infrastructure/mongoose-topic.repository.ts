@@ -12,9 +12,9 @@ export class MongooseTopicRepository implements TopicRepository {
     @InjectModel(Topic.name) private readonly topicModel: Model<Topic>,
   ) {}
 
-  async findAll(query: TopicQuery): Promise<TopicEntity[]> {
+  async findAll(query?: TopicQuery): Promise<TopicEntity[]> {
     const topics = await this.topicModel
-      .find({ userId: query.userId })
+      .find(query?.userId === undefined ? {} : { userId: query.userId })
       .sort({ name: 1 })
       .exec();
 
@@ -24,7 +24,7 @@ export class MongooseTopicRepository implements TopicRepository {
   private dbModelToEntity(data: TopicDocument): TopicEntity {
     return {
       id: data._id.toString(),
-      userId: data.userId,
+      userId: data.userId?.toString(),
       name: data.name,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,

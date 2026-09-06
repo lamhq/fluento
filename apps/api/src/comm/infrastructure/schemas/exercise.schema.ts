@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 import { ExerciseStatus } from '../../core/exercise.entity';
 
@@ -19,8 +19,8 @@ export const ExpectedResponseSchema =
 
 @Schema({ timestamps: true, collection: 'exercises' })
 export class Exercise {
-  @Prop({ required: true })
-  userId: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  userId: mongoose.Types.ObjectId;
 
   @Prop({
     type: String,

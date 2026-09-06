@@ -52,7 +52,7 @@ describe('create exercise', () => {
     expect(savedExercise).not.toBeNull();
     expect(savedExercise).toEqual(
       expect.objectContaining({
-        userId: userId,
+        userId,
         status: dto.status,
         topics: dto.topics,
         scenario: dto.scenario,

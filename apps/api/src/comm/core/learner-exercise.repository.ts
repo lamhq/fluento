@@ -3,11 +3,10 @@ import { PracticeExerciseEntity } from './practice-exercise.entity';
 export const LEARNER_EXERCISE_REPOSITORY = Symbol('LearnerExerciseRepository');
 
 export interface PracticeExerciseQuery {
-  sort?: string;
-  limit?: number;
-  cursor?: string;
-  offset?: number;
   topics?: string[];
+  limit?: number;
+  after?: string;
+  sort?: string;
 }
 
 export interface PaginatedPracticeExerciseResult {

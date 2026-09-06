@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export type ResponseSubmissionDocument = HydratedDocument<ResponseSubmission>;
 
@@ -65,11 +65,15 @@ export class ResponseSubmissionAppropriateness {
 
 @Schema({ timestamps: true, collection: 'response_submissions' })
 export class ResponseSubmission {
-  @Prop({ required: true })
-  userId: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  userId: mongoose.Types.ObjectId;
 
-  @Prop({ required: true })
-  exerciseId: string;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exercise',
+    required: true,
+  })
+  exerciseId: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   response: string;

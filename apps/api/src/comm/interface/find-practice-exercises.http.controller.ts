@@ -12,6 +12,7 @@ import {
 
 import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
+import type { CursorPaginationResult } from '../../common/types/pagination';
 import { ExerciseService } from '../core/exercise.service';
 import { PracticeExerciseResponseDto } from './practice-exercise-response.dto';
 
@@ -22,25 +23,17 @@ export class FindPracticeExercisesHttpController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findExercisesForUser(
+  async findAll(
     @Query('sort') sort?: 'practicedAt' | 'createdAt',
-    @Query('cursor') cursor?: string,
+    @Query('after') after?: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
-  ): Promise<{
-    items: PracticeExerciseResponseDto[];
-    pagination: {
-      nextCursor: string | null;
-      previousCursor: string | null;
-      hasNext: boolean;
-      hasPrevious: boolean;
-    };
-  }> {
+  ): Promise<CursorPaginationResult<PracticeExerciseResponseDto>> {
     const { items, nextCursor, previousCursor, hasNext, hasPrevious } =
       await this.exerciseService.findExercisesForUser(undefined, {
         sort,
         limit,
-        cursor,
+        after,
         topics,
       });
 
@@ -48,12 +41,10 @@ export class FindPracticeExercisesHttpController {
       items: items.map((exercise) =>
         PracticeExerciseResponseDto.fromEntity(exercise),
       ),
-      pagination: {
-        nextCursor,
-        previousCursor,
-        hasNext,
-        hasPrevious,
-      },
+      nextCursor,
+      previousCursor,
+      hasNext,
+      hasPrevious,
     };
   }
 }

@@ -1,5 +1,6 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ObjectId } from 'mongodb';
 import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
@@ -12,7 +13,7 @@ export function setUpApiTest() {
 
   // NestJS application instance for testing
   let app!: INestApplication<App>;
-  let user!: { email: string; id: string };
+  let user!: { email: string; id: ObjectId };
 
   beforeAll(async () => {
     // connect to database
@@ -21,7 +22,7 @@ export function setUpApiTest() {
     // create a test user in database
     const email = `learner-${cleanupMarker}@example.com`;
     const insertedUser = await insert('users', { email });
-    user = { email, id: insertedUser._id.toString() };
+    user = { email, id: insertedUser._id };
 
     // create NestJS app
     const moduleFixture: TestingModule = await Test.createTestingModule({
