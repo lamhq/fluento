@@ -12,19 +12,19 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 
 ### Request Headers
 
-| **Name**   | **Value**          |
-| ---------- | ------------------ |
-| User-Email | `test@example.com` |
-| Accept     | application/json   |
+| **Name**     | **Value**          |
+| ------------ | ------------------ |
+| x-user-email | `test@example.com` |
+| Accept       | application/json   |
 
 ### Query Parameters
 
-| **Name** | **Type** | **Required** | **Description**                                                                                                                                                                                          |
-| -------- | -------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| topics   | string   | No           | Filter exercises by one or more topics (e.g., `?topics=Restaurant&topics=School`). Use OR condition.                                                                                                     |
-| sort     | string   | No           | Multi-column sort order using camelCase field names. Use dash prefix (`-`) for descending order (e.g., `-practicedAt,createdAt`). Default: `-practicedAt`. Supported fields: `practicedAt`, `createdAt`. |
-| cursor   | string   | No           | Opaque cursor token returned by the previous page. Omit for the first page.                                                                                                                              |
-| limit    | integer  | No           | Maximum number of items per response. Maximum 50. Default: `10`.                                                                                                                                         |
+| **Name** | **Type** | **Required** | **Description**                                                                                                                                                                                                            |
+| -------- | -------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| topics   | string   | No           | Filter exercises by one or more topics (e.g., `?topics=Restaurant&topics=School`). Use OR condition.                                                                                                                       |
+| sort     | string   | No           | Multi-column sort order using camelCase field names. Use dash prefix (`-`) for descending order (e.g., `-practicedAt,createdAt`). Default: `-practicedAt`. Supported fields: `practicedAt`, `lastPracticeAt`, `createdAt`. |
+| after    | string   | No           | Cursor exercise ID returned by the previous page. Omit for the first page.                                                                                                                                                 |
+| limit    | integer  | No           | Maximum number of items per response. Capped at 50 by the repository. Default: `10`.                                                                                                                                       |
 
 ### Response
 
@@ -73,12 +73,10 @@ Retrieve a paginated list of exercises available to a learner for practice, with
       ]
     }
   ],
-  "pagination": {
-    "nextCursor": "ex_124",
-    "previousCursor": null,
-    "hasNext": true,
-    "hasPrevious": false
-  }
+  "nextCursor": "ex_124",
+  "previousCursor": null,
+  "hasNext": true,
+  "hasPrevious": false
 }
 ```
 
@@ -104,13 +102,13 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 
 ## Functional Requirements
 
-- **User Identification:** Use the `User-Email` header to identify the learner making the request.
+- **User Identification:** Require the `x-user-email` header to identify the learner making the request.
 - **Exercise Retrieval:** Return only active exercises.
-- **Paging Support:** Support `limit` and `cursor` to paginate results without returning the full exercise set at once.
+- **Paging Support:** Support `limit` and `after` to paginate results without returning the full exercise set at once. Return flat `nextCursor`, `previousCursor`, `hasNext`, and `hasPrevious` fields.
 - **Sorting Support:** Support ordering exercises by:
   - `practicedAt`: the time the current learner practiced them
   - `createdAt`: the time they were added
-- **Topic Filtering:** Allow filtering by one or more topic values when the client needs a narrower set of scenarios.
+- **Topic Filtering:** Allow filtering by one or more topic values when the client needs a narrower set of scenarios. Topics use an OR condition.
 
 ## Non-Functional Requirements
 

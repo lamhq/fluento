@@ -14,7 +14,7 @@ Submit a learner's written response in an exercise for evaluation and return act
 
 | **Name**     | **Value**          |
 | ------------ | ------------------ |
-| User-Email   | `test@example.com` |
+| x-user-email | `test@example.com` |
 | Content-Type | application/json   |
 | Accept       | application/json   |
 
@@ -110,12 +110,12 @@ Submit a learner's written response in an exercise for evaluation and return act
 
 ## Functional Requirements
 
-- **User Identification:** Use the `User-Email` header to identify which learner is submitting the response.
+- **User Identification:** Require the `x-user-email` header to identify which learner is submitting the response.
 - **Validation:** Reject empty or whitespace-only submissions before evaluation.
 - **Context Matching:** Evaluate the response to the exercise scenario, learner role, and counterpart role.
 - **AI-Based Evaluation:** Use AI service for scoring, return overall feedback and corrected sentences or fix suggestions.
 - **Suggestions:** Return polished alternatives aligned with the exercise context.
-- **Retry Support:** Allow repeated submissions for the same exercise. Each attempt is tracked separately and counts toward practice.
+- **Retry Support:** Allow repeated submissions for the same exercise. Each attempt is stored separately and increments the learner's practice count.
 
 ## Non-Functional Requirements
 

@@ -12,21 +12,21 @@ Retrieve a paginated, filterable, and sortable list of exercises owned by the cu
 
 ### Request Headers
 
-| **Name**   | **Value**          |
-| ---------- | ------------------ |
-| User-Email | `test@example.com` |
-| Accept     | application/json   |
+| **Name**     | **Value**          |
+| ------------ | ------------------ |
+| x-user-email | `test@example.com` |
+| Accept       | application/json   |
 
 ### Query Parameters
 
-| **Name** | **Type** | **Required** | **Description**                                                                                                                                                                                                |
-| -------- | -------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| scenario | string   | No           | Case-insensitive partial match filter on scenario name.                                                                                                                                                        |
-| topics   | string   | No           | Filter exercises by one or more topics (e.g., `?topics=Vocabulary&topics=Speaking`). Use OR condition                                                                                                          |
-| status   | string   | No           | Filter by exercise status. Supported values: `active`, `archived`, `all`. Default: `all`.                                                                                                                      |
-| sort     | string   | No           | Multi-column sort order using kebab-case field names. Use dash prefix (`-`) for descending order (e.g., `-created-at,scenario`). Default: `-created-at`. Supported fields: `scenario`, `created-at`, `status`. |
-| offset   | integer  | No           | Number of items to skip for pagination. Default: `0`.                                                                                                                                                          |
-| limit    | integer  | No           | Maximum number of items per response. Maximum 50. Default: `10`.                                                                                                                                               |
+| **Name** | **Type** | **Required** | **Description**                                                                                                                                                                      |
+| -------- | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| scenario | string   | No           | Case-insensitive partial match filter on scenario name.                                                                                                                              |
+| topics   | string   | No           | Filter exercises by one or more topics (e.g., `?topics=Vocabulary&topics=Speaking`). Use OR condition                                                                                |
+| status   | string   | No           | Filter by exercise status. Supported values: `active`, `archived`, `all`. Default: `all`.                                                                                            |
+| sort     | string   | No           | Multi-column sort order using `scenario`, `createdAt`/`created-at`, and `status`. Use dash prefix (`-`) for descending order (e.g., `-created-at,scenario`). Default: `-created-at`. |
+| offset   | integer  | No           | Number of items to skip for pagination. Default: `0`.                                                                                                                                |
+| limit    | integer  | No           | Maximum number of items per response. Non-positive values are treated as `0` by the repository. Default: `10`.                                                                       |
 
 ### Response
 
@@ -46,7 +46,14 @@ Retrieve a paginated, filterable, and sortable list of exercises owned by the cu
       "createdAt": "2026-01-15T10:30:00Z",
       "updatedAt": "2026-01-20T14:15:00Z",
       "learnerRole": "customer",
-      "counterpartRole": "barista"
+      "counterpartRole": "barista",
+      "prompts": ["Order a coffee politely."],
+      "expectedResponses": [
+        {
+          "content": "Could I have a coffee, please?",
+          "style": ["polite"]
+        }
+      ]
     },
     {
       "id": "ex_457",
@@ -56,7 +63,9 @@ Retrieve a paginated, filterable, and sortable list of exercises owned by the cu
       "createdAt": "2026-01-10T09:00:00Z",
       "updatedAt": "2026-01-18T11:45:00Z",
       "learnerRole": "participant",
-      "counterpartRole": "manager"
+      "counterpartRole": "manager",
+      "prompts": ["Contribute an idea in the meeting."],
+      "expectedResponses": []
     }
   ]
 }
@@ -88,10 +97,9 @@ Retrieve a paginated, filterable, and sortable list of exercises owned by the cu
 - **Scenario Filtering:** Support case-insensitive partial match filter on the scenario field.
 - **Topic Filtering:** Support filtering by one or more topics using OR condition. Accept multiple values via repeated query parameters (e.g., `?topics=Vocabulary&topics=Speaking`).
 - **Status Filtering:** Support filtering by single status value or return all statuses.
-- **Multi-Column Sorting:** Support sorting by `scenario`, `createdAt`, and `status` with multi-column sort capability using kebab-case field names and dash prefix for descending order.
+- **Multi-Column Sorting:** Support sorting by `scenario`, `createdAt`/`created-at`, and `status` with multi-column sort capability and dash prefix for descending order. Unknown sort fields fall back to `createdAt`.
 - **Offset-Based Pagination:** Return results with offset, limit, total count, and array of items.
-- **Limit Flexibility:** Support flexible limit (maximum 50).
-- **Stale Request Cancellation:** Client should cancel prior in-flight requests when filters or pagination parameters change.
+- **Limit Flexibility:** Support a caller-provided limit; the current implementation does not enforce the documented maximum of 50.
 - **Empty Results:** Return empty items array when no exercises match the filter criteria.
 
 ## Non-Functional Requirements

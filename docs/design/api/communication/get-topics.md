@@ -12,10 +12,10 @@ Retrieve a list of topics created by the user for categorizing and filtering com
 
 ### Request Headers
 
-| **Name**   | **Value**          |
-| ---------- | ------------------ |
-| User-Email | `test@example.com` |
-| Accept     | application/json   |
+| **Name**     | **Value**          |
+| ------------ | ------------------ |
+| x-user-email | `test@example.com` |
+| Accept       | application/json   |
 
 ### Query Parameters
 
@@ -28,7 +28,7 @@ No query parameters are supported for this endpoint. All available topics are re
 ```json
 [
   {
-    "id": "topic_001",
+    "id": "topic_004",
     "name": "Communication",
     "createdAt": "2026-01-10T08:45:00Z"
   },
@@ -67,9 +67,8 @@ No query parameters are supported for this endpoint. All available topics are re
 
 ## Functional Requirements
 
-- **User Identification:** Use the `User-Email` header to identify which user is making the request.
-- **User Isolation:** Return only topics created by the user.
-- **Topic List Retrieval:** Return user-created topics sorted by name in ascending order.
+- **User Identification:** Require the `x-user-email` header to identify the authenticated request context.
+- **Topic List Retrieval:** Return all topics sorted by name in ascending order. The current implementation does not filter topics by the authenticated user.
 - **Consistent Format:** Return topic objects with id, name, and createdAt fields.
 - **Empty Results:** Return empty array if the user has not created any topics.
 
@@ -82,6 +81,6 @@ No query parameters are supported for this endpoint. All available topics are re
 
 ## Changelog
 
-| **Date**   | **Version** | **Changes**                                         |
-| ---------- | ----------- | --------------------------------------------------- |
-| 2026-08-30 | v1.0        | Initial release of the endpoint for listing topics. |
+| **Date**   | **Version** | **Changes**                                             |
+| ---------- | ----------- | ------------------------------------------------------- |
+| 2026-08-30 | v1.0        | Initial release of the endpoint for listing all topics. |
