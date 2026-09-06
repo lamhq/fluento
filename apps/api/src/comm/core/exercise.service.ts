@@ -129,7 +129,7 @@ export class ExerciseService {
     return this.repository.update(id, data.toEntity());
   }
 
-  async delete(id: string): Promise<ExerciseEntity> {
+  async delete(id: string): Promise<void> {
     const userId = this.contextService.getUserIdOrThrow();
     const exercise = await this.repository.findById(id);
 
@@ -137,7 +137,7 @@ export class ExerciseService {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.delete(id);
+    await this.repository.delete(id);
   }
 
   async submitResponse(

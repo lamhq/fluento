@@ -34,6 +34,10 @@ export class MongooseExerciseRepository implements ExerciseRepository {
     return [total, exercises.map((exercise) => this.dbModelToEntity(exercise))];
   }
 
+  findAll(): Promise<ExerciseEntity[]> {
+    throw new Error('Method not implemented.');
+  }
+
   async findById(id: string): Promise<ExerciseEntity | null> {
     if (!Types.ObjectId.isValid(id)) {
       return null;
@@ -58,7 +62,7 @@ export class MongooseExerciseRepository implements ExerciseRepository {
     return this.dbModelToEntity(updatedExercise);
   }
 
-  async delete(id: string): Promise<ExerciseEntity> {
+  async delete(id: string): Promise<void> {
     const deletedExercise = await this.exerciseModel
       .findByIdAndDelete(id)
       .exec();
@@ -66,8 +70,6 @@ export class MongooseExerciseRepository implements ExerciseRepository {
     if (!deletedExercise) {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
-
-    return this.dbModelToEntity(deletedExercise);
   }
 
   private buildFilter(query: ExerciseQuery): FilterQuery<Exercise> {

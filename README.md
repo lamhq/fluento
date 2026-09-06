@@ -38,10 +38,10 @@ Run lint for all files:
 pnpm lint
 ```
 
-Run lint for specific files:
+Run lint for specific paths:
 
 ```bash
-pnpm lint <pattern>
+pnpm lint <path>
 # pnpm lint apps/web/src/
 # pnpm lint apps/web/src/comm/components/PracticeForm/utils.ts
 ```

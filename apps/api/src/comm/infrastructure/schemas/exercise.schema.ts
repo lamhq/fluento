@@ -47,8 +47,8 @@ export class Exercise {
   @Prop({ type: [ExpectedResponseSchema], default: [] })
   expectedResponses: ExpectedResponse[];
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const ExerciseSchema = SchemaFactory.createForClass(Exercise);

@@ -1,10 +1,15 @@
+import type { Entity } from '../../common/types/entity';
+
 export enum ExerciseStatus {
   Active = 'active',
   Archived = 'archived',
 }
 
-export class ExerciseEntity {
+export class ExerciseEntity implements Entity {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
+
   userId: string;
   status: ExerciseStatus;
   topics: string[];
@@ -16,8 +21,6 @@ export class ExerciseEntity {
     content: string;
     style: string[];
   }[];
-  createdAt?: Date;
-  updatedAt?: Date;
 
   constructor(data?: Partial<ExerciseEntity>) {
     Object.assign(this, data);
