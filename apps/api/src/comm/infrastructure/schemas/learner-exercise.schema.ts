@@ -1,21 +1,25 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export type LearnerExerciseDocument = HydratedDocument<LearnerExercise>;
 
-@Schema({ timestamps: true, collection: 'learner_exercise_practices' })
+@Schema({ timestamps: true, collection: 'exercise_practices' })
 export class LearnerExercise {
-  @Prop({ required: true })
-  learnerId: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  userId: mongoose.Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Exercise', required: true })
-  exerciseId: Types.ObjectId;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exercise',
+    required: true,
+  })
+  exerciseId: mongoose.Types.ObjectId;
 
   @Prop({ default: 0 })
   practiceCount: number;
 
   @Prop({ type: Date, default: Date.now })
-  lastPracticeAt: Date;
+  practicedAt: Date;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,4 +27,4 @@ export class LearnerExercise {
 
 export const LearnerExerciseSchema =
   SchemaFactory.createForClass(LearnerExercise);
-LearnerExerciseSchema.index({ learnerId: 1, exerciseId: 1 }, { unique: true });
+LearnerExerciseSchema.index({ userId: 1, exerciseId: 1 }, { unique: true });

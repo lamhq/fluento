@@ -30,6 +30,76 @@ Follow installation instructions in each project:
 - `api-gateway`: `apps/api-gateway/README.md`
 - `web`: `apps/web/README.md`
 
+## Format code
+
+Run the code formatter for files:
+
+```bash
+pnpm format <path>
+# pnpm format "apps/api/src/**/*.{js,ts}"
+# pnpm format "apps/web/src/**/*.{js,ts,tsx}"
+# pnpm format apps/api/src/user/infrastructure/mongoose-user.repository.ts
+```
+
+## Run lint
+
+Run lint for all files:
+
+```bash
+pnpm lint
+```
+
+Run lint for specific paths:
+
+```bash
+pnpm lint <path>
+# pnpm lint apps/web/src/
+# pnpm lint apps/web/src/comm/components/PracticeForm/utils.ts
+```
+
+## Run type check
+
+```bash
+pnpm -F <project> run type-check
+# pnpm -F api run type-check
+# pnpm -F web run type-check
+```
+
+## Run unit tests
+
+Run unit tests for a project (`web`, `api`):
+
+```bash
+pnpm -F <project> test
+# pnpm -F web test
+```
+
+Run unit tests for files in a project:
+
+```bash
+pnpm -F <project> test <pattern>
+# pnpm -F web test src/comm/components/PracticeForm/utils
+```
+
+## Run package binary
+
+Run a locally installed package binary in a project:
+
+```bash
+pnpm -F <project> exec <command>
+# pnpm -F web exec shadcn add button
+```
+
+## Manage dependencies
+
+Add/remove a dependency for a project:
+
+```bash
+pnpm -F <project> add <dependency>
+
+pnpm -F <project> remove <dependency>
+```
+
 ## Repository Structure
 
 This repository follows the [Turborepo workspace structure](https://c.lamhq.com/se/development/tools/turborepo/workspace-structure.md).

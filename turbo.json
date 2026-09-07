@@ -2,30 +2,6 @@
   "$schema": "node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
-    "lint": {},
-    "type-check": {},
-    "test": {},
-    "web#build": {
-      "inputs": ["$TURBO_DEFAULT$", "!README.md"],
-      "outputs": ["apps/web/dist/**"]
-    },
-    "api#build": {
-      "inputs": ["$TURBO_DEFAULT$", "!README.md"],
-      "outputs": ["apps/api/dist/**"]
-    },
-    "web#start": {
-      "persistent": true,
-      "cache": false,
-      "env": ["VITE_*"],
-      "dependsOn": ["web#build"],
-      "with": ["api#start"]
-    },
-    "api#start": {
-      "persistent": true,
-      "cache": false,
-      "dependsOn": ["api#build"],
-      "env": ["DB_URI"]
-    },
     "web#dev": {
       "persistent": true,
       "cache": false,

@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { EXERCISE_REPOSITORY } from './core/exercise.repository';
 import { ExerciseService } from './core/exercise.service';
-import { EXERCISE_REPOSITORY } from './core/exercise-repository.port';
-import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise-repository.port';
-import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation-service.port';
-import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission-repository.port';
-import { ExerciseRepository } from './infrastructure/exercise.repository';
-import { PracticeExerciseRepository } from './infrastructure/practice-exercise.repository';
-import { ResponseEvaluationService } from './infrastructure/response-evaluation.service';
-import { ResponseSubmissionRepository } from './infrastructure/response-submission.repository';
+import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repository';
+import { PracticeExerciseService } from './core/practice-exercise.service';
+import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation.service';
+import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission.repository';
+import { TOPIC_REPOSITORY } from './core/topic.repository';
+import { TopicService } from './core/topic.service';
+import { MgExerciseRepository } from './infrastructure/mg-exercise.repository';
+import { MgPracticeExerciseRepository } from './infrastructure/mg-practice-exercise.repository';
+import { MgResponseRepository } from './infrastructure/mg-response.repository';
+import { MgTopicRepository } from './infrastructure/mg-topic.repository';
+import { OpenAIEvaluationService } from './infrastructure/openai-evaluation.service';
 import {
   Exercise,
   ExerciseSchema,
@@ -22,13 +26,15 @@ import {
   ResponseSubmission,
   ResponseSubmissionSchema,
 } from './infrastructure/schemas/response-submission.schema';
-import { CreateExerciseHttpController } from './interface/create-exercise/create-exercise.http.controller';
-import { DeleteExerciseHttpController } from './interface/delete-exercise/delete-exercise.http.controller';
-import { FindExercisesHttpController } from './interface/find-exercises/find-exercises.http.controller';
-import { FindPracticeExercisesHttpController } from './interface/find-practice-exercises/find-practice-exercises.http.controller';
-import { GetExerciseHttpController } from './interface/get-exercise/get-exercise.http.controller';
-import { SubmitResponseHttpController } from './interface/submit-response/submit-response.http.controller';
-import { UpdateExerciseHttpController } from './interface/update-exercise/update-exercise.http.controller';
+import { Topic, TopicSchema } from './infrastructure/schemas/topic.schema';
+import { CreateExerciseHttpController } from './interface/create-exercise.http.controller';
+import { DeleteExerciseHttpController } from './interface/delete-exercise.http.controller';
+import { FindExercisesHttpController } from './interface/find-exercises.http.controller';
+import { FindPracticeExercisesHttpController } from './interface/find-practice-exercises.http.controller';
+import { FindTopicsHttpController } from './interface/find-topics.http.controller';
+import { GetExerciseHttpController } from './interface/get-exercise.http.controller';
+import { SubmitResponseHttpController } from './interface/submit-response.http.controller';
+import { UpdateExerciseHttpController } from './interface/update-exercise.http.controller';
 
 @Module({
   imports: [
@@ -36,12 +42,14 @@ import { UpdateExerciseHttpController } from './interface/update-exercise/update
       { name: Exercise.name, schema: ExerciseSchema },
       { name: LearnerExercise.name, schema: LearnerExerciseSchema },
       { name: ResponseSubmission.name, schema: ResponseSubmissionSchema },
+      { name: Topic.name, schema: TopicSchema },
     ]),
   ],
   controllers: [
     CreateExerciseHttpController,
     FindExercisesHttpController,
     FindPracticeExercisesHttpController,
+    FindTopicsHttpController,
     GetExerciseHttpController,
     SubmitResponseHttpController,
     UpdateExerciseHttpController,
@@ -49,25 +57,32 @@ import { UpdateExerciseHttpController } from './interface/update-exercise/update
   ],
   providers: [
     ExerciseService,
-    PracticeExerciseRepository,
-    ExerciseRepository,
-    ResponseSubmissionRepository,
-    ResponseEvaluationService,
+    PracticeExerciseService,
+    TopicService,
+    MgPracticeExerciseRepository,
+    MgExerciseRepository,
+    MgTopicRepository,
+    MgResponseRepository,
+    OpenAIEvaluationService,
     {
       provide: PRACTICE_EXERCISE_REPOSITORY,
-      useExisting: PracticeExerciseRepository,
+      useExisting: MgPracticeExerciseRepository,
     },
     {
       provide: EXERCISE_REPOSITORY,
-      useExisting: ExerciseRepository,
+      useExisting: MgExerciseRepository,
+    },
+    {
+      provide: TOPIC_REPOSITORY,
+      useExisting: MgTopicRepository,
     },
     {
       provide: RESPONSE_SUBMISSION_REPOSITORY,
-      useExisting: ResponseSubmissionRepository,
+      useExisting: MgResponseRepository,
     },
     {
       provide: RESPONSE_EVALUATION_SERVICE,
-      useExisting: ResponseEvaluationService,
+      useExisting: OpenAIEvaluationService,
     },
   ],
 })

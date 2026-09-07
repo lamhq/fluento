@@ -54,17 +54,24 @@ export default function PracticeForm({ exercise }: PracticeFormProps) {
         </CardHeader>
 
         <CardContent className="space-y-2">
-          <p>
-            You&apos;re a <strong>{learnerRole}</strong> {scenario.toLowerCase()}.
-          </p>
+          {learnerRole && (
+            <p>
+              You&apos;re a <strong>{learnerRole}</strong>.
+            </p>
+          )}
 
-          <p>
-            The <strong>{counterpart}</strong> said:
-          </p>
+          {counterpart && (
+            <>
+              <p>
+                The <strong>{counterpart}</strong> said:
+              </p>
+              <blockquote className="my-4 italic font-bold text-center text-lg">
+                {prompt}
+              </blockquote>
+            </>
+          )}
 
-          <blockquote className="my-4 italic font-bold text-center text-lg">
-            {prompt}
-          </blockquote>
+          {!counterpart && <p>{prompt}</p>}
 
           <form id="practice-form" onSubmit={handleSubmit} noValidate>
             <Controller
@@ -73,7 +80,7 @@ export default function PracticeForm({ exercise }: PracticeFormProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="practice-form-response">
-                    Response in a polite manner:
+                    Your response:
                   </FieldLabel>
                   <InputGroup>
                     <InputGroupTextarea

@@ -15,5 +15,6 @@
     {
       "file": ".github/instructions/commit-message.md"
     }
-  ]
+  ],
+  "editor.pasteAs.preferences": ["text.plain"]
 }

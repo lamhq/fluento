@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { RESPONSE_EVALUATION_SERVICE } from '../../../src/comm/core/response-evaluation-service.port';
+import { RESPONSE_EVALUATION_SERVICE } from '../../../src/comm/core/response-evaluation.service';
 import { deleteMany, findOne, insert } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
@@ -18,6 +18,7 @@ describe('submit response', () => {
       .mockResolvedValue(fakeEvaluation);
 
     const exercise = await insert('exercises', {
+      userId,
       topics: ['Socializing', cleanupMarker],
       scenario: 'asking for a favor',
       learnerRole: 'person',
@@ -34,7 +35,7 @@ describe('submit response', () => {
     });
 
     const resp = await request(getApp().getHttpServer())
-      .post(`/comm/exercises/${exercise._id.toString()}/responses`)
+      .post(`/v1/practice/exercises/${exercise._id.toString()}/responses`)
       .set('x-user-email', email)
       .send({
         response: responseText,
@@ -74,22 +75,23 @@ describe('submit response', () => {
     );
 
     const storedSubmission = await findOne('response_submissions', {
-      learnerId: userId,
-      exerciseId: exercise._id.toString(),
+      userId: userId,
+      exerciseId: exercise._id,
     });
 
     expect(storedSubmission).toEqual(
       expect.objectContaining({
-        learnerId: userId,
-        exerciseId: exercise._id.toString(),
+        userId: userId,
+        exerciseId: exercise._id,
         response: responseText,
       }),
     );
   });
 
   afterEach(async () => {
+    const { id: userId } = getUser();
     await deleteMany('response_submissions', {
-      exerciseId: { $regex: cleanupMarker },
+      userId: userId,
     });
     await deleteMany('exercises', {
       topics: { $elemMatch: { $regex: cleanupMarker } },

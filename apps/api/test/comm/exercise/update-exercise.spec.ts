@@ -4,11 +4,14 @@ import { deleteMany, findById, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
 describe('update exercise', () => {
-  const { cleanupMarker, getApp } = setUpApiTest();
+  const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should update a record in database', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
     const [exerciseId] = await insertMany('exercises', [
       {
+        userId,
         topics: ['Restaurant', cleanupMarker],
         scenario: 'ordering food in a restaurant',
         learnerRole: 'customer',
@@ -31,9 +34,18 @@ describe('update exercise', () => {
       scenario: 'introducing yourself',
       learnerRole: 'interviewee',
       counterpartRole: 'interviewer',
+      prompts: ['Introduce yourself briefly and explain your experience.'],
+      expectedResponses: [
+        {
+          content:
+            'Hi, I am a software engineer with five years of experience.',
+          style: ['confident', 'clear'],
+        },
+      ],
     };
     const resp = await request(getApp().getHttpServer())
-      .patch(`/manage/exercises/${exerciseId}`)
+      .patch(`/v1/manage/exercises/${exerciseId}`)
+      .set('x-user-email', userEmail)
       .send(dto)
       .expect(200);
 
@@ -45,6 +57,8 @@ describe('update exercise', () => {
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
         counterpartRole: dto.counterpartRole,
+        prompts: dto.prompts,
+        expectedResponses: dto.expectedResponses,
       }),
     );
 
@@ -59,6 +73,8 @@ describe('update exercise', () => {
         scenario: dto.scenario,
         learnerRole: dto.learnerRole,
         counterpartRole: dto.counterpartRole,
+        prompts: dto.prompts,
+        expectedResponses: dto.expectedResponses,
       }),
     );
   });
