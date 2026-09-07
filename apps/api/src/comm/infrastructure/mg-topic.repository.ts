@@ -7,7 +7,7 @@ import { TopicQuery, TopicRepository } from '../core/topic.repository';
 import { Topic, TopicDocument } from './schemas/topic.schema';
 
 @Injectable()
-export class MongooseTopicRepository implements TopicRepository {
+export class MgTopicRepository implements TopicRepository {
   constructor(
     @InjectModel(Topic.name) private readonly topicModel: Model<Topic>,
   ) {}

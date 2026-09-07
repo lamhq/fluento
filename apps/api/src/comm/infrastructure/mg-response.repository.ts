@@ -10,7 +10,7 @@ import {
 } from './schemas/response-submission.schema';
 
 @Injectable()
-export class MongooseResponseRepository implements ResponseSubmissionRepository {
+export class MgResponseRepository implements ResponseSubmissionRepository {
   constructor(
     @InjectModel(ResponseSubmission.name)
     private readonly responseSubmissionModel: Model<ResponseSubmission>,

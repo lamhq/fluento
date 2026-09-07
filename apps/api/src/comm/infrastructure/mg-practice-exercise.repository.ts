@@ -29,7 +29,7 @@ interface RawPracticeExercise {
 }
 
 @Injectable()
-export class MongoosePracticeExerciseRepository implements PracticeExerciseRepository {
+export class MgPracticeExerciseRepository implements PracticeExerciseRepository {
   constructor(
     @InjectModel(Exercise.name)
     private readonly exerciseModel: Model<Exercise>,

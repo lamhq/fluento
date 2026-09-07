@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { USER_REPOSITORY } from './core/user.repository';
 import { UserService } from './core/user.service';
-import { MongooseUserRepository } from './infrastructure/mongoose-user.repository';
+import { MgUserRepository } from './infrastructure/mg-user.repository';
 import { User, UserSchema } from './infrastructure/schemas/user.schema';
 import { UserMiddleware } from './interface/user.middleware';
 
@@ -13,10 +13,10 @@ import { UserMiddleware } from './interface/user.middleware';
   ],
   providers: [
     UserService,
-    MongooseUserRepository,
+    MgUserRepository,
     {
       provide: USER_REPOSITORY,
-      useExisting: MongooseUserRepository,
+      useExisting: MgUserRepository,
     },
     UserMiddleware,
   ],

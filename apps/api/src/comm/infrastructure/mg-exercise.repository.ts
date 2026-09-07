@@ -7,7 +7,7 @@ import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository';
 import { Exercise, ExerciseDocument } from './schemas/exercise.schema';
 
 @Injectable()
-export class MongooseExerciseRepository implements ExerciseRepository {
+export class MgExerciseRepository implements ExerciseRepository {
   constructor(
     @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
   ) {}

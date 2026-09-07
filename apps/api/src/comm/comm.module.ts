@@ -9,10 +9,10 @@ import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation.service'
 import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission.repository';
 import { TOPIC_REPOSITORY } from './core/topic.repository';
 import { TopicService } from './core/topic.service';
-import { MongooseExerciseRepository } from './infrastructure/mongoose-exercise.repository';
-import { MongoosePracticeExerciseRepository } from './infrastructure/mongoose-practice-exercise.repository';
-import { MongooseResponseRepository } from './infrastructure/mongoose-response.repository';
-import { MongooseTopicRepository } from './infrastructure/mongoose-topic.repository';
+import { MgExerciseRepository } from './infrastructure/mg-exercise.repository';
+import { MgPracticeExerciseRepository } from './infrastructure/mg-practice-exercise.repository';
+import { MgResponseRepository } from './infrastructure/mg-response.repository';
+import { MgTopicRepository } from './infrastructure/mg-topic.repository';
 import { OpenAIEvaluationService } from './infrastructure/openai-evaluation.service';
 import {
   Exercise,
@@ -59,26 +59,26 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
     ExerciseService,
     PracticeExerciseService,
     TopicService,
-    MongoosePracticeExerciseRepository,
-    MongooseExerciseRepository,
-    MongooseTopicRepository,
-    MongooseResponseRepository,
+    MgPracticeExerciseRepository,
+    MgExerciseRepository,
+    MgTopicRepository,
+    MgResponseRepository,
     OpenAIEvaluationService,
     {
       provide: PRACTICE_EXERCISE_REPOSITORY,
-      useExisting: MongoosePracticeExerciseRepository,
+      useExisting: MgPracticeExerciseRepository,
     },
     {
       provide: EXERCISE_REPOSITORY,
-      useExisting: MongooseExerciseRepository,
+      useExisting: MgExerciseRepository,
     },
     {
       provide: TOPIC_REPOSITORY,
-      useExisting: MongooseTopicRepository,
+      useExisting: MgTopicRepository,
     },
     {
       provide: RESPONSE_SUBMISSION_REPOSITORY,
-      useExisting: MongooseResponseRepository,
+      useExisting: MgResponseRepository,
     },
     {
       provide: RESPONSE_EVALUATION_SERVICE,

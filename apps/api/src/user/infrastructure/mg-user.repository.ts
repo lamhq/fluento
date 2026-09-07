@@ -7,7 +7,7 @@ import { UserQuery, UserRepository } from '../core/user.repository';
 import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
-export class MongooseUserRepository implements UserRepository {
+export class MgUserRepository implements UserRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
