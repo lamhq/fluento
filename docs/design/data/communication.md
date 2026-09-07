@@ -2,537 +2,256 @@
 
 ## Introduction
 
-This document describes the database design for the Communication module.
+This document describes the MongoDB collections, embedded documents, relationships, indexes, storage details, and initialization scripts for the Communication module.
 
-## Logical Model
+## ER Diagram
 
 ```mermaid
 erDiagram
-    CommunicationExercise ||--o{ LearnerExercisePractice : has
-    CommunicationExercise ||--o{ ExercisePrompt : contains
-    CommunicationExercise ||--o{ ExpectedResponse : has
-    CommunicationExercise }o--o{ Topic : categorized_by
-    CommunicationExercise ||--o{ ResponseSubmission : receives
+    User ||--o{ Exercise : creates
+    User ||--o{ Topic : owns
+    User ||--o{ LearnerExercisePractice : practices
+    User ||--o{ ResponseSubmission : submits
+    Exercise ||--o{ LearnerExercisePractice : tracked_by
+    Exercise ||--o{ ResponseSubmission : receives
+    Exercise }o--o{ Topic : categorized_by
 
-    ResponseSubmission ||--|| EvaluationFeedback : produces
-    EvaluationFeedback ||--|| CorrectnessEvaluation : includes
-    EvaluationFeedback ||--|| AppropriatenessEvaluation : includes
-
-    Topic {
-        string id
-        string name
-        datetime createdAt
-    }
-
-    CommunicationExercise {
-        string id
-        ObjectId userId
+    Exercise {
+        ObjectId _id PK
+        ObjectId userId FK
         string status
         string scenario
+        string[] prompts
+        ExpectedResponse[] expectedResponses
         string learnerRole
         string counterpartRole
-        datetime createdAt
-        datetime updatedAt
+        string[] topics
+        Date createdAt
+        Date updatedAt
     }
 
-    %% status must be one of: active, archived
-
-    ExercisePrompt {
-        string id
-        string exerciseId
-        string content
-        string kind
-    }
-
-    ExpectedResponse {
-        string id
-        string exerciseId
-        string content
-        string[] style
+    Topic {
+        ObjectId _id PK
+        ObjectId userId FK
+        string name UK
+        Date createdAt
+        Date updatedAt
     }
 
     LearnerExercisePractice {
-        string id
-      ObjectId userId
-        string exerciseId
+        ObjectId _id PK
+        ObjectId userId FK
+        ObjectId exerciseId FK
         int practiceCount
-      datetime | null lastPracticeAt
+        Date practicedAt
+        Date createdAt
+        Date updatedAt
     }
 
     ResponseSubmission {
-        string id
-      ObjectId userId
-        string exerciseId
+        ObjectId _id PK
+        ObjectId userId FK
+        ObjectId exerciseId FK
         string response
-        datetime createdAt
-    }
-
-    EvaluationFeedback {
-        string id
-        string responseSubmissionId
-        string feedback
-        int score
-        datetime createdAt
-    }
-
-    CorrectnessEvaluation {
-        string id
-        string feedbackId
         int score
         string feedback
-        string[] fixes
-        string correctedSentence
-    }
-
-    AppropriatenessEvaluation {
-        string id
-        string feedbackId
-        int score
-        string feedback
-        int clarityScore
-        string clarityFeedback
-        int politenessScore
-        string politenessFeedback
-        int toneScore
-        string toneFeedback
+        Correctness correctness
+        Appropriateness appropriateness
+        Date createdAt
+        Date updatedAt
     }
 ```
 
-### CommunicationExercise
+`ExpectedResponse`, `Correctness`, and `Appropriateness` are embedded documents. They are not separate collections. MongoDB references to `users` are represented by `userId`; references to exercises are represented by `exerciseId`.
 
-Represents a reusable scenario-based communication exercise for practice.
+## `exercises` collection
 
-**Attributes:**
+**Description**: Stores reusable scenario-based communication exercises. Prompts, expected responses, and topic names are embedded so an exercise can be returned as a single practice payload.
 
-| Attribute Name  | Type     | Description                                                            |
-| --------------- | -------- | ---------------------------------------------------------------------- |
-| id              | String   | Unique exercise identifier.                                            |
-| userId          | ObjectId | Identifier of the user who owns or created the exercise.               |
-| status          | String   | Lifecycle state of the exercise. Allowed values: `active`, `archived`. |
-| scenario        | String   | Real-world situation the learner is expected to respond to.            |
-| learnerRole     | String   | Role played by the learner in the scenario.                            |
-| counterpartRole | String   | Role played by the other participant in the scenario.                  |
-| createdAt       | DateTime | When the exercise was created.                                         |
-| updatedAt       | DateTime | When the exercise was last updated.                                    |
+**Schema Definition**:
 
-**Relationships:**
+| Field                       | Description                            | Data Type                   | Constraints                                                               |
+| --------------------------- | -------------------------------------- | --------------------------- | ------------------------------------------------------------------------- |
+| `_id`                       | MongoDB document identifier            | ObjectId                    | Primary key, auto-generated                                               |
+| `userId`                    | User who created the exercise          | ObjectId                    | Required, reference to `users`                                            |
+| `status`                    | Exercise lifecycle state               | String                      | Enum: `active`, `archived`; default `active`                              |
+| `scenario`                  | Situation represented by the exercise  | String                      | Required                                                                  |
+| `prompts`                   | Counterpart utterances or instructions | Array of String             | Defaults to `[]`                                                          |
+| `expectedResponses`         | Acceptable learner responses           | Array of embedded documents | Defaults to `[]`; each `content` is required and `style` defaults to `[]` |
+| `expectedResponses.content` | Reference response text                | String                      | Required                                                                  |
+| `expectedResponses.style`   | Response style labels                  | Array of String             | Defaults to `[]`                                                          |
+| `learnerRole`               | Role played by the learner             | String                      | Optional                                                                  |
+| `counterpartRole`           | Role played by the other participant   | String                      | Optional                                                                  |
+| `topics`                    | Topic names used for filtering         | Array of String             | Defaults to `[]`                                                          |
+| `createdAt`                 | Creation timestamp                     | Date                        | Required, generated by timestamps                                         |
+| `updatedAt`                 | Last modification timestamp            | Date                        | Required, generated by timestamps                                         |
 
-| Related Entity          | Type         | Cardinality | Description                                                         |
-| ----------------------- | ------------ | ----------- | ------------------------------------------------------------------- |
-| ExercisePrompt          | One-to-Many  | 1..*        | An exercise contains one or more prompts or counterpart utterances. |
-| ExpectedResponse        | One-to-Many  | 1..*        | An exercise defines one or more valid target responses.             |
-| Topic                   | Many-to-Many | _.._        | An exercise can belong to one or more topic categories.             |
-| LearnerExercisePractice | One-to-Many  | 1..*        | The exercise can be practiced by many learners over time.           |
-| ResponseSubmission      | One-to-Many  | 1..*        | Multiple learner attempts may be stored for the same exercise.      |
+**Relationships**:
 
-### Topic
+| Related Collection           | Type                       | Cardinality | Description                                                                            |
+| ---------------------------- | -------------------------- | ----------- | -------------------------------------------------------------------------------------- |
+| `users`                      | Many-to-One                | *..1        | Each exercise has one creator.                                                         |
+| `topics`                     | Many-to-Many by topic name | _.._        | An exercise can contain multiple topic names; a topic can classify multiple exercises. |
+| `learner_exercise_practices` | One-to-Many                | 1..*        | An exercise can have one practice record per learner.                                  |
+| `response_submissions`       | One-to-Many                | 1..*        | An exercise can receive many learner submissions.                                      |
 
-Represents a thematic category used for grouping and filtering exercises.
+**Indexes**:
 
-**Attributes:**
+| Fields   | Type  | Purpose                                                                                             |
+| -------- | ----- | --------------------------------------------------------------------------------------------------- |
+| `topics` | INDEX | Supports filtering exercises by topic.                                                              |
+| `status` | INDEX | Recommended for filtering active exercises; the current Mongoose schema does not create this index. |
+
+**Storage Details**:
+
+- Stored in MongoDB collection `exercises` using the default WiredTiger storage engine.
+- Prompts and expected responses are embedded because they are read with the exercise and are bounded by the exercise document.
+- Topic names are denormalized as strings. The `topics` collection provides topic discovery, while the exercise stores the filterable values.
+- Mongoose timestamps maintain `createdAt` and `updatedAt`.
+
+## `topics` collection
+
+**Description**: Stores topic labels available for grouping and filtering communication exercises.
+
+**Schema Definition**:
+
+| Field       | Description                              | Data Type | Constraints                       |
+| ----------- | ---------------------------------------- | --------- | --------------------------------- |
+| `_id`       | MongoDB document identifier              | ObjectId  | Primary key, auto-generated       |
+| `userId`    | User who owns the topic, when applicable | ObjectId  | Optional, reference to `users`    |
+| `name`      | Topic label                              | String    | Required, indexed                 |
+| `createdAt` | Creation timestamp                       | Date      | Required, generated by timestamps |
+| `updatedAt` | Last modification timestamp              | Date      | Required, generated by timestamps |
 
-| Attribute Name | Type     | Description                                                    |
-| -------------- | -------- | -------------------------------------------------------------- |
-| id             | String   | Unique topic identifier.                                       |
-| userId         | ObjectId | Optional identifier of the user who owns or created the topic. |
-| name           | String   | Topic label, such as Restaurant, School, or Socializing.       |
-| createdAt      | DateTime | Timestamp when the topic was created.                          |
+**Relationships**:
+
+| Related Collection | Type                       | Cardinality | Description                                 |
+| ------------------ | -------------------------- | ----------- | ------------------------------------------- |
+| `users`            | Many-to-One                | *..1        | A topic may be owned by one user.           |
+| `exercises`        | Many-to-Many by topic name | _.._        | A topic name may be used by many exercises. |
 
-**Relationships:**
+**Indexes**:
 
-| Related Entity        | Type         | Cardinality | Description                                                                              |
-| --------------------- | ------------ | ----------- | ---------------------------------------------------------------------------------------- |
-| CommunicationExercise | Many-to-Many | _.._        | A topic can be associated with many exercises, and an exercise can have multiple topics. |
+| Fields | Type  | Purpose                              |
+| ------ | ----- | ------------------------------------ |
+| `name` | INDEX | Supports topic lookup and filtering. |
 
-### ExercisePrompt
+**Storage Details**:
 
-Stores the prompt text or counterpart utterance that initiates the exercise.
+- Stored in MongoDB collection `topics` using WiredTiger.
+- Topic names are currently not unique at the database level. Duplicate prevention, if required, must be added with a unique index and an agreed case-normalization rule.
+- Mongoose timestamps maintain `createdAt` and `updatedAt`.
 
-**Attributes:**
+## `learner_exercise_practices` collection
 
-| Attribute Name | Type   | Description                                                              |
-| -------------- | ------ | ------------------------------------------------------------------------ |
-| id             | String | Unique prompt identifier.                                                |
-| exerciseId     | String | Owning exercise.                                                         |
-| content        | String | Prompt text shown to the learner.                                        |
-| kind           | String | Indicates whether the content is a learner prompt or counterpart speech. |
+**Description**: Stores aggregate practice state for one learner and one exercise. It supports ordering practice exercises and showing repetition progress.
 
-**Relationships:**
+**Schema Definition**:
 
-| Related Entity        | Type        | Cardinality | Description                          |
-| --------------------- | ----------- | ----------- | ------------------------------------ |
-| CommunicationExercise | Many-to-One | *..1        | Each prompt belongs to one exercise. |
+| Field           | Description                    | Data Type | Constraints                        |
+| --------------- | ------------------------------ | --------- | ---------------------------------- |
+| `_id`           | MongoDB document identifier    | ObjectId  | Primary key, auto-generated        |
+| `userId`        | Learner identifier             | ObjectId  | Required, reference to `users`     |
+| `exerciseId`    | Practiced exercise identifier  | ObjectId  | Required, reference to `exercises` |
+| `practiceCount` | Number of successful practices | Number    | Defaults to `0`                    |
+| `practicedAt`   | Most recent practice timestamp | Date      | Defaults to the current date       |
+| `createdAt`     | Creation timestamp             | Date      | Generated by timestamps            |
+| `updatedAt`     | Last modification timestamp    | Date      | Generated by timestamps            |
 
-### ExpectedResponse
+**Relationships**:
 
-Represents an ideal or acceptable response to a prompt.
-
-**Attributes:**
-
-| Attribute Name | Type     | Description                                                       |
-| -------------- | -------- | ----------------------------------------------------------------- |
-| id             | String   | Unique expected-response identifier.                              |
-| exerciseId     | String   | Owning exercise.                                                  |
-| content        | String   | Model answer or reference response.                               |
-| style          | String[] | Tone or delivery traits, such as polite, simple, or professional. |
-
-**Relationships:**
-
-| Related Entity        | Type        | Cardinality | Description                                     |
-| --------------------- | ----------- | ----------- | ----------------------------------------------- |
-| CommunicationExercise | Many-to-One | *..1        | Each expected response belongs to one exercise. |
-
-### LearnerExercisePractice
-
-Tracks per-learner exercise practice state and repetition behavior.
-
-**Attributes:**
-
-| Attribute Name | Type     | Description                                                       |
-| -------------- | -------- | ----------------------------------------------------------------- |
-| id             | String   | Unique learner-practice record identifier.                        |
-| userId         | ObjectId | Identifier of the learner associated with the practice record.    |
-| exerciseId     | String   | Exercise associated with the practice record.                     |
-| practiceCount  | Integer  | Number of times the learner has practiced the exercise.           |
-| lastPracticeAt | DateTime | Nullable timestamp of the learner’s most recent practice attempt. |
-
-**Relationships:**
-
-| Related Entity        | Type        | Cardinality | Description                                   |
-| --------------------- | ----------- | ----------- | --------------------------------------------- |
-| CommunicationExercise | Many-to-One | *..1        | Each practice record belongs to one exercise. |
-
-### ResponseSubmission
-
-Stores a learner’s submitted response and the associated exercise context.
-
-**Attributes:**
-
-| Attribute Name | Type     | Description                                           |
-| -------------- | -------- | ----------------------------------------------------- |
-| id             | String   | Unique submission identifier.                         |
-| userId         | ObjectId | Identifier of the learner who submitted the response. |
-| exerciseId     | String   | Exercise to which the response belongs.               |
-| response       | String   | Learner’s trimmed response text before evaluation.    |
-| createdAt      | DateTime | Timestamp of submission.                              |
-
-**Relationships:**
-
-| Related Entity        | Type        | Cardinality | Description                                   |
-| --------------------- | ----------- | ----------- | --------------------------------------------- |
-| CommunicationExercise | Many-to-One | *..1        | Each submission belongs to one exercise.      |
-| EvaluationFeedback    | One-to-One  | 1..1        | Each submission receives a single evaluation. |
-
-### EvaluationFeedback
-
-Represents the AI-generated feedback from evaluating a learner response.
-
-**Attributes:**
-
-| Attribute Name       | Type     | Description                             |
-| -------------------- | -------- | --------------------------------------- |
-| id                   | String   | Unique evaluation identifier.           |
-| responseSubmissionId | String   | Related learner submission.             |
-| feedback             | String   | Summary of the learner’s result.        |
-| score                | Integer  | Overall evaluation score from 0 to 100. |
-| createdAt            | DateTime | Timestamp when evaluation was created.  |
-
-**Relationships:**
-
-| Related Entity            | Type       | Cardinality | Description                                             |
-| ------------------------- | ---------- | ----------- | ------------------------------------------------------- |
-| ResponseSubmission        | One-to-One | 1..1        | Each response has exactly one evaluation record.        |
-| CorrectnessEvaluation     | One-to-One | 1..1        | Correctness details are attached to the evaluation.     |
-| AppropriatenessEvaluation | One-to-One | 1..1        | Appropriateness details are attached to the evaluation. |
-
-### CorrectnessEvaluation
-
-Captures grammar, spelling, and correction feedback for the submitted response.
-
-**Attributes:**
-
-| Attribute Name    | Type     | Description                                       |
-| ----------------- | -------- | ------------------------------------------------- |
-| id                | String   | Unique correctness record identifier.             |
-| feedbackId        | String   | Owning evaluation result.                         |
-| score             | Integer  | Score between 0 and 100.                          |
-| feedback          | String   | Feedback about correctness, grammar, or spelling. |
-| fixes             | String[] | Suggested grammar or spelling corrections.        |
-| correctedSentence | String   | Cleaned-up corrected version of the response.     |
-
-**Relationships:**
-
-| Related Entity     | Type        | Cardinality | Description                                        |
-| ------------------ | ----------- | ----------- | -------------------------------------------------- |
-| EvaluationFeedback | Many-to-One | *..1        | Each correctness record belongs to one evaluation. |
-
-### AppropriatenessEvaluation
-
-Measures relevance and quality of the response in the conversation context.
-
-**Attributes:**
-
-| Attribute Name     | Type    | Description                               |
-| ------------------ | ------- | ----------------------------------------- |
-| id                 | String  | Unique appropriateness record identifier. |
-| feedbackId         | String  | Owning evaluation result.                 |
-| score              | Integer | Overall appropriateness score.            |
-| feedback           | String  | Overall evaluation message.               |
-| clarityScore       | Integer | Score for clarity.                        |
-| clarityFeedback    | String  | Explanation of clarity assessment.        |
-| politenessScore    | Integer | Score for politeness.                     |
-| politenessFeedback | String  | Explanation of politeness assessment.     |
-| toneScore          | Integer | Score for tone appropriateness.           |
-| toneFeedback       | String  | Explanation of tone assessment.           |
-
-**Relationships:**
-
-| Related Entity     | Type        | Cardinality | Description                                            |
-| ------------------ | ----------- | ----------- | ------------------------------------------------------ |
-| EvaluationFeedback | Many-to-One | *..1        | Each appropriateness record belongs to one evaluation. |
-
-## Physical Model
-
-### Collection: `exercises`
-
-This collection stores reusable communication exercises.
-
-```json
-{
-  "_id": "64f5c1d2a9b4e2f1d3c4b5a6",
-  "id": "ex_123",
-  "topics": ["Restaurant", "Ordering"],
-  "scenario": "ordering food in a restaurant",
-  "learnerRole": "customer",
-  "counterpartRole": "waiter",
-  "prompts": ["Say that you would like to order a meal."],
-  "expectedResponses": [
-    {
-      "content": "I would like to order the grilled salmon, please.",
-      "style": ["polite", "simple"]
-    },
-    {
-      "content": "Could I have the chicken curry with rice?",
-      "style": ["polite", "clear"]
-    }
-  ],
-  "createdAt": "2026-08-13T10:00:00Z",
-  "updatedAt": "2026-08-13T10:00:00Z"
-}
-```
-
-**Key design decisions:**
-
-- `topics` is stored as an array to support `topics` filtering without a join.
-- `prompts` is a string array so the client can render all exercise instructions in order.
-- `expectedResponses` is embedded as an array of objects because the response payload is always shown with the exercise.
-
-**Indexes:**
-
-| Index          | Purpose                                                        |
-| -------------- | -------------------------------------------------------------- |
-| `topics_index` | Filter exercises by topic values in Get Practice Exercises API |
-
-**Constraints:**
-
-- `expectedResponses.style` should be normalized to lowercase values such as `polite`, `clear`, `simple`, and `formal`.
-
-### Collection: `response_submissions`
-
-This collection stores each learner attempt and the resulting evaluation.
-
-```json
-{
-  "_id": "64f5d8a6c2ed4a7f82024b91",
-  "userId": "lear_42",
-  "exerciseId": "ex_123",
-  "response": "Lets meet tomorrow to discuss the project.",
-  "score": 95,
-  "feedback": "Excellent work. Your response is clear, polite, and appropriate for the scenario.",
-  "createdAt": "2026-08-13T11:05:00Z",
-  "correctness": {
-    "score": 95,
-    "feedback": "Your response is grammatically correct, with one minor contraction improvement.",
-    "correctedSentence": "Let's meet tomorrow to discuss the project.",
-    "fixes": ["Use the contraction form: 'Let's' instead of 'Lets'."]
-  },
-  "appropriateness": {
-    "score": 95,
-    "feedback": "The response is relevant to the prompt and matches the tone expected in the scenario.",
-    "clarity": {
-      "score": 96,
-      "feedback": "The message is easy to understand and free of ambiguity."
-    },
-    "politeness": {
-      "score": 97,
-      "feedback": "The response shows courtesy and respects the other person."
-    },
-    "tone": {
-      "score": 94,
-      "feedback": "The tone is friendly and appropriate for a conversation in this context."
-    }
-  }
-}
-```
-
-**Indexes:**
-
-| Index                     | Purpose                                             |
-| ------------------------- | --------------------------------------------------- |
-| `userId_index`            | Fetch learner history or recent attempts            |
-| `userId_exerciseId_index` | Find the learner's practice count and retry history |
-| `createdAt_index`         | Sort by most recent submission                      |
-
-**Constraints:**
-
-- The `response` field should be trimmed before persistence and validation should reject empty strings.
-
-### Collection: `learner_exercise_practices`
-
-This collection records each learner’s practice statistics, enabling sorting the exercises by last practice date or by practice count.
+| Related Collection | Type        | Cardinality | Description                                  |
+| ------------------ | ----------- | ----------- | -------------------------------------------- |
+| `users`            | Many-to-One | *..1        | Each practice record belongs to one learner. |
+| `exercises`        | Many-to-One | *..1        | Each practice record tracks one exercise.    |
+
+**Indexes**:
+
+| Fields                   | Type         | Purpose                                                                                                       |
+| ------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------- |
+| (`userId`, `exerciseId`) | UNIQUE INDEX | Enforces one aggregate practice record per learner and exercise and supports lookup during practice ordering. |
+
+**Storage Details**:
+
+- Stored in MongoDB collection `learner_exercise_practices` using WiredTiger.
+- The compound unique index prevents duplicate counters for the same learner/exercise pair.
+- Updates to `practiceCount` and `practicedAt` should be performed atomically for a learner/exercise pair.
+- Mongoose timestamps maintain `createdAt` and `updatedAt`.
+
+## `response_submissions` collection
+
+**Description**: Stores a learner response together with the AI-generated overall, correctness, and appropriateness evaluation.
+
+**Schema Definition**:
+
+| Field                           | Description                        | Data Type         | Constraints                                          |
+| ------------------------------- | ---------------------------------- | ----------------- | ---------------------------------------------------- |
+| `_id`                           | MongoDB document identifier        | ObjectId          | Primary key, auto-generated                          |
+| `userId`                        | Learner who submitted the response | ObjectId          | Required, reference to `users`                       |
+| `exerciseId`                    | Exercise being answered            | ObjectId          | Required, reference to `exercises`                   |
+| `response`                      | Learner response text              | String            | Required                                             |
+| `score`                         | Overall evaluation score           | Number            | Required; application scores responses from 0 to 100 |
+| `feedback`                      | Overall evaluation feedback        | String            | Required                                             |
+| `correctness`                   | Grammar and spelling evaluation    | Embedded document | Required                                             |
+| `correctness.score`             | Correctness score                  | Number            | Required                                             |
+| `correctness.feedback`          | Correctness explanation            | String            | Required                                             |
+| `correctness.fixes`             | Suggested corrections              | Array of String   | Defaults to `[]`                                     |
+| `correctness.correctedSentence` | Corrected response                 | String            | Required                                             |
+| `appropriateness`               | Context and tone evaluation        | Embedded document | Required                                             |
+| `appropriateness.score`         | Appropriateness score              | Number            | Required                                             |
+| `appropriateness.feedback`      | Appropriateness explanation        | String            | Required                                             |
+| `appropriateness.clarity`       | Clarity evaluation                 | Embedded document | Required; `score` and `feedback` required            |
+| `appropriateness.politeness`    | Politeness evaluation              | Embedded document | Required; `score` and `feedback` required            |
+| `appropriateness.tone`          | Tone evaluation                    | Embedded document | Required; `score` and `feedback` required            |
+| `createdAt`                     | Submission timestamp               | Date              | Required, generated by timestamps                    |
+| `updatedAt`                     | Last modification timestamp        | Date              | Required, generated by timestamps                    |
+
+**Relationships**:
+
+| Related Collection | Type        | Cardinality | Description                             |
+| ------------------ | ----------- | ----------- | --------------------------------------- |
+| `users`            | Many-to-One | *..1        | Each submission belongs to one learner. |
+| `exercises`        | Many-to-One | *..1        | Each submission answers one exercise.   |
+
+**Indexes**:
+
+| Fields                   | Type  | Purpose                                                  |
+| ------------------------ | ----- | -------------------------------------------------------- |
+| (`userId`, `exerciseId`) | INDEX | Supports a learner's submission history for an exercise. |
+| `createdAt` descending   | INDEX | Supports recent-submission queries.                      |
+
+**Storage Details**:
+
+- Stored in MongoDB collection `response_submissions` using WiredTiger.
+- Evaluation details are embedded because they are created and read as one immutable evaluation result.
+- Mongoose timestamps maintain `createdAt` and `updatedAt`.
+
+## Scripts
+
+MongoDB replica set initialization and development seed data are maintained in `apps/db/init-rs.js` and `apps/db/seed.js`.
+
+The following snippets show the collection and index setup represented by the current application schemas:
 
 ```javascript
-{
-  "_id": "64f5d8a6c2ed4a7f82024b92",
-  "userId": ObjectId('65f000000000000000000003'),
-  "exerciseId": "ex_123",
-  "practiceCount": 2,
-  "lastPracticeAt": "2026-08-13T11:15:00Z"
-}
+db.createCollection('exercises');
+db.createCollection('topics');
+db.createCollection('learner_exercise_practices');
+db.createCollection('response_submissions');
+
+db.topics.createIndex({ name: 1 });
+db.learner_exercise_practices.createIndex(
+  { userId: 1, exerciseId: 1 },
+  { unique: true },
+);
+db.response_submissions.createIndex({ userId: 1, exerciseId: 1 });
+db.response_submissions.createIndex({ createdAt: -1 });
 ```
 
-**Indexes:**
-
-| Index                     | Purpose                                              |
-| ------------------------- | ---------------------------------------------------- |
-| `userId_exerciseId_index` | Ensure a single practice record per learner/exercise |
-
-**Constraints:**
-
-- Each `learner_exercise_practices` record must have a unique `(userId, exerciseId)` pair. The same exercise may have different `practiceCount` values for different learners.
-- `practiceCount` is incremented atomically per learner per exercise after each successful submission.
-- `lastPracticeAt` is updated to the timestamp of the most recent successful practice.
-
-## Seed sample data
-
-```javascript
-// Insert sample exercises
-db.getCollection('exercises').deleteMany({});
-db.getCollection('exercises').insertMany([
-  {
-    _id: ObjectId('6a8134985ed2456c91a10b4d'),
-    topics: ['Restaurant'],
-    scenario: 'ordering coffee',
-    learnerRole: 'customer',
-    counterpartRole: 'barista',
-    prompts: ['Order a coffee politely.'],
-    expectedResponses: [
-      {
-        content: 'I would like a cappuccino, please.',
-        style: ['polite', 'simple'],
-      },
-      {
-        content: 'Could I have a latte with almond milk?',
-        style: ['polite', 'clear'],
-      },
-    ],
-    createdAt: new Date('2026-08-13T10:00:00Z'),
-    updatedAt: new Date('2026-08-13T10:00:00Z'),
-  },
-  {
-    _id: ObjectId('6a8134985ed2456c91a10b4e'),
-    topics: ['Hotel'],
-    scenario: 'booking a hotel room',
-    learnerRole: 'guest',
-    counterpartRole: 'receptionist',
-    prompts: ['Ask for a room reservation.'],
-    expectedResponses: [
-      {
-        content: 'I would like to book a double room for two nights.',
-        style: ['polite', 'simple'],
-      },
-      {
-        content: 'Could you please reserve a single room for me?',
-        style: ['polite', 'clear'],
-      },
-    ],
-    createdAt: new Date('2026-08-13T10:00:00Z'),
-    updatedAt: new Date('2026-08-13T10:00:00Z'),
-  },
-]);
-
-// Insert sample learner practice counts
-db.getCollection('learner_exercise_practices').deleteMany({});
-db.getCollection('learner_exercise_practices').insertMany([
-  {
-    userId: ObjectId('65f000000000000000000003'),
-    exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
-    practiceCount: 2,
-    lastPracticeAt: new Date('2026-08-13T11:10:00Z'),
-  },
-  {
-    userId: ObjectId('65f000000000000000000003'),
-    exerciseId: ObjectId('6a8134985ed2456c91a10b4e'),
-    practiceCount: 0,
-    lastPracticeAt: null,
-  },
-  {
-    userId: ObjectId('65f000000000000000000004'),
-    exerciseId: ObjectId('6a8134985ed2456c91a10b4d'),
-    practiceCount: 1,
-    lastPracticeAt: new Date('2026-08-13T10:45:00Z'),
-  },
-]);
-```
-
-## Get exercises for practice
-
-Retrieve exercises ordered by recency of practice, favors unattempted exercises first:
-
-```javascript
-db.getCollection('exercises').aggregate([
-  {
-    $lookup: {
-      from: 'learner_exercise_practices',
-      let: { exId: '$_id' },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                { $eq: ['$exerciseId', '$$exId'] },
-                { $eq: ['$userId', 'lear_1'] },
-              ],
-            },
-          },
-        },
-        { $project: { practiceCount: 1, lastPracticeAt: 1 } },
-      ],
-      as: 'practiceData',
-    },
-  },
-  {
-    $addFields: {
-      practiceCount: {
-        $ifNull: [{ $arrayElemAt: ['$practiceData.practiceCount', 0] }, 0],
-      },
-      lastPracticeAt: {
-        $ifNull: [{ $arrayElemAt: ['$practiceData.lastPracticeAt', 0] }, null],
-      },
-    },
-  },
-  {
-    $sort: {
-      lastPracticeAt: 1,
-    },
-  },
-]);
-```
+The development seed script creates users, topics, exercises, and learner practice records. It removes only the sample records it owns before inserting them, so it can be rerun during local development.
 
 ## Changelog
 
-| Version | Date       | Changes                                                                                                                                                                                                         |
-| ------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.0     | 2026-08-14 | Initial communication data model based on the requirement and API specifications for exercise retrieval, practice repetition logic, and response evaluation.                                                    |
-| 1.1     | 2026-08-14 | Removed the Learner entity, removed prompt ordering and practice timestamps, renamed response fields, removed duplicated alternatives from evaluation feedback, and added overall score to evaluation feedback. |
-| 1.2     | 2026-08-14 | Added the MongoDB physical model, collection-level schema examples, index strategy.                                                                                                                             |
+| Version | Date       | Changes                                                                                                                                                                                                                                |
+| ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0     | 2026-08-14 | Initial communication data model for exercise retrieval, practice tracking, and response evaluation.                                                                                                                                   |
+| 1.1     | 2026-09-07 | Aligned the model with the implemented MongoDB schemas: embedded prompts, expected responses, and evaluation details; removed unregistered prompt and evaluation collections; documented collection-level indexes and storage details. |
