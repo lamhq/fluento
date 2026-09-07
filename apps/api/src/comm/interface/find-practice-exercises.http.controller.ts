@@ -13,13 +13,15 @@ import {
 import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
 import type { CursorPaginationResult } from '../../common/types/pagination';
-import { ExerciseService } from '../core/exercise.service';
+import { PracticeExerciseService } from '../core/practice-exercise.service';
 import { PracticeExerciseResponseDto } from './practice-exercise-response.dto';
 
 @Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
 export class FindPracticeExercisesHttpController {
-  constructor(private readonly exerciseService: ExerciseService) {}
+  constructor(
+    private readonly practiceExerciseService: PracticeExerciseService,
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -30,7 +32,7 @@ export class FindPracticeExercisesHttpController {
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
   ): Promise<CursorPaginationResult<PracticeExerciseResponseDto>> {
     const { items, nextCursor, previousCursor, hasNext, hasPrevious } =
-      await this.exerciseService.findExercisesForUser(undefined, {
+      await this.practiceExerciseService.findExercisesForUser(undefined, {
         sort,
         limit,
         after,

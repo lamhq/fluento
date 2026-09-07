@@ -10,13 +10,15 @@ import {
 
 import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
-import { ExerciseService } from '../core/exercise.service';
+import { PracticeExerciseService } from '../core/practice-exercise.service';
 import { SubmitResponseRequestDto } from './submit-response-request.dto';
 
 @Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
 export class SubmitResponseHttpController {
-  constructor(private readonly exerciseService: ExerciseService) {}
+  constructor(
+    private readonly practiceExerciseService: PracticeExerciseService,
+  ) {}
 
   @Post(':exerciseId/responses')
   @HttpCode(HttpStatus.CREATED)
@@ -24,6 +26,9 @@ export class SubmitResponseHttpController {
     @Param('exerciseId') exerciseId: string,
     @Body() body: SubmitResponseRequestDto,
   ) {
-    return this.exerciseService.submitResponse(exerciseId, body.response);
+    return this.practiceExerciseService.submitResponse(
+      exerciseId,
+      body.response,
+    );
   }
 }

@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EXERCISE_REPOSITORY } from './core/exercise.repository';
 import { ExerciseService } from './core/exercise.service';
 import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repository';
+import { PracticeExerciseService } from './core/practice-exercise.service';
 import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation.service';
 import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission.repository';
 import { TOPIC_REPOSITORY } from './core/topic.repository';
@@ -56,6 +57,7 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
   ],
   providers: [
     ExerciseService,
+    PracticeExerciseService,
     TopicService,
     MongoosePracticeExerciseRepository,
     MongooseExerciseRepository,
