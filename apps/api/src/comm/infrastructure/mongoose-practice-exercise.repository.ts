@@ -4,9 +4,9 @@ import { Model, PipelineStage, Types } from 'mongoose';
 
 import type { CursorPaginationResult } from '../../common/types/pagination';
 import { ExerciseStatus } from '../core/exercise.entity';
-import type { PracticeExerciseQuery } from '../core/learner-exercise.repository';
-import { LearnerExerciseRepository } from '../core/learner-exercise.repository';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
+import type { PracticeExerciseQuery } from '../core/practice-exercise.repository';
+import { PracticeExerciseRepository } from '../core/practice-exercise.repository';
 import { Exercise } from './schemas/exercise.schema';
 import { LearnerExercise } from './schemas/learner-exercise.schema';
 
@@ -29,7 +29,7 @@ interface RawPracticeExercise {
 }
 
 @Injectable()
-export class MongooseLearnerExerciseRepository implements LearnerExerciseRepository {
+export class MongoosePracticeExerciseRepository implements PracticeExerciseRepository {
   constructor(
     @InjectModel(Exercise.name)
     private readonly exerciseModel: Model<Exercise>,
@@ -37,7 +37,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
     private readonly learnerExerciseModel: Model<LearnerExercise>,
   ) {}
 
-  async findExercisesForUser(
+  async findAll(
     userId: string,
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {

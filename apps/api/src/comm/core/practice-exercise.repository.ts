@@ -1,7 +1,9 @@
 import type { CursorPaginationResult } from '../../common/types/pagination';
 import { PracticeExerciseEntity } from './practice-exercise.entity';
 
-export const LEARNER_EXERCISE_REPOSITORY = Symbol('LearnerExerciseRepository');
+export const PRACTICE_EXERCISE_REPOSITORY = Symbol(
+  'PracticeExerciseRepository',
+);
 
 export interface PracticeExerciseQuery {
   topics?: string[];
@@ -10,11 +12,11 @@ export interface PracticeExerciseQuery {
   sort?: string;
 }
 
-export interface LearnerExerciseRepository {
+export interface PracticeExerciseRepository {
   /*
    * Finds all practice exercises for a given learner with optional filtering and sorting.
    */
-  findExercisesForUser(
+  findAll(
     userId: string,
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>>;

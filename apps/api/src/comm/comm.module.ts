@@ -3,13 +3,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { EXERCISE_REPOSITORY } from './core/exercise.repository';
 import { ExerciseService } from './core/exercise.service';
-import { LEARNER_EXERCISE_REPOSITORY } from './core/learner-exercise.repository';
+import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repository';
 import { RESPONSE_EVALUATION_SERVICE } from './core/response-evaluation.service';
 import { RESPONSE_SUBMISSION_REPOSITORY } from './core/response-submission.repository';
 import { TOPIC_REPOSITORY } from './core/topic.repository';
 import { TopicService } from './core/topic.service';
 import { MongooseExerciseRepository } from './infrastructure/mongoose-exercise.repository';
-import { MongooseLearnerExerciseRepository } from './infrastructure/mongoose-learner-exercise.repository';
+import { MongoosePracticeExerciseRepository } from './infrastructure/mongoose-practice-exercise.repository';
 import { MongooseResponseRepository } from './infrastructure/mongoose-response.repository';
 import { MongooseTopicRepository } from './infrastructure/mongoose-topic.repository';
 import { OpenAIEvaluationService } from './infrastructure/openai-evaluation.service';
@@ -57,14 +57,14 @@ import { UpdateExerciseHttpController } from './interface/update-exercise.http.c
   providers: [
     ExerciseService,
     TopicService,
-    MongooseLearnerExerciseRepository,
+    MongoosePracticeExerciseRepository,
     MongooseExerciseRepository,
     MongooseTopicRepository,
     MongooseResponseRepository,
     OpenAIEvaluationService,
     {
-      provide: LEARNER_EXERCISE_REPOSITORY,
-      useExisting: MongooseLearnerExerciseRepository,
+      provide: PRACTICE_EXERCISE_REPOSITORY,
+      useExisting: MongoosePracticeExerciseRepository,
     },
     {
       provide: EXERCISE_REPOSITORY,

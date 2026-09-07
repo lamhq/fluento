@@ -17,12 +17,12 @@ import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
 } from './exercise.repository';
-import {
-  LEARNER_EXERCISE_REPOSITORY,
-  type LearnerExerciseRepository,
-  type PracticeExerciseQuery,
-} from './learner-exercise.repository';
 import { PracticeExerciseEntity } from './practice-exercise.entity';
+import {
+  PRACTICE_EXERCISE_REPOSITORY,
+  type PracticeExerciseQuery,
+  type PracticeExerciseRepository,
+} from './practice-exercise.repository';
 import {
   RESPONSE_EVALUATION_SERVICE,
   type ResponseEvaluationService,
@@ -38,8 +38,8 @@ export class ExerciseService {
   constructor(
     @Inject(EXERCISE_REPOSITORY)
     private readonly repository: ExerciseRepository,
-    @Inject(LEARNER_EXERCISE_REPOSITORY)
-    private readonly practiceExerciseRepository: LearnerExerciseRepository,
+    @Inject(PRACTICE_EXERCISE_REPOSITORY)
+    private readonly practiceExerciseRepository: PracticeExerciseRepository,
     @Inject(RESPONSE_SUBMISSION_REPOSITORY)
     private readonly responseSubmissionRepository: ResponseSubmissionRepository,
     @Inject(RESPONSE_EVALUATION_SERVICE)
@@ -94,10 +94,7 @@ export class ExerciseService {
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
     const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
-    return this.practiceExerciseRepository.findExercisesForUser(
-      currentUserId,
-      query,
-    );
+    return this.practiceExerciseRepository.findAll(currentUserId, query);
   }
 
   async findById(id: string): Promise<ExerciseEntity | null> {
