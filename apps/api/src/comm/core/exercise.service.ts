@@ -9,6 +9,7 @@ import {
   CONTEXT_SERVICE,
   type ContextService,
 } from '../../common/core/context.service';
+import type { CursorPaginationResult } from '../../common/types/pagination';
 import { CreateExerciseRequestDto } from '../interface/create-exercise-request.dto';
 import { UpdateExerciseRequestDto } from '../interface/update-exercise-request.dto';
 import { ExerciseEntity } from './exercise.entity';
@@ -19,9 +20,9 @@ import {
 import {
   LEARNER_EXERCISE_REPOSITORY,
   type LearnerExerciseRepository,
-  type PaginatedPracticeExerciseResult,
   type PracticeExerciseQuery,
 } from './learner-exercise.repository';
+import { PracticeExerciseEntity } from './practice-exercise.entity';
 import {
   RESPONSE_EVALUATION_SERVICE,
   type ResponseEvaluationService,
@@ -91,7 +92,7 @@ export class ExerciseService {
   async findExercisesForUser(
     userId?: string,
     query?: PracticeExerciseQuery,
-  ): Promise<PaginatedPracticeExerciseResult> {
+  ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
     const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
     return this.practiceExerciseRepository.findExercisesForUser(
       currentUserId,

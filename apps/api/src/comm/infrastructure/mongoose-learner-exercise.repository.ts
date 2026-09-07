@@ -2,12 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
+import type { CursorPaginationResult } from '../../common/types/pagination';
 import { ExerciseStatus } from '../core/exercise.entity';
 import type { PracticeExerciseQuery } from '../core/learner-exercise.repository';
-import {
-  LearnerExerciseRepository,
-  PaginatedPracticeExerciseResult,
-} from '../core/learner-exercise.repository';
+import { LearnerExerciseRepository } from '../core/learner-exercise.repository';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 import { Exercise } from './schemas/exercise.schema';
 import { LearnerExercise } from './schemas/learner-exercise.schema';
@@ -42,7 +40,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
   async findExercisesForUser(
     userId: string,
     query?: PracticeExerciseQuery,
-  ): Promise<PaginatedPracticeExerciseResult> {
+  ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
     const { sort = '-practicedAt', limit = 10, after, topics } = query ?? {};
 
     const matchStage: Record<string, unknown> = {

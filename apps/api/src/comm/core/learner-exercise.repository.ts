@@ -1,3 +1,4 @@
+import type { CursorPaginationResult } from '../../common/types/pagination';
 import { PracticeExerciseEntity } from './practice-exercise.entity';
 
 export const LEARNER_EXERCISE_REPOSITORY = Symbol('LearnerExerciseRepository');
@@ -9,14 +10,6 @@ export interface PracticeExerciseQuery {
   sort?: string;
 }
 
-export interface PaginatedPracticeExerciseResult {
-  items: PracticeExerciseEntity[];
-  nextCursor: string | null;
-  previousCursor: string | null;
-  hasNext: boolean;
-  hasPrevious: boolean;
-}
-
 export interface LearnerExerciseRepository {
   /*
    * Finds all practice exercises for a given learner with optional filtering and sorting.
@@ -24,7 +17,7 @@ export interface LearnerExerciseRepository {
   findExercisesForUser(
     userId: string,
     query?: PracticeExerciseQuery,
-  ): Promise<PaginatedPracticeExerciseResult>;
+  ): Promise<CursorPaginationResult<PracticeExerciseEntity>>;
 
   /*
    * Record learner practice for a given exercise.
