@@ -10,9 +10,9 @@ This document describes the MongoDB collections, embedded documents, relationshi
 erDiagram
     User ||--o{ Exercise : creates
     User ||--o{ Topic : owns
-    User ||--o{ LearnerExercisePractice : practices
+    User ||--o{ ExercisePractice : practices
     User ||--o{ ResponseSubmission : submits
-    Exercise ||--o{ LearnerExercisePractice : tracked_by
+    Exercise ||--o{ ExercisePractice : tracked_by
     Exercise ||--o{ ResponseSubmission : receives
     Exercise }o--o{ Topic : categorized_by
 
@@ -38,7 +38,7 @@ erDiagram
         Date updatedAt
     }
 
-    LearnerExercisePractice {
+    ExercisePractice {
         ObjectId _id PK
         ObjectId userId FK
         ObjectId exerciseId FK
@@ -88,12 +88,12 @@ erDiagram
 
 **Relationships**:
 
-| Related Collection           | Type                       | Cardinality | Description                                                                            |
-| ---------------------------- | -------------------------- | ----------- | -------------------------------------------------------------------------------------- |
-| `users`                      | Many-to-One                | *..1        | Each exercise has one creator.                                                         |
-| `topics`                     | Many-to-Many by topic name | _.._        | An exercise can contain multiple topic names; a topic can classify multiple exercises. |
-| `learner_exercise_practices` | One-to-Many                | 1..*        | An exercise can have one practice record per learner.                                  |
-| `response_submissions`       | One-to-Many                | 1..*        | An exercise can receive many learner submissions.                                      |
+| Related Collection     | Type                       | Cardinality | Description                                                                            |
+| ---------------------- | -------------------------- | ----------- | -------------------------------------------------------------------------------------- |
+| `users`                | Many-to-One                | *..1        | Each exercise has one creator.                                                         |
+| `topics`               | Many-to-Many by topic name | _.._        | An exercise can contain multiple topic names; a topic can classify multiple exercises. |
+| `exercise_practices`   | One-to-Many                | 1..*        | An exercise can have one practice record per learner.                                  |
+| `response_submissions` | One-to-Many                | 1..*        | An exercise can receive many learner submissions.                                      |
 
 **Indexes**:
 
@@ -142,7 +142,7 @@ erDiagram
 - Topic names are currently not unique at the database level. Duplicate prevention, if required, must be added with a unique index and an agreed case-normalization rule.
 - Mongoose timestamps maintain `createdAt` and `updatedAt`.
 
-## `learner_exercise_practices` collection
+## `exercise_practices` collection
 
 **Description**: Stores aggregate practice state for one learner and one exercise. It supports ordering practice exercises and showing repetition progress.
 
@@ -173,7 +173,7 @@ erDiagram
 
 **Storage Details**:
 
-- Stored in MongoDB collection `learner_exercise_practices` using WiredTiger.
+- Stored in MongoDB collection `exercise_practices` using WiredTiger.
 - The compound unique index prevents duplicate counters for the same learner/exercise pair.
 - Updates to `practiceCount` and `practicedAt` should be performed atomically for a learner/exercise pair.
 - Mongoose timestamps maintain `createdAt` and `updatedAt`.
@@ -235,14 +235,11 @@ The following snippets show the collection and index setup represented by the cu
 ```javascript
 db.createCollection('exercises');
 db.createCollection('topics');
-db.createCollection('learner_exercise_practices');
+db.createCollection('exercise_practices');
 db.createCollection('response_submissions');
 
 db.topics.createIndex({ name: 1 });
-db.learner_exercise_practices.createIndex(
-  { userId: 1, exerciseId: 1 },
-  { unique: true },
-);
+db.exercise_practices.createIndex({ userId: 1, exerciseId: 1 }, { unique: true });
 db.response_submissions.createIndex({ userId: 1, exerciseId: 1 });
 db.response_submissions.createIndex({ createdAt: -1 });
 ```

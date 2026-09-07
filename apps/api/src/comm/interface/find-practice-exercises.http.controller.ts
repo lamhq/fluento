@@ -27,7 +27,6 @@ export class FindPracticeExercisesHttpController {
   @HttpCode(HttpStatus.OK)
   async findAll(
     @Query('sort') sort?: 'practicedAt' | 'createdAt',
-    @Query('after') after?: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
   ): Promise<CursorPaginationResult<PracticeExerciseResponseDto>> {
@@ -35,7 +34,6 @@ export class FindPracticeExercisesHttpController {
       await this.practiceExerciseService.findAllForUser(undefined, {
         sort,
         limit,
-        after,
         topics,
       });
 

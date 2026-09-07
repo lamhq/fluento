@@ -3,7 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 
 export type LearnerExerciseDocument = HydratedDocument<LearnerExercise>;
 
-@Schema({ timestamps: true, collection: 'learner_exercise_practices' })
+@Schema({ timestamps: true, collection: 'exercise_practices' })
 export class LearnerExercise {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   userId: mongoose.Types.ObjectId;

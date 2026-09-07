@@ -21,12 +21,10 @@ export const PracticeExerciseSchema = z.object({
 
 export const PracticeExercisesResponseSchema = z.object({
   items: z.array(PracticeExerciseSchema),
-  pagination: z.object({
-    nextCursor: z.string().nullable(),
-    previousCursor: z.string().nullable(),
-    hasNext: z.boolean(),
-    hasPrevious: z.boolean(),
-  }),
+  nextCursor: z.string().nullable(),
+  previousCursor: z.string().nullable(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
 });
 
 export const SubmitResponseSchema = z.object({

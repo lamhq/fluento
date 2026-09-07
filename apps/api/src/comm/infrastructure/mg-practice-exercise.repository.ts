@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
 import type { CursorPaginationResult } from '../../common/types/pagination';
+import { parseSortStr } from '../../common/utils';
 import { ExerciseStatus } from '../core/exercise.entity';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 import type { PracticeExerciseQuery } from '../core/practice-exercise.repository';
@@ -37,25 +38,27 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
     private readonly learnerExerciseModel: Model<LearnerExercise>,
   ) {}
 
+  /**
+   * TODO: implement cursor-based pagination
+   */
   async findAllForUser(
     userId: string,
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
-    const { sort = '-practicedAt', limit = 10, after, topics } = query ?? {};
-
-    const matchStage: Record<string, unknown> = {
-      status: ExerciseStatus.Active,
-    };
+    const { sort, limit, topics } = query ?? {};
+    const safeLimit = Math.min(!limit || limit < 0 ? 10 : limit, 50);
+    const pipeline: PipelineStage[] = [
+      { $match: { status: ExerciseStatus.Active } },
+    ];
 
     if (topics && topics.length > 0) {
-      matchStage.topics = { $in: topics };
+      pipeline.push({ $match: { topics: { $in: topics } } });
     }
 
-    const basePipeline: PipelineStage[] = [
-      { $match: matchStage },
+    pipeline.push(
       {
         $lookup: {
-          from: 'learner_exercise_practices',
+          from: 'exercise_practices',
           let: { exId: '$_id' },
           pipeline: [
             {
@@ -83,137 +86,29 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
           },
         },
       },
-    ];
+      {
+        $sort: parseSortStr(sort, [
+          'practicedAt',
+          'practiceCount',
+          'createdAt',
+        ]),
+      },
+      { $limit: safeLimit },
+    );
 
-    const safeLimit = Math.min(limit > 0 ? limit : 10, 50); // Cap at 50
-    const sortOrder = this.buildSort(sort);
-
-    // Build keyset pagination filter
-    let keysetFilter: Record<string, unknown> = {};
-    let cursorData: RawPracticeExercise | null = null;
-
-    if (after) {
-      try {
-        // Fetch the cursor item to get its sort key values
-        const cursorItem = await this.exerciseModel.findById(after).exec();
-        if (cursorItem) {
-          // Reconstruct the full item with practice data
-          const fullCursorItem = await this.exerciseModel
-            .aggregate<RawPracticeExercise>([
-              { $match: { _id: new Types.ObjectId(after) } },
-              ...basePipeline,
-            ])
-            .exec();
-          if (fullCursorItem.length > 0) {
-            cursorData = fullCursorItem[0];
-          }
-        }
-
-        // Build filter to skip past cursor based on sort order
-        if (cursorData) {
-          keysetFilter = this.buildKeysetFilter(cursorData, sortOrder);
-        }
-      } catch {
-        // Invalid cursor, ignore and start from beginning
-        keysetFilter = {};
-      }
-    }
-
-    // Fetch one extra item to determine if there's a next page
-    const fetchLimit = safeLimit + 1;
-
-    const pagePipeline: PipelineStage[] = [
-      ...basePipeline,
-      ...(Object.keys(keysetFilter).length > 0
-        ? [{ $match: keysetFilter }]
-        : []),
-      { $sort: sortOrder },
-      { $limit: fetchLimit },
-    ];
-
-    const pageResults = await this.exerciseModel
-      .aggregate<RawPracticeExercise>(pagePipeline)
+    const results = await this.exerciseModel
+      .aggregate<RawPracticeExercise>(pipeline)
       .exec();
-    const results = Array.isArray(pageResults) ? pageResults : [];
 
-    // Determine if there's a next page
-    const hasNext = results.length > safeLimit;
-    const pageItems = results.slice(0, safeLimit);
-
-    // Build cursors
-    let nextCursor: string | null = null;
-    if (hasNext && pageItems.length > 0) {
-      nextCursor = pageItems[pageItems.length - 1]._id.toString();
-    }
-
-    const previousCursor = after && pageItems.length > 0 ? after : null;
+    const items = results.map((result) => this.dbModelToEntity(result));
 
     return {
-      items: pageItems.map((result) => this.dbModelToEntity(result)),
-      nextCursor,
-      previousCursor,
-      hasNext,
-      hasPrevious: !!after,
+      items,
+      nextCursor: null,
+      previousCursor: null,
+      hasNext: false,
+      hasPrevious: false,
     };
-  }
-
-  private buildKeysetFilter(
-    cursorItem: RawPracticeExercise,
-    sortOrder: Record<string, 1 | -1>,
-  ): Record<string, unknown> {
-    const sortFields = Object.entries(sortOrder);
-    if (sortFields.length === 0) {
-      return {};
-    }
-
-    const [primaryField, primaryDirection] = sortFields[0];
-    const isDescending = primaryDirection === -1;
-    const operator = isDescending ? '$lt' : '$gt';
-
-    // For single-field sort, use simple comparison with ID tiebreaker
-    const primaryValue = (cursorItem as unknown as Record<string, unknown>)[
-      primaryField
-    ];
-
-    return {
-      $or: [
-        { [primaryField]: { [operator]: primaryValue } },
-        {
-          $and: [
-            { [primaryField]: primaryValue },
-            {
-              _id: isDescending
-                ? { $lt: cursorItem._id }
-                : { $gt: cursorItem._id },
-            },
-          ],
-        },
-      ],
-    };
-  }
-
-  private buildSort(sort?: string): Record<string, 1 | -1> {
-    const sortEntries = (sort ?? '-practicedAt').split(',').filter(Boolean);
-    const fieldMap: Record<string, string> = {
-      practicedAt: 'practicedAt',
-      createdAt: 'createdAt',
-    };
-    const normalized: Record<string, 1 | -1> = {};
-
-    for (const entry of sortEntries) {
-      const isDescending = entry.startsWith('-');
-      const field = entry.replace(/^-/, '');
-      const normalizedField = fieldMap[field] ?? 'practicedAt';
-      normalized[normalizedField] = isDescending ? -1 : 1;
-    }
-
-    const sortOrder: Record<string, 1 | -1> =
-      Object.keys(normalized).length > 0 ? normalized : { practicedAt: -1 };
-
-    // Add `_id` as a deterministic tiebreaker so ties on the primary sort
-    // field are ordered consistently with buildKeysetFilter's assumption.
-    const primaryDirection = Object.values(sortOrder)[0];
-    return { ...sortOrder, _id: primaryDirection };
   }
 
   async upsertPractice(userId: string, exerciseId: string): Promise<void> {
