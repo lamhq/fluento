@@ -19,8 +19,23 @@ export const ExpectedResponseSchema =
 
 @Schema({ timestamps: true, collection: 'exercises' })
 export class Exercise {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  userId: mongoose.Types.ObjectId;
+  @Prop({ required: true })
+  scenario: string;
+
+  @Prop({ type: [String], default: [] })
+  prompts: string[];
+
+  @Prop({ type: [ExpectedResponseSchema], default: [] })
+  expectedResponses: ExpectedResponse[];
+
+  @Prop()
+  learnerRole?: string;
+
+  @Prop()
+  counterpartRole?: string;
+
+  @Prop({ type: [String], default: [] })
+  topics: string[];
 
   @Prop({
     type: String,
@@ -29,23 +44,8 @@ export class Exercise {
   })
   status: ExerciseStatus;
 
-  @Prop({ type: [String], default: [] })
-  topics: string[];
-
-  @Prop({ required: true })
-  scenario: string;
-
-  @Prop({ required: true })
-  learnerRole: string;
-
-  @Prop({ required: true })
-  counterpartRole: string;
-
-  @Prop({ type: [String], default: [] })
-  prompts: string[];
-
-  @Prop({ type: [ExpectedResponseSchema], default: [] })
-  expectedResponses: ExpectedResponse[];
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  userId: mongoose.Types.ObjectId;
 
   createdAt: Date;
   updatedAt: Date;

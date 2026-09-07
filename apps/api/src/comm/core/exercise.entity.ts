@@ -10,17 +10,17 @@ export class ExerciseEntity implements Entity {
   createdAt: Date;
   updatedAt: Date;
 
-  userId: string;
-  status: ExerciseStatus;
-  topics: string[];
   scenario: string;
-  learnerRole: string;
-  counterpartRole: string;
   prompts: string[];
   expectedResponses: {
     content: string;
     style: string[];
   }[];
+  learnerRole?: string;
+  counterpartRole?: string;
+  topics: string[];
+  status: ExerciseStatus;
+  userId: string;
 
   constructor(data?: Partial<ExerciseEntity>) {
     Object.assign(this, data);

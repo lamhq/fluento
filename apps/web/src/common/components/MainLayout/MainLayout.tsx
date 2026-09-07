@@ -7,13 +7,7 @@ import { cn } from '@/lib/utils';
 
 import { useAuth } from '../../../auth';
 import SignOutButton from '../../../common/components/SignOutButton';
-import {
-  DATA_FETCHING_ROUTE,
-  DATA_MUTATION_ROUTE,
-  HOME_ROUTE,
-  PRACTICE_ROUTE,
-  PROTECTED_ROUTE,
-} from '../../../routes';
+import { HOME_ROUTE, PRACTICE_ROUTE } from '../../../routes';
 import ErrorBoundary from '../ErrorBoundary';
 
 export default function MainLayout() {
@@ -22,9 +16,6 @@ export default function MainLayout() {
 
   const menuItems = [
     { label: 'Home', to: HOME_ROUTE },
-    { label: 'Protected Page', to: PROTECTED_ROUTE },
-    { label: 'Data Fetching', to: DATA_FETCHING_ROUTE },
-    { label: 'Data Mutation', to: DATA_MUTATION_ROUTE },
     { label: 'Practice Page', to: PRACTICE_ROUTE },
   ];
 

@@ -19,7 +19,7 @@ export class LearnerExercise {
   practiceCount: number;
 
   @Prop({ type: Date, default: Date.now })
-  lastPracticeAt: Date;
+  practicedAt: Date;
 
   createdAt?: Date;
   updatedAt?: Date;

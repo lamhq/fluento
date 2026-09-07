@@ -1,7 +1,7 @@
 import { ExerciseEntity } from './exercise.entity';
 
 export class PracticeExerciseEntity extends ExerciseEntity {
-  lastPracticeAt?: Date | null;
+  practicedAt: Date | null;
   practiceCount: number;
 
   constructor(data?: Partial<PracticeExerciseEntity>) {

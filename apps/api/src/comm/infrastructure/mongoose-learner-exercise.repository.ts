@@ -25,7 +25,7 @@ interface RawPracticeExercise {
     style: string[];
   }[];
   practiceCount: number;
-  lastPracticeAt: Date | null;
+  practicedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -70,7 +70,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
                 },
               },
             },
-            { $project: { practiceCount: 1, lastPracticeAt: 1 } },
+            { $project: { practiceCount: 1, practicedAt: 1 } },
           ],
           as: 'practiceData',
         },
@@ -80,11 +80,8 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
           practiceCount: {
             $ifNull: [{ $arrayElemAt: ['$practiceData.practiceCount', 0] }, 0],
           },
-          lastPracticeAt: {
-            $ifNull: [
-              { $arrayElemAt: ['$practiceData.lastPracticeAt', 0] },
-              null,
-            ],
+          practicedAt: {
+            $ifNull: [{ $arrayElemAt: ['$practiceData.practicedAt', 0] }, null],
           },
         },
       },
@@ -200,8 +197,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
   private buildSort(sort?: string): Record<string, 1 | -1> {
     const sortEntries = (sort ?? '-practicedAt').split(',').filter(Boolean);
     const fieldMap: Record<string, string> = {
-      practicedAt: 'lastPracticeAt',
-      lastPracticeAt: 'lastPracticeAt',
+      practicedAt: 'practicedAt',
       createdAt: 'createdAt',
     };
     const normalized: Record<string, 1 | -1> = {};
@@ -209,12 +205,12 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
     for (const entry of sortEntries) {
       const isDescending = entry.startsWith('-');
       const field = entry.replace(/^-/, '');
-      const normalizedField = fieldMap[field] ?? 'lastPracticeAt';
+      const normalizedField = fieldMap[field] ?? 'practicedAt';
       normalized[normalizedField] = isDescending ? -1 : 1;
     }
 
     const sortOrder: Record<string, 1 | -1> =
-      Object.keys(normalized).length > 0 ? normalized : { lastPracticeAt: -1 };
+      Object.keys(normalized).length > 0 ? normalized : { practicedAt: -1 };
 
     // Add `_id` as a deterministic tiebreaker so ties on the primary sort
     // field are ordered consistently with buildKeysetFilter's assumption.
@@ -237,7 +233,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
           $set: {
             userId: objectUserId,
             exerciseId: objectExerciseId,
-            lastPracticeAt: practicedAt,
+            practicedAt,
           },
           $inc: { practiceCount: 1 },
         },
@@ -262,7 +258,7 @@ export class MongooseLearnerExerciseRepository implements LearnerExerciseReposit
       expectedResponses: item.expectedResponses,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
-      lastPracticeAt: item.lastPracticeAt,
+      practicedAt: item.practicedAt,
       practiceCount: item.practiceCount,
     });
   }

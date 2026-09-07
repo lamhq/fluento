@@ -34,7 +34,7 @@ describe('find practice exercises', () => {
       userId,
       exerciseId: new Types.ObjectId(exerciseId),
       practiceCount: 2,
-      lastPracticeAt: new Date('2024-01-15T12:00:00.000Z'),
+      practicedAt: new Date('2024-01-15T12:00:00.000Z'),
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -121,7 +121,7 @@ describe('find practice exercises', () => {
         userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
-        lastPracticeAt: new Date(),
+        practicedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -171,7 +171,7 @@ describe('find practice exercises', () => {
         userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
-        lastPracticeAt: new Date(Date.now() + 1000),
+        practicedAt: new Date(Date.now() + 1000),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -230,7 +230,7 @@ describe('find practice exercises', () => {
         userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
-        lastPracticeAt: new Date(Date.now() + 1000),
+        practicedAt: new Date(Date.now() + 1000),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -300,7 +300,7 @@ describe('find practice exercises', () => {
         userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
-        lastPracticeAt: new Date(Date.now() + 1000),
+        practicedAt: new Date(Date.now() + 1000),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -366,7 +366,7 @@ describe('find practice exercises', () => {
         userId,
         exerciseId: new Types.ObjectId(exerciseId),
         practiceCount: 1,
-        lastPracticeAt: new Date(Date.now() + 1000),
+        practicedAt: new Date(Date.now() + 1000),
         createdAt: new Date(),
         updatedAt: new Date(),
       });

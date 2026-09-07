@@ -3,6 +3,7 @@ import {
   IsArray,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -21,26 +22,9 @@ export class ExerciseExpectedResponseDto {
 }
 
 export class CreateExerciseRequestDto {
-  @IsNotEmpty()
-  @IsEnum(ExerciseStatus)
-  status: ExerciseStatus;
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsNotEmpty({ each: true })
-  topics: string[];
-
   @IsString()
   @IsNotEmpty()
   scenario: string;
-
-  @IsString()
-  @IsNotEmpty()
-  learnerRole: string;
-
-  @IsString()
-  @IsNotEmpty()
-  counterpartRole: string;
 
   @IsArray()
   @IsString({ each: true })
@@ -52,18 +36,37 @@ export class CreateExerciseRequestDto {
   @Type(() => ExerciseExpectedResponseDto)
   expectedResponses: ExerciseExpectedResponseDto[];
 
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  learnerRole?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  counterpartRole?: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  topics: string[];
+
+  @IsNotEmpty()
+  @IsEnum(ExerciseStatus)
+  status: ExerciseStatus;
+
   toEntity(): Omit<
     ExerciseEntity,
     'id' | 'userId' | 'createdAt' | 'updatedAt'
   > {
     return {
-      status: this.status,
-      topics: this.topics,
       scenario: this.scenario,
-      learnerRole: this.learnerRole,
-      counterpartRole: this.counterpartRole,
       prompts: this.prompts,
       expectedResponses: this.expectedResponses,
+      learnerRole: this.learnerRole,
+      counterpartRole: this.counterpartRole,
+      topics: this.topics,
+      status: this.status,
     };
   }
 }
