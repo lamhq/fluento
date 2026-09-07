@@ -16,7 +16,7 @@ export interface PracticeExerciseRepository {
   /*
    * Finds all practice exercises for a given learner with optional filtering and sorting.
    */
-  findAll(
+  findAllForUser(
     userId: string,
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>>;

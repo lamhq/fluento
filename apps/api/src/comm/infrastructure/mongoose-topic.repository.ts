@@ -21,6 +21,26 @@ export class MongooseTopicRepository implements TopicRepository {
     return topics.map((topic) => this.dbModelToEntity(topic));
   }
 
+  findById(): Promise<TopicEntity | null> {
+    throw new Error('Method not implemented.');
+  }
+
+  findAllPaginated(): Promise<[number, TopicEntity[]]> {
+    throw new Error('Method not implemented.');
+  }
+
+  create(): Promise<TopicEntity> {
+    throw new Error('Method not implemented.');
+  }
+
+  update(): Promise<TopicEntity> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
   private dbModelToEntity(data: TopicDocument): TopicEntity {
     return {
       id: data._id.toString(),

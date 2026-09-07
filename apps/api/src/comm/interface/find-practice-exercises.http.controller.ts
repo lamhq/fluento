@@ -32,7 +32,7 @@ export class FindPracticeExercisesHttpController {
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
   ): Promise<CursorPaginationResult<PracticeExerciseResponseDto>> {
     const { items, nextCursor, previousCursor, hasNext, hasPrevious } =
-      await this.practiceExerciseService.findExercisesForUser(undefined, {
+      await this.practiceExerciseService.findAllForUser(undefined, {
         sort,
         limit,
         after,

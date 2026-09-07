@@ -90,8 +90,8 @@ export class ResponseSubmission {
   @Prop({ type: ResponseSubmissionAppropriateness, required: true })
   appropriateness: ResponseSubmissionAppropriateness;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const ResponseSubmissionSchema =

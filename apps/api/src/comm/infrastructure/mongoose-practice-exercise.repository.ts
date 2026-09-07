@@ -37,7 +37,7 @@ export class MongoosePracticeExerciseRepository implements PracticeExerciseRepos
     private readonly learnerExerciseModel: Model<LearnerExercise>,
   ) {}
 
-  async findAll(
+  async findAllForUser(
     userId: string,
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
@@ -240,6 +240,10 @@ export class MongoosePracticeExerciseRepository implements PracticeExerciseRepos
       .exec();
   }
 
+  private isPracticeExercise(data: unknown): data is RawPracticeExercise {
+    return (data as { _id?: unknown })._id !== undefined;
+  }
+
   private dbModelToEntity(item: unknown): PracticeExerciseEntity {
     if (!this.isPracticeExercise(item)) {
       throw new Error('Invalid database model: missing _id field');
@@ -259,9 +263,5 @@ export class MongoosePracticeExerciseRepository implements PracticeExerciseRepos
       practicedAt: item.practicedAt,
       practiceCount: item.practiceCount,
     });
-  }
-
-  private isPracticeExercise(data: unknown): data is RawPracticeExercise {
-    return (data as { _id?: unknown })._id !== undefined;
   }
 }

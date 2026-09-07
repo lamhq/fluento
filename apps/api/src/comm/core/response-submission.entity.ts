@@ -1,4 +1,6 @@
-export class ResponseSubmissionEntity {
+import type { Entity } from '../../common/types/entity';
+
+export class ResponseSubmissionEntity implements Entity {
   id: string;
   userId: string;
   exerciseId: string;
@@ -27,8 +29,8 @@ export class ResponseSubmissionEntity {
       feedback: string;
     };
   };
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor(data?: Partial<ResponseSubmissionEntity>) {
     Object.assign(this, data);

@@ -14,8 +14,8 @@ export class User {
   @Prop()
   avatarUrl?: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

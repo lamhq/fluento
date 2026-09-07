@@ -1,9 +1,11 @@
-export class TopicEntity {
+import type { Entity } from '../../common/types/entity';
+
+export class TopicEntity implements Entity {
   id: string;
-  userId?: string;
   name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  userId?: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor(data?: Partial<TopicEntity>) {
     Object.assign(this, data);

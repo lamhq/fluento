@@ -45,12 +45,12 @@ export class PracticeExerciseService {
     private readonly contextService: ContextService,
   ) {}
 
-  async findExercisesForUser(
+  async findAllForUser(
     userId?: string,
     query?: PracticeExerciseQuery,
   ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
     const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
-    return this.practiceExerciseRepository.findAll(currentUserId, query);
+    return this.practiceExerciseRepository.findAllForUser(currentUserId, query);
   }
 
   async submitResponse(

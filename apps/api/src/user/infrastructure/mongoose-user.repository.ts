@@ -17,10 +17,36 @@ export class MongooseUserRepository implements UserRepository {
     return user ? this.dbModelToEntity(user) : null;
   }
 
+  findById(): Promise<UserEntity | null> {
+    throw new Error('Method not implemented.');
+  }
+
+  findAll(): Promise<UserEntity[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  findAllPaginated(): Promise<[number, UserEntity[]]> {
+    throw new Error('Method not implemented.');
+  }
+
+  create(): Promise<UserEntity> {
+    throw new Error('Method not implemented.');
+  }
+
+  update(): Promise<UserEntity> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
   private dbModelToEntity(data: UserDocument): UserEntity {
     return {
       id: data._id.toString(),
       email: data.email,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
   }
 }

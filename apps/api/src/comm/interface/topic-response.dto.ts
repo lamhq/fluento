@@ -13,7 +13,7 @@ export class TopicResponseDto {
     return new TopicResponseDto({
       id: entity.id,
       name: entity.name,
-      createdAt: entity.createdAt?.toISOString() ?? new Date().toISOString(),
+      createdAt: entity.createdAt.toISOString(),
     });
   }
 }

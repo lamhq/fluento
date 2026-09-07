@@ -11,8 +11,8 @@ export class Topic {
   @Prop({ required: true, index: true })
   name: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const TopicSchema = SchemaFactory.createForClass(Topic);
