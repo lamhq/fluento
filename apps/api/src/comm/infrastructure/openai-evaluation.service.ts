@@ -44,8 +44,8 @@ Review the response of an English learner and give feedback for correctness and 
 ## Inputs
 
 - **Scenario:** ${exercise.scenario}
-- **Learner Role:** ${exercise.learnerRole}
-- **Counterpart Role:** ${exercise.counterpartRole}
+- **Learner Role:** ${exercise.learnerRole ?? 'N/A'}
+- **Counterpart Role:** ${exercise.counterpartRole ?? 'N/A'}
 - **Prompt:** ${prompt}
 - **Learner Response:** "${response}"`;
   }
