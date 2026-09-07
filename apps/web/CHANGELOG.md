@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/lamhq/fluento/compare/web-v1.1.0...web-v1.2.0) (2026-09-07)
+
+
+### Features
+
+* implement list exercises API ([#15](https://github.com/lamhq/fluento/issues/15)) ([e5e1846](https://github.com/lamhq/fluento/commit/e5e1846632e5556fabd0c3f52a7df20f58c54b37))
+
 ## [1.1.0](https://github.com/lamhq/fluento/compare/web-v1.0.0...web-v1.1.0) (2026-08-28)
 
 
