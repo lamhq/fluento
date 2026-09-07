@@ -30,6 +30,17 @@ Follow installation instructions in each project:
 - `api-gateway`: `apps/api-gateway/README.md`
 - `web`: `apps/web/README.md`
 
+## Format code
+
+Run the code formatter for files:
+
+```bash
+pnpm format <path>
+# pnpm format "apps/api/src/**/*.{js,ts}"
+# pnpm format "apps/web/src/**/*.{js,ts,tsx}"
+# pnpm format apps/api/src/user/infrastructure/mongoose-user.repository.ts
+```
+
 ## Run lint
 
 Run lint for all files:
@@ -46,6 +57,14 @@ pnpm lint <path>
 # pnpm lint apps/web/src/comm/components/PracticeForm/utils.ts
 ```
 
+## Run type check
+
+```bash
+pnpm -F <project> run type-check
+# pnpm -F api run type-check
+# pnpm -F web run type-check
+```
+
 ## Run unit tests
 
 Run unit tests for a project (`web`, `api`):
@@ -60,14 +79,6 @@ Run unit tests for files in a project:
 ```bash
 pnpm -F <project> test <pattern>
 # pnpm -F web test src/comm/components/PracticeForm/utils
-```
-
-## Run type check
-
-```bash
-pnpm -F <project> run type-check
-# pnpm -F api run type-check
-# pnpm -F web run type-check
 ```
 
 ## Run package binary

@@ -4,7 +4,7 @@ Follow these rules for every task:
 
 - Read the relevant documentation before doing anything.
 - Read code files only if documentation is insufficient.
-- Run lint and type check after changing code.
+- Format code, run lint and type check after changing code.
 - At the end of the response, list every document referenced while working.
 
 ## Tasks
@@ -18,6 +18,7 @@ All tasks and the relevant documents to read for context:
 | Run lint                     | Root README |
 | Run type check               | Root README |
 | Run unit tests               | Root README |
+| Format code                  | Root README |
 | Run package's binary         | Root README |
 | Manage dependencies          | Root README |
 | Review Docker Compose file   | Root README |
