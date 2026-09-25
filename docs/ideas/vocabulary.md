@@ -7,13 +7,15 @@ Vocabulary practice helps learners build and reinforce their English word knowle
 ## How it works
 
 Learners practice through these exercise types:
-- **Sentence Builder:** use target vocabulary in different contexts by building sentences (e.g., workplace emails, casual chats)
+
+- **Using Word:** use target vocabulary in different contexts by building sentences (e.g., workplace emails, casual chats)
 - **Just One Word:** guess a secret word based on contextual clues
 - **Flashcards:** digital flashcards for quick review and self-testing
 
 ## Data Model
 
 Vocabulary structure:
+
 ```json
 {
   "word": "present",
@@ -65,11 +67,11 @@ Vocabulary structure:
    - **Add New Word** button: add new words and phrases to their personal word bank
    - **Practice** button: shows below configuration:
      - **Topics** (default: All Topics)
-     - **Exercises**: Sentence Builder, Just One Word, Flashcards; default: All Exercises
+     - **Exercises**: Using Word, Just One Word, Flashcards; default: All Exercises
      - **My Library Only** (default: off)
      - **Start Practice**: begins session
 
-## Sentence Builder
+## Using Word
 
 ### Flow
 
@@ -83,6 +85,7 @@ Vocabulary structure:
 ### Feedback
 
 Feedback includes:
+
 - **Feedback**: overall feedback
 - **Correctness**: check spelling & grammar of learner's response
   - **Score** (x/100)
@@ -96,7 +99,8 @@ Feedback includes:
 
 ### Example Practices
 
-**Exercise 1: Sentence Builder**
+**Exercise 1: Using Word**
+
 - **Target word**: resilient
 - **Context**: workplace email
 - **Example learner input**: "I believe our team is resilient and can overcome this challenge."
@@ -104,7 +108,8 @@ Feedback includes:
   - Correctness: 98/100 (Perfect grammar and spelling)
   - Vocabulary Usage: 95/100 (Word used appropriately in professional context)
 
-**Exercise 2: Sentence Builder**
+**Exercise 2: Using Word**
+
 - **Target word**: innovative
 - **Context**: casual chat
 - **Example learner input**: "That's such a innovative idea for the project."
@@ -115,25 +120,32 @@ Feedback includes:
 ### Prompts
 
 #### Get all contexts of a word
+
 ```md
 ## Task
+
 Give me all the contexts in which the word 'present' can be used.
 
 ## Response format
+
 A list of context names with short descriptions, starting with the most popular.
 ```
 
 #### Provide feedback on learner's response
+
 ```md
 ## Task
+
 Review the sentence and give feedback on correctness and vocabulary usage.
 
 ## Inputs
+
 - **Target word:** resilient
 - **Context:** workplace email
 - **Sentence:** "I believe our team is resilient and can overcome this challenge."
 
 ## Feedback Structure
+
 - **Feedback**: overall feedback
 - **Correctness**: check spelling & grammar of learner's response
   - **Score** (x/100)
@@ -160,6 +172,7 @@ Review the sentence and give feedback on correctness and vocabulary usage.
 ### Feedback
 
 Feedback includes:
+
 - **Result**: Correct or Wrong
 - **Target word/phrase**: the correct answer
 - **Meaning**: definition of the target word/phrase
@@ -168,6 +181,7 @@ Feedback includes:
 ### Example Practices
 
 **Exercise 3: Just One Word**
+
 - **Clues**: "endure", "adapt", "tough", "bounce"
 - **Target word**: resilient
 - **App feedback**:
@@ -176,6 +190,7 @@ Feedback includes:
   - Example sentences: "She remained resilient in the face of adversity." / "The resilient community rebuilt after the disaster."
 
 **Exercise 4: Just One Word**
+
 - **Clues**: "new ideas", "novel", "creative", "advanced"
 - **Target word**: innovative
 - **App feedback**:
@@ -186,6 +201,7 @@ Feedback includes:
 ### Prompts
 
 Getting clues for guessing a word:
+
 ```md
 Give me 4 words (clues) for guessing the word "present" in a Just One Word exercise.
 ```
@@ -203,6 +219,7 @@ Give me 4 words (clues) for guessing the word "present" in a Just One Word exerc
 ### Feedback
 
 Feedback includes:
+
 - **Word/phrase**: the target vocabulary
 - **Meaning**: definition shown on the front of the card
 - **Example sentences**: contextual examples demonstrating usage
@@ -210,6 +227,7 @@ Feedback includes:
 ### Example Practices
 
 **Exercise 5: Flashcards**
+
 - **Front**: "Able to recover quickly from difficulties"
 - **Back**: "Resilient"
 - **Example sentences**:
@@ -217,6 +235,7 @@ Feedback includes:
   - "The resilient community rebuilt after the disaster."
 
 **Exercise 6: Flashcards**
+
 - **Front**: "Introducing new ideas or methods"
 - **Back**: "Innovative"
 - **Example sentences**:

@@ -6,43 +6,22 @@ import {
 } from '@tanstack/react-query';
 
 import { useApiClient } from '../api';
-import { PracticeExercisesResponseSchema, SubmitResponseSchema } from './schemas';
-import { type PracticeExercise, type SubmitResponse } from './types';
-
-export {
-  PracticeExerciseSchema,
-  PracticeExercisesResponseSchema,
-  SubmitResponseSchema,
-} from './schemas';
-export type { PracticeExercise, SubmitResponse } from './types';
 
 const PRACTICE_EXERCISES_QUERY_KEY = ['practice-page', 'exercises'];
 
-export function usePracticeExercise(): PracticeExercise | null {
+export function usePracticeExercise() {
   const apiClient = useApiClient();
   const result = useSuspenseQuery(
     queryOptions({
       queryKey: PRACTICE_EXERCISES_QUERY_KEY,
       queryFn: async () => {
         try {
-          const response = await apiClient.get('/v1/practice/exercises', {
-            params: {
-              sort: '-practicedAt',
-              limit: 1,
-            },
-          });
-
-          const parsed = PracticeExercisesResponseSchema.safeParse(response.data);
-          if (!parsed.success) {
-            throw new Error('Invalid exercise response from server.');
-          }
-
-          return parsed.data.items;
+          const { items } = await apiClient.getPracticeExercise();
+          return items;
         } catch (error) {
           if (error instanceof Error) {
             throw error;
           }
-
           throw new Error('Unable to load exercise.');
         }
       },
@@ -61,20 +40,8 @@ export function useSubmitResponse() {
     }: {
       exerciseId: string;
       response: string;
-    }): Promise<SubmitResponse> => {
-      const result = await apiClient.post(
-        `/v1/practice/exercises/${exerciseId}/responses`,
-        {
-          response,
-        },
-      );
-
-      const parsed = SubmitResponseSchema.safeParse(result.data);
-      if (!parsed.success) {
-        throw new Error('Invalid response feedback from server.');
-      }
-
-      return parsed.data;
+    }) => {
+      return apiClient.submitPracticeResponse(exerciseId, response);
     },
   });
 

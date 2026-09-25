@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
+import type { PracticeExercise, SubmitResponse } from '../../../api/types';
 import { useErrorHandler } from '../../../error';
-import type { PracticeExercise, SubmitResponse } from '../../hooks';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from './utils';
 

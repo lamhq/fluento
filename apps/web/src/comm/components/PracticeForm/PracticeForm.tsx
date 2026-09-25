@@ -16,8 +16,8 @@ import {
   InputGroupTextarea,
 } from '@/components/ui/input-group';
 
+import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
-import type { PracticeExercise } from '../../hooks';
 import ResponseFeedback from '../ResponseFeedback';
 import { usePracticeForm } from './usePracticeForm';
 

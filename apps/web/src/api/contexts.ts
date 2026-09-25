@@ -1,4 +1,5 @@
-import type { AxiosInstance } from 'axios';
 import { createContext } from 'react';
 
-export const ApiClientContext = createContext<AxiosInstance | null>(null);
+import type { ApiClient } from './types';
+
+export const ApiClientContext = createContext<ApiClient | null>(null);
