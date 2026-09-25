@@ -18,45 +18,16 @@ Vocabulary structure:
 
 ```json
 {
+  "name": "Present",
+  "skill": "vocabulary",
+  "format": "word",
+  "topics": ["Time", "Daily Life"],
   "word": "present",
-  "meanings": [
-    {
-      "context": "Current Time",
-      "grammatical_category": "Noun",
-      "definition": "The current period or moment occurring right now.",
-      "example_sentence": "Focus on the present rather than worrying about what might happen tomorrow."
-    },
-    {
-      "context": "Physical Presence & Attendance",
-      "grammatical_category": "Adjective",
-      "definition": "Being in a specific place or attending an event, rather than absent.",
-      "example_sentence": "All students were present in the classroom for the history lecture."
-    },
-    {
-      "context": "Gifts & Tokens",
-      "grammatical_category": "Noun",
-      "definition": "A gift given to someone to express gratitude or celebrate an occasion.",
-      "example_sentence": "She wrapped the birthday present in colorful paper and tied it with a bow."
-    },
-    {
-      "context": "Formally Showing or Giving",
-      "grammatical_category": "Verb",
-      "definition": "Formally giving, handing over, or awarding something to someone.",
-      "example_sentence": "The mayor will present the bravery award to the local firefighter."
-    },
-    {
-      "context": "Speeches, Demonstrations & Performance",
-      "grammatical_category": "Verb",
-      "definition": "Formally explaining, pitching, or showing an idea or project to an audience.",
-      "example_sentence": "Our team will present the new quarterly sales strategy to the executives tomorrow."
-    },
-    {
-      "context": "Introducing People",
-      "grammatical_category": "Verb",
-      "definition": "Formally introducing one person to another or bringing someone onto a stage.",
-      "example_sentence": "May I present our keynote speaker for this evening's gala?"
-    }
-  ]
+  "meaning": "The current period or moment occurring right now.",
+  "example_sentences": [
+    "Focus on the present rather than worrying about what might happen tomorrow."
+  ],
+  "clues": ["now", "current", "moment", "today"]
 }
 ```
 

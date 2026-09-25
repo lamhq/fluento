@@ -63,7 +63,6 @@ flowchart TD
 - The app shows feedback with an overall score and actionable suggestions appropriate to the exercise type.
 - The learner can retry after evaluation, and the response input resets.
 - The learner can move to the next exercise if it is new.
-- The app tracks exercise IDs for 24 hours to avoid repeats.
 - If no exercise is available, the app shows an empty state.
 - If the backend fails, the app shows a retry message.
 
