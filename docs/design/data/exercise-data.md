@@ -101,7 +101,7 @@
   - Travel
 - word: customs
 - meaning: The official procedures and formalities required by a country when entering or leaving it (hải quan).
-- example_sentences:
+- sentences:
   - "At customs, they're going to ask for your passport and stamp it."
 - clues:
   - passport
@@ -120,7 +120,7 @@
   - Travel
 - word: security
 - meaning: The area where you have to get checked before entering the secure part of an airport (an ninh).
-- example_sentences:
+- sentences:
   - "At security, they'll check your bags and ask you to remove your shoes."
 - clues:
   - screening
@@ -139,7 +139,7 @@
   - Travel
 - word: baggage claim
 - meaning: The area in an airport where passengers collect their checked luggage after a flight (nhận hành lý).
-- example_sentences:
+- sentences:
   - "After landing, head to baggage claim to pick up your suitcase."
 - clues:
   - luggage
@@ -158,7 +158,7 @@
   - Travel
 - word: check-in counter
 - meaning: The area in an airport where passengers go to check in for their flight and drop off their luggage (quầy làm thủ tục).
-- example_sentences:
+- sentences:
   - "I need to go to the check-in counter to get my boarding pass."
 - clues:
   - check-in
@@ -177,7 +177,7 @@
   - Travel
 - word: self check-in
 - meaning: The process where passengers check in for their flight and print their boarding passes using automated kiosks at the airport (tự làm thủ tục).
-- example_sentences:
+- sentences:
   - "I prefer using the self check-in kiosks to save time."
 - clues:
   - kiosk
@@ -197,14 +197,14 @@
   - Job Interview
   - Software Engineering
 - prompts:
-  - Tell the interviewer about your educational background.
-- sentences:
-  - "I studied computer science at university and had a bachelor's degree."
+  - Describe your educational background using provided words.
 - words:
   - study
   - computer science
   - university
   - bachelor's degree
+- validResponses:
+  - "I studied computer science at university and had a bachelor's degree."
 
 ### Describe work experiences
 
@@ -215,9 +215,7 @@
   - Job Interview
   - Software Engineering
 - prompts:
-  - Describe your work experience to the interviewer.
-- sentences:
-  - "I have over 10 years of experience in software development. For the past 6 years, I've worked as a tech lead, managing development teams, and doing hands-on coding."
+  - Describe your work experience to the interviewer using provided words.
 - words:
   - over / more than
   - 10 years
@@ -225,6 +223,8 @@
   - tech lead
   - manage
   - coding
+- validResponses:
+  - "I have over 10 years of experience in software development. For the past 6 years, I've worked as a tech lead, managing development teams, and doing hands-on coding."
 
 ### Describe job expertise
 
@@ -235,9 +235,7 @@
   - Job Interview
   - Software Engineering
 - prompts:
-  - Tell the interviewer about your technical skills and areas of expertise.
-- sentences:
-  - "I specialize in web and backend development using React, Node.js, TypeScript, Python, Cloud computing, and DevOps, and I have experience with Cloud computing and DevOps practices."
+  - Describe your skills and areas of expertise using provided words.
 - words:
   - web
   - backend
@@ -246,6 +244,8 @@
   - TypeScript
   - Cloud computing
   - DevOps
+- validResponses:
+  - "I specialize in web and backend development using React, Node.js, TypeScript, Python, Cloud computing, and DevOps, and I have experience with Cloud computing and DevOps practices."
 
 ### Describe your strengths
 
@@ -256,16 +256,16 @@
   - Job Interview
   - Software Engineering
 - prompts:
-  - Tell the interviewer about your strengths.
-- sentences:
-  - I'm capable of working solo in a whole project or collaborating effectively within a team.
-  - With my technical skills and carefulness, I can deliver high-quality work while meeting deadlines consistently.
-  - I work well with others. I enjoy building positive relationships with teammates. I can connect with people and help them solve problems to keep projects moving smoothly.
+  - Describe your strengths using provided words.
 - words:
   - work solo
   - high-quality
   - meeting deadlines
   - problem-solving
+- validResponses:
+  - "I'm capable of working solo in a whole project or collaborating effectively within a team."
+  - "With my technical skills and carefulness, I can deliver high-quality work while meeting deadlines consistently."
+  - "I work well with others. I enjoy building positive relationships with teammates. I can connect with people and help them solve problems to keep projects moving smoothly."
 
 ### Mid-Autumn Festival Introduction
 
