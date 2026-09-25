@@ -22,7 +22,7 @@ Feedback includes:
     - **Feedback**: correctness feedback
     - **Grammar/spelling fixes**
     - **Corrected sentence**
-- **Meaning Preservation**: check if the rewritten paragraph preserves the original meaning
+- **Appropriateness**: check if the rewritten paragraph preserves the original meaning
   - **Score** (x/100)
   - **Feedback**: how well the overall meaning and structure are preserved
 
@@ -33,7 +33,7 @@ Prompt for getting feedback for learner's response:
 ```md
 ## Task
 
-Review the rewritten paragraph and give feedback on correctness and meaning preservation.
+Review the rewritten paragraph and give feedback on correctness and appropriateness.
 
 ## Inputs
 
@@ -50,7 +50,7 @@ Review the rewritten paragraph and give feedback on correctness and meaning pres
     - **Feedback**: correctness feedback
     - **Grammar/spelling fixes**
     - **Corrected sentence**
-- **Meaning Preservation**: check if the rewritten paragraph preserves the original meaning
+- **Appropriateness**: check if the rewritten paragraph preserves the original meaning
   - **Score** (x/100)
   - **Feedback**: how well the overall meaning and structure are preserved
 ```
@@ -63,4 +63,4 @@ Review the rewritten paragraph and give feedback on correctness and meaning pres
 - **Example learner input**: "Beautiful weather inspired me to visit the park, where I unexpectedly encountered an old friend among the many people enjoying the day."
 - **App feedback**:
   - Correctness: 95/100 (Well-structured and grammatically sound)
-  - Meaning Preservation: 92/100 (All main ideas preserved in condensed form)
+  - Appropriateness: 92/100 (All main ideas preserved in condensed form)

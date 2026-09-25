@@ -20,7 +20,7 @@ Feedback includes:
   - **Feedback**: correctness feedback
   - **Grammar/spelling fixes**
   - **Corrected sentence**
-- **Meaning Preservation**: check if the rewritten sentence preserves the original meaning
+- **Appropriateness**: check if the rewritten sentence preserves the original meaning
   - **Score** (x/100)
   - **Feedback**: how well the meaning is preserved
 - **Alternatives**: three sentences that feel more fluid and natural
@@ -33,7 +33,7 @@ Feedback includes:
 - **Example learner input**: "The movie was really enjoyable."
 - **App feedback**:
   - Correctness: 96/100 (Well-formed sentence)
-  - Meaning Preservation: 95/100 (Meaning is well preserved with slight nuance change)
+  - Appropriateness: 95/100 (Meaning is well preserved with slight nuance change)
 
 **Exercise 4: Sentence Variation**
 
@@ -41,7 +41,7 @@ Feedback includes:
 - **Example learner input**: "She prepared thoroughly by studying for the exam."
 - **App feedback**:
   - Correctness: 94/100 (Good grammar, slightly verbose)
-  - Meaning Preservation: 88/100 (Meaning preserved but added concept of "thoroughly")
+  - Appropriateness: 88/100 (Meaning preserved but added concept of "thoroughly")
 
 ## Prompts
 
@@ -50,7 +50,7 @@ Prompt for getting feedback for learner's response:
 ```md
 ## Task
 
-Review the rewritten sentence and give feedback on correctness and meaning preservation.
+Review the rewritten sentence and give feedback on correctness and appropriateness.
 
 ## Inputs
 
@@ -65,7 +65,7 @@ Review the rewritten sentence and give feedback on correctness and meaning prese
   - **Feedback**: correctness feedback
   - **Grammar/spelling fixes**
   - **Corrected sentence**
-- **Meaning Preservation**: check if the rewritten sentence preserves the original meaning
+- **Appropriateness**: check if the rewritten sentence preserves the original meaning
   - **Score** (x/100)
   - **Feedback**: how well the meaning is preserved
 - **Alternatives**: three sentences that feel more fluid and natural

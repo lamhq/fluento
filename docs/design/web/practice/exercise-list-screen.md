@@ -20,17 +20,17 @@
 ├────────────────────────────────────────────────────────────────────────┤
 │ Filter Panel (Collapsed/Expanded)                                      │
 │ ┌──────────────────────────────────────────────────────────┐           │
-│ │ Scenario: [____________]                                 │           │
-│ │ Topics: [Conversation ▼] [Grammar ▼]                     │           │
-│ │ Status: [Active ▼]                                       │           │
+│ │ name: [__________________]                               │           │
+│ │ skill: [Communication ▼]  format: [Sentence ▼]           │           │
+│ │ topics: [Conversation ▼]  status: [Active ▼]             │           │
 │ │ [Clear Filters]                                          │           │
 │ └──────────────────────────────────────────────────────────┘           │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Scenario  │ Topics       │ Date Created   │ Status   │ Actions         │
+│ name      │ skill        │ format         │ topics   │ status          │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Coffee... │ Vocabulary   │ Jan 15, 2024   │ Active   │ [Edit] [Delete] │
-│ Meeting   │ Grammar,...  │ Jan 10, 2024   │ Active   │ [Edit] [Delete] │
-│ Doctor    │ Listening    │ Jan 8, 2024    │ Archived │ [Edit] [Delete] │
+│ Coffee... │ communication│ sentence       │ Food     │ active          │
+│ Verb forms│ vocabulary   │ word           │ Grammar  │ active          │
+│ Listen... │ articulation │ sentence       │ Speaking │ archived        │
 ├────────────────────────────────────────────────────────────────────────┤
 │ Rows per page: [10 ▼]   1 - 10 of 45                                   │
 │ [< 1 2 3 ... >]                                                        │
@@ -49,10 +49,20 @@
 
 ### Filter Panel
 
-- **Scenario Filter**:
-  - Label: "Scenario"
-  - Input: Text field (placeholder: "Contain word...")
+- **name Filter**:
+  - Label: "name"
+  - Input: Text field (placeholder: "Search by name...")
   - Behavior: Case-insensitive, partial match, 500ms debounce
+
+- **skill Filter**:
+  - Label: "skill"
+  - Input: Single-select dropdown
+  - Behavior: Match one skill value
+
+- **format Filter**:
+  - Label: "format"
+  - Input: Single-select dropdown
+  - Behavior: Match one format value
 
 - **Topics Filter**:
   - Label: "Topics"
@@ -68,13 +78,15 @@
 
 ### Table Columns
 
-| Column       | Data Type | Sortable | Notes                                        |
-| ------------ | --------- | -------- | -------------------------------------------- |
-| Scenario     | String    | Yes      | Exercise scenario or title                   |
-| Topics       | Array     | No       | Comma-separated list of topics; not sortable |
-| Date Created | Date      | Yes      | Format: MMM DD, YYYY                         |
-| Status       | Enum      | Yes      | Active or Archived badge                     |
-| Actions      | Buttons   | No       | Edit and Delete buttons for each row         |
+| Column    | Data Type | Sortable | Notes                                        |
+| --------- | --------- | -------- | -------------------------------------------- |
+| name      | String    | Yes      | Exercise name                                |
+| skill     | String    | Yes      | Skill practiced by the exercise              |
+| format    | String    | Yes      | Exercise format                              |
+| topics    | Array     | No       | Comma-separated list of topics; not sortable |
+| createdAt | Date      | Yes      | Exercise creation timestamp                  |
+| status    | String    | Yes      | `active` or `archived`                       |
+| Actions   | Buttons   | No       | Edit and Delete buttons for each row         |
 
 ### Pagination Controls
 
@@ -93,14 +105,14 @@
 ### Filter Panel Interactions
 
 - **Toggle Filters**: Click filter icon → expand/collapse filter panel
-- **Scenario Text Input**:
+- **name Text Input**:
   - Type characters → wait 500ms after last keystroke → fetch filtered data
   - Clear input → immediately refresh list
 
 - **Topic Multi-Select**:
   - Click dropdown → show topic list with checkboxes
   - Select/deselect topics → immediately refresh list
-  - Show count badge: "Topics (2)" when filters applied
+  - Show count badge: "topics (2)" when filters applied
 
 - **Status Single-Select**:
   - Click dropdown → show status options
@@ -148,7 +160,7 @@
 ### APIs Required
 
 - `GET /manage/exercises`: Fetch paginated, filtered, sorted exercise list
-  - Query params: `page`, `pageSize`, `scenario`, `topics`, `status`, `sortBy`, `sortOrder`
+  - Query params: `page`, `pageSize`, `name`, `skill`, `format`, `topics`, `status`, `sortBy`, `sortOrder`
   - Response: Paginated list of exercises + total count
 
 - `GET /topics`: Fetch available topics for topic filter dropdown
@@ -190,7 +202,7 @@
 
 - **Optimization**:
   - Cancel in-flight requests when filters change
-  - Debounce scenario text input (500ms)
+  - Debounce name text input (500ms)
 
 ## Security Considerations
 

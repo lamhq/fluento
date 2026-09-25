@@ -121,7 +121,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 
 | **Date**   | **Version** | **Changes**                                                                                                                    |
 | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-08-13 | v1.0        | Initial release of the endpoint for communication practice scenarios.                                                          |
+| 2026-08-13 | v1.0        | Initial release of the endpoint.                                                                                               |
 | 2026-08-13 | v1.1        | Added sorting support, including `practicedAt`, and pagination parameters `limit` and `offset`.                                |
 | 2026-08-28 | v1.2        | Restricted learner-facing practice responses to active exercises only; archived exercises are filtered out from this endpoint. |
 | 2026-08-31 | v1.3        | Migrated pagination to the cursor-based contract using `cursor` and `pagination` metadata.                                     |

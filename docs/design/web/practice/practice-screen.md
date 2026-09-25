@@ -1,28 +1,28 @@
-# Practice Communication Screen
+# Practice Exercise Screen
 
 ## Introduction
 
-- **Purpose**: Help a learner practice responding to a scenario-based communication prompt and receive actionable feedback on clarity, tone, and correctness.
-- **Context**: This screen is the main practice flow where learners read a prompt, write a response, and review feedback.
+- **Purpose**: Help a learner complete an exercise and receive actionable feedback on the skills evaluated by that exercise.
+- **Context**: This screen is the main practice flow where learners review an exercise, provide a response in the required format, and review feedback.
 - **Key goals**:
-  - Display a realistic communication scenario and prompt.
-  - Let the learner submit a response for evaluation.
-  - Show a feedback summary with corrections and example alternatives.
+  - Display the exercise prompt, context, and response requirements.
+  - Let the learner submit a response using the exercise's supported input.
+  - Show a feedback summary with exercise-appropriate corrections, explanations, or examples.
   - Allow the learner to retry or move to the next exercise without repetition.
 
 ## Wireframes & Mockups
 
 ```text
 +---------------------------------------------------------------+
-| Ordering food in a restaurant                                 |
+| Exercise title                                                |
 |---------------------------------------------------------------|
-| You're a customer ordering food in a restaurant               |
+| Exercise context and instructions                             |
 |                                                               |
-| Waiter said:                                                  |
-| "What would you like to order?"                               |
+| Prompt:                                                        |
+| Complete the exercise as instructed.                          |
 |                                                               |
-| Response in a polite manner:                                  |
-| [ input for learner response ]                                |
+| Response:                                                      |
+| [ input appropriate to the exercise ]                         |
 |---------------------------------------------------------------|
 |                     [ Submit ]  [ Next ]                      |
 +---------------------------------------------------------------+
@@ -32,33 +32,31 @@ After submission:
 
 ```text
 +------------------------------------------------------------------+
-| 🌟 Excellent work!                                           95% |
+| Excellent work!                                            95% |
 |------------------------------------------------------------------|
-| Your response was clear and polished.                            |
+| Your response met the exercise requirements.                    |
 |                                                                  |
-| Corrected sentence:                                              |
-| "Let's meet tomorrow to discuss the project."                    |
+| Suggested correction, if available:                             |
+| "Example of an improved response."                             |
 |                                                                  |
-| What to improve:                                                 |
-| - "Lets" → "Let's"                                               |
+| What to improve:                                                |
+| - Review the feedback for the evaluated skill.                  |
 |                                                                  |
-| You can say:                                                     |
-| - "I'd be happy to meet tomorrow to talk about the project."     |
-| - "Tomorrow works well for me. Let's discuss the details then."  |
-| - "Sure, let's meet tomorrow to go over the project."            |
+| Example responses, if available:                               |
+| - "Example response appropriate to this exercise."             |
 +------------------------------------------------------------------+
 ```
 
 ## Displayed Information
 
 - **Exercise metadata**:
-  - Learner role (e.g., customer, employee, student).
-  - Scenario context (e.g., ordering food, asking for a meeting, making a complaint).
-  - Counterpart role (e.g., waiter, manager, teammate).
-  - Exercise prompt text.
+  - Exercise title or topic.
+  - Exercise type and learning goal.
+  - Context or supporting instructions, when required.
+  - Exercise prompt and response requirements.
 - **Response input**:
-  - Label describing the required tone or style.
-  - Multi-line text area for the learner's answer.
+  - Input control appropriate to the exercise type.
+  - Label and instructions describing the expected response.
 - **Action buttons**:
   - Submit response.
   - Retry response (shown after submission).
@@ -66,17 +64,17 @@ After submission:
 - **Feedback panel** (after submission):
   - A feedback icon and status message appear together in the header.
   - The numeric score sits on the far right of the header.
-  - Corrected sentence, if available.
-  - Specific grammar or phrasing improvements.
-  - Suggested alternative responses.
+  - Corrected response, if available.
+  - Specific improvements for the evaluated skill.
+  - Suggested examples or alternative responses, if available.
 - **Data source**:
-  - Exercise content and evaluation results are loaded from the communication exercise API.
+  - Exercise content and evaluation results are loaded from the practice exercise APIs.
 
 ## User Interactions
 
 - **Submit response**:
   - When the learner taps or clicks Submit, the app validates that the response is not empty.
-  - The app sends the response to the response submission API.
+  - The app sends the response to the response submission API with the exercise ID and response format.
   - The feedback returned by the backend is rendered in the feedback panel.
 - **Retry**:
   - When the learner clicks Retry, the response input is cleared and the feedback panel is reset.
@@ -86,13 +84,13 @@ After submission:
 
 ## Exercise selection logic
 
-- See the [Feature Specification Document](../../../requirements/communication/practice-communication.md#exercise-selection-logic).
+- See the [Submit Exercise Response Feature Specification](../../../requirements/practice/submit-response.md#exercise-selection-logic).
 
 ## Error Handling
 
 - **User errors**:
   - Empty response: show "Please enter a response before submitting."
-  - Irrelevant response: show a brief validation prompt and allow the learner to revise.
+  - Invalid response for the exercise: show a brief validation prompt and allow the learner to revise.
 - **System errors**:
   - Exercise fetch fails: show "We couldn't load the exercise. Please try again."
   - Submission fails due to network or backend issues: show "Your response could not be submitted. Please retry."
@@ -102,18 +100,18 @@ After submission:
 
 - **Response input**:
   - The response must not be empty after trimming whitespace.
-  - The response should be submitted as plain text.
-  - Maximum length is 150 characters.
+  - The response must match the input and validation requirements of the exercise type.
+  - Length, format, and required fields are defined by the exercise type.
 
 ## Dependencies & Integration
 
 - **Get exercises API**:
-  - return a list of exercises.
+  - return a list of exercises with their input and evaluation requirements.
   - allow specifying sort order, including last practice order.
   - allow specifying a limit and offset for pagination.
 - **Submit response API**:
   - accept a response for evaluation.
-  - Evaluate the learner's response and return score, corrections, and suggestions.
+  - Evaluate the learner's response and return an overall score, feedback, and exercise-specific corrections or suggestions.
 
 ## Authentication & Authorization
 
@@ -140,7 +138,7 @@ After submission:
 ## Responsiveness
 
 - **Mobile**:
-  - The prompt and text area stack vertically with sufficient spacing for touch input.
+  - The prompt and response input stack vertically with sufficient spacing for touch input.
   - Buttons are larger and remain reachable without horizontal scrolling.
 - **Tablet**:
   - Content width remains readable with moderate padding and a centered layout.
@@ -162,5 +160,5 @@ After submission:
 
 ## Analytics & Tracking
 
-- Track screen view when the practice communication screen loads.
+- Track screen view when the practice exercise screen loads.
 - Track response submission success and failure events.

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Retrieve a list of topics created by the user for categorizing and filtering communication exercises.
+Retrieve a list of topics created by the user for categorizing and filtering exercises.
 
 ## Contract
 
@@ -29,12 +29,12 @@ No query parameters are supported for this endpoint. All available topics are re
 [
   {
     "id": "topic_004",
-    "name": "Communication",
+    "name": "Travel",
     "createdAt": "2026-01-10T08:45:00Z"
   },
   {
     "id": "topic_003",
-    "name": "Grammar",
+    "name": "Airport",
     "createdAt": "2026-01-10T08:30:00Z"
   },
   {
@@ -44,12 +44,12 @@ No query parameters are supported for this endpoint. All available topics are re
   },
   {
     "id": "topic_002",
-    "name": "Speaking",
+    "name": "Food",
     "createdAt": "2026-01-10T08:15:00Z"
   },
   {
     "id": "topic_001",
-    "name": "Vocabulary",
+    "name": "Job Interview",
     "createdAt": "2026-01-10T08:00:00Z"
   }
 ]

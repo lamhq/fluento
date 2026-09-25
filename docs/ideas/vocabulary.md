@@ -92,7 +92,7 @@ Feedback includes:
   - **Feedback**: correctness feedback
   - **Grammar/spelling fixes**
   - **Corrected sentence**
-- **Vocabulary Usage**: check if the target word/phrase is used appropriately
+- **Appropriateness**: check if the target word/phrase is used appropriately
   - **Score** (x/100)
   - **Feedback**: how well the word/phrase is used in context
 - **Alternatives**: three sentences that feel more fluid and natural
@@ -106,7 +106,7 @@ Feedback includes:
 - **Example learner input**: "I believe our team is resilient and can overcome this challenge."
 - **App feedback**:
   - Correctness: 98/100 (Perfect grammar and spelling)
-  - Vocabulary Usage: 95/100 (Word used appropriately in professional context)
+  - Appropriateness: 95/100 (Word used appropriately in professional context)
 
 **Exercise 2: Using Word**
 
@@ -115,7 +115,7 @@ Feedback includes:
 - **Example learner input**: "That's such a innovative idea for the project."
 - **App feedback**:
   - Correctness: 92/100 (Minor article error: "an" instead of "a")
-  - Vocabulary Usage: 96/100 (Word used correctly and naturally)
+  - Appropriateness: 96/100 (Word used correctly and naturally)
 
 ### Prompts
 
@@ -136,7 +136,7 @@ A list of context names with short descriptions, starting with the most popular.
 ```md
 ## Task
 
-Review the sentence and give feedback on correctness and vocabulary usage.
+Review the sentence and give feedback on correctness and appropriateness.
 
 ## Inputs
 
@@ -152,7 +152,7 @@ Review the sentence and give feedback on correctness and vocabulary usage.
   - **Feedback**: correctness feedback
   - **Grammar/spelling fixes**
   - **Corrected sentence**
-- **Vocabulary Usage**: check if the target word/phrase is used appropriately
+- **Appropriateness**: check if the target word/phrase is used appropriately
   - **Score** (x/100)
   - **Feedback**: how well the word/phrase is used in context
 - **Alternatives**: three sentences that feel more fluid and natural
@@ -173,10 +173,13 @@ Review the sentence and give feedback on correctness and vocabulary usage.
 
 Feedback includes:
 
-- **Result**: Correct or Wrong
-- **Target word/phrase**: the correct answer
-- **Meaning**: definition of the target word/phrase
-- **Example sentences**: three sentences demonstrating the word/phrase in context
+- **Score** (x/100)
+- **Feedback**: overall feedback
+- **Correctness**: whether the guessed word/phrase matches the target answer
+  - **Score** (x/100)
+  - **Feedback**: correctness feedback
+
+The target word, meaning, and example sentences are exercise content shown as part of the result, not feedback fields stored on the attempt.
 
 ### Example Practices
 
@@ -185,18 +188,18 @@ Feedback includes:
 - **Clues**: "endure", "adapt", "tough", "bounce"
 - **Target word**: resilient
 - **App feedback**:
-  - Result: Correct ✓
-  - Meaning: Able to recover quickly from difficulties
-  - Example sentences: "She remained resilient in the face of adversity." / "The resilient community rebuilt after the disaster."
+  - Score: 100/100
+  - Feedback: Correct answer.
+  - Correctness: 100/100 (The guessed word matches the target.)
 
 **Exercise 4: Just One Word**
 
 - **Clues**: "new ideas", "novel", "creative", "advanced"
 - **Target word**: innovative
 - **App feedback**:
-  - Result: Correct ✓
-  - Meaning: Introducing new ideas or methods
-  - Example sentences: "The company is known for its innovative products." / "Her innovative approach solved the problem."
+  - Score: 100/100
+  - Feedback: Correct answer.
+  - Correctness: 100/100 (The guessed word matches the target.)
 
 ### Prompts
 
@@ -220,9 +223,13 @@ Give me 4 words (clues) for guessing the word "present" in a Just One Word exerc
 
 Feedback includes:
 
-- **Word/phrase**: the target vocabulary
-- **Meaning**: definition shown on the front of the card
-- **Example sentences**: contextual examples demonstrating usage
+- **Score** (x/100)
+- **Feedback**: overall feedback
+- **Correctness**: whether the learner recalled or recognized the target word/phrase
+  - **Score** (x/100)
+  - **Feedback**: correctness feedback
+
+The word/phrase, meaning, and example sentences are exercise content shown on the card, not feedback fields stored on the attempt.
 
 ### Example Practices
 

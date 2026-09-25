@@ -125,6 +125,6 @@ Submit a learner's written response in an exercise for evaluation and return act
 
 ## Changelog
 
-| Date       | Version | Changes                                                 |
-| ---------- | ------- | ------------------------------------------------------- |
-| 2026-08-13 | v1.0    | Initial release of the communication response endpoint. |
+| Date       | Version | Changes                          |
+| ---------- | ------- | -------------------------------- |
+| 2026-08-13 | v1.0    | Initial release of the endpoint. |

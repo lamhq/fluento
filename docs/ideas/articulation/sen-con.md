@@ -20,7 +20,7 @@ Feedback includes:
   - **Feedback**: correctness feedback
   - **Grammar/spelling fixes**
   - **Corrected sentence**
-- **Completeness**: check if all required words are used
+- **Appropriateness**: check if all required words are used appropriately
   - **Score** (x/100)
   - **Feedback**: which words are missing or improperly used
 - **Alternatives**: three sentences that feel more fluid and natural
@@ -33,7 +33,7 @@ Feedback includes:
 - **Example learner input**: "I hope to travel soon."
 - **App feedback**:
   - Correctness: 98/100 (Perfect grammar and spelling)
-  - Completeness: 100/100 (All words used correctly)
+  - Appropriateness: 100/100 (All words used correctly)
 
 **Exercise 2: Sentence Construction**
 
@@ -41,7 +41,7 @@ Feedback includes:
 - **Example learner input**: "The beautiful flowers in the garden are blooming."
 - **App feedback**:
   - Correctness: 97/100 (Excellent structure and grammar)
-  - Completeness: 100/100 (All words incorporated well)
+  - Appropriateness: 100/100 (All words incorporated well)
 
 ## Prompts
 
@@ -50,7 +50,7 @@ Prompt for getting feedback for learner's response:
 ```md
 ## Task
 
-Review the provided sentence and give feedback on correctness and word usage.
+Review the provided sentence and give feedback on correctness and appropriateness.
 
 ## Inputs
 
@@ -65,7 +65,7 @@ Review the provided sentence and give feedback on correctness and word usage.
   - **Feedback**: correctness feedback
   - **Grammar/spelling fixes**
   - **Corrected sentence**
-- **Completeness**: check if all required words are used
+- **Appropriateness**: check if all required words are used appropriately
   - **Score** (x/100)
   - **Feedback**: which words are missing or improperly used
 - **Alternatives**: three sentences that feel more fluid and natural
