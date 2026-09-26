@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { ContentModule } from '../content/content.module';
 import {
-  Exercise,
+  ExerciseModel,
   ExerciseSchema,
 } from '../content/infrastructure/exercise.schema';
 import { PracticeService } from './core/practice.service';
@@ -12,14 +12,14 @@ import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repositor
 import { RESPONSE_EVALUATION_PORT } from './core/response-evaluation.port';
 import { ResponseEvaluationService } from './core/response-evaluation.service';
 import {
-  LearnerExerciseProgress,
+  LearnerExerciseProgressModel,
   LearnerExerciseProgressSchema,
 } from './infrastructure/learner-exercise-progress.schema';
 import { MgPracticeAttemptRepository } from './infrastructure/mg-practice-attempt.repository';
 import { MgPracticeExerciseRepository } from './infrastructure/mg-practice-exercise.repository';
 import { OpenAIEvaluationService } from './infrastructure/openai-evaluation.service';
 import {
-  PracticeAttempt,
+  PracticeAttemptModel,
   PracticeAttemptSchema,
 } from './infrastructure/practice-attempt.schema';
 import { FindPracticeExercisesHttpController } from './interface/find-practice-exercises.http.controller';
@@ -29,12 +29,12 @@ import { SubmitResponseHttpController } from './interface/submit-response.http.c
   imports: [
     ContentModule,
     MongooseModule.forFeature([
-      { name: Exercise.name, schema: ExerciseSchema },
+      { name: ExerciseModel.name, schema: ExerciseSchema },
       {
-        name: LearnerExerciseProgress.name,
+        name: LearnerExerciseProgressModel.name,
         schema: LearnerExerciseProgressSchema,
       },
-      { name: PracticeAttempt.name, schema: PracticeAttemptSchema },
+      { name: PracticeAttemptModel.name, schema: PracticeAttemptSchema },
     ]),
   ],
   controllers: [

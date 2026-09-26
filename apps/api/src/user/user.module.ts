@@ -4,12 +4,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { USER_REPOSITORY } from './core/user.repository';
 import { UserService } from './core/user.service';
 import { MgUserRepository } from './infrastructure/mg-user.repository';
-import { User, UserSchema } from './infrastructure/schemas/user.schema';
+import { UserModel, UserSchema } from './infrastructure/schemas/user.schema';
 import { UserMiddleware } from './interface/user.middleware';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }]),
   ],
   providers: [
     UserService,

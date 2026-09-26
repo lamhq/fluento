@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
-export type PracticeAttemptDocument = HydratedDocument<PracticeAttempt>;
+export type PracticeAttemptDocument = HydratedDocument<PracticeAttemptModel>;
 
 @Schema({ _id: false })
 export class PracticeAttemptCorrectness {
@@ -64,7 +64,7 @@ export class PracticeAttemptAppropriateness {
 }
 
 @Schema({ timestamps: true, collection: 'practice_attempts' })
-export class PracticeAttempt {
+export class PracticeAttemptModel {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   userId: mongoose.Types.ObjectId;
 
@@ -95,7 +95,7 @@ export class PracticeAttempt {
 }
 
 export const PracticeAttemptSchema =
-  SchemaFactory.createForClass(PracticeAttempt);
+  SchemaFactory.createForClass(PracticeAttemptModel);
 
 PracticeAttemptSchema.index({ userId: 1, exerciseId: 1 });
 PracticeAttemptSchema.index({ createdAt: -1 });

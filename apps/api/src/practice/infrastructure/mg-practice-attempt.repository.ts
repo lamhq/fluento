@@ -5,15 +5,15 @@ import { Model } from 'mongoose';
 import { PracticeAttemptEntity } from '../core/practice-attempt.entity';
 import { PracticeAttemptRepository } from '../core/practice-attempt.repository';
 import {
-  PracticeAttempt,
   PracticeAttemptDocument,
+  PracticeAttemptModel,
 } from './practice-attempt.schema';
 
 @Injectable()
 export class MgPracticeAttemptRepository implements PracticeAttemptRepository {
   constructor(
-    @InjectModel(PracticeAttempt.name)
-    private readonly practiceAttemptModel: Model<PracticeAttempt>,
+    @InjectModel(PracticeAttemptModel.name)
+    private readonly practiceAttemptModel: Model<PracticeAttemptModel>,
   ) {}
 
   async create(data: PracticeAttemptEntity): Promise<PracticeAttemptEntity> {

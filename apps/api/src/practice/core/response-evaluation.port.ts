@@ -13,9 +13,9 @@ export const FeedbackEvaluationSchema = z.object({
       score: z.number().min(0).max(100).describe('Correctness score (0-100).'),
       feedback: z.string().describe('Correctness feedback. Max 20 words.'),
       fixes: z.array(z.string()).describe('List of grammar/spelling fixes.'),
-      correctedSentence: z
+      correctedResponse: z
         .string()
-        .describe('Corrected version of the sentence.'),
+        .describe('Corrected version of the response.'),
     })
     .describe("Check spelling & grammar of learner's response."),
   appropriateness: z

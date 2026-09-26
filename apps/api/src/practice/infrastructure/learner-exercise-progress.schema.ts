@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
 export type LearnerExerciseProgressDocument =
-  HydratedDocument<LearnerExerciseProgress>;
+  HydratedDocument<LearnerExerciseProgressModel>;
 
 @Schema({ timestamps: true, collection: 'learner_exercise_progress' })
-export class LearnerExerciseProgress {
+export class LearnerExerciseProgressModel {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   userId: mongoose.Types.ObjectId;
 
@@ -27,7 +27,7 @@ export class LearnerExerciseProgress {
 }
 
 export const LearnerExerciseProgressSchema = SchemaFactory.createForClass(
-  LearnerExerciseProgress,
+  LearnerExerciseProgressModel,
 );
 
 LearnerExerciseProgressSchema.index(

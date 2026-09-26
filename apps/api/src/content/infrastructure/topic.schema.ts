@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
-export type TopicDocument = HydratedDocument<Topic>;
+export type TopicDocument = HydratedDocument<TopicModel>;
 
 @Schema({ timestamps: true, collection: 'topics' })
-export class Topic {
+export class TopicModel {
   @Prop({ required: true, index: true })
   name: string;
 
@@ -15,4 +15,4 @@ export class Topic {
   updatedAt: Date;
 }
 
-export const TopicSchema = SchemaFactory.createForClass(Topic);
+export const TopicSchema = SchemaFactory.createForClass(TopicModel);

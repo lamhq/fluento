@@ -4,12 +4,13 @@ import { Model } from 'mongoose';
 
 import { TopicEntity } from '../core/topic.entity';
 import { TopicQuery, TopicRepository } from '../core/topic.repository';
-import { Topic, TopicDocument } from './topic.schema';
+import { TopicDocument, TopicModel } from './topic.schema';
 
 @Injectable()
 export class MgTopicRepository implements TopicRepository {
   constructor(
-    @InjectModel(Topic.name) private readonly topicModel: Model<Topic>,
+    @InjectModel(TopicModel.name)
+    private readonly topicModel: Model<TopicModel>,
   ) {}
 
   async findAll(query?: TopicQuery): Promise<TopicEntity[]> {

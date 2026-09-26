@@ -3,10 +3,10 @@ import mongoose, { HydratedDocument } from 'mongoose';
 
 import { ExerciseStatus } from '../core/exercise.entity';
 
-export type ExerciseDocument = HydratedDocument<Exercise>;
+export type ExerciseDocument = HydratedDocument<ExerciseModel>;
 
 @Schema({ timestamps: true, collection: 'exercises' })
-export class Exercise {
+export class ExerciseModel {
   @Prop({ required: true })
   name: string;
 
@@ -69,4 +69,4 @@ export class Exercise {
   updatedAt: Date;
 }
 
-export const ExerciseSchema = SchemaFactory.createForClass(Exercise);
+export const ExerciseSchema = SchemaFactory.createForClass(ExerciseModel);

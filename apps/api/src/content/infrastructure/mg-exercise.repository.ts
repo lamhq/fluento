@@ -8,12 +8,13 @@ import {
   ExerciseSkill,
 } from '../core/exercise.entity';
 import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository';
-import { Exercise, ExerciseDocument } from './exercise.schema';
+import { ExerciseDocument, ExerciseModel } from './exercise.schema';
 
 @Injectable()
 export class MgExerciseRepository implements ExerciseRepository {
   constructor(
-    @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
+    @InjectModel(ExerciseModel.name)
+    private readonly exerciseModel: Model<ExerciseModel>,
   ) {}
 
   async create(data: ExerciseEntity): Promise<ExerciseEntity> {
@@ -76,8 +77,8 @@ export class MgExerciseRepository implements ExerciseRepository {
     }
   }
 
-  private buildFilter(query: ExerciseQuery): FilterQuery<Exercise> {
-    const filter: FilterQuery<Exercise> = {};
+  private buildFilter(query: ExerciseQuery): FilterQuery<ExerciseEntity> {
+    const filter: FilterQuery<ExerciseEntity> = {};
 
     if (query.userId) {
       filter.userId = new Types.ObjectId(query.userId);

@@ -1,5 +1,5 @@
 import type { CursorPaginationResult } from '../../common/types/pagination';
-import { PracticeExerciseView } from './practice-exercise.view';
+import { ExerciseView } from './exercise.view';
 
 export const PRACTICE_EXERCISE_REPOSITORY = Symbol(
   'PracticeExerciseRepository',
@@ -19,7 +19,7 @@ export interface PracticeExerciseRepository {
   findAllForUser(
     userId: string,
     query?: PracticeExerciseQuery,
-  ): Promise<CursorPaginationResult<PracticeExerciseView>>;
+  ): Promise<CursorPaginationResult<ExerciseView>>;
 
   /*
    * Record learner practice for a given exercise.

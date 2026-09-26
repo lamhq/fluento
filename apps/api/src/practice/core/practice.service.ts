@@ -14,6 +14,7 @@ import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
 } from '../../content/core/exercise.repository';
+import { ExerciseView } from './exercise.view';
 import { PracticeAttemptEntity } from './practice-attempt.entity';
 import {
   PRACTICE_ATTEMPT_REPOSITORY,
@@ -24,7 +25,6 @@ import {
   type PracticeExerciseQuery,
   type PracticeExerciseRepository,
 } from './practice-exercise.repository';
-import { PracticeExerciseView } from './practice-exercise.view';
 import { ResponseEvaluationService } from './response-evaluation.service';
 
 @Injectable()
@@ -41,10 +41,10 @@ export class PracticeService {
     private readonly contextService: ContextService,
   ) {}
 
-  async findAllForUser(
+  async findExercises(
     userId?: string,
     query?: PracticeExerciseQuery,
-  ): Promise<CursorPaginationResult<PracticeExerciseView>> {
+  ): Promise<CursorPaginationResult<ExerciseView>> {
     const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
     return this.practiceExerciseRepository.findAllForUser(currentUserId, query);
   }

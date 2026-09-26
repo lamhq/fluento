@@ -53,7 +53,7 @@ describe('submit response', () => {
           score: expect.any(Number),
           feedback: expect.any(String),
           fixes: expect.any(Array),
-          correctedSentence: expect.any(String),
+          correctedResponse: expect.any(String),
         }),
         appropriateness: expect.objectContaining({
           score: expect.any(Number),
@@ -108,7 +108,7 @@ const fakeEvaluation = {
     score: 95,
     feedback: 'Correct and natural.',
     fixes: [],
-    correctedSentence: 'I was hoping you could give me a lift to the airport.',
+    correctedResponse: 'I was hoping you could give me a lift to the airport.',
   },
   appropriateness: {
     feedback: 'Well suited to the situation.',

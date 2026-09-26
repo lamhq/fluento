@@ -1,6 +1,6 @@
-import { PracticeExerciseView } from '../core/practice-exercise.view';
+import { ExerciseView } from '../core/exercise.view';
 
-export class PracticeExerciseResponseDto {
+export class ExerciseResponseDto {
   id: string;
   userId: string;
   name: string;
@@ -22,12 +22,12 @@ export class PracticeExerciseResponseDto {
   practicedAt?: Date;
   practiceCount: number;
 
-  constructor(data?: Partial<PracticeExerciseResponseDto>) {
+  constructor(data?: Partial<ExerciseResponseDto>) {
     Object.assign(this, data);
   }
 
-  static fromEntity(entity: PracticeExerciseView): PracticeExerciseResponseDto {
-    return new PracticeExerciseResponseDto({
+  static fromEntity(entity: ExerciseView): ExerciseResponseDto {
+    return new ExerciseResponseDto({
       id: entity.id,
       userId: entity.userId,
       name: entity.name,

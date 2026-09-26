@@ -9,11 +9,11 @@ import {
   ExerciseSkill,
   ExerciseStatus,
 } from '../../content/core/exercise.entity';
-import { Exercise } from '../../content/infrastructure/exercise.schema';
+import { ExerciseModel } from '../../content/infrastructure/exercise.schema';
+import { ExerciseView } from '../core/exercise.view';
 import type { PracticeExerciseQuery } from '../core/practice-exercise.repository';
 import { PracticeExerciseRepository } from '../core/practice-exercise.repository';
-import { PracticeExerciseView } from '../core/practice-exercise.view';
-import { LearnerExerciseProgress } from './learner-exercise-progress.schema';
+import { LearnerExerciseProgressModel } from './learner-exercise-progress.schema';
 
 interface RawPracticeExercise {
   _id: Types.ObjectId;
@@ -42,10 +42,10 @@ interface RawPracticeExercise {
 @Injectable()
 export class MgPracticeExerciseRepository implements PracticeExerciseRepository {
   constructor(
-    @InjectModel(Exercise.name)
-    private readonly exerciseModel: Model<Exercise>,
-    @InjectModel(LearnerExerciseProgress.name)
-    private readonly learnerExerciseModel: Model<LearnerExerciseProgress>,
+    @InjectModel(ExerciseModel.name)
+    private readonly exerciseModel: Model<ExerciseModel>,
+    @InjectModel(LearnerExerciseProgressModel.name)
+    private readonly learnerExerciseModel: Model<LearnerExerciseProgressModel>,
   ) {}
 
   /**
@@ -54,7 +54,7 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
   async findAllForUser(
     userId: string,
     query?: PracticeExerciseQuery,
-  ): Promise<CursorPaginationResult<PracticeExerciseView>> {
+  ): Promise<CursorPaginationResult<ExerciseView>> {
     const { sort, limit, topics } = query ?? {};
     const safeLimit = Math.min(!limit || limit < 0 ? 10 : limit, 50);
     const pipeline: PipelineStage[] = [
@@ -149,12 +149,12 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
     return (data as { _id?: unknown })._id !== undefined;
   }
 
-  private dbModelToEntity(item: unknown): PracticeExerciseView {
+  private dbModelToEntity(item: unknown): ExerciseView {
     if (!this.isPracticeExercise(item)) {
       throw new Error('Invalid database model: missing _id field');
     }
 
-    return new PracticeExerciseView({
+    return new ExerciseView({
       id: item._id.toString(),
       userId: item.userId.toString(),
       status: item.status as ExerciseStatus,
