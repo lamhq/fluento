@@ -1,160 +1,236 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Types } from 'mongoose';
 import request from 'supertest';
+import { z } from 'zod';
 
-import { deleteMany, insert, insertMany } from '../utils/mongodb';
+import { deleteMany, insertMany } from '../utils/mongodb';
 import { setUpApiTest } from '../utils/test';
+
+const exerciseBaseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  topics: z.array(z.string()),
+  references: z.array(z.string()),
+  practicedAt: z.iso.datetime().nullable().optional(),
+  practiceCount: z.number().int().nonnegative(),
+});
+
+const exerciseSchema = z.discriminatedUnion('format', [
+  exerciseBaseSchema.extend({
+    skill: z.literal('communication'),
+    format: z.literal('communication'),
+    scenario: z.string(),
+    prompts: z.array(z.string()),
+  }),
+  exerciseBaseSchema.extend({
+    skill: z.literal('vocabulary'),
+    format: z.literal('word'),
+    word: z.string(),
+    meaning: z.string(),
+    clues: z.array(z.string()),
+    sentences: z.array(z.string()),
+  }),
+  exerciseBaseSchema.extend({
+    skill: z.literal('articulation'),
+    format: z.literal('sentence'),
+    scenario: z.string(),
+    prompts: z.array(z.string()),
+    words: z.array(z.string()),
+  }),
+  exerciseBaseSchema.extend({
+    skill: z.literal('articulation'),
+    format: z.literal('paragraph'),
+    scenario: z.string(),
+    prompts: z.array(z.string()),
+    paragraph: z.string(),
+    words: z.array(z.string()),
+  }),
+]);
+
+const paginatedExercisesSchema = z.object({
+  items: z.array(exerciseSchema),
+  nextCursor: z.string().nullable(),
+  previousCursor: z.string().nullable(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+});
 
 describe('find practice exercises', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
-  it('should return exercises of current user', async () => {
+  it('should only return active exercises', async () => {
     const { email: userEmail, id: userId } = getUser();
 
-    const [exerciseId] = await insertMany('exercises', [
+    await insertMany('exercises', [
       {
         status: 'active',
+        userId,
         topics: ['Socializing', cleanupMarker],
-        scenario: 'asking for a favor',
-        learnerRole: 'person',
-        counterpartRole: 'friend',
-        prompts: ['Politely ask your friend to take you to the airport.'],
-        expectedResponses: [
-          {
-            content: 'I was hoping you could give me a lift to the airport.',
-            style: ['polite', 'courteous'],
-          },
-        ],
+        scenario: 'active practice one',
+        name: 'Active practice one',
+        skill: 'communication',
+        format: 'communication',
+        references: [],
+        prompts: ['Say hello.'],
+        validResponses: ['Hello!'],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        status: 'archived',
+        userId,
+        topics: ['Socializing', cleanupMarker],
+        scenario: 'archived practice',
+        name: 'Archived practice',
+        skill: 'communication',
+        format: 'communication',
+        references: [],
+        prompts: ['Say hello.'],
+        validResponses: ['Hello!'],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     ]);
-    await insert('learner_exercise_progress', {
-      userId,
-      exerciseId: new Types.ObjectId(exerciseId),
-      practiceCount: 2,
-      practicedAt: new Date('2024-01-15T12:00:00.000Z'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
 
     const resp = await request(getApp().getHttpServer())
       .get('/v1/practice/exercises')
       .query({ limit: 10 })
       .set('x-user-email', userEmail)
+      .set('Accept', 'application/json')
       .expect(200);
 
-    expect(resp.body).toEqual(
-      expect.objectContaining({
-        items: [
-          expect.objectContaining({
-            id: exerciseId,
-            topics: expect.arrayContaining(['Socializing', cleanupMarker]),
-            scenario: 'asking for a favor',
-            practicedAt: expect.any(String),
-            practiceCount: 2,
-            learnerRole: 'person',
-            counterpartRole: 'friend',
-            prompts: expect.arrayContaining([
-              'Politely ask your friend to take you to the airport.',
-            ]),
-            expectedResponses: expect.arrayContaining([
-              expect.objectContaining({
-                content:
-                  'I was hoping you could give me a lift to the airport.',
-                style: expect.arrayContaining(['polite', 'courteous']),
-              }),
-            ]),
-          }),
-        ],
-        nextCursor: null,
-        previousCursor: null,
-        hasNext: false,
-        hasPrevious: false,
-      }),
+    const response = paginatedExercisesSchema.parse(resp.body);
+
+    expect(response.items).toHaveLength(1);
+  });
+
+  it('should return correct exercise data', async () => {
+    const { email: userEmail, id: userId } = getUser();
+
+    await insertMany('exercises', [
+      {
+        userId,
+        name: 'Small talk',
+        skill: 'communication',
+        format: 'communication',
+        status: 'active',
+        topics: ['Common', cleanupMarker],
+        scenario: 'Answer small talk questions',
+        prompts: ['What are you up to this weekend?'],
+        references: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        userId,
+        name: 'customs',
+        skill: 'vocabulary',
+        format: 'word',
+        status: 'active',
+        topics: ['Airport', cleanupMarker],
+        word: 'customs',
+        meaning: 'The official procedures required when entering a country.',
+        sentences: ['At customs, they will check your passport.'],
+        clues: ['passport', 'inspection'],
+        references: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        userId,
+        name: 'Talk about your background',
+        skill: 'articulation',
+        format: 'sentence',
+        status: 'active',
+        topics: ['Job Interview', cleanupMarker],
+        scenario: 'Talk about your background',
+        prompts: ['Describe your educational background.'],
+        words: ['study', 'university'],
+        references: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        userId,
+        name: 'Festival introduction',
+        skill: 'articulation',
+        format: 'paragraph',
+        status: 'active',
+        topics: ['Mid-Autumn Festival', cleanupMarker],
+        scenario: 'Mid-Autumn Festival Introduction',
+        prompts: ['Read and practice the paragraph.'],
+        paragraph: 'The festival brings families together.',
+        words: ['festival', 'family reunion'],
+        references: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+
+    const resp = await request(getApp().getHttpServer())
+      .get('/v1/practice/exercises')
+      .query({ limit: 10 })
+      .set('x-user-email', userEmail)
+      .set('Accept', 'application/json')
+      .expect(200);
+
+    const response = paginatedExercisesSchema.parse(resp.body);
+
+    expect(response.items).toHaveLength(4);
+    expect(response.items.map((item) => item.format)).toEqual(
+      expect.arrayContaining([
+        'communication',
+        'word',
+        'sentence',
+        'paragraph',
+      ]),
     );
   });
 
-  it('should exclude archived exercises', async () => {
+  it('should filter exercises by requested topic', async () => {
     const { email: userEmail, id: userId } = getUser();
 
-    const activeExerciseIds = await insertMany('exercises', [
+    await insertMany('exercises', [
       {
+        userId,
+        name: 'Restaurant conversation',
+        skill: 'communication',
+        format: 'communication',
         status: 'active',
-        topics: ['Socializing', cleanupMarker],
-        scenario: 'active practice one',
-        learnerRole: 'person',
-        counterpartRole: 'friend',
-        prompts: ['Say hello.'],
-        expectedResponses: [{ content: 'Hello!', style: ['friendly'] }],
-        createdAt: new Date(),
+        topics: ['Restaurant', cleanupMarker],
+        scenario: 'Order a meal at a restaurant',
+        references: [],
+        prompts: ['Order a meal.'],
+        validResponses: ['I would like a meal.'],
+        createdAt: new Date('2024-01-01T00:00:00.000Z'),
         updatedAt: new Date(),
       },
       {
+        userId,
+        name: 'School conversation',
+        skill: 'communication',
+        format: 'communication',
         status: 'active',
-        topics: ['Socializing', cleanupMarker],
-        scenario: 'active practice two',
-        learnerRole: 'person',
-        counterpartRole: 'friend',
-        prompts: ['Say hello.'],
-        expectedResponses: [{ content: 'Hello!', style: ['friendly'] }],
-        createdAt: new Date(),
+        topics: ['School', cleanupMarker],
+        references: [],
+        prompts: ['Ask about class.'],
+        validResponses: ['How was class?'],
+        createdAt: new Date('2024-01-02T00:00:00.000Z'),
         updatedAt: new Date(),
       },
     ]);
 
-    const archivedExerciseId = await insert('exercises', {
-      status: 'archived',
-      topics: ['Socializing', cleanupMarker],
-      scenario: 'archived practice',
-      learnerRole: 'person',
-      counterpartRole: 'friend',
-      prompts: ['Say hello.'],
-      expectedResponses: [{ content: 'Hello!', style: ['friendly'] }],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    for (const exerciseId of activeExerciseIds) {
-      await insert('learner_exercise_progress', {
-        userId,
-        exerciseId: new Types.ObjectId(exerciseId),
-        practiceCount: 1,
-        practicedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
-
     const resp = await request(getApp().getHttpServer())
       .get('/v1/practice/exercises')
-      .query({ limit: 10 })
+      .query({ topics: ['Restaurant'], limit: 10 })
       .set('x-user-email', userEmail)
+      .set('Accept', 'application/json')
       .expect(200);
 
-    expect(resp.body.items).toHaveLength(2);
-    expect(
-      resp.body.items.every(
-        (item: { id: string }) => item.id !== archivedExerciseId._id.toString(),
-      ),
-    ).toBe(true);
-    expect(
-      resp.body.items.map((item: { status?: string }) => item.status),
-    ).not.toContain('archived');
-  });
+    const response = paginatedExercisesSchema.parse(resp.body);
 
-  it('should return empty list when user has no practice', async () => {
-    const { email: userEmail } = getUser();
-
-    // Don't create or practice any exercises for this user
-    const resp = await request(getApp().getHttpServer())
-      .get('/v1/practice/exercises')
-      .query({ limit: 10 })
-      .set('x-user-email', userEmail)
-      .expect(200);
-
-    expect(resp.body.items).toEqual([]);
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].topics).toEqual(
+      expect.arrayContaining(['Restaurant']),
+    );
   });
 
   afterEach(async () => {
