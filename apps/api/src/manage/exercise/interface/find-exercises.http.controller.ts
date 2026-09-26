@@ -13,6 +13,7 @@ import {
 import { ApiVersion } from '../../../common/constants';
 import { RequireUser } from '../../../common/interface/require-user.guard';
 import type { OffsetPaginationResult } from '../../../common/types/pagination';
+import { ExerciseStatus } from '../../../content/core/exercise.entity';
 import { ExerciseService } from '../../../content/core/exercise.service';
 import { ExerciseResponseDto } from './exercise-response.dto';
 
@@ -26,7 +27,7 @@ export class FindExercisesHttpController {
   async findAll(
     @Query('scenario') scenario?: string,
     @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
-    @Query('status') status?: 'active' | 'archived' | 'all',
+    @Query('status') status?: ExerciseStatus,
     @Query('sort') sort?: string,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,

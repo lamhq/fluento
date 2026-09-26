@@ -2,11 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, SortOrder, Types } from 'mongoose';
 
-import {
-  ExerciseEntity,
-  ExerciseFormat,
-  ExerciseSkill,
-} from '../core/exercise.entity';
+import { ExerciseEntity } from '../core/exercise.entity';
 import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository';
 import { ExerciseDocument, ExerciseModel } from './exercise.schema';
 
@@ -84,7 +80,7 @@ export class MgExerciseRepository implements ExerciseRepository {
       filter.userId = new Types.ObjectId(query.userId);
     }
 
-    if (query.status && query.status !== 'all') {
+    if (query.status) {
       filter.status = query.status;
     }
 
@@ -125,8 +121,8 @@ export class MgExerciseRepository implements ExerciseRepository {
       userId: data.userId.toString(),
       status: data.status,
       name: data.name,
-      skill: data.skill as ExerciseSkill,
-      format: data.format as ExerciseFormat,
+      skill: data.skill,
+      format: data.format,
       topics: data.topics,
       references: data.references,
       scenario: data.scenario,

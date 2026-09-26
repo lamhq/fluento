@@ -6,7 +6,7 @@ import {
 } from '../../common/core/context.service';
 import { CreateExerciseRequestDto } from '../../manage/exercise/interface/create-exercise-request.dto';
 import { UpdateExerciseRequestDto } from '../../manage/exercise/interface/update-exercise-request.dto';
-import { ExerciseEntity } from './exercise.entity';
+import { ExerciseEntity, ExerciseStatus } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
@@ -32,7 +32,7 @@ export class ExerciseService {
     query: {
       scenario?: string;
       topics?: string[];
-      status?: 'active' | 'archived' | 'all';
+      status?: ExerciseStatus;
       sort?: string;
       offset?: number;
       limit?: number;

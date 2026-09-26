@@ -68,7 +68,7 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
     pipeline.push(
       {
         $lookup: {
-          from: 'learner_exercise_progress',
+          from: this.learnerExerciseModel.collection.name,
           let: { exId: '$_id' },
           pipeline: [
             {

@@ -1,7 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
-import { ExerciseStatus } from '../core/exercise.entity';
+import {
+  ExerciseFormat,
+  ExerciseSkill,
+  ExerciseStatus,
+} from '../core/exercise.entity';
 
 export type ExerciseDocument = HydratedDocument<ExerciseModel>;
 
@@ -12,15 +16,15 @@ export class ExerciseModel {
 
   @Prop({
     required: true,
-    enum: ['communication', 'vocabulary', 'articulation'],
+    enum: Object.values(ExerciseSkill),
   })
-  skill: string;
+  skill: ExerciseSkill;
 
   @Prop({
     required: true,
-    enum: ['word', 'sentence', 'paragraph', 'communication'],
+    enum: Object.values(ExerciseFormat),
   })
-  format: string;
+  format: ExerciseFormat;
 
   @Prop()
   scenario?: string;
