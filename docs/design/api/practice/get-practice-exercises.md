@@ -35,42 +35,31 @@ Retrieve a paginated list of exercises available to a learner for practice, with
   "items": [
     {
       "id": "ex_123",
+      "name": "Ordering Food in a Restaurant",
       "scenario": "Ordering Food in a Restaurant",
+      "skill": "communication",
+      "format": "communication",
       "topics": ["Restaurant", "Vocabulary"],
-      "createdAt": "2026-08-13T10:00:00Z",
-      "updatedAt": "2026-08-13T10:00:00Z",
+      "references": [],
+      "prompts": ["Say that you would like to order a meal."],
+      "validResponses": ["I would like to order the grilled salmon, please."],
       "practicedAt": "2026-08-13T09:30:00Z",
       "practiceCount": 5,
-      "learnerRole": "customer",
-      "counterpartRole": "waiter",
-      "prompts": ["Say that you would like to order a meal."],
-      "expectedResponses": [
-        {
-          "content": "I would like to order the grilled salmon, please.",
-          "style": ["polite", "simple"]
-        },
-        {
-          "content": "Could I have the chicken curry with rice?",
-          "style": ["polite", "clear"]
-        }
-      ]
+      "status": "active"
     },
     {
       "id": "ex_124",
+      "name": "Greeting a Friend",
       "scenario": "Greeting a Friend",
+      "skill": "communication",
+      "format": "communication",
       "topics": ["Socializing", "Speaking"],
-      "createdAt": "2026-08-10T14:00:00Z",
-      "updatedAt": "2026-08-12T16:30:00Z",
-      "practicedAt": "2026-08-12T15:45:00Z",
-      "learnerRole": "friend",
-      "counterpartRole": "friend",
+      "references": [],
       "prompts": ["Greet your friend warmly."],
-      "expectedResponses": [
-        {
-          "content": "Hi! How have you been?",
-          "style": ["friendly", "casual"]
-        }
-      ]
+      "validResponses": ["Hi! How have you been?"],
+      "practicedAt": null,
+      "practiceCount": 0,
+      "status": "active"
     }
   ],
   "nextCursor": "ex_124",

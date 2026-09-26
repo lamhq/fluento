@@ -40,32 +40,27 @@ Retrieve a paginated, filterable, and sortable list of exercises owned by the cu
   "items": [
     {
       "id": "ex_456",
+      "name": "Coffee Shop Order",
       "scenario": "Coffee Shop Order",
+      "skill": "communication",
+      "format": "communication",
       "topics": ["Vocabulary", "Speaking"],
+      "references": [],
       "status": "active",
-      "createdAt": "2026-01-15T10:30:00Z",
-      "updatedAt": "2026-01-20T14:15:00Z",
-      "learnerRole": "customer",
-      "counterpartRole": "barista",
       "prompts": ["Order a coffee politely."],
-      "expectedResponses": [
-        {
-          "content": "Could I have a coffee, please?",
-          "style": ["polite"]
-        }
-      ]
+      "validResponses": ["Could I have a coffee, please?"]
     },
     {
       "id": "ex_457",
+      "name": "Business Meeting",
       "scenario": "Business Meeting",
+      "skill": "communication",
+      "format": "communication",
       "topics": ["Grammar", "Communication"],
+      "references": [],
       "status": "active",
-      "createdAt": "2026-01-10T09:00:00Z",
-      "updatedAt": "2026-01-18T11:45:00Z",
-      "learnerRole": "participant",
-      "counterpartRole": "manager",
       "prompts": ["Contribute an idea in the meeting."],
-      "expectedResponses": []
+      "validResponses": []
     }
   ]
 }

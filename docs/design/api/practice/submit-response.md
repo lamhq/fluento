@@ -51,7 +51,7 @@ Submit a learner's written response in an exercise for evaluation and return act
     "score": 95,
     "feedback": "Your response is grammatically correct, with one minor contraction improvement.",
     "fixes": ["Use the contraction form: 'Let's' instead of 'Lets'."],
-    "correctedSentence": "Let's meet tomorrow to discuss the project."
+    "correctedResponse": "Let's meet tomorrow to discuss the project."
   },
   "appropriateness": {
     "score": 95,

@@ -29,28 +29,23 @@ No query parameters are supported for this endpoint. All available topics are re
 [
   {
     "id": "topic_004",
-    "name": "Travel",
-    "createdAt": "2026-01-10T08:45:00Z"
+    "name": "Travel"
   },
   {
     "id": "topic_003",
-    "name": "Airport",
-    "createdAt": "2026-01-10T08:30:00Z"
+    "name": "Airport"
   },
   {
     "id": "topic_005",
-    "name": "Restaurant",
-    "createdAt": "2026-01-10T09:00:00Z"
+    "name": "Restaurant"
   },
   {
     "id": "topic_002",
-    "name": "Food",
-    "createdAt": "2026-01-10T08:15:00Z"
+    "name": "Food"
   },
   {
     "id": "topic_001",
-    "name": "Job Interview",
-    "createdAt": "2026-01-10T08:00:00Z"
+    "name": "Job Interview"
   }
 ]
 ```
@@ -69,7 +64,7 @@ No query parameters are supported for this endpoint. All available topics are re
 
 - **User Identification:** Require the `x-user-email` header to identify the authenticated request context.
 - **Topic List Retrieval:** Return all topics sorted by name in ascending order. The current implementation does not filter topics by the authenticated user.
-- **Consistent Format:** Return topic objects with id, name, and createdAt fields.
+- **Consistent Format:** Return topic objects with id and name fields.
 - **Empty Results:** Return empty array if the user has not created any topics.
 
 ## Non-Functional Requirements
