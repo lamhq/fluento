@@ -5,10 +5,10 @@ import { NavLink, Outlet } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-import { useAuth } from '../../../auth';
-import SignOutButton from '../../../common/components/SignOutButton';
-import { HOME_ROUTE, PRACTICE_ROUTE } from '../../../routes';
-import ErrorBoundary from '../ErrorBoundary';
+import { useAuth } from '../../auth';
+import { HOME_ROUTE, PRACTICE_ROUTE } from '../../routes';
+import ErrorBoundary from './ErrorBoundary';
+import SignOutButton from './SignOutButton';
 
 export default function MainLayout() {
   const { isAuthenticated } = useAuth();

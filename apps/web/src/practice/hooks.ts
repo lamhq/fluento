@@ -17,7 +17,7 @@ export function usePracticeExercise() {
       queryFn: async () => {
         try {
           const { items } = await apiClient.getPracticeExercise();
-          return items;
+          return items.length > 0 ? items[0] : null;
         } catch (error) {
           if (error instanceof Error) {
             throw error;
@@ -28,7 +28,7 @@ export function usePracticeExercise() {
     }),
   );
 
-  return result.data[0] ?? null;
+  return result.data;
 }
 
 export function useSubmitResponse() {

@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router';
 
 import { requireAuth } from './auth';
-import PracticePage from './comm/pages/PracticePage';
 import ErrorBoundary from './common/components/ErrorBoundary';
 import MainLayout from './common/components/MainLayout';
 import SignInCallbackPage from './common/pages/SignInCallbackPage';
@@ -10,6 +9,7 @@ import DataFetchingPage from './demo/pages/DataFetchingPage';
 import DataMutationPage from './demo/pages/DataMutationPage';
 import HomePage from './demo/pages/HomePage';
 import ProtectedPage from './demo/pages/ProtectedPage';
+import PracticePage from './practice/pages/PracticePage';
 import {
   DATA_FETCHING_ROUTE,
   DATA_MUTATION_ROUTE,

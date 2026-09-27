@@ -2,7 +2,7 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary as Reb } from 'react-error-boundary';
 import { useLocation } from 'react-router';
 
-import ErrorFallback from '../ErrorFallback';
+import ErrorFallback from './ErrorFallback';
 
 export default function ErrorBoundary({ children }: { children: React.ReactNode }) {
   const location = useLocation();

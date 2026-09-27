@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import type { PracticeExercise, SubmitResponse } from '../../api/types';
-import { getFeedbackIcon, getFeedbackTitle } from './PracticeForm/utils';
+import { getFeedbackIcon, getFeedbackTitle } from '../utils';
 
 export interface ResponseFeedbackProps {
   feedback: SubmitResponse;

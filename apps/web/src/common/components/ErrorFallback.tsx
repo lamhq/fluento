@@ -3,8 +3,8 @@ import { type FallbackProps } from 'react-error-boundary';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 
-import { useAuth } from '../../../auth';
-import { getErrorInfo } from '../../../error';
+import { useAuth } from '../../auth';
+import { getErrorInfo } from '../../error';
 
 /**
  * Default error fallback component that displays error information

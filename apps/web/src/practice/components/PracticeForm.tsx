@@ -16,10 +16,10 @@ import {
   InputGroupTextarea,
 } from '@/components/ui/input-group';
 
-import type { PracticeExercise } from '../../../api/types';
-import SubmitButton from '../../../common/components/Button';
-import ResponseFeedback from '../ResponseFeedback';
-import { usePracticeForm } from './usePracticeForm';
+import type { PracticeExercise } from '../../api/types';
+import SubmitButton from '../../common/components/Button';
+import { usePracticeForm } from './PracticeForm.hook';
+import ResponseFeedback from './ResponseFeedback';
 
 export interface PracticeFormProps {
   exercise: PracticeExercise;

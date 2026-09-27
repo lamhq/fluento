@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 
-import PracticeForm from '../../components/PracticeForm';
-import { usePracticeExercise } from '../../hooks';
-import { LoadingFallback } from './LoadingFallback';
+import { ExerciseSkeleton } from '../components/ExerciseSkeleton';
+import PracticeForm from '../components/PracticeForm';
+import { usePracticeExercise } from '../hooks';
 
 function FetchExercise() {
   const exercise = usePracticeExercise();
@@ -16,7 +16,7 @@ function FetchExercise() {
 export default function PracticePage() {
   return (
     <div className="max-w-2xl mx-auto">
-      <Suspense fallback={<LoadingFallback />}>
+      <Suspense fallback={<ExerciseSkeleton />}>
         <FetchExercise />
       </Suspense>
     </div>

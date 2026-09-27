@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import type { PracticeExercise, SubmitResponse } from '../../../api/types';
-import { useErrorHandler } from '../../../error';
-import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
-import { normalizeLearnerResponse } from './utils';
+import type { PracticeExercise, SubmitResponse } from '../../api/types';
+import { useErrorHandler } from '../../error';
+import { useResetPracticeExercise, useSubmitResponse } from '../hooks';
+import { normalizeLearnerResponse } from '../utils';
 
 const practiceFormSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
