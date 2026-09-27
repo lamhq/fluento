@@ -112,7 +112,7 @@ describe('find practice exercises', () => {
         skill: 'communication',
         format: 'communication',
         status: 'active',
-        topics: ['Common', cleanupMarker],
+        topics: ['Everyday Conversation', cleanupMarker],
         scenario: 'Answer small talk questions',
         prompts: ['What are you up to this weekend?'],
         references: [],

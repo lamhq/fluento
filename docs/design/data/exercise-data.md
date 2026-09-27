@@ -16,7 +16,7 @@
 - skill: communication
 - format: communication
 - topics:
-  - Common
+  - Everyday Conversation
 - references:
   - https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS
 - scenario: Answer small talk questions
@@ -31,7 +31,7 @@
 - skill: communication
 - format: communication
 - topics:
-  - Common
+  - Everyday Conversation
 - references:
   - https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS
 - scenario: Answer small talk questions
@@ -46,7 +46,7 @@
 - skill: communication
 - format: communication
 - topics:
-  - Common
+  - Everyday Conversation
 - references:
   - https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS
 - scenario: Answer small talk questions
@@ -61,7 +61,7 @@
 - skill: communication
 - format: communication
 - topics:
-  - Common
+  - Everyday Conversation
 - references:
   - https://youtu.be/H-HVm6hRbsI?si=UwH6Z34fGJwlNQQW
 - scenario: Reject invitations
@@ -79,7 +79,7 @@
 - skill: communication
 - format: communication
 - topics:
-  - Common
+  - Everyday Conversation
 - references:
   - https://www.youtube.com/watch?v=FinOIdu21XA
 - scenario: Exaggerate things

@@ -51,9 +51,11 @@ After submission:
 
 - **Exercise metadata**:
   - Exercise title or topic.
+  - Exercise topic displayed below the title in parentheses.
   - Exercise type and learning goal.
   - Context or supporting instructions, when required.
   - Exercise prompt and response requirements.
+  - Format-specific titles, content, and response inputs are defined in the [Exercise Display Rules](../../../requirements/practice/view-practice-exercise.md#exercise-display-rules).
 - **Response input**:
   - Input control appropriate to the exercise type.
   - Label and instructions describing the expected response.
@@ -135,19 +137,8 @@ After submission:
   - `😕` for 0–39
 - The emoji is decorative only; the text label and score value must remain visible to users and screen readers.
 
-## Responsiveness
-
-- **Mobile**:
-  - The prompt and response input stack vertically with sufficient spacing for touch input.
-  - Buttons are larger and remain reachable without horizontal scrolling.
-- **Tablet**:
-  - Content width remains readable with moderate padding and a centered layout.
-- **Desktop**:
-  - The screen uses a comfortable reading width and maintains the full response area with clear separation between prompt and feedback.
-
 ## Performance Requirements
 
-- The app should avoid unnecessary re-fetches by caching exercises for 3 minutes.
 - Feedback response should appear promptly after submission without blocking the rest of the app.
 - Exercise retrieval and submission should handle network latency gracefully with loading states and retry affordances.
 
@@ -155,10 +146,3 @@ After submission:
 
 - User responses should be sanitized and handled as untrusted input before rendering in the UI.
 - Feedback content should be rendered safely to prevent XSS or unsafe HTML injection.
-- API calls must use secure transport and authentic user sessions.
-- The app should not expose sensitive user data in analytics or logs.
-
-## Analytics & Tracking
-
-- Track screen view when the practice exercise screen loads.
-- Track response submission success and failure events.

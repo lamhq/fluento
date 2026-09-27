@@ -1,4 +1,4 @@
-# View Exercises
+# View My Exercises
 
 ## Introduction
 

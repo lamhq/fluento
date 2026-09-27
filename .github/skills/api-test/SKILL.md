@@ -1,8 +1,8 @@
 ---
 name: api-test
-description: API testing skills. Use when you want to run API end-to-end tests.
+description: API testing skills. Use when you want to run API tests.
 ---
 
-## Run tests
+## Run API tests
 
-Read the section `Run end-to-end tests` in `apps/api/README.md`
+Refer to `Run end-to-end tests` section in `apps/api/README.md`.

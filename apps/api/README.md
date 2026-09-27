@@ -64,6 +64,12 @@ pnpm -F api test:e2e <pattern>
 # pnpm -F api test:e2e delete-exercise.spec.ts
 ```
 
+To start docker (macOS):
+
+```bash
+open -a Docker
+```
+
 ## Deploy
 
 Create the production build at `apps/api/dist/`:
@@ -162,6 +168,24 @@ apps/api/
 ├── CHANGELOG.md                   # Release notes and version history
 └── package.json                   # Project dependencies and scripts
 ```
+
+Available modules:
+
+- `common`: contains boilerplate code and shared utilities.
+- `manage`:
+  - define API endpoints to create, list, update, and delete exercises of current user
+  - define API endpoints to create, list, update, and delete topics of current user
+- `practice`:
+  - find personalized exercises for learners
+  - receive learner's responses and give feedback
+  - track learner's practice progress
+- `content`:
+  - contains entity / schema definitions for exercises and topics.
+  - define services for interacting with exercises and topics.
+  - define repository contracts for exercises and topics.
+- `user`:
+  - persist user account to database.
+  - provide utilities for accessing authenticated user information.
 
 ## Tech Stack
 

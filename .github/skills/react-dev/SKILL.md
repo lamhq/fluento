@@ -1,6 +1,6 @@
 ---
 name: react-dev
-description: React coding skills. Use when user want to implement anything related to React.
+description: React coding skills. Use when you want to implement anything related to React.
 ---
 
 ## Develop data list page

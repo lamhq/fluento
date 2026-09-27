@@ -38,7 +38,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
       "name": "Answer small talk questions",
       "skill": "communication",
       "format": "communication",
-      "topics": ["Common"],
+      "topics": ["Everyday Conversation"],
       "scenario": "Answer small talk questions",
       "prompts": ["What are you up to this weekend?"],
       "references": [

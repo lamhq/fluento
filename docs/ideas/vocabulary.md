@@ -10,37 +10,7 @@ Learners practice through these exercise types:
 
 - **Using Word:** use target vocabulary in different contexts by building sentences (e.g., workplace emails, casual chats)
 - **Just One Word:** guess a secret word based on contextual clues
-- **Flashcards:** digital flashcards for quick review and self-testing
-
-## Data Model
-
-Vocabulary structure:
-
-```json
-{
-  "name": "Present",
-  "skill": "vocabulary",
-  "format": "word",
-  "topics": ["Time", "Daily Life"],
-  "word": "present",
-  "meaning": "The current period or moment occurring right now.",
-  "example_sentences": [
-    "Focus on the present rather than worrying about what might happen tomorrow."
-  ],
-  "clues": ["now", "current", "moment", "today"]
-}
-```
-
-## Accessing the module
-
-1. Learner selects **Vocabulary** in the main menu.
-2. On the **Vocabulary Practice screen**, options include:
-   - **Add New Word** button: add new words and phrases to their personal word bank
-   - **Practice** button: shows below configuration:
-     - **Topics** (default: All Topics)
-     - **Exercises**: Using Word, Just One Word, Flashcards; default: All Exercises
-     - **My Library Only** (default: off)
-     - **Start Practice**: begins session
+- **Word Guessing:** guess a target word or phrase from its meaning
 
 ## Using Word
 
@@ -180,15 +150,16 @@ Getting clues for guessing a word:
 Give me 4 words (clues) for guessing the word "present" in a Just One Word exercise.
 ```
 
-## Flashcards
+## Word Guessing
 
 ### Flow
 
-1. App displays a flashcard with the meaning on the front side (e.g., "Able to recover quickly from difficulties").
-2. Learner taps the **Reveal** button to show the answer with the word and example sentences (e.g., "Resilient").
+1. App displays the meaning (e.g., "Able to recover quickly from difficulties").
+2. Learner enters a guess for the word or phrase and clicks **Submit**.
 3. Learner chooses:
-   - **Retry**: see another example or review the same card
-   - **Next**: move to the next card
+
+- **Retry**: guess again
+- **Next**: move to the next exercise
 
 ### Feedback
 
@@ -196,7 +167,7 @@ Feedback includes:
 
 - **Score** (x/100)
 - **Feedback**: overall feedback
-- **Correctness**: whether the learner recalled or recognized the target word/phrase
+- **Correctness**: whether the learner guessed the target word/phrase
   - **Score** (x/100)
   - **Feedback**: correctness feedback
 
@@ -204,22 +175,18 @@ The word/phrase, meaning, and example sentences are exercise content shown on th
 
 ### Example Practices
 
-**Exercise 5: Flashcards**
+**Exercise 5: Word Guessing**
 
-- **Front**: "Able to recover quickly from difficulties"
-- **Back**: "Resilient"
+- **Meaning**: "Able to recover quickly from difficulties"
+- **Example guess**: "Resilient"
 - **Example sentences**:
   - "She remained resilient in the face of adversity."
   - "The resilient community rebuilt after the disaster."
 
-**Exercise 6: Flashcards**
+**Exercise 6: Word Guessing**
 
-- **Front**: "Introducing new ideas or methods"
-- **Back**: "Innovative"
+- **Meaning**: "Introducing new ideas or methods"
+- **Example guess**: "Innovative"
 - **Example sentences**:
   - "The company is known for its innovative products."
   - "Her innovative approach solved the problem."
-
-## Add New Word
-
-Steps TBD: adding words and phrases to personal word bank, including the word/phrase, topics, meaning, example usage (sentences).
