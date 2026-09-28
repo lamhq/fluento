@@ -14,7 +14,7 @@ import { ApiVersion } from '../../common/constants';
 import { RequireUser } from '../../common/interface/require-user.guard';
 import type { CursorPaginationResult } from '../../common/types/pagination';
 import { PracticeService } from '../core/practice.service';
-import { ExerciseResponseDto } from './exercise-response.dto';
+import { ExerciseResponseDto } from './exercise.response.dto';
 
 @Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

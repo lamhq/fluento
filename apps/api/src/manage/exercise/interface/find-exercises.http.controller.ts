@@ -15,7 +15,7 @@ import { RequireUser } from '../../../common/interface/require-user.guard';
 import type { OffsetPaginationResult } from '../../../common/types/pagination';
 import { ExerciseStatus } from '../../../content/core/exercise.entity';
 import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseResponseDto } from './exercise-response.dto';
+import { ExerciseResponseDto } from './exercise.response.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

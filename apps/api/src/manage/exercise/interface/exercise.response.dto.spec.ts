@@ -4,7 +4,7 @@ import {
   ExerciseSkill,
   ExerciseStatus,
 } from '../../../content/core/exercise.entity';
-import { ExerciseResponseDto } from './exercise-response.dto';
+import { ExerciseResponseDto } from './exercise.response.dto';
 
 describe('ExerciseResponseDto', () => {
   it('maps an entity into a response DTO', () => {

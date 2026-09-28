@@ -4,8 +4,8 @@ import {
   CONTEXT_SERVICE,
   type ContextService,
 } from '../../common/core/context.service';
-import { CreateExerciseRequestDto } from '../../manage/exercise/interface/create-exercise-request.dto';
-import { UpdateExerciseRequestDto } from '../../manage/exercise/interface/update-exercise-request.dto';
+import { CreateExerciseRequestDto } from '../../manage/exercise/interface/create-exercise.request.dto';
+import { UpdateExerciseRequestDto } from '../../manage/exercise/interface/update-exercise.request.dto';
 import { ExerciseEntity, ExerciseStatus } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,

@@ -11,72 +11,100 @@
 
 ## Scope
 
-### Inclusions
-
 - Open the practice screen from a learning section and fetch one available exercise.
-- Display its learner-facing title, topic, content, instructions, and response requirements.
-
-### Exclusions
-
-- Creating, editing, deleting, importing, or selecting exercises from a list.
-- Evaluating or submitting responses.
-- Real-time tutoring, peer chat, leaderboards, or community challenges.
+- Display exercise's title, meta-data, content, and response inputs.
 
 ## Dependencies
 
 - An authenticated learner account and active exercise data.
 
-## Exercise Display Rules
-
-The practice screen maps `format` to a learner-facing title and displays the topic immediately below it in parentheses:
-
-| Exercise format | Displayed exercise title                    | Display behavior                                                                                                       |
-| --------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `communication` | exercise's scenario                         | Display the scenario as the title, the topic below it in parentheses, and one randomly selected prompt from `prompts`. |
-| `word`          | Using Word, Just One Word, or Word Guessing | Randomly choose one of the three titles and render the corresponding word exercise presentation.                       |
-| `sentence`      | Sentence Construction or Sentence Variation | Randomly choose one of the two titles and render the corresponding sentence exercise presentation.                     |
-| `paragraph`     | Paragraph Variation                         | Display the paragraph variation presentation.                                                                          |
-
-The selected title and presentation belong to the current view. A new exercise may receive a new presentation, which must remain consistent with its data.
-
 ## User Flow
 
 1. The learner opens the practice screen.
-2. The app fetches an exercise, selects its presentation, and displays the title, topic, instructions, and content.
+2. The app fetches an exercise and displays it.
 3. The learner responds or requests another exercise.
 4. Submission is handled by the Submit Exercise Response feature.
 
 ```mermaid
 flowchart TD
     A[Open practice screen] --> B[Fetch exercise]
-    B --> C[Select consistent presentation]
+    B --> C[Select consistent practice type]
     C --> D[Display exercise]
     D --> E{Learner action}
     E -->|Submit| F[Submit response flow]
     E -->|Next| B
 ```
 
-## Exercise Presentations
+## Practice Types
+
+Here are supported practice types to help learners improve different skills:
+
+### Communication
+
+- **Communication:** Respond to a scenario or prompt in a natural conversation.
+
+### Vocabulary
+
+- **Word Usage:** Make a sentence using the study word.
+- **Word Guessing:** Guess the word from its meaning.
+- **Just One Word:** Guess the study word from clues.
+
+### Articulation
+
+- **Sentence Construction:** Make a sentence from provided words.
+- **Sentence Variation:** Rewrite a sentence with the same meaning.
+- **Paragraph Variation:** Rewrite a paragraph with the same meaning.
+
+## Choosing Practice Types
+
+An exercise's `format` determines which practice types are applicable:
+
+| Exercise format | Skill         | Allowed practice types                    |
+| --------------- | ------------- | ----------------------------------------- |
+| `communication` | communication | Communication                             |
+| `word`          | vocabulary    | Just One Word, Word Guessing, Word Usage  |
+| `sentence`      | articulation  | Sentence Construction, Sentence Variation |
+| `paragraph`     | articulation  | Paragraph Variation                       |
+
+## Data Requirements
+
+Required fields for displaying based on practice type:
+
+| Practice type         | Required exercise fields                         |
+| --------------------- | ------------------------------------------------ |
+| Communication         | `scenario`, `prompts`, `validResponses` (result) |
+| Word Usage            | `word`, `meaning`, `sentences` (result)          |
+| Word Guessing         | `meaning`, `word` (result)                       |
+| Just One Word         | `clues`, `word` (result)                         |
+| Sentence Construction | `prompts`, `words`, `sentence` (result)          |
+| Sentence Variation    | `sentence`                                       |
+| Paragraph Variation   | `paragraph`                                      |
+
+Optional `id`, `name`, `skill`, `topics`, `references`, `practicedAt`, and `practiceCount` support context, tracking, or selection but do not replace required content.
+
+## Exercise Display
+
+Each practice type has a specific way it is displayed.
 
 ### Communication
 
 - **Title:** The exercise's scenario
 - **Topic:** Displayed below the title in parentheses.
 - **Prompt:** Randomly selected from the exercise's `prompts`.
-- **Response input:** Free-form response to the selected prompt.
+- **Response input:** A sentence responding to the prompt.
 
-### Using Word
+### Word Usage
 
-- **Title:** Using Word
+- **Title:** Word Usage
 - **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Write a sentence using "<word>" in <context> context` (hover or click on the word will show its meaning)
+- **Prompt:** `Write a sentence using the word "<word>" in <context> context` (hover or click on the word will show its meaning)
 - **Response input:** A sentence using the target word or phrase.
 
 ### Just One Word
 
 - **Title:** Just One Word
 - **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Guess the word or phrase from these clues:`
+- **Prompt:** `Guess the word/phrase from these clues:`
 - **Main content:** clues for guessing the target word or phrase.
 - **Response input:** A word or phrase guess.
 
@@ -84,7 +112,7 @@ flowchart TD
 
 - **Title:** Word Guessing
 - **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Guess the word or phrase from its meaning`.
+- **Prompt:** `Guess the word/phrase from the meaning below`.
 - **Main content:** meaning of the target word or phrase.
 - **Response input:** A word or phrase guess.
 
@@ -115,39 +143,20 @@ flowchart TD
 ## Acceptance Criteria
 
 - An authenticated learner can fetch and view one active exercise at a time.
-- The title, topic, content, instructions, and response input match the display rules; `communication` uses its scenario and one random prompt.
-- `word` randomly uses **Using Word**, **Just One Word**, or **Word Guessing**; `sentence` randomly uses **Sentence Construction** or **Sentence Variation**; `paragraph` uses **Paragraph Variation**.
-- Word Guessing displays the meaning and accepts a revisable word or phrase guess.
-- The learner can request another exercise, with duplicate requests prevented while loading.
-- Loading replaces stale content; errors provide retry; no results provide retry or leave options.
-- Unsupported formats or incomplete required data show an unavailable-exercise message rather than a misleading presentation.
-- Titles, prompts, meanings, inputs, and controls are keyboard and screen-reader accessible.
+- The displayed title, topic, content, instructions, and response input follow the display rules.
+- The learner can request another exercise without duplicate requests while loading.
+- Loading, empty, unsupported, and incomplete states provide clear recovery options.
+- Titles, prompts, content, inputs, and controls are keyboard and screen-reader accessible.
 
 ## Alternate Flows
 
-- **No results:** Show an empty state with retry and leave options.
-- **Fetch failure:** Show `We couldn't load the exercise. Please try again.` or equivalent, with Retry.
-- **Unsupported or incomplete data:** Show an unavailable-exercise message and allow the learner to request another exercise; do not infer a presentation.
+- **No results or fetch failure:** Show an appropriate empty or error state with Retry and Leave options.
+- **Unsupported or incomplete data:** Show an unavailable-exercise message and allow the learner to request another exercise.
 
 ## Edge Cases
 
-- Re-viewing a `word` or `sentence` exercise may select a new presentation.
-- Word Guessing guesses remain editable without fetching another exercise.
-- Repeated **Next** actions do not duplicate in-flight requests; the latest result wins after leaving and returning.
+- Re-viewing a `word` or `sentence` exercise may select a new practice.
 - Long exercise content remains readable without horizontal scrolling.
-
-## Data Requirements
-
-The screen consumes fields returned by the Get Practice Exercises API:
-
-| Format          | Required display data                                     |
-| --------------- | --------------------------------------------------------- |
-| `communication` | `name`, `scenario`, `topics`, `prompts`                   |
-| `word`          | `name`, `topics`, `word`, `meaning`, `sentences`, `clues` |
-| `sentence`      | `name`, `topics`, `prompts`, `words`                      |
-| `paragraph`     | `name`, `topics`, `prompts`, `paragraph`                  |
-
-Optional `id`, `skill`, `references`, `practicedAt`, and `practiceCount` support context, tracking, or selection but do not replace required content.
 
 ## Related Documents
 

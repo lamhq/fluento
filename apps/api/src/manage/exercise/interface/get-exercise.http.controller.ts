@@ -11,7 +11,7 @@ import {
 import { ApiVersion } from '../../../common/constants';
 import { RequireUser } from '../../../common/interface/require-user.guard';
 import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseResponseDto } from './exercise-response.dto';
+import { ExerciseResponseDto } from './exercise.response.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

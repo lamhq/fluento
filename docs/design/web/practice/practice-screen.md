@@ -16,12 +16,9 @@
 +---------------------------------------------------------------+
 | Exercise title                                                |
 |---------------------------------------------------------------|
-| Exercise context and instructions                             |
+| Exercise context, instructions, prompt                        |
 |                                                               |
-| Prompt:                                                        |
-| Complete the exercise as instructed.                          |
-|                                                               |
-| Response:                                                      |
+| Response:                                                     |
 | [ input appropriate to the exercise ]                         |
 |---------------------------------------------------------------|
 |                     [ Submit ]  [ Next ]                      |
@@ -31,33 +28,31 @@
 After submission:
 
 ```text
-+------------------------------------------------------------------+
++----------------------------------------------------------------+
 | Excellent work!                                            95% |
-|------------------------------------------------------------------|
-| Your response met the exercise requirements.                    |
-|                                                                  |
-| Suggested correction, if available:                             |
+|----------------------------------------------------------------|
+| Your response met the exercise requirements.                   |
+|                                                                |
+| Suggested correction, if available:                            |
 | "Example of an improved response."                             |
-|                                                                  |
-| What to improve:                                                |
-| - Review the feedback for the evaluated skill.                  |
-|                                                                  |
+|                                                                |
+| What to improve:                                               |
+| - Review the feedback for the evaluated skill.                 |
+|                                                                |
 | Example responses, if available:                               |
 | - "Example response appropriate to this exercise."             |
-+------------------------------------------------------------------+
++----------------------------------------------------------------+
 ```
 
 ## Displayed Information
 
-- **Exercise metadata**:
-  - Exercise title or topic.
-  - Exercise topic displayed below the title in parentheses.
-  - Exercise type and learning goal.
-  - Context or supporting instructions, when required.
-  - Exercise prompt and response requirements.
-  - Format-specific titles, content, and response inputs are defined in the [Exercise Display Rules](../../../requirements/practice/view-practice-exercise.md#exercise-display-rules).
+- **Exercise**: Follow the [Exercise Display](../../../requirements/practice/view-practice-exercise.md#exercise-display) requirement.
+  - Title: Practice type title or the communication exercise's scenario.
+  - Topic: Exercise topic displayed below the title in parentheses.
+  - Prompt: Exercise prompt, response requirements, etc.
+  - Content: word clues, word meaning, etc.
 - **Response input**:
-  - Input control appropriate to the exercise type.
+  - Input control appropriate to the practice type.
   - Label and instructions describing the expected response.
 - **Action buttons**:
   - Submit response.
@@ -69,8 +64,7 @@ After submission:
   - Corrected response, if available.
   - Specific improvements for the evaluated skill.
   - Suggested examples or alternative responses, if available.
-- **Data source**:
-  - Exercise content and evaluation results are loaded from the practice exercise APIs.
+  - Links to related lectures or resources, if available.
 
 ## User Interactions
 
@@ -82,11 +76,12 @@ After submission:
   - When the learner clicks Retry, the response input is cleared and the feedback panel is reset.
   - The same exercise remains available for reattempting.
 - **Next exercise**:
-  - When the learner clicks Next, the app fetches and selects the next exercise.
+  - When the learner clicks Next, the app fetches another active exercise and selects a practice type allowed by its format.
+  - Prevent duplicate requests while an exercise is loading.
 
-## Exercise selection logic
+## Practice Type Determination
 
-- See the [Submit Exercise Response Feature Specification](../../../requirements/practice/submit-response.md#exercise-selection-logic).
+- After fetching an exercise, the app randomly chooses the appropriate practice type based on the exercise format. See [Choosing Practice Types](../../../requirements/practice/view-practice-exercise.md#choosing-practice-types).
 
 ## Error Handling
 
@@ -95,6 +90,8 @@ After submission:
   - Invalid response for the exercise: show a brief validation prompt and allow the learner to revise.
 - **System errors**:
   - Exercise fetch fails: show "We couldn't load the exercise. Please try again."
+  - No results: show an empty state with Retry and Leave options.
+  - Unsupported or incomplete data: show an unavailable-exercise message and allow the learner to request another exercise.
   - Submission fails due to network or backend issues: show "Your response could not be submitted. Please retry."
   - Feedback generation fails: show "We couldn't evaluate your response right now. Please try again later."
 
@@ -102,15 +99,13 @@ After submission:
 
 - **Response input**:
   - The response must not be empty after trimming whitespace.
-  - The response must match the input and validation requirements of the exercise type.
-  - Length, format, and required fields are defined by the exercise type.
+  - The response must match the input and validation requirements of the practice type.
+  - Length, format, and required fields are defined by the practice type.
 
 ## Dependencies & Integration
 
 - **Get exercises API**:
-  - return a list of exercises with their input and evaluation requirements.
-  - allow specifying sort order, including last practice order.
-  - allow specifying a limit and offset for pagination.
+  - return an active exercise with its practice format, content, and response requirements.
 - **Submit response API**:
   - accept a response for evaluation.
   - Evaluate the learner's response and return an overall score, feedback, and exercise-specific corrections or suggestions.

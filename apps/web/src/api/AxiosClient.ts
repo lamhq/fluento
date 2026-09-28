@@ -6,7 +6,6 @@ import type {
   PaginatedPracticeExercises,
   SubmitResponse,
 } from './types';
-import { PaginatedPracticeExercisesSchema, SubmitResponseSchema } from './types';
 
 export default class AxiosClient implements ApiClient {
   private readonly httpClient: AxiosInstance;
@@ -30,12 +29,7 @@ export default class AxiosClient implements ApiClient {
       },
     );
 
-    const parsed = PaginatedPracticeExercisesSchema.safeParse(response.data);
-    if (!parsed.success) {
-      throw new Error('Invalid exercise response from server.');
-    }
-
-    return parsed.data;
+    return response.data;
   }
 
   async submitPracticeResponse(
@@ -47,12 +41,7 @@ export default class AxiosClient implements ApiClient {
       { response },
     );
 
-    const parsed = SubmitResponseSchema.safeParse(result.data);
-    if (!parsed.success) {
-      throw new Error('Invalid response feedback from server.');
-    }
-
-    return parsed.data;
+    return result.data;
   }
 
   async getExercises(

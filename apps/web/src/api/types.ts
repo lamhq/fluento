@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 export interface ApiClient {
   setAccessToken(token: string): void;
 
@@ -20,70 +18,75 @@ export interface ApiClient {
   }): Promise<[number, ExerciseResponseDto[]]>;
 }
 
-export const PracticeExerciseSchema = z.object({
-  id: z.string(),
-  scenario: z.string(),
-  prompts: z.array(z.string()).min(1, 'Exercise prompts must not be empty.'),
-  expectedResponses: z.array(
-    z.object({
-      content: z.string(),
-      style: z.array(z.string()),
-    }),
-  ),
-  learnerRole: z.string().optional(),
-  counterpartRole: z.string().optional(),
-  topics: z.array(z.string()),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-  practicedAt: z.string().nullable(),
-  practiceCount: z.number().default(0),
-});
+export interface PracticeExercise {
+  id: string;
+  format: 'communication' | 'word' | 'sentence' | 'paragraph';
+  name: string;
+  topics: string[];
+  // Communication format fields
+  scenario?: string;
+  prompts?: string[];
+  expectedResponses?: {
+    content: string;
+    style: string[];
+  }[];
+  learnerRole?: string;
+  counterpartRole?: string;
+  // Word format fields
+  word?: string;
+  meaning?: string;
+  clues?: string[];
+  sentences?: string[];
+  // Sentence format fields
+  words?: string[];
+  // Paragraph format fields
+  paragraph?: string;
+  // Metadata
+  createdAt?: string;
+  updatedAt?: string;
+  practicedAt: string | null;
+  practiceCount: number;
+  // Presentation type for randomly chosen exercises
+  presentationType?: string;
+}
 
-export const PaginatedPracticeExercisesSchema = z.object({
-  items: z.array(PracticeExerciseSchema),
-  nextCursor: z.string().nullable(),
-  previousCursor: z.string().nullable(),
-  hasNext: z.boolean(),
-  hasPrevious: z.boolean(),
-});
+export interface PaginatedPracticeExercises {
+  items: PracticeExercise[];
+  nextCursor: string | null;
+  previousCursor: string | null;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
 
-export const SubmitResponseSchema = z.object({
-  id: z.string(),
-  exerciseId: z.string(),
-  response: z.string(),
-  score: z.number(),
-  feedback: z.string(),
-  correctness: z.object({
-    score: z.number(),
-    feedback: z.string(),
-    fixes: z.array(z.string()),
-    correctedSentence: z.string(),
-  }),
-  appropriateness: z.object({
-    score: z.number(),
-    feedback: z.string(),
-    clarity: z.object({
-      score: z.number(),
-      feedback: z.string(),
-    }),
-    politeness: z.object({
-      score: z.number(),
-      feedback: z.string(),
-    }),
-    tone: z.object({
-      score: z.number(),
-      feedback: z.string(),
-    }),
-  }),
-});
-
-export type PracticeExercise = z.infer<typeof PracticeExerciseSchema>;
-
-export type PaginatedPracticeExercises = z.infer<
-  typeof PaginatedPracticeExercisesSchema
->;
-
-export type SubmitResponse = z.infer<typeof SubmitResponseSchema>;
+export interface SubmitResponse {
+  id: string;
+  exerciseId: string;
+  response: string;
+  score: number;
+  feedback: string;
+  correctness: {
+    score: number;
+    feedback: string;
+    fixes: string[];
+    correctedSentence: string;
+  };
+  appropriateness: {
+    score: number;
+    feedback: string;
+    clarity: {
+      score: number;
+      feedback: string;
+    };
+    politeness: {
+      score: number;
+      feedback: string;
+    };
+    tone: {
+      score: number;
+      feedback: string;
+    };
+  };
+}
 
 export interface ExerciseResponseDto {
   id: string;
