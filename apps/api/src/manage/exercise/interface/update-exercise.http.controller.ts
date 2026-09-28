@@ -11,8 +11,8 @@ import {
 import { ApiVersion } from '../../../common/constants';
 import { RequireUser } from '../../../common/interface/require-user.guard';
 import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseResponseDto } from './exercise.response.dto';
-import { UpdateExerciseRequestDto } from './update-exercise.request.dto';
+import { ExerciseDto } from './exercise.dto';
+import { UpdateExerciseDto } from './update-exercise.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -23,10 +23,8 @@ export class UpdateExerciseHttpController {
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id') id: string,
-    @Body() body: UpdateExerciseRequestDto,
-  ): Promise<ExerciseResponseDto> {
-    return ExerciseResponseDto.fromEntity(
-      await this.exerciseService.update(id, body),
-    );
+    @Body() body: UpdateExerciseDto,
+  ): Promise<ExerciseDto> {
+    return ExerciseDto.fromEntity(await this.exerciseService.update(id, body));
   }
 }

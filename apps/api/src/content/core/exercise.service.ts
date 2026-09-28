@@ -4,8 +4,8 @@ import {
   CONTEXT_SERVICE,
   type ContextService,
 } from '../../common/core/context.service';
-import { CreateExerciseRequestDto } from '../../manage/exercise/interface/create-exercise.request.dto';
-import { UpdateExerciseRequestDto } from '../../manage/exercise/interface/update-exercise.request.dto';
+import { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto';
+import { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto';
 import { ExerciseEntity, ExerciseStatus } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,
@@ -21,7 +21,7 @@ export class ExerciseService {
     private readonly contextService: ContextService,
   ) {}
 
-  async create(data: CreateExerciseRequestDto): Promise<ExerciseEntity> {
+  async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
     return this.repository.create({
       ...data.toEntity(),
       userId: this.contextService.getUserIdOrThrow(),
@@ -78,10 +78,7 @@ export class ExerciseService {
     return exercise;
   }
 
-  async update(
-    id: string,
-    data: UpdateExerciseRequestDto,
-  ): Promise<ExerciseEntity> {
+  async update(id: string, data: UpdateExerciseDto): Promise<ExerciseEntity> {
     const userId = this.contextService.getUserIdOrThrow();
     const exercise = await this.repository.findById(id);
 

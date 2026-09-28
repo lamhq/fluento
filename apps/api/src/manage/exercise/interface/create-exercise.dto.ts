@@ -13,7 +13,7 @@ import {
   ExerciseStatus,
 } from '../../../content/core/exercise.entity';
 
-export class UpdateExerciseRequestDto {
+export class CreateExerciseDto {
   @IsString()
   @IsNotEmpty()
   name: string;

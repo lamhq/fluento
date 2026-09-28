@@ -10,8 +10,8 @@ import {
 import { ApiVersion } from '../../../common/constants';
 import { RequireUser } from '../../../common/interface/require-user.guard';
 import { ExerciseService } from '../../../content/core/exercise.service';
-import { CreateExerciseRequestDto } from './create-exercise.request.dto';
-import { ExerciseResponseDto } from './exercise.response.dto';
+import { CreateExerciseDto } from './create-exercise.dto';
+import { ExerciseDto } from './exercise.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -20,11 +20,7 @@ export class CreateExerciseHttpController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(
-    @Body() body: CreateExerciseRequestDto,
-  ): Promise<ExerciseResponseDto> {
-    return ExerciseResponseDto.fromEntity(
-      await this.exerciseService.create(body),
-    );
+  async create(@Body() body: CreateExerciseDto): Promise<ExerciseDto> {
+    return ExerciseDto.fromEntity(await this.exerciseService.create(body));
   }
 }

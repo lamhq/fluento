@@ -1,6 +1,6 @@
 import type { Entity } from '../../common/types/entity';
 
-export class LearnerExerciseProgressEntity implements Entity {
+export class LearnerExerciseEntity implements Entity {
   id: string;
   userId: string;
   exerciseId: string;
@@ -9,7 +9,7 @@ export class LearnerExerciseProgressEntity implements Entity {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(data?: Partial<LearnerExerciseProgressEntity>) {
+  constructor(data?: Partial<LearnerExerciseEntity>) {
     Object.assign(this, data);
   }
 }

@@ -10,10 +10,10 @@ import {
   ExerciseStatus,
 } from '../../content/core/exercise.entity';
 import { ExerciseModel } from '../../content/infrastructure/exercise.schema';
-import { ExerciseView } from '../core/exercise.view';
+import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 import type { PracticeExerciseQuery } from '../core/practice-exercise.repository';
 import { PracticeExerciseRepository } from '../core/practice-exercise.repository';
-import { LearnerExerciseProgressModel } from './learner-exercise-progress.schema';
+import { LearnerExerciseModel } from './learner-exercise.schema';
 
 interface RawPracticeExercise {
   _id: Types.ObjectId;
@@ -44,8 +44,8 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
   constructor(
     @InjectModel(ExerciseModel.name)
     private readonly exerciseModel: Model<ExerciseModel>,
-    @InjectModel(LearnerExerciseProgressModel.name)
-    private readonly learnerExerciseModel: Model<LearnerExerciseProgressModel>,
+    @InjectModel(LearnerExerciseModel.name)
+    private readonly learnerExerciseModel: Model<LearnerExerciseModel>,
   ) {}
 
   /**
@@ -54,7 +54,7 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
   async findAllForUser(
     userId: string,
     query?: PracticeExerciseQuery,
-  ): Promise<CursorPaginationResult<ExerciseView>> {
+  ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
     const { sort, limit, topics } = query ?? {};
     const safeLimit = Math.min(!limit || limit < 0 ? 10 : limit, 50);
     const pipeline: PipelineStage[] = [
@@ -149,12 +149,12 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
     return (data as { _id?: unknown })._id !== undefined;
   }
 
-  private dbModelToEntity(item: unknown): ExerciseView {
+  private dbModelToEntity(item: unknown): PracticeExerciseEntity {
     if (!this.isPracticeExercise(item)) {
       throw new Error('Invalid database model: missing _id field');
     }
 
-    return new ExerciseView({
+    return new PracticeExerciseEntity({
       id: item._id.toString(),
       userId: item.userId.toString(),
       status: item.status as ExerciseStatus,

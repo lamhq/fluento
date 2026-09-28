@@ -4,9 +4,9 @@ import {
   ExerciseSkill,
   ExerciseStatus,
 } from '../../../content/core/exercise.entity';
-import { ExerciseResponseDto } from './exercise.response.dto';
+import { ExerciseDto } from './exercise.dto';
 
-describe('ExerciseResponseDto', () => {
+describe('ExerciseDto', () => {
   it('maps an entity into a response DTO', () => {
     const entity: ExerciseEntity = {
       id: 'exercise-1',
@@ -24,9 +24,9 @@ describe('ExerciseResponseDto', () => {
       updatedAt: new Date('2024-01-02T00:00:00.000Z'),
     };
 
-    const dto = ExerciseResponseDto.fromEntity(entity);
+    const dto = ExerciseDto.fromEntity(entity);
 
-    expect(dto).toBeInstanceOf(ExerciseResponseDto);
+    expect(dto).toBeInstanceOf(ExerciseDto);
     expect(dto).toEqual({
       id: 'exercise-1',
       userId: 'user-1',

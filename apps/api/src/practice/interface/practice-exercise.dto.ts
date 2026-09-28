@@ -1,20 +1,31 @@
-import { ExerciseView } from '../core/exercise.view';
+import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 
-export class ExerciseResponseDto {
+export class PracticeExerciseDto {
+  // Common exercise fields
   id: string;
   userId: string;
   name: string;
   skill: string;
   format: string;
+
+  // Communication format fields
   scenario?: string;
-  paragraph?: string;
   prompts?: string[];
   validResponses?: string[];
+
+  // Word format fields
   word?: string;
   meaning?: string;
   clues?: string[];
   sentences?: string[];
+
+  // Sentence format fields
   words?: string[];
+
+  // Paragraph format fields
+  paragraph?: string;
+
+  // Exercise context and practice progress
   topics: string[];
   references: string[];
   createdAt?: Date;
@@ -22,12 +33,12 @@ export class ExerciseResponseDto {
   practicedAt?: Date;
   practiceCount: number;
 
-  constructor(data?: Partial<ExerciseResponseDto>) {
+  constructor(data?: Partial<PracticeExerciseDto>) {
     Object.assign(this, data);
   }
 
-  static fromEntity(entity: ExerciseView): ExerciseResponseDto {
-    return new ExerciseResponseDto({
+  static fromEntity(entity: PracticeExerciseEntity): PracticeExerciseDto {
+    return new PracticeExerciseDto({
       id: entity.id,
       userId: entity.userId,
       name: entity.name,

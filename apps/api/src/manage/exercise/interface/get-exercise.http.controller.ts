@@ -11,7 +11,7 @@ import {
 import { ApiVersion } from '../../../common/constants';
 import { RequireUser } from '../../../common/interface/require-user.guard';
 import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseResponseDto } from './exercise.response.dto';
+import { ExerciseDto } from './exercise.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -20,13 +20,13 @@ export class GetExerciseHttpController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findById(@Param('id') id: string): Promise<ExerciseResponseDto> {
+  async findById(@Param('id') id: string): Promise<ExerciseDto> {
     const exercise = await this.exerciseService.findById(id);
 
     if (!exercise) {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return ExerciseResponseDto.fromEntity(exercise);
+    return ExerciseDto.fromEntity(exercise);
   }
 }

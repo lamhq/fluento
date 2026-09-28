@@ -1,6 +1,6 @@
 import { ExerciseEntity } from '../../../content/core/exercise.entity';
 
-export class ExerciseResponseDto {
+export class ExerciseDto {
   id: string;
   userId: string;
   name: string;
@@ -21,12 +21,12 @@ export class ExerciseResponseDto {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(data?: Partial<ExerciseResponseDto>) {
+  constructor(data?: Partial<ExerciseDto>) {
     Object.assign(this, data);
   }
 
-  static fromEntity(entity: ExerciseEntity): ExerciseResponseDto {
-    return new ExerciseResponseDto({
+  static fromEntity(entity: ExerciseEntity): ExerciseDto {
+    return new ExerciseDto({
       id: entity.id,
       userId: entity.userId,
       name: entity.name,

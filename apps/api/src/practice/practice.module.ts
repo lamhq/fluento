@@ -12,9 +12,9 @@ import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repositor
 import { RESPONSE_EVALUATION_PORT } from './core/response-evaluation.port';
 import { ResponseEvaluationService } from './core/response-evaluation.service';
 import {
-  LearnerExerciseProgressModel,
-  LearnerExerciseProgressSchema,
-} from './infrastructure/learner-exercise-progress.schema';
+  LearnerExerciseModel,
+  LearnerExerciseSchema,
+} from './infrastructure/learner-exercise.schema';
 import { MgPracticeAttemptRepository } from './infrastructure/mg-practice-attempt.repository';
 import { MgPracticeExerciseRepository } from './infrastructure/mg-practice-exercise.repository';
 import { OpenAIEvaluationService } from './infrastructure/openai-evaluation.service';
@@ -31,8 +31,8 @@ import { SubmitResponseHttpController } from './interface/submit-response.http.c
     MongooseModule.forFeature([
       { name: ExerciseModel.name, schema: ExerciseSchema },
       {
-        name: LearnerExerciseProgressModel.name,
-        schema: LearnerExerciseProgressSchema,
+        name: LearnerExerciseModel.name,
+        schema: LearnerExerciseSchema,
       },
       { name: PracticeAttemptModel.name, schema: PracticeAttemptSchema },
     ]),

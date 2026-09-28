@@ -15,7 +15,7 @@ import { RequireUser } from '../../../common/interface/require-user.guard';
 import type { OffsetPaginationResult } from '../../../common/types/pagination';
 import { ExerciseStatus } from '../../../content/core/exercise.entity';
 import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseResponseDto } from './exercise.response.dto';
+import { ExerciseDto } from './exercise.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -31,7 +31,7 @@ export class FindExercisesHttpController {
     @Query('sort') sort?: string,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
-  ): Promise<OffsetPaginationResult<ExerciseResponseDto>> {
+  ): Promise<OffsetPaginationResult<ExerciseDto>> {
     const {
       total,
       items,
@@ -50,7 +50,7 @@ export class FindExercisesHttpController {
       total,
       offset: normalizedOffset,
       limit: normalizedLimit,
-      items: items.map((exercise) => ExerciseResponseDto.fromEntity(exercise)),
+      items: items.map((exercise) => ExerciseDto.fromEntity(exercise)),
     };
   }
 }

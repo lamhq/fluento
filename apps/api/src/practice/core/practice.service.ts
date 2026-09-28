@@ -14,12 +14,12 @@ import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
 } from '../../content/core/exercise.repository';
-import { ExerciseView } from './exercise.view';
 import { PracticeAttemptEntity } from './practice-attempt.entity';
 import {
   PRACTICE_ATTEMPT_REPOSITORY,
   type PracticeAttemptRepository,
 } from './practice-attempt.repository';
+import { PracticeExerciseEntity } from './practice-exercise.entity';
 import {
   PRACTICE_EXERCISE_REPOSITORY,
   type PracticeExerciseQuery,
@@ -44,7 +44,7 @@ export class PracticeService {
   async findExercises(
     userId?: string,
     query?: PracticeExerciseQuery,
-  ): Promise<CursorPaginationResult<ExerciseView>> {
+  ): Promise<CursorPaginationResult<PracticeExerciseEntity>> {
     const currentUserId = userId ?? this.contextService.getUserIdOrThrow();
     return this.practiceExerciseRepository.findAllForUser(currentUserId, query);
   }

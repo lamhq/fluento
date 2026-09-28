@@ -8,12 +8,6 @@ export class UserModel {
   @Prop({ required: true, unique: true, index: true })
   email: string;
 
-  @Prop()
-  name?: string;
-
-  @Prop()
-  avatarUrl?: string;
-
   createdAt: Date;
   updatedAt: Date;
 }

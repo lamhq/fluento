@@ -33,10 +33,10 @@ export class ExerciseModel {
   paragraph?: string;
 
   @Prop({ type: [String], default: [] })
-  prompts: string[];
+  prompts?: string[];
 
   @Prop({ type: [String], default: [] })
-  validResponses: string[];
+  validResponses?: string[];
 
   @Prop({ type: [String], default: [] })
   references: string[];
@@ -48,13 +48,13 @@ export class ExerciseModel {
   meaning?: string;
 
   @Prop({ type: [String], default: [] })
-  clues: string[];
+  clues?: string[];
 
   @Prop({ type: [String], default: [] })
-  sentences: string[];
+  sentences?: string[];
 
   @Prop({ type: [String], default: [] })
-  words: string[];
+  words?: string[];
 
   @Prop({ type: [String], default: [] })
   topics: string[];
