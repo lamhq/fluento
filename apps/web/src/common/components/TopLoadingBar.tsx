@@ -26,7 +26,7 @@ export default function TopLoadingBar({ open }: TopLoadingBarProps) {
 
   // automatic increase loading bar's progress while open
   useEffect(() => {
-    let interval: number;
+    let interval: NodeJS.Timeout;
     if (open) {
       setTimeout(() => {
         setProgress(START_PROGRESS);

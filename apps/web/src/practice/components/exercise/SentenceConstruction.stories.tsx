@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import SentenceConstructionExercise from './SentenceConstructionExercise';
+import SentenceConstruction from './SentenceConstruction';
 
 const meta = {
-  component: SentenceConstructionExercise,
-} satisfies Meta<typeof SentenceConstructionExercise>;
+  title: 'Practice/Articulation/SentenceConstruction',
+  component: SentenceConstruction,
+} satisfies Meta<typeof SentenceConstruction>;
 
 export default meta;
 

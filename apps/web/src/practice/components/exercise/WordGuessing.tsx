@@ -3,8 +3,16 @@ import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import {
   InputGroup,
@@ -13,24 +21,23 @@ import {
   InputGroupTextarea,
 } from '@/components/ui/input-group';
 
-import type { PracticeExercise } from '../../api/types';
-import SubmitButton from '../../common/components/Button';
-import { useErrorHandler } from '../../error';
-import { useResetPracticeExercise, useSubmitResponse } from '../hooks';
-import { normalizeLearnerResponse } from '../utils';
-import ResponseFeedback from './ResponseFeedback';
-
+import type { PracticeExercise } from '../../../api/types';
+import SubmitButton from '../../../common/components/Button';
+import { useErrorHandler } from '../../../error';
+import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
+import { normalizeLearnerResponse } from '../../utils';
+import ResponseFeedback from '../ResponseFeedback';
 const formSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface JustOneWordExerciseProps {
+interface WordGuessingProps {
   exercise: PracticeExercise;
 }
 
-export default function JustOneWordExercise({ exercise }: JustOneWordExerciseProps) {
+export default function WordGuessing({ exercise }: WordGuessingProps) {
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -61,30 +68,34 @@ export default function JustOneWordExercise({ exercise }: JustOneWordExercisePro
     resetPracticeExercise();
   };
   const isSubmitting = form.formState.isSubmitting;
-  const topic = exercise.topics[0] ?? '';
 
   return (
     <>
       <Card size="sm" className="text-sm mb-4">
-        <CardHeader className="border-b" />
+        <CardHeader className="border-b text-center">
+          <CardTitle>{exercise.name}</CardTitle>
+          {exercise.topics.length > 0 && (
+            <CardDescription className="mt-1">
+              {exercise.topics.map((topic) => (
+                <Badge
+                  key={topic}
+                  variant="outline"
+                  className="mr-1 text-xs text-muted-foreground"
+                >
+                  {topic}
+                </Badge>
+              ))}
+            </CardDescription>
+          )}
+        </CardHeader>
         <CardContent className="space-y-4">
           <form id="practice-form" onSubmit={handleSubmit} noValidate>
             <div className="space-y-2">
               <div className="mb-4">
-                <h2 className="text-lg font-bold">Just One Word</h2>
-                {topic && <p className="text-sm text-gray-600">({topic})</p>}
-              </div>
-              <div className="mb-4">
                 <p className="font-semibold">
-                  Guess the word or phrase from these clues:
+                  Guess the word or phrase from its meaning:
                 </p>
-                <ul className="list-disc list-inside space-y-1 mt-2">
-                  {exercise.clues?.map((clue, index) => (
-                    <li key={index} className="text-sm">
-                      {clue}
-                    </li>
-                  ))}
-                </ul>
+                <p className="mt-2 italic text-gray-700">{exercise.meaning}</p>
               </div>
               <Controller
                 name="response"

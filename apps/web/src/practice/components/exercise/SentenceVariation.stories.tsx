@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import SentenceVariationExercise from './SentenceVariationExercise';
+import SentenceVariation from './SentenceVariation';
 
 const meta = {
-  component: SentenceVariationExercise,
-} satisfies Meta<typeof SentenceVariationExercise>;
+  title: 'Practice/Articulation/SentenceVariation',
+  component: SentenceVariation,
+} satisfies Meta<typeof SentenceVariation>;
 
 export default meta;
 

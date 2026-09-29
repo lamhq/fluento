@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import CommunicationExercise from './CommunicationExercise';
+import Communication from './Communication';
 
 const meta = {
-  component: CommunicationExercise,
-} satisfies Meta<typeof CommunicationExercise>;
+  title: 'Practice/Communication/Communication',
+  component: Communication,
+} satisfies Meta<typeof Communication>;
 
 export default meta;
 

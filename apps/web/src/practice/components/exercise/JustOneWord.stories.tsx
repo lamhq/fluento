@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import JustOneWordExercise from './JustOneWordExercise';
+import JustOneWord from './JustOneWord';
 
 const meta = {
-  component: JustOneWordExercise,
-} satisfies Meta<typeof JustOneWordExercise>;
+  title: 'Practice/Vocabulary/JustOneWord',
+  component: JustOneWord,
+} satisfies Meta<typeof JustOneWord>;
 
 export default meta;
 

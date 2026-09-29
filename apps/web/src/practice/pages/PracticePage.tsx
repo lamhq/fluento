@@ -1,31 +1,31 @@
 import type { PracticeExercise } from '../../api/types';
 import TopLoadingBar from '../../common/components/TopLoadingBar';
-import CommunicationExercise from '../components/CommunicationExercise';
+import Communication from '../components/exercise/Communication';
+import JustOneWord from '../components/exercise/JustOneWord';
+import ParagraphVariation from '../components/exercise/ParagraphVariation';
+import SentenceConstruction from '../components/exercise/SentenceConstruction';
+import SentenceVariation from '../components/exercise/SentenceVariation';
+import UsingWord from '../components/exercise/UsingWord';
+import WordGuessing from '../components/exercise/WordGuessing';
 import { ExerciseSkeleton } from '../components/ExerciseSkeleton';
-import JustOneWordExercise from '../components/JustOneWordExercise';
-import ParagraphVariationExercise from '../components/ParagraphVariationExercise';
-import SentenceConstructionExercise from '../components/SentenceConstructionExercise';
-import SentenceVariationExercise from '../components/SentenceVariationExercise';
-import UsingWordExercise from '../components/UsingWordExercise';
-import WordGuessingExercise from '../components/WordGuessingExercise';
 import { usePracticeExercise } from '../hooks';
 
 function renderExercise(exercise: PracticeExercise) {
   switch (exercise.type) {
     case 'communication':
-      return <CommunicationExercise exercise={exercise} />;
+      return <Communication exercise={exercise} />;
     case 'using-word':
-      return <UsingWordExercise exercise={exercise} />;
+      return <UsingWord exercise={exercise} />;
     case 'just-one-word':
-      return <JustOneWordExercise exercise={exercise} />;
+      return <JustOneWord exercise={exercise} />;
     case 'word-guessing':
-      return <WordGuessingExercise exercise={exercise} />;
+      return <WordGuessing exercise={exercise} />;
     case 'sentence-construction':
-      return <SentenceConstructionExercise exercise={exercise} />;
+      return <SentenceConstruction exercise={exercise} />;
     case 'sentence-variation':
-      return <SentenceVariationExercise exercise={exercise} />;
+      return <SentenceVariation exercise={exercise} />;
     case 'paragraph-variation':
-      return <ParagraphVariationExercise exercise={exercise} />;
+      return <ParagraphVariation exercise={exercise} />;
   }
 }
 

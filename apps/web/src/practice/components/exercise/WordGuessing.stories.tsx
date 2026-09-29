@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import WordGuessingExercise from './WordGuessingExercise';
+import WordGuessing from './WordGuessing';
 
 const meta = {
-  component: WordGuessingExercise,
-} satisfies Meta<typeof WordGuessingExercise>;
+  title: 'Practice/Vocabulary/WordGuessing',
+  component: WordGuessing,
+} satisfies Meta<typeof WordGuessing>;
 
 export default meta;
 
