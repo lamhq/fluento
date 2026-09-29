@@ -1,21 +1,32 @@
+export type PracticeType =
+  | 'communication'
+  | 'using-word'
+  | 'just-one-word'
+  | 'word-guessing'
+  | 'sentence-construction'
+  | 'sentence-variation'
+  | 'paragraph-variation';
+
 export interface ApiClient {
   setAccessToken(token: string): void;
 
-  getPracticeExercise(): Promise<PaginatedPracticeExercises>;
+  getPracticeExercise(): Promise<PaginatedResponse<PracticeExercise>>;
 
   submitPracticeResponse(
     exerciseId: string,
     response: string,
   ): Promise<SubmitResponse>;
 
-  getExercises(options?: {
-    scenario?: string;
-    topics?: string[];
-    status?: 'active' | 'archived' | 'all';
-    sort?: string;
-    offset?: number;
-    limit?: number;
-  }): Promise<[number, ExerciseResponseDto[]]>;
+  getExercises(options?: ExerciseQuery): Promise<[number, Exercise[]]>;
+}
+
+export interface ExerciseQuery {
+  scenario?: string;
+  topics?: string[];
+  status?: 'active' | 'archived' | 'all';
+  sort?: string;
+  offset?: number;
+  limit?: number;
 }
 
 export interface PracticeExercise {
@@ -23,35 +34,31 @@ export interface PracticeExercise {
   format: 'communication' | 'word' | 'sentence' | 'paragraph';
   name: string;
   topics: string[];
+  type: PracticeType;
+  practicedAt: string | null;
+  practiceCount: number;
+
   // Communication format fields
   scenario?: string;
   prompts?: string[];
-  expectedResponses?: {
-    content: string;
-    style: string[];
-  }[];
-  learnerRole?: string;
-  counterpartRole?: string;
+  validResponses?: string[];
+
   // Word format fields
   word?: string;
   meaning?: string;
   clues?: string[];
   sentences?: string[];
+
   // Sentence format fields
+  sentence?: string;
   words?: string[];
+
   // Paragraph format fields
   paragraph?: string;
-  // Metadata
-  createdAt?: string;
-  updatedAt?: string;
-  practicedAt: string | null;
-  practiceCount: number;
-  // Presentation type for randomly chosen exercises
-  presentationType?: string;
 }
 
-export interface PaginatedPracticeExercises {
-  items: PracticeExercise[];
+export interface PaginatedResponse<T> {
+  items: T[];
   nextCursor: string | null;
   previousCursor: string | null;
   hasNext: boolean;
@@ -88,43 +95,25 @@ export interface SubmitResponse {
   };
 }
 
-export interface ExerciseResponseDto {
+export interface Exercise {
   id: string;
-  scenario: string;
+  userId: string;
+  name: string;
+  skill: string;
+  format: string;
+  scenario?: string;
+  paragraph?: string;
+  prompts?: string[];
+  validResponses?: string[];
+  word?: string;
+  meaning?: string;
+  clues?: string[];
+  sentences?: string[];
+  words?: string[];
   topics: string[];
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  learnerRole?: string;
-  counterpartRole?: string;
-  prompts: string[];
-  expectedResponses: {
-    content: string;
-    style: string[];
-  }[];
-}
-
-export interface PracticeExercisesResponse {
-  items: PracticeExerciseResponseDto[];
-  nextCursor: string | null;
-  previousCursor: string | null;
-  hasNext: boolean;
-  hasPrevious: boolean;
-}
-
-export interface PracticeExerciseResponseDto {
-  id: string;
-  scenario: string;
-  topics: string[];
+  references: string[];
   createdAt?: string;
   updatedAt?: string;
-  practicedAt: string | null;
+  practicedAt?: string;
   practiceCount: number;
-  learnerRole?: string;
-  counterpartRole?: string;
-  prompts: string[];
-  expectedResponses: {
-    content: string;
-    style: string[];
-  }[];
 }

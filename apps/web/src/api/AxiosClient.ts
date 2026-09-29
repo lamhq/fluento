@@ -2,10 +2,12 @@ import axios, { type AxiosInstance } from 'axios';
 
 import type {
   ApiClient,
-  ExerciseResponseDto,
-  PaginatedPracticeExercises,
+  Exercise,
+  PaginatedResponse,
+  PracticeExercise,
   SubmitResponse,
 } from './types';
+import { getPracticeType } from './utils';
 
 export default class AxiosClient implements ApiClient {
   private readonly httpClient: AxiosInstance;
@@ -18,8 +20,8 @@ export default class AxiosClient implements ApiClient {
     this.httpClient.defaults.headers.common.Authorization = `Bearer ${token}`;
   }
 
-  async getPracticeExercise(): Promise<PaginatedPracticeExercises> {
-    const response = await this.httpClient.get<PaginatedPracticeExercises>(
+  async getPracticeExercise() {
+    const response = await this.httpClient.get<PaginatedResponse<PracticeExercise>>(
       '/v1/practice/exercises',
       {
         params: {
@@ -29,7 +31,11 @@ export default class AxiosClient implements ApiClient {
       },
     );
 
-    return response.data;
+    const items = response.data.items.map((exercise) => {
+      return { ...exercise, type: getPracticeType(exercise.format) };
+    });
+
+    return { ...response.data, items };
   }
 
   async submitPracticeResponse(
@@ -53,11 +59,11 @@ export default class AxiosClient implements ApiClient {
       offset?: number;
       limit?: number;
     } = {},
-  ): Promise<[number, ExerciseResponseDto[]]> {
+  ): Promise<[number, Exercise[]]> {
     const params = options;
     const response = await this.httpClient.get<{
       total: number;
-      items: ExerciseResponseDto[];
+      items: Exercise[];
     }>('/v1/manage/exercises', {
       params,
     });

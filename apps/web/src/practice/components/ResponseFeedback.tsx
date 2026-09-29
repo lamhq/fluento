@@ -5,12 +5,12 @@ import { getFeedbackIcon, getFeedbackTitle } from '../utils';
 
 export interface ResponseFeedbackProps {
   feedback: SubmitResponse;
-  expectedResponses: PracticeExercise['expectedResponses'];
+  validResponses: NonNullable<PracticeExercise['validResponses']>;
 }
 
 export default function ResponseFeedback({
   feedback,
-  expectedResponses,
+  validResponses,
 }: ResponseFeedbackProps) {
   return (
     <Card size="sm" className="text-sm">
@@ -49,18 +49,15 @@ export default function ResponseFeedback({
           </section>
         )}
 
-        {expectedResponses.length > 0 && (
+        {validResponses.length > 0 && (
           <section aria-labelledby="practice-feedback-alternatives">
             <h4 id="practice-feedback-alternatives" className="mb-2">
               You can say:
             </h4>
             <ul className="list-disc space-y-1 pl-5">
-              {expectedResponses.map((expectedResponse, index) => (
+              {validResponses.map((validResponse, index) => (
                 <li key={`alternative-${index.toString()}`}>
-                  <span className="italic text-foreground/80">
-                    {expectedResponse.content}
-                  </span>{' '}
-                  <small>({expectedResponse.style})</small>
+                  <span className="italic text-foreground/80">{validResponse}</span>
                 </li>
               ))}
             </ul>

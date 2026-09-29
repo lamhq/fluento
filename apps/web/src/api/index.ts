@@ -1,10 +1,4 @@
 export { default as ApiProvider } from './ApiProvider';
 export { default as AxiosClient } from './AxiosClient';
 export { useApiClient } from './hooks';
-export type {
-  ApiClient,
-  ExerciseResponseDto,
-  PracticeExerciseResponseDto,
-  PaginatedPracticeExercises as PracticeExercisesResponse,
-  SubmitResponse,
-} from './types';
+export type { ApiClient, SubmitResponse } from './types';

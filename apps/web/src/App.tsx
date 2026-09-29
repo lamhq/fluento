@@ -5,14 +5,10 @@ import ErrorBoundary from './common/components/ErrorBoundary';
 import MainLayout from './common/components/MainLayout';
 import SignInCallbackPage from './common/pages/SignInCallbackPage';
 import SignOutCallbackPage from './common/pages/SignOutCallbackPage';
-import DataFetchingPage from './demo/pages/DataFetchingPage';
-import DataMutationPage from './demo/pages/DataMutationPage';
 import HomePage from './demo/pages/HomePage';
 import ProtectedPage from './demo/pages/ProtectedPage';
 import PracticePage from './practice/pages/PracticePage';
 import {
-  DATA_FETCHING_ROUTE,
-  DATA_MUTATION_ROUTE,
   HOME_ROUTE,
   PRACTICE_ROUTE,
   PROTECTED_ROUTE,
@@ -28,8 +24,6 @@ export default function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path={HOME_ROUTE} element={<HomePage />} />
-          <Route path={DATA_FETCHING_ROUTE} element={<DataFetchingPage />} />
-          <Route path={DATA_MUTATION_ROUTE} element={<DataMutationPage />} />
           <Route path={PROTECTED_ROUTE} element={<ProtectedPageWithAuth />} />
           <Route path={PRACTICE_ROUTE} element={<PracticePage />} />
         </Route>

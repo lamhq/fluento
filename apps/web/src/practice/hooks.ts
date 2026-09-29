@@ -1,17 +1,17 @@
 import {
   queryOptions,
   useMutation,
+  useQuery,
   useQueryClient,
-  useSuspenseQuery,
 } from '@tanstack/react-query';
 
 import { useApiClient } from '../api';
 
-const PRACTICE_EXERCISES_QUERY_KEY = ['practice-page', 'exercises'];
+const PRACTICE_EXERCISES_QUERY_KEY = ['practice-exercise'];
 
 export function usePracticeExercise() {
   const apiClient = useApiClient();
-  const result = useSuspenseQuery(
+  return useQuery(
     queryOptions({
       queryKey: PRACTICE_EXERCISES_QUERY_KEY,
       queryFn: async () => {
@@ -27,8 +27,6 @@ export function usePracticeExercise() {
       },
     }),
   );
-
-  return result.data;
 }
 
 export function useSubmitResponse() {
