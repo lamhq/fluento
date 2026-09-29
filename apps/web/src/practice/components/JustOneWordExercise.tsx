@@ -19,16 +19,18 @@ import { useErrorHandler } from '../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../hooks';
 import { normalizeLearnerResponse } from '../utils';
 import ResponseFeedback from './ResponseFeedback';
+
 const formSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
 });
+
 type FormValues = z.infer<typeof formSchema>;
 
-export default function JustOneWordExercise({
-  exercise,
-}: {
+interface JustOneWordExerciseProps {
   exercise: PracticeExercise;
-}) {
+}
+
+export default function JustOneWordExercise({ exercise }: JustOneWordExerciseProps) {
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();

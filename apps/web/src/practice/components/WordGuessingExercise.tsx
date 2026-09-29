@@ -22,13 +22,16 @@ import ResponseFeedback from './ResponseFeedback';
 const formSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
 });
+
 type FormValues = z.infer<typeof formSchema>;
+
+interface WordGuessingExerciseProps {
+  exercise: PracticeExercise;
+}
 
 export default function WordGuessingExercise({
   exercise,
-}: {
-  exercise: PracticeExercise;
-}) {
+}: WordGuessingExerciseProps) {
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();

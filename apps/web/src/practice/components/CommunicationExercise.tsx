@@ -26,13 +26,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface CommunicationPracticeExerciseProps {
+interface CommunicationExerciseProps {
   exercise: PracticeExercise;
 }
 
 export default function CommunicationExercise({
   exercise,
-}: CommunicationPracticeExerciseProps) {
+}: CommunicationExerciseProps) {
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
