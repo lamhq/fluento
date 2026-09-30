@@ -19,3 +19,6 @@ build/
 coverage/
 .nyc_output/
 *.lcov
+
+*storybook.log
+storybook-static

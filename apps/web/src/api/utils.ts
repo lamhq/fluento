@@ -1,10 +1,20 @@
-import axios, { type AxiosInstance, type CreateAxiosDefaults } from 'axios';
+import type { PracticeExercise, PracticeType } from './types';
 
-export function createApiClient(config?: CreateAxiosDefaults): AxiosInstance {
-  return axios.create({
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    ...config,
-  });
+export function getPracticeType(format: PracticeExercise['format']): PracticeType {
+  switch (format) {
+    case 'communication':
+      return 'communication';
+    case 'word': {
+      const types: PracticeType[] = ['using-word', 'just-one-word', 'word-guessing'];
+      return types[Math.floor(Math.random() * types.length)];
+    }
+    case 'sentence': {
+      const types: PracticeType[] = ['sentence-construction', 'sentence-variation'];
+      return types[Math.floor(Math.random() * types.length)];
+    }
+    case 'paragraph':
+      return 'paragraph-variation';
+    default:
+      throw new Error('Unsupported exercise format');
+  }
 }

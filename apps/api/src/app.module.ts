@@ -6,9 +6,11 @@ import { ClsModule } from 'nestjs-cls';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CommModule } from './comm/comm.module';
 import { CommonModule } from './common/common.module';
 import { configFactory } from './config';
+import { ContentModule } from './content/content.module';
+import { ManageModule } from './manage/manage.module';
+import { PracticeModule } from './practice/practice.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -33,7 +35,9 @@ import { UserModule } from './user/user.module';
     }),
     CommonModule,
     UserModule,
-    CommModule,
+    ContentModule,
+    PracticeModule,
+    ManageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

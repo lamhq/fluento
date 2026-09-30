@@ -75,6 +75,22 @@ aws cloudfront create-invalidation \
   - for `prod`: `ERJB4PD7UCXWK`
 - `<region>`: The AWS region of the target environment. Use `ap-southeast-1` for both `dev` and `prod`
 
+## Run storybook
+
+To start Storybook for the web application, run the following command:
+
+```bash
+pnpx -F web storybook
+```
+
+## Init Shadcn/ui
+
+When you want to re-initialize Shadcn/ui setup, run the following command:
+
+```bash
+pnpm dlx shadcn@latest init --preset b2CPkFibI --template vite --pointer
+```
+
 ## Project Structure
 
 Application root:

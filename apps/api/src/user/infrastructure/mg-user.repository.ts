@@ -4,12 +4,12 @@ import { Model } from 'mongoose';
 
 import type { UserEntity } from '../core/user.entity';
 import { UserQuery, UserRepository } from '../core/user.repository';
-import { User, UserDocument } from './schemas/user.schema';
+import { UserDocument, UserModel } from './schemas/user.schema';
 
 @Injectable()
 export class MgUserRepository implements UserRepository {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(UserModel.name) private readonly userModel: Model<UserModel>,
   ) {}
 
   async findOne(query: UserQuery): Promise<UserEntity | null> {

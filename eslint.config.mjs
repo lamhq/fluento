@@ -1,4 +1,4 @@
-// @ts-check
+import storybook from 'eslint-plugin-storybook';
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import jest from 'eslint-plugin-jest';
@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig(
+export default defineConfig([
   // Global ignores
   {
     ignores: [
@@ -133,9 +133,11 @@ export default defineConfig(
     ],
   },
 
+  ...storybook.configs['flat/recommended'],
+
   // Prettier - must be last
   {
     ...eslintConfigPrettier,
     name: 'Prettier',
   },
-);
+]);
