@@ -77,6 +77,10 @@ export class UpdateExerciseDto {
   @IsOptional()
   words?: string[];
 
+  @IsOptional()
+  @IsString()
+  sentence?: string;
+
   @IsNotEmpty()
   @IsEnum(ExerciseStatus)
   status: ExerciseStatus;
@@ -101,6 +105,7 @@ export class UpdateExerciseDto {
       clues: this.clues,
       sentences: this.sentences,
       words: this.words,
+      sentence: this.sentence,
     };
   }
 }

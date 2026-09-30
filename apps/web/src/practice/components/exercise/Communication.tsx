@@ -95,7 +95,7 @@ export default function Communication({ exercise }: CommunicationProps) {
         <CardContent>
           <form id="practice-form" onSubmit={handleSubmit} noValidate>
             <p className="text-xs tracking-wide text-muted-foreground">
-              Participate in a real-life conversation.
+              Communicate in a real-life conversation.
             </p>
 
             <p className="text-lg text-foreground my-4 text-center">{prompt}</p>

@@ -17,7 +17,11 @@ export const Default: Story = {
       id: '65f000000000000000000001',
       format: 'communication',
       name: 'Answer small talk questions',
+      skill: 'communication',
       topics: ['Everyday Conversation'],
+      references: [
+        'https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS',
+      ],
       type: 'communication',
       practicedAt: null,
       practiceCount: 0,

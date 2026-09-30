@@ -188,23 +188,20 @@
 
 ## Skill: articulation
 
-### Talk about your background
+### Describe your background
 
-- name: Talk about your background
+- name: Describe your background
 - skill: articulation
 - format: sentence
 - topics:
   - Job Interview
   - Software Engineering
-- prompts:
-  - Describe your educational background using provided words.
 - words:
   - study
   - computer science
   - university
   - bachelor's degree
-- validResponses:
-  - "I studied computer science at university and had a bachelor's degree."
+- sentence: "I studied computer science at university and had a bachelor's degree."
 
 ### Describe work experiences
 
@@ -214,8 +211,6 @@
 - topics:
   - Job Interview
   - Software Engineering
-- prompts:
-  - Describe your work experience to the interviewer using provided words.
 - words:
   - over / more than
   - 10 years
@@ -223,8 +218,7 @@
   - tech lead
   - manage
   - coding
-- validResponses:
-  - "I have over 10 years of experience in software development. For the past 6 years, I've worked as a tech lead, managing development teams, and doing hands-on coding."
+- sentence: "I have over 10 years of experience in software development. For the past 6 years, I've worked as a tech lead, managing development teams, and doing hands-on coding."
 
 ### Describe job expertise
 
@@ -234,8 +228,6 @@
 - topics:
   - Job Interview
   - Software Engineering
-- prompts:
-  - Describe your skills and areas of expertise using provided words.
 - words:
   - web
   - backend
@@ -244,8 +236,7 @@
   - TypeScript
   - Cloud computing
   - DevOps
-- validResponses:
-  - "I specialize in web and backend development using React, Node.js, TypeScript, Python, Cloud computing, and DevOps, and I have experience with Cloud computing and DevOps practices."
+- sentence: "I specialize in web and backend development using React, Node.js, TypeScript, Python, Cloud computing, and DevOps, and I have experience with Cloud computing and DevOps practices."
 
 ### Describe your strengths
 
@@ -255,17 +246,12 @@
 - topics:
   - Job Interview
   - Software Engineering
-- prompts:
-  - Describe your strengths using provided words.
 - words:
   - work solo
   - high-quality
   - meeting deadlines
   - problem-solving
-- validResponses:
-  - "I'm capable of working solo in a whole project or collaborating effectively within a team."
-  - "With my technical skills and carefulness, I can deliver high-quality work while meeting deadlines consistently."
-  - "I work well with others. I enjoy building positive relationships with teammates. I can connect with people and help them solve problems to keep projects moving smoothly."
+- sentence: "I'm capable of working solo in a whole project or collaborating effectively within a team."
 
 ### Mid-Autumn Festival Introduction
 

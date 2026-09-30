@@ -277,16 +277,10 @@ const articulationExercises = [
     skill: 'articulation',
     format: 'sentence',
     topics: ['Job Interview', 'Software Engineering'],
-    scenario: 'Talk about your background',
-    prompts: ['Describe your educational background using provided words.'],
+    scenario: 'Describe your background',
     words: ['study', 'computer science', 'university', "bachelor's degree"],
-    expectedResponses: [
-      {
-        content:
-          "I studied computer science at university and had a bachelor's degree.",
-        style: ['formal'],
-      },
-    ],
+    sentence:
+      "I studied computer science at university and had a bachelor's degree.",
     references: [],
     createdAt: now,
     updatedAt: now,
@@ -299,9 +293,6 @@ const articulationExercises = [
     format: 'sentence',
     topics: ['Job Interview', 'Software Engineering'],
     scenario: 'Describe work experiences',
-    prompts: [
-      'Describe your work experience to the interviewer using provided words.',
-    ],
     words: [
       'over / more than',
       '10 years',
@@ -310,13 +301,8 @@ const articulationExercises = [
       'manage',
       'coding',
     ],
-    expectedResponses: [
-      {
-        content:
-          "I have over 10 years of experience in software development. For the past 6 years, I've worked as a tech lead, managing development teams, and doing hands-on coding.",
-        style: ['formal'],
-      },
-    ],
+    sentence:
+      "I have over 10 years of experience in software development. For the past 6 years, I've worked as a tech lead, managing development teams, and doing hands-on coding.",
     references: [],
     createdAt: now,
     updatedAt: now,
@@ -329,7 +315,6 @@ const articulationExercises = [
     format: 'sentence',
     topics: ['Job Interview', 'Software Engineering'],
     scenario: 'Describe job expertise',
-    prompts: ['Describe your skills and areas of expertise using provided words.'],
     words: [
       'web',
       'backend',
@@ -339,13 +324,8 @@ const articulationExercises = [
       'Cloud computing',
       'DevOps',
     ],
-    expectedResponses: [
-      {
-        content:
-          'I specialize in web and backend development using React, Node.js, TypeScript, Python, Cloud computing, and DevOps, and I have experience with Cloud computing and DevOps practices.',
-        style: ['formal'],
-      },
-    ],
+    sentence:
+      'I specialize in web and backend development using React, Node.js, TypeScript, Python, Cloud computing, and DevOps, and I have experience with Cloud computing and DevOps practices.',
     references: [],
     createdAt: now,
     updatedAt: now,

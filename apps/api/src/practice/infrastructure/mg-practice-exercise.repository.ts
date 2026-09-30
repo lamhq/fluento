@@ -33,6 +33,7 @@ interface RawPracticeExercise {
   clues: string[];
   sentences: string[];
   words: string[];
+  sentence?: string;
   practiceCount: number;
   practicedAt: Date | null;
   createdAt: Date;
@@ -172,6 +173,7 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
       clues: item.clues,
       sentences: item.sentences,
       words: item.words,
+      sentence: item.sentence,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       practicedAt: item.practicedAt ?? undefined,

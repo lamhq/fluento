@@ -16,17 +16,16 @@ export const Default: Story = {
     exercise: {
       id: '65f00000000000000000000b',
       format: 'sentence',
-      name: 'Talk about your background',
+      name: 'Describe your background',
+      skill: 'articulation',
       topics: ['Job Interview', 'Software Engineering'],
+      references: [],
       type: 'sentence-construction',
       practicedAt: null,
       practiceCount: 0,
-      scenario: 'Talk about your background',
-      prompts: ['Describe your educational background using provided words.'],
       words: ['study', 'computer science', 'university', "bachelor's degree"],
-      validResponses: [
+      sentence:
         "I studied computer science at university and had a bachelor's degree.",
-      ],
     },
   },
 };

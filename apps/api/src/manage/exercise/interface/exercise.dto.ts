@@ -15,6 +15,7 @@ export class ExerciseDto {
   clues?: string[];
   sentences?: string[];
   words?: string[];
+  sentence?: string;
   topics: string[];
   references: string[];
   status: string;
@@ -41,6 +42,7 @@ export class ExerciseDto {
       clues: entity.clues,
       sentences: entity.sentences,
       words: entity.words,
+      sentence: entity.sentence,
       topics: entity.topics,
       references: entity.references,
       status: entity.status,

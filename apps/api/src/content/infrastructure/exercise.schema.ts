@@ -56,6 +56,9 @@ export class ExerciseModel {
   @Prop({ type: [String], default: [] })
   words?: string[];
 
+  @Prop()
+  sentence?: string;
+
   @Prop({ type: [String], default: [] })
   topics: string[];
 

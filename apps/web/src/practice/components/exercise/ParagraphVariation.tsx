@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Badge } from '@/components/ui/badge';
@@ -13,13 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from '@/components/ui/input-group';
+import { Field, FieldError } from '@/components/ui/field';
+import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 
 import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
@@ -47,7 +42,6 @@ export default function ParagraphVariation({ exercise }: ParagraphVariationProps
     defaultValues: { response: '' },
     mode: 'onChange',
   });
-  const response = useWatch({ control: form.control, name: 'response' });
   const [feedback, setFeedback] = useState<Awaited<
     ReturnType<typeof submitResponse>
   > | null>(null);
@@ -72,9 +66,9 @@ export default function ParagraphVariation({ exercise }: ParagraphVariationProps
 
   return (
     <>
-      <Card size="sm" className="text-sm mb-4">
+      <Card size="sm" className="mb-4">
         <CardHeader className="border-b text-center">
-          <CardTitle>{exercise.name}</CardTitle>
+          <CardTitle>Rewrite Paragraph</CardTitle>
           {exercise.topics.length > 0 && (
             <CardDescription className="mt-1">
               {exercise.topics.map((topic) => (
@@ -89,47 +83,36 @@ export default function ParagraphVariation({ exercise }: ParagraphVariationProps
             </CardDescription>
           )}
         </CardHeader>
-        <CardContent className="space-y-4">
-          <form id="practice-form" onSubmit={handleSubmit} noValidate>
-            <div className="space-y-2">
-              <div className="mb-4">
-                <p className="font-semibold mb-2">
-                  Rewrite the following paragraph with the same meaning:
-                </p>
-                <blockquote className="italic border-l-4 border-gray-300 pl-4 py-2 text-gray-700">
-                  {exercise.paragraph}
-                </blockquote>
-              </div>
-              <Controller
-                name="response"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="practice-form-response">
-                      Your response:
-                    </FieldLabel>
-                    <InputGroup>
-                      <InputGroupTextarea
-                        {...field}
-                        id="practice-form-response"
-                        placeholder="Type your response here..."
-                        rows={8}
-                        className="min-h-32 resize-none"
-                        aria-invalid={fieldState.invalid}
-                      />
-                      <InputGroupAddon align="block-end">
-                        <InputGroupText className="tabular-nums">
-                          {response.length}/500 characters
-                        </InputGroupText>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
+        <CardContent>
+          <form
+            id="practice-form"
+            onSubmit={handleSubmit}
+            noValidate
+            className="space-y-4"
+          >
+            <p className="text-xs tracking-wide text-muted-foreground">
+              Rewrite the following paragraph with the same meaning:
+            </p>
+            <p className="text-justify">{exercise.paragraph}</p>
+            <Controller
+              name="response"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <InputGroup>
+                    <InputGroupTextarea
+                      {...field}
+                      id="practice-form-response"
+                      placeholder="Type your response here..."
+                      rows={8}
+                      className="min-h-32 resize-none"
+                      aria-invalid={fieldState.invalid}
+                    />
+                  </InputGroup>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
           </form>
         </CardContent>
         <CardFooter className="flex justify-center gap-2">

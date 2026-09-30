@@ -21,6 +21,7 @@ export class PracticeExerciseDto {
 
   // Sentence format fields
   words?: string[];
+  sentence?: string;
 
   // Paragraph format fields
   paragraph?: string;
@@ -53,6 +54,7 @@ export class PracticeExerciseDto {
       clues: entity.clues,
       sentences: entity.sentences,
       words: entity.words,
+      sentence: entity.sentence,
       topics: entity.topics,
       references: entity.references,
       createdAt: entity.createdAt,

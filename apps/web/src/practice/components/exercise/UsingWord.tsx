@@ -68,7 +68,7 @@ export default function UsingWord({ exercise }: UsingWordProps) {
     <>
       <Card size="sm" className="mb-4">
         <CardHeader className="border-b text-center">
-          <CardTitle className="uppercase">"{exercise.name}"</CardTitle>
+          <CardTitle>Using Word</CardTitle>
           {exercise.topics.length > 0 && (
             <CardDescription className="mt-1">
               {exercise.topics.map((topic) => (
@@ -90,15 +90,15 @@ export default function UsingWord({ exercise }: UsingWordProps) {
             noValidate
             className="space-y-4"
           >
-            <p>
-              Write a sentence using the word&nbsp;
-              <strong className="text-lg">&quot;{exercise.word}&quot;</strong>.
+            <p className="text-xs tracking-wide text-muted-foreground">
+              Write a sentence using the word:
             </p>
-
+            <p className="text-lg text-foreground my-4 text-center">
+              &quot;{exercise.word}&quot;
+            </p>
             <p className="text-muted-foreground text-xs italic">
               {exercise.meaning}
             </p>
-
             <Controller
               name="response"
               control={form.control}
@@ -137,6 +137,7 @@ export default function UsingWord({ exercise }: UsingWordProps) {
           )}
         </CardFooter>
       </Card>
+
       {feedback && (
         <ResponseFeedback
           feedback={feedback}

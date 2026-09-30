@@ -32,8 +32,8 @@ const exerciseSchema = z.discriminatedUnion('format', [
     skill: z.literal('articulation'),
     format: z.literal('sentence'),
     scenario: z.string(),
-    prompts: z.array(z.string()),
     words: z.array(z.string()),
+    sentence: z.string(),
   }),
   exerciseBaseSchema.extend({
     skill: z.literal('articulation'),
@@ -141,9 +141,10 @@ describe('find practice exercises', () => {
         format: 'sentence',
         status: 'active',
         topics: ['Job Interview', cleanupMarker],
-        scenario: 'Talk about your background',
-        prompts: ['Describe your educational background.'],
-        words: ['study', 'university'],
+        scenario: 'Describe your background',
+        words: ['study', 'computer science', 'university', "bachelor's degree"],
+        sentence:
+          "I studied computer science at university and had a bachelor's degree.",
         references: [],
         createdAt: new Date(),
         updatedAt: new Date(),

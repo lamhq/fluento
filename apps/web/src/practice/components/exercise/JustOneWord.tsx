@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -20,6 +19,7 @@ import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from '../../utils';
+import ColoredBadges from '../ColoredBadges';
 import ResponseFeedback from '../ResponseFeedback';
 
 const formSchema = z.object({
@@ -27,15 +27,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-const clueBadgeColors = [
-  'border-blue-200 bg-blue-100 text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
-  'border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200',
-  'border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-200',
-  'border-rose-200 bg-rose-100 text-rose-800 dark:border-rose-800 dark:bg-rose-900/30 dark:text-rose-200',
-  'border-violet-200 bg-violet-100 text-violet-800 dark:border-violet-800 dark:bg-violet-900/30 dark:text-violet-200',
-  'border-cyan-200 bg-cyan-100 text-cyan-800 dark:border-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200',
-];
 
 interface JustOneWordProps {
   exercise: PracticeExercise;
@@ -80,17 +71,12 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
         </CardHeader>
         <CardContent>
           <form id="practice-form" onSubmit={handleSubmit} noValidate>
-            <p>Guess the word or phrase from these clues:</p>
+            <p className="text-xs tracking-wide text-muted-foreground">
+              Guess the word or phrase from these clues:
+            </p>
 
             <div className="flex flex-wrap gap-2 my-4 justify-center">
-              {exercise.clues?.map((clue, index) => (
-                <Badge
-                  key={clue}
-                  className={clueBadgeColors[index % clueBadgeColors.length]}
-                >
-                  {clue}
-                </Badge>
-              ))}
+              <ColoredBadges values={exercise.clues ?? []} />
             </div>
 
             <Controller

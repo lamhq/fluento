@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Badge } from '@/components/ui/badge';
@@ -13,13 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from '@/components/ui/input-group';
+import { Field, FieldError } from '@/components/ui/field';
+import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 
 import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
@@ -46,7 +41,6 @@ export default function WordGuessing({ exercise }: WordGuessingProps) {
     defaultValues: { response: '' },
     mode: 'onChange',
   });
-  const response = useWatch({ control: form.control, name: 'response' });
   const [feedback, setFeedback] = useState<Awaited<
     ReturnType<typeof submitResponse>
   > | null>(null);
@@ -71,9 +65,9 @@ export default function WordGuessing({ exercise }: WordGuessingProps) {
 
   return (
     <>
-      <Card size="sm" className="text-sm mb-4">
+      <Card size="sm" className="mb-4">
         <CardHeader className="border-b text-center">
-          <CardTitle>{exercise.name}</CardTitle>
+          <CardTitle>Word Guessing</CardTitle>
           {exercise.topics.length > 0 && (
             <CardDescription className="mt-1">
               {exercise.topics.map((topic) => (
@@ -88,45 +82,36 @@ export default function WordGuessing({ exercise }: WordGuessingProps) {
             </CardDescription>
           )}
         </CardHeader>
-        <CardContent className="space-y-4">
-          <form id="practice-form" onSubmit={handleSubmit} noValidate>
-            <div className="space-y-2">
-              <div className="mb-4">
-                <p className="font-semibold">
-                  Guess the word or phrase from its meaning:
-                </p>
-                <p className="mt-2 italic text-gray-700">{exercise.meaning}</p>
-              </div>
-              <Controller
-                name="response"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="practice-form-response">
-                      Your response:
-                    </FieldLabel>
-                    <InputGroup>
-                      <InputGroupTextarea
-                        {...field}
-                        id="practice-form-response"
-                        placeholder="Type your response here..."
-                        rows={2}
-                        className="min-h-fit resize-none"
-                        aria-invalid={fieldState.invalid}
-                      />
-                      <InputGroupAddon align="block-end">
-                        <InputGroupText className="tabular-nums">
-                          {response.length}/50 characters
-                        </InputGroupText>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
+        <CardContent>
+          <form
+            id="practice-form"
+            onSubmit={handleSubmit}
+            noValidate
+            className="space-y-4"
+          >
+            <p className="text-xs tracking-wide text-muted-foreground">
+              Guess the word or phrase from its meaning:
+            </p>
+            <p className="text-center text-sm">{exercise.meaning}</p>
+            <Controller
+              name="response"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <InputGroup>
+                    <InputGroupTextarea
+                      {...field}
+                      id="practice-form-response"
+                      placeholder="Type your response here..."
+                      rows={2}
+                      className="min-h-fit resize-none"
+                      aria-invalid={fieldState.invalid}
+                    />
+                  </InputGroup>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
           </form>
         </CardContent>
         <CardFooter className="flex justify-center gap-2">
@@ -145,6 +130,7 @@ export default function WordGuessing({ exercise }: WordGuessingProps) {
           )}
         </CardFooter>
       </Card>
+
       {feedback && (
         <ResponseFeedback
           feedback={feedback}

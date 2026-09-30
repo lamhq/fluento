@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Badge } from '@/components/ui/badge';
@@ -13,19 +13,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from '@/components/ui/input-group';
+import { Field, FieldError } from '@/components/ui/field';
+import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 
 import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from '../../utils';
+import ColoredBadges from '../ColoredBadges';
 import ResponseFeedback from '../ResponseFeedback';
 
 const formSchema = z.object({
@@ -49,7 +45,6 @@ export default function SentenceConstruction({
     defaultValues: { response: '' },
     mode: 'onChange',
   });
-  const response = useWatch({ control: form.control, name: 'response' });
   const [feedback, setFeedback] = useState<Awaited<
     ReturnType<typeof submitResponse>
   > | null>(null);
@@ -74,7 +69,7 @@ export default function SentenceConstruction({
 
   return (
     <>
-      <Card size="sm" className="text-sm mb-4">
+      <Card size="sm" className="mb-4">
         <CardHeader className="border-b text-center">
           <CardTitle>{exercise.name}</CardTitle>
           {exercise.topics.length > 0 && (
@@ -91,54 +86,38 @@ export default function SentenceConstruction({
             </CardDescription>
           )}
         </CardHeader>
-        <CardContent className="space-y-4">
-          <form id="practice-form" onSubmit={handleSubmit} noValidate>
-            <div className="space-y-2">
-              <div className="mb-4">
-                <p className="font-semibold mb-2">
-                  Write a sentence using the following words:
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {exercise.words?.map((word, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <Controller
-                name="response"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="practice-form-response">
-                      Your response:
-                    </FieldLabel>
-                    <InputGroup>
-                      <InputGroupTextarea
-                        {...field}
-                        id="practice-form-response"
-                        placeholder="Type your response here..."
-                        rows={4}
-                        className="min-h-24 resize-none"
-                        aria-invalid={fieldState.invalid}
-                      />
-                      <InputGroupAddon align="block-end">
-                        <InputGroupText className="tabular-nums">
-                          {response.length}/200 characters
-                        </InputGroupText>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+        <CardContent>
+          <form
+            id="practice-form"
+            onSubmit={handleSubmit}
+            noValidate
+            className="space-y-4"
+          >
+            <p className="text-xs tracking-wide text-muted-foreground">
+              Make a sentence using the following words:
+            </p>
+            <div className="flex flex-wrap gap-2 my-4 justify-center">
+              <ColoredBadges values={exercise.words ?? []} />
             </div>
+            <Controller
+              name="response"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <InputGroup>
+                    <InputGroupTextarea
+                      {...field}
+                      id="practice-form-response"
+                      placeholder="Type your response here..."
+                      rows={4}
+                      className="min-h-24 resize-none"
+                      aria-invalid={fieldState.invalid}
+                    />
+                  </InputGroup>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
           </form>
         </CardContent>
         <CardFooter className="flex justify-center gap-2">
@@ -157,6 +136,7 @@ export default function SentenceConstruction({
           )}
         </CardFooter>
       </Card>
+
       {feedback && (
         <ResponseFeedback
           feedback={feedback}

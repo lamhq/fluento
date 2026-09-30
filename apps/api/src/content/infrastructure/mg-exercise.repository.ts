@@ -134,6 +134,7 @@ export class MgExerciseRepository implements ExerciseRepository {
       clues: data.clues,
       sentences: data.sentences,
       words: data.words,
+      sentence: data.sentence,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     });

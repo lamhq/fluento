@@ -41,11 +41,11 @@ Here are supported practice types to help learners improve different skills:
 
 ### Communication
 
-- **Communication:** Respond to a scenario or prompt in a natural conversation.
+- **Communication:** Communicate in a real-life conversation.
 
 ### Vocabulary
 
-- **Word Usage:** Make a sentence using the study word.
+- **Using Word:** Make a sentence using the study word.
 - **Word Guessing:** Guess the word from its meaning.
 - **Just One Word:** Guess the study word from clues.
 
@@ -63,8 +63,8 @@ An exercise's `format` determines which practice types are applicable:
 | --------------- | ------------- | ----------------------------------------- |
 | `communication` | communication | Communication                             |
 | `word`          | vocabulary    | Just One Word, Word Guessing, Word Usage  |
-| `sentence`      | articulation  | Sentence Construction, Sentence Variation |
 | `paragraph`     | articulation  | Paragraph Variation                       |
+| `sentence`      | articulation  | Sentence Construction, Sentence Variation |
 
 ## Data Requirements
 
@@ -73,12 +73,12 @@ Required fields for displaying based on practice type:
 | Practice type         | Required exercise fields                         |
 | --------------------- | ------------------------------------------------ |
 | Communication         | `scenario`, `prompts`, `validResponses` (result) |
-| Word Usage            | `word`, `meaning`, `sentences` (result)          |
+| Using Word            | `word`, `meaning`, `sentences` (result)          |
 | Word Guessing         | `meaning`, `word` (result)                       |
 | Just One Word         | `clues`, `word` (result)                         |
-| Sentence Construction | `prompts`, `words`, `sentence` (result)          |
-| Sentence Variation    | `sentence`                                       |
 | Paragraph Variation   | `paragraph`                                      |
+| Sentence Construction | `words`, `sentence` (result)                     |
+| Sentence Variation    | `sentence`                                       |
 
 Optional `id`, `name`, `skill`, `topics`, `references`, `practicedAt`, and `practiceCount` support context, tracking, or selection but do not replace required content.
 
@@ -89,54 +89,56 @@ Each practice type has a specific way it is displayed.
 ### Communication
 
 - **Title:** The exercise's scenario
-- **Topic:** Displayed below the title in parentheses.
+- **Topics:** Displayed below the title.
+- **Explanation:** Communicate in a real-life conversation.
 - **Prompt:** Randomly selected from the exercise's `prompts`.
 - **Response input:** A sentence responding to the prompt.
 
-### Word Usage
+### Using Word
 
-- **Title:** Word Usage
-- **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Write a sentence using the word "<word>" in <context> context` (hover or click on the word will show its meaning)
+- **Title:** Using Word
+- **Topics:** Displayed below the title.
+- **Explanation:** `Write a sentence using provided word`.
+- **Content:** The target word and its meaning.
 - **Response input:** A sentence using the target word or phrase.
 
 ### Just One Word
 
 - **Title:** Just One Word
-- **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Guess the word/phrase from these clues:`
-- **Main content:** clues for guessing the target word or phrase.
+- **Topics:** Displayed below the title.
+- **Explanation:** `Guess the word/phrase from these clues:`
+- **Content:** clues for guessing the target word or phrase.
 - **Response input:** A word or phrase guess.
 
 ### Word Guessing
 
 - **Title:** Word Guessing
-- **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Guess the word/phrase from the meaning below`.
-- **Main content:** meaning of the target word or phrase.
+- **Topics:** Displayed below the title.
+- **Explanation:** `Guess the word/phrase from the meaning below:`.
+- **Content:** meaning of the target word or phrase.
 - **Response input:** A word or phrase guess.
 
 ### Sentence Construction
 
 - **Title:** Sentence Construction
-- **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Write a sentence using the following words:`
-- **Main content:** words or phrases required for the sentence.
+- **Topics:** Displayed below the title.
+- **Explanation:** `Make a sentence using the following words:`
+- **Main content:** words required for the sentence.
 - **Response input:** A sentence that uses the required words or phrases.
 
 ### Sentence Variation
 
 - **Title:** Sentence Variation
-- **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Rewrite the following sentence with the same meaning.`
+- **Topics:** Displayed below the title.
+- **Explanation:** `Rewrite the following sentence with the same meaning.`
 - **Main content:** The original sentence.
 - **Response input:** A rewritten sentence with the same meaning.
 
 ### Paragraph Variation
 
 - **Title:** Paragraph Variation
-- **Topic:** Displayed below the title in parentheses.
-- **Prompt:** `Rewrite the following paragraph with the same meaning.`
+- **Topics:** Displayed below the title.
+- **Explanation:** `Rewrite the following paragraph with the same meaning.`
 - **Main content:** The original paragraph.
 - **Response input:** A rewritten paragraph with the same meaning.
 

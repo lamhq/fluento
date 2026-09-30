@@ -33,7 +33,9 @@ export interface PracticeExercise {
   id: string;
   format: 'communication' | 'word' | 'sentence' | 'paragraph';
   name: string;
+  skill: 'communication' | 'vocabulary' | 'articulation';
   topics: string[];
+  references: string[];
   type: PracticeType;
   practicedAt: string | null;
   practiceCount: number;
@@ -110,6 +112,7 @@ export interface Exercise {
   clues?: string[];
   sentences?: string[];
   words?: string[];
+  sentence?: string;
   topics: string[];
   references: string[];
   createdAt?: string;

@@ -46,6 +46,7 @@ export class ExerciseEntity implements Entity {
 
   // Sentence and Paragraph format fields
   words?: string[];
+  sentence?: string;
 
   constructor(data?: Partial<ExerciseEntity>) {
     Object.assign(this, data);
