@@ -13,16 +13,14 @@ describe('find exercises', () => {
       {
         userId,
         status: 'active',
+        name: 'Asking for a favor',
+        skill: 'communication',
+        format: 'communication',
         topics: ['Socializing', cleanupMarker],
         scenario: 'asking for a favor',
-        learnerRole: 'person',
-        counterpartRole: 'friend',
         prompts: ['Politely ask your friend to take you to the airport.'],
-        expectedResponses: [
-          {
-            content: 'I was hoping you could give me a lift to the airport.',
-            style: ['polite', 'courteous'],
-          },
+        validResponses: [
+          'I was hoping you could give me a lift to the airport.',
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -45,8 +43,13 @@ describe('find exercises', () => {
             scenario: 'asking for a favor',
             status: 'active',
             id: expect.any(String),
-            learnerRole: 'person',
-            counterpartRole: 'friend',
+            name: 'Asking for a favor',
+            skill: 'communication',
+            format: 'communication',
+            prompts: ['Politely ask your friend to take you to the airport.'],
+            validResponses: [
+              'I was hoping you could give me a lift to the airport.',
+            ],
           }),
         ]),
       }),

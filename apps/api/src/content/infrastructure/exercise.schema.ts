@@ -15,12 +15,14 @@ export class ExerciseModel {
   name: string;
 
   @Prop({
+    type: String,
     required: true,
     enum: Object.values(ExerciseSkill),
   })
   skill: ExerciseSkill;
 
   @Prop({
+    type: String,
     required: true,
     enum: Object.values(ExerciseFormat),
   })

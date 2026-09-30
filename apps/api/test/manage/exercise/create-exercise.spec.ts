@@ -10,20 +10,15 @@ describe('create exercise', () => {
     const { email: userEmail, id: userId } = getUser();
     const dto = {
       status: 'active',
+      name: 'Ordering food',
+      skill: 'communication',
+      format: 'communication',
       topics: ['Restaurant', cleanupMarker],
       scenario: 'ordering food in a restaurant',
-      learnerRole: 'customer',
-      counterpartRole: 'waiter',
       prompts: ['Say that you would like to order a meal.'],
-      expectedResponses: [
-        {
-          content: 'I would like to order the grilled salmon, please.',
-          style: ['polite', 'simple'],
-        },
-        {
-          content: 'Could I have the chicken curry with rice?',
-          style: ['polite', 'clear'],
-        },
+      validResponses: [
+        'I would like to order the grilled salmon, please.',
+        'Could I have the chicken curry with rice?',
       ],
     };
 
@@ -37,12 +32,13 @@ describe('create exercise', () => {
       expect.objectContaining({
         id: expect.any(String),
         status: dto.status,
+        name: dto.name,
+        skill: dto.skill,
+        format: dto.format,
         topics: dto.topics,
         scenario: dto.scenario,
-        learnerRole: dto.learnerRole,
-        counterpartRole: dto.counterpartRole,
         prompts: dto.prompts,
-        expectedResponses: dto.expectedResponses,
+        validResponses: dto.validResponses,
       }),
     );
 
@@ -54,12 +50,13 @@ describe('create exercise', () => {
       expect.objectContaining({
         userId,
         status: dto.status,
+        name: dto.name,
+        skill: dto.skill,
+        format: dto.format,
         topics: dto.topics,
         scenario: dto.scenario,
-        learnerRole: dto.learnerRole,
-        counterpartRole: dto.counterpartRole,
         prompts: dto.prompts,
-        expectedResponses: dto.expectedResponses,
+        validResponses: dto.validResponses,
       }),
     );
   });
@@ -67,17 +64,13 @@ describe('create exercise', () => {
   it('should accept archived status and reject invalid values', async () => {
     const archivedDto = {
       status: 'archived',
+      name: 'Ordering food',
+      skill: 'communication',
+      format: 'communication',
       topics: ['Restaurant', cleanupMarker],
       scenario: 'ordering food in a restaurant',
-      learnerRole: 'customer',
-      counterpartRole: 'waiter',
       prompts: ['Say that you would like to order a meal.'],
-      expectedResponses: [
-        {
-          content: 'I would like to order the grilled salmon, please.',
-          style: ['polite', 'simple'],
-        },
-      ],
+      validResponses: ['I would like to order the grilled salmon, please.'],
     };
 
     const { email: userEmail } = getUser();

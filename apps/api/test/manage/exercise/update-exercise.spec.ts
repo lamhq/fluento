@@ -12,17 +12,13 @@ describe('update exercise', () => {
     const [exerciseId] = await insertMany('exercises', [
       {
         userId,
+        name: 'Ordering food',
+        skill: 'communication',
+        format: 'communication',
         topics: ['Restaurant', cleanupMarker],
         scenario: 'ordering food in a restaurant',
-        learnerRole: 'customer',
-        counterpartRole: 'waiter',
         prompts: ['Say that you would like to order a meal.'],
-        expectedResponses: [
-          {
-            content: 'I would like to order the grilled salmon, please.',
-            style: ['polite', 'simple'],
-          },
-        ],
+        validResponses: ['I would like to order the grilled salmon, please.'],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -30,17 +26,14 @@ describe('update exercise', () => {
 
     const dto = {
       status: 'active',
+      name: 'Introducing yourself',
+      skill: 'communication',
+      format: 'communication',
       topics: ['Job Interview', cleanupMarker],
       scenario: 'introducing yourself',
-      learnerRole: 'interviewee',
-      counterpartRole: 'interviewer',
       prompts: ['Introduce yourself briefly and explain your experience.'],
-      expectedResponses: [
-        {
-          content:
-            'Hi, I am a software engineer with five years of experience.',
-          style: ['confident', 'clear'],
-        },
+      validResponses: [
+        'Hi, I am a software engineer with five years of experience.',
       ],
     };
     const resp = await request(getApp().getHttpServer())
@@ -53,12 +46,13 @@ describe('update exercise', () => {
       expect.objectContaining({
         id: exerciseId,
         status: dto.status,
+        name: dto.name,
+        skill: dto.skill,
+        format: dto.format,
         topics: dto.topics,
         scenario: dto.scenario,
-        learnerRole: dto.learnerRole,
-        counterpartRole: dto.counterpartRole,
         prompts: dto.prompts,
-        expectedResponses: dto.expectedResponses,
+        validResponses: dto.validResponses,
       }),
     );
 
@@ -69,12 +63,13 @@ describe('update exercise', () => {
     expect(updatedExercise).toEqual(
       expect.objectContaining({
         status: dto.status,
+        name: dto.name,
+        skill: dto.skill,
+        format: dto.format,
         topics: dto.topics,
         scenario: dto.scenario,
-        learnerRole: dto.learnerRole,
-        counterpartRole: dto.counterpartRole,
         prompts: dto.prompts,
-        expectedResponses: dto.expectedResponses,
+        validResponses: dto.validResponses,
       }),
     );
   });

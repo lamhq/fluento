@@ -12,17 +12,14 @@ describe('get exercise', () => {
     const [seededExerciseId] = await insertMany('exercises', [
       {
         userId,
+        name: 'Asking for an explanation',
+        skill: 'communication',
+        format: 'communication',
         topics: ['School', cleanupMarker],
         scenario: 'asking for explanation',
-        learnerRole: 'student',
-        counterpartRole: 'teacher',
         prompts: ['Ask the teacher guidance for solving a math problem.'],
-        expectedResponses: [
-          {
-            content:
-              "Could you please help me with this math problem? I'm having trouble understanding it.",
-            style: ['polite', 'respectful'],
-          },
+        validResponses: [
+          "Could you please help me with this math problem? I'm having trouble understanding it.",
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -39,8 +36,13 @@ describe('get exercise', () => {
         id: seededExerciseId,
         topics: expect.arrayContaining(['School', cleanupMarker]),
         scenario: 'asking for explanation',
-        learnerRole: 'student',
-        counterpartRole: 'teacher',
+        name: 'Asking for an explanation',
+        skill: 'communication',
+        format: 'communication',
+        prompts: ['Ask the teacher guidance for solving a math problem.'],
+        validResponses: [
+          "Could you please help me with this math problem? I'm having trouble understanding it.",
+        ],
       }),
     );
   });
