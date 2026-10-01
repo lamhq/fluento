@@ -1,11 +1,16 @@
-import { ExerciseEntity } from '../../../content/core/exercise.entity';
+import {
+  ExerciseEntity,
+  ExerciseFormat,
+  ExerciseSkill,
+  ExerciseStatus,
+} from '../../../content/core/exercise.entity';
 
 export class ExerciseDto {
   id: string;
   userId: string;
   name: string;
-  skill: string;
-  format: string;
+  skill: ExerciseSkill;
+  format: ExerciseFormat;
   scenario?: string;
   paragraph?: string;
   prompts?: string[];
@@ -18,7 +23,7 @@ export class ExerciseDto {
   sentence?: string;
   topics: string[];
   references: string[];
-  status: string;
+  status: ExerciseStatus;
   createdAt: Date;
   updatedAt: Date;
 

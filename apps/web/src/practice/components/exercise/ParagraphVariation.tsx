@@ -50,6 +50,7 @@ export default function ParagraphVariation({ exercise }: ParagraphVariationProps
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
+          practiceType: exercise.type,
           response: normalizeLearnerResponse(values.response),
         }),
       );

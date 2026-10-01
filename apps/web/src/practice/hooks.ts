@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 
 import { useApiClient } from '../api';
+import type { PracticeExercise } from '../api/types';
 
 const PRACTICE_EXERCISES_QUERY_KEY = ['practice-exercise'];
 
@@ -34,12 +35,14 @@ export function useSubmitResponse() {
   const mutation = useMutation({
     mutationFn: async ({
       exerciseId,
+      practiceType,
       response,
     }: {
       exerciseId: string;
+      practiceType: PracticeExercise['type'];
       response: string;
     }) => {
-      return apiClient.submitPracticeResponse(exerciseId, response);
+      return apiClient.submitPracticeResponse(exerciseId, practiceType, response);
     },
   });
 

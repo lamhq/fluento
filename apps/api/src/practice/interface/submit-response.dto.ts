@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-import { PracticeType } from '../core/practice-attempt.entity';
+import { PracticeType } from '../core/types';
 
 export class SubmitResponseDto {
   @IsEnum(PracticeType)

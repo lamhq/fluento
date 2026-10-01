@@ -16,7 +16,7 @@ import {
   type ExerciseRepository,
 } from '../../content/core/exercise.repository';
 import { EvaluationChain } from './evaluation-chain';
-import { PracticeAttemptEntity, PracticeType } from './practice-attempt.entity';
+import { PracticeAttemptEntity } from './practice-attempt.entity';
 import {
   PRACTICE_ATTEMPT_REPOSITORY,
   type PracticeAttemptRepository,
@@ -27,6 +27,7 @@ import {
   type PracticeExerciseQuery,
   type PracticeExerciseRepository,
 } from './practice-exercise.repository';
+import { PracticeType } from './types';
 
 const PRACTICE_TYPE_FORMAT_MAP: Record<PracticeType, ExerciseFormat[]> = {
   [PracticeType.Communication]: [ExerciseFormat.Communication],

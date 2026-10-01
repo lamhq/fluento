@@ -53,6 +53,7 @@ export default function SentenceConstruction({
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
+          practiceType: exercise.type,
           response: normalizeLearnerResponse(values.response),
         }),
       );

@@ -49,6 +49,7 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
+          practiceType: exercise.type,
           response: normalizeLearnerResponse(values.response),
         }),
       );

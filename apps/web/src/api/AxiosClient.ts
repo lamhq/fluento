@@ -4,8 +4,8 @@ import type {
   ApiClient,
   Exercise,
   PaginatedResponse,
+  PracticeAttempt,
   PracticeExercise,
-  SubmitResponse,
 } from './types';
 import { getPracticeType } from './utils';
 
@@ -40,11 +40,12 @@ export default class AxiosClient implements ApiClient {
 
   async submitPracticeResponse(
     exerciseId: string,
+    practiceType: PracticeExercise['type'],
     response: string,
-  ): Promise<SubmitResponse> {
-    const result = await this.httpClient.post<SubmitResponse>(
+  ): Promise<PracticeAttempt> {
+    const result = await this.httpClient.post<PracticeAttempt>(
       `/v1/practice/exercises/${exerciseId}/responses`,
-      { response },
+      { practiceType, response },
     );
 
     return result.data;

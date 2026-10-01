@@ -1,14 +1,5 @@
 import type { Entity } from '../../common/types/entity';
-
-export enum PracticeType {
-  Communication = 'communication',
-  UsingWord = 'usingWord',
-  JustOneWord = 'justOneWord',
-  WordGuessing = 'wordGuessing',
-  SentenceConstruction = 'sentenceConstruction',
-  SentenceVariation = 'sentenceVariation',
-  ParagraphVariation = 'paragraphVariation',
-}
+import { PracticeType } from './types';
 
 export class PracticeAttemptEntity implements Entity {
   id: string;

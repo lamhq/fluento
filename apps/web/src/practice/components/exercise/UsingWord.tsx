@@ -50,6 +50,7 @@ export default function UsingWord({ exercise }: UsingWordProps) {
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
+          practiceType: exercise.type,
           response: normalizeLearnerResponse(values.response),
         }),
       );

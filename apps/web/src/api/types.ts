@@ -1,3 +1,17 @@
+export interface ApiClient {
+  setAccessToken(token: string): void;
+
+  getPracticeExercise(): Promise<PaginatedResponse<PracticeExercise>>;
+
+  submitPracticeResponse(
+    exerciseId: string,
+    practiceType: PracticeType,
+    response: string,
+  ): Promise<PracticeAttempt>;
+
+  getExercises(options?: ExerciseQuery): Promise<[number, Exercise[]]>;
+}
+
 export type PracticeType =
   | 'communication'
   | 'using-word'
@@ -6,19 +20,6 @@ export type PracticeType =
   | 'sentence-construction'
   | 'sentence-variation'
   | 'paragraph-variation';
-
-export interface ApiClient {
-  setAccessToken(token: string): void;
-
-  getPracticeExercise(): Promise<PaginatedResponse<PracticeExercise>>;
-
-  submitPracticeResponse(
-    exerciseId: string,
-    response: string,
-  ): Promise<SubmitResponse>;
-
-  getExercises(options?: ExerciseQuery): Promise<[number, Exercise[]]>;
-}
 
 export interface ExerciseQuery {
   scenario?: string;
@@ -67,30 +68,38 @@ export interface PaginatedResponse<T> {
   hasPrevious: boolean;
 }
 
-export interface SubmitResponse {
+export interface PracticeAttempt {
   id: string;
   exerciseId: string;
+  practiceType: PracticeType;
   response: string;
   score: number;
   feedback: string;
-  correctness: {
+  correctness?: {
     score: number;
     feedback: string;
-    fixes: string[];
-    correctedSentence: string;
+    fixes?: string[];
+    correctedSentence?: string;
+    sentences?: {
+      sentence: string;
+      score: number;
+      feedback: string;
+      fixes?: string[];
+      correctedSentence?: string;
+    }[];
   };
-  appropriateness: {
+  appropriateness?: {
     score: number;
     feedback: string;
-    clarity: {
+    clarity?: {
       score: number;
       feedback: string;
     };
-    politeness: {
+    politeness?: {
       score: number;
       feedback: string;
     };
-    tone: {
+    tone?: {
       score: number;
       feedback: string;
     };
@@ -99,10 +108,9 @@ export interface SubmitResponse {
 
 export interface Exercise {
   id: string;
-  userId: string;
   name: string;
-  skill: string;
-  format: string;
+  skill: 'communication' | 'vocabulary' | 'articulation';
+  format: 'communication' | 'word' | 'sentence' | 'paragraph';
   scenario?: string;
   paragraph?: string;
   prompts?: string[];
@@ -115,8 +123,5 @@ export interface Exercise {
   sentence?: string;
   topics: string[];
   references: string[];
-  createdAt?: string;
-  updatedAt?: string;
-  practicedAt?: string;
-  practiceCount: number;
+  status: 'active' | 'archived';
 }

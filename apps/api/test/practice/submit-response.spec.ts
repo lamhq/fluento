@@ -2,9 +2,7 @@ import { ObjectId } from 'mongodb';
 import request from 'supertest';
 import { z } from 'zod';
 
-import type { EvaluationResult } from '../../src/practice/core/evaluation.service';
 import { EvaluationChain } from '../../src/practice/core/evaluation-chain';
-import { PracticeType } from '../../src/practice/core/practice-attempt.entity';
 import { deleteMany, findOne, insertMany } from '../utils/mongodb';
 import { setUpApiTest } from '../utils/test';
 
@@ -13,12 +11,12 @@ const responseBaseSchema = z.object({
   exerciseId: z.string(),
   practiceType: z.enum([
     'communication',
-    'usingWord',
-    'justOneWord',
-    'wordGuessing',
-    'sentenceConstruction',
-    'sentenceVariation',
-    'paragraphVariation',
+    'using-word',
+    'just-one-word',
+    'word-guessing',
+    'sentence-construction',
+    'sentence-variation',
+    'paragraph-variation',
   ]),
   response: z.string(),
   score: z.number().min(0).max(100),
@@ -57,22 +55,22 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
     }),
   }),
   responseBaseSchema.extend({
-    practiceType: z.literal('usingWord'),
+    practiceType: z.literal('using-word'),
     correctness: correctnessSchema,
     appropriateness: appropriatenessSchema,
   }),
   responseBaseSchema.extend({
-    practiceType: z.literal('sentenceConstruction'),
+    practiceType: z.literal('sentence-construction'),
     correctness: correctnessSchema,
     appropriateness: appropriatenessSchema,
   }),
   responseBaseSchema.extend({
-    practiceType: z.literal('sentenceVariation'),
+    practiceType: z.literal('sentence-variation'),
     correctness: correctnessSchema,
     appropriateness: appropriatenessSchema,
   }),
   responseBaseSchema.extend({
-    practiceType: z.literal('paragraphVariation'),
+    practiceType: z.literal('paragraph-variation'),
     correctness: correctnessSchema.extend({
       sentences: z.array(
         z.object({
@@ -87,231 +85,253 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
     appropriateness: appropriatenessSchema,
   }),
   responseBaseSchema.extend({
-    practiceType: z.literal('justOneWord'),
+    practiceType: z.literal('just-one-word'),
   }),
   responseBaseSchema.extend({
-    practiceType: z.literal('wordGuessing'),
+    practiceType: z.literal('word-guessing'),
   }),
 ]);
 
 const submissionCases = [
   {
-    practiceType: 'communication' as const,
-    response: 'My parents are coming to visit. What about you?',
-    format: 'communication',
-    skill: 'communication',
-    name: 'Small talk',
-    scenario: 'Answer small talk questions',
-    prompts: ['What are you up to this weekend?'],
-  },
-  {
-    practiceType: 'usingWord' as const,
-    response: "At customs, they'll check my passport.",
-    format: 'word',
-    skill: 'vocabulary',
-    name: 'customs',
-    word: 'customs',
-    meaning: 'The official procedures required when entering a country.',
-    sentences: ["At customs, they're going to ask for your passport."],
-    clues: ['passport', 'inspection', 'border'],
-  },
-  {
-    practiceType: 'justOneWord' as const,
-    response: 'customs',
-    format: 'word',
-    skill: 'vocabulary',
-    name: 'customs clues',
-    word: 'customs',
-    meaning: 'The official procedures required when entering a country.',
-    sentences: [],
-    clues: ['passport', 'inspection', 'border'],
-  },
-  {
-    practiceType: 'wordGuessing' as const,
-    response: 'customs',
-    format: 'word',
-    skill: 'vocabulary',
-    name: 'customs meaning',
-    word: 'customs',
-    meaning: 'The official procedures required when entering a country.',
-    sentences: [],
-    clues: [],
-  },
-  {
-    practiceType: 'sentenceConstruction' as const,
-    response:
-      "I studied computer science at university and earned a bachelor's degree.",
-    format: 'sentence',
-    skill: 'articulation',
-    name: 'Describe your background',
-    scenario: 'Describe your background',
-    words: ['study', 'computer science', 'university', "bachelor's degree"],
-    sentence:
-      "I studied computer science at university and had a bachelor's degree.",
-  },
-  {
-    practiceType: 'sentenceVariation' as const,
-    response:
-      "I earned a bachelor's degree in computer science from university.",
-    format: 'sentence',
-    skill: 'articulation',
-    name: 'Rewrite your background',
-    scenario: 'Describe your background',
-    words: [],
-    sentence:
-      "I studied computer science at university and had a bachelor's degree.",
-  },
-  {
-    practiceType: 'paragraphVariation' as const,
-    response:
-      'The festival is an important Vietnamese tradition. Families gather to enjoy food, lanterns, and the full moon.',
-    format: 'paragraph',
-    skill: 'articulation',
-    name: 'Festival introduction',
-    scenario: 'Mid-Autumn Festival Introduction',
-    prompts: ['Rewrite the paragraph with the same meaning.'],
-    words: ['festival', 'lanterns', 'family reunion'],
-    paragraph:
-      'The Mid-Autumn Festival is an important traditional celebration in Vietnam. Families gather to enjoy mooncakes and tea while admiring the full moon.',
-  },
-];
-
-const evaluationResponses: Record<PracticeType, EvaluationResult> = {
-  [PracticeType.Communication]: {
-    score: 94,
-    feedback: 'Good response. It sounds polite and relevant.',
-    correctness: {
-      score: 95,
-      feedback: 'Correct and natural.',
-      fixes: [],
-      correctedSentence: 'My parents are coming to visit. What about you?',
+    request: {
+      practiceType: 'communication' as const,
+      response: 'My parents are coming to visit. What about you?',
     },
-    appropriateness: {
-      score: 93,
-      feedback: 'Well suited to the situation.',
-      clarity: {
-        score: 90,
-        feedback: 'Clear and easy to understand.',
-      },
-      politeness: {
-        score: 95,
-        feedback: 'Very polite.',
-      },
-      tone: {
-        score: 90,
-        feedback: 'Friendly and appropriate.',
-      },
+    exercise: {
+      format: 'communication',
+      skill: 'communication',
+      name: 'Small talk',
+      scenario: 'Answer small talk questions',
+      prompts: ['What are you up to this weekend?'],
     },
-  },
-  [PracticeType.UsingWord]: {
-    score: 92,
-    feedback: 'The target word is used naturally and correctly.',
-    correctness: {
+    expectedEvaluation: {
       score: 94,
-      feedback: 'The sentence is grammatically correct.',
-      fixes: [],
-      correctedSentence: "At customs, they'll check my passport.",
+      feedback: 'Good response. It sounds polite and relevant.',
+      correctness: {
+        score: 95,
+        feedback: 'Correct and natural.',
+        fixes: [],
+        correctedSentence: 'My parents are coming to visit. What about you?',
+      },
+      appropriateness: {
+        score: 93,
+        feedback: 'Well suited to the situation.',
+        clarity: {
+          score: 90,
+          feedback: 'Clear and easy to understand.',
+        },
+        politeness: {
+          score: 95,
+          feedback: 'Very polite.',
+        },
+        tone: {
+          score: 90,
+          feedback: 'Friendly and appropriate.',
+        },
+      },
     },
-    appropriateness: {
-      score: 90,
-      feedback: 'The target word fits the context accurately.',
+  },
+  {
+    request: {
+      practiceType: 'using-word' as const,
+      response: "At customs, they'll check my passport.",
+    },
+    exercise: {
+      format: 'word',
+      skill: 'vocabulary',
+      name: 'customs',
+      word: 'customs',
+      meaning: 'The official procedures required when entering a country.',
+      sentences: ["At customs, they're going to ask for your passport."],
+      clues: ['passport', 'inspection', 'border'],
+    },
+    expectedEvaluation: {
+      score: 92,
+      feedback: 'The target word is used naturally and correctly.',
+      correctness: {
+        score: 94,
+        feedback: 'The sentence is grammatically correct.',
+        fixes: [],
+        correctedSentence: "At customs, they'll check my passport.",
+      },
+      appropriateness: {
+        score: 90,
+        feedback: 'The target word fits the context accurately.',
+      },
     },
   },
-  [PracticeType.JustOneWord]: {
-    score: 100,
-    feedback: 'The response matches the target word.',
+  {
+    request: {
+      practiceType: 'just-one-word' as const,
+      response: 'customs',
+    },
+    exercise: {
+      format: 'word',
+      skill: 'vocabulary',
+      name: 'customs clues',
+      word: 'customs',
+      meaning: 'The official procedures required when entering a country.',
+      sentences: [],
+      clues: ['passport', 'inspection', 'border'],
+    },
+    expectedEvaluation: {
+      score: 100,
+      feedback: 'The response matches the target word.',
+    },
   },
-  [PracticeType.WordGuessing]: {
-    score: 100,
-    feedback: 'The response matches the target word.',
+  {
+    request: {
+      practiceType: 'word-guessing' as const,
+      response: 'customs',
+    },
+    exercise: {
+      format: 'word',
+      skill: 'vocabulary',
+      name: 'customs meaning',
+      word: 'customs',
+      meaning: 'The official procedures required when entering a country.',
+      sentences: [],
+      clues: [],
+    },
+    expectedEvaluation: {
+      score: 100,
+      feedback: 'The response matches the target word.',
+    },
   },
-  [PracticeType.SentenceConstruction]: {
-    score: 92,
-    feedback: 'The sentence uses all required words clearly.',
-    correctness: {
-      score: 88,
-      feedback: 'The sentence is understandable and grammatically sound.',
-      fixes: [],
-      correctedSentence:
+  {
+    request: {
+      practiceType: 'sentence-construction' as const,
+      response:
         "I studied computer science at university and earned a bachelor's degree.",
     },
-    appropriateness: {
-      score: 96,
-      feedback: 'All required words are used appropriately.',
+    exercise: {
+      format: 'sentence',
+      skill: 'articulation',
+      name: 'Describe your background',
+      scenario: 'Describe your background',
+      words: ['study', 'computer science', 'university', "bachelor's degree"],
+      sentence:
+        "I studied computer science at university and had a bachelor's degree.",
+    },
+    expectedEvaluation: {
+      score: 92,
+      feedback: 'The sentence uses all required words clearly.',
+      correctness: {
+        score: 88,
+        feedback: 'The sentence is understandable and grammatically sound.',
+        fixes: [],
+        correctedSentence:
+          "I studied computer science at university and earned a bachelor's degree.",
+      },
+      appropriateness: {
+        score: 96,
+        feedback: 'All required words are used appropriately.',
+      },
     },
   },
-  [PracticeType.SentenceVariation]: {
-    score: 93,
-    feedback: 'The sentence preserves the original meaning naturally.',
-    correctness: {
-      score: 95,
-      feedback: 'The sentence is grammatically correct.',
-      fixes: [],
-      correctedSentence:
+  {
+    request: {
+      practiceType: 'sentence-variation' as const,
+      response:
         "I earned a bachelor's degree in computer science from university.",
     },
-    appropriateness: {
-      score: 91,
-      feedback: 'The original meaning is preserved accurately.',
+    exercise: {
+      format: 'sentence',
+      skill: 'articulation',
+      name: 'Rewrite your background',
+      scenario: 'Describe your background',
+      words: [],
+      sentence:
+        "I studied computer science at university and had a bachelor's degree.",
+    },
+    expectedEvaluation: {
+      score: 93,
+      feedback: 'The sentence preserves the original meaning naturally.',
+      correctness: {
+        score: 95,
+        feedback: 'The sentence is grammatically correct.',
+        fixes: [],
+        correctedSentence:
+          "I earned a bachelor's degree in computer science from university.",
+      },
+      appropriateness: {
+        score: 91,
+        feedback: 'The original meaning is preserved accurately.',
+      },
     },
   },
-  [PracticeType.ParagraphVariation]: {
-    score: 91,
-    feedback: 'The paragraph preserves the original meaning clearly.',
-    correctness: {
-      score: 90,
-      feedback: 'The rewritten paragraph is grammatically correct.',
-      fixes: [],
-      correctedSentence:
+  {
+    request: {
+      practiceType: 'paragraph-variation' as const,
+      response:
         'The festival is an important Vietnamese tradition. Families gather to enjoy food, lanterns, and the full moon.',
-      sentences: [
-        {
-          sentence: 'The festival is an important Vietnamese tradition.',
-          score: 90,
-          feedback: 'The sentence is clear and correct.',
-          fixes: [],
-          correctedSentence:
-            'The festival is an important Vietnamese tradition.',
-        },
-        {
-          sentence:
-            'Families gather to enjoy food, lanterns, and the full moon.',
-          score: 90,
-          feedback: 'The sentence is clear and correct.',
-          fixes: [],
-          correctedSentence:
-            'Families gather to enjoy food, lanterns, and the full moon.',
-        },
-      ],
     },
-    appropriateness: {
-      score: 92,
-      feedback: 'The paragraph keeps the original meaning.',
+    exercise: {
+      format: 'paragraph',
+      skill: 'articulation',
+      name: 'Festival introduction',
+      scenario: 'Mid-Autumn Festival Introduction',
+      prompts: ['Rewrite the paragraph with the same meaning.'],
+      words: ['festival', 'lanterns', 'family reunion'],
+      paragraph:
+        'The Mid-Autumn Festival is an important traditional celebration in Vietnam. Families gather to enjoy mooncakes and tea while admiring the full moon.',
+    },
+    expectedEvaluation: {
+      score: 91,
+      feedback: 'The paragraph preserves the original meaning clearly.',
+      correctness: {
+        score: 90,
+        feedback: 'The rewritten paragraph is grammatically correct.',
+        fixes: [],
+        correctedSentence:
+          'The festival is an important Vietnamese tradition. Families gather to enjoy food, lanterns, and the full moon.',
+        sentences: [
+          {
+            sentence: 'The festival is an important Vietnamese tradition.',
+            score: 90,
+            feedback: 'The sentence is clear and correct.',
+            fixes: [],
+            correctedSentence:
+              'The festival is an important Vietnamese tradition.',
+          },
+          {
+            sentence:
+              'Families gather to enjoy food, lanterns, and the full moon.',
+            score: 90,
+            feedback: 'The sentence is clear and correct.',
+            fixes: [],
+            correctedSentence:
+              'Families gather to enjoy food, lanterns, and the full moon.',
+          },
+        ],
+      },
+      appropriateness: {
+        score: 92,
+        feedback: 'The paragraph keeps the original meaning.',
+      },
     },
   },
-};
+];
 
 describe('submit response', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it.each(submissionCases)(
-    'should submit and validate a $practiceType response',
+    'should submit and validate a $request.practiceType response',
     async (submissionCase) => {
       const { email, id: userId } = getUser();
-
-      const evaluationResponse =
-        evaluationResponses[submissionCase.practiceType];
 
       // Mock the evaluation chain to avoid calling the AI provider.
       jest
         .spyOn(getApp().get(EvaluationChain), 'evaluate')
-        .mockResolvedValue(evaluationResponse);
+        .mockResolvedValue(submissionCase.expectedEvaluation);
 
       const exerciseIds = await insertMany('exercises', [
         {
           status: 'active',
           references: [],
-          ...submissionCase,
+          ...submissionCase.exercise,
           topics: ['Practice', cleanupMarker],
           userId,
           createdAt: new Date(),
@@ -324,10 +344,7 @@ describe('submit response', () => {
         .post(`/v1/practice/exercises/${exerciseId}/responses`)
         .set('x-user-email', email)
         .set('Accept', 'application/json')
-        .send({
-          practiceType: submissionCase.practiceType,
-          response: submissionCase.response,
-        })
+        .send(submissionCase.request)
         .expect(201);
 
       const response = submitResponseSchema.parse(resp.body);
@@ -335,8 +352,8 @@ describe('submit response', () => {
       expect(response).toEqual(
         expect.objectContaining({
           exerciseId,
-          practiceType: submissionCase.practiceType,
-          response: submissionCase.response,
+          practiceType: submissionCase.request.practiceType,
+          response: submissionCase.request.response,
         }),
       );
 
@@ -349,7 +366,7 @@ describe('submit response', () => {
         expect.objectContaining({
           userId,
           exerciseId: new ObjectId(exerciseId),
-          response: submissionCase.response,
+          response: submissionCase.request.response,
         }),
       );
     },
