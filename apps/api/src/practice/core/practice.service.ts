@@ -10,11 +10,13 @@ import {
   type ContextService,
 } from '../../common/core/context.service';
 import type { CursorPaginationResult } from '../../common/types/pagination';
+import { ExerciseFormat } from '../../content/core/exercise.entity';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
 } from '../../content/core/exercise.repository';
-import { PracticeAttemptEntity } from './practice-attempt.entity';
+import { EvaluationChain } from './evaluation-chain';
+import { PracticeAttemptEntity, PracticeType } from './practice-attempt.entity';
 import {
   PRACTICE_ATTEMPT_REPOSITORY,
   type PracticeAttemptRepository,
@@ -25,7 +27,16 @@ import {
   type PracticeExerciseQuery,
   type PracticeExerciseRepository,
 } from './practice-exercise.repository';
-import { ResponseEvaluationService } from './response-evaluation.service';
+
+const PRACTICE_TYPE_FORMAT_MAP: Record<PracticeType, ExerciseFormat[]> = {
+  [PracticeType.Communication]: [ExerciseFormat.Communication],
+  [PracticeType.UsingWord]: [ExerciseFormat.Word],
+  [PracticeType.JustOneWord]: [ExerciseFormat.Word],
+  [PracticeType.WordGuessing]: [ExerciseFormat.Word],
+  [PracticeType.SentenceConstruction]: [ExerciseFormat.Sentence],
+  [PracticeType.SentenceVariation]: [ExerciseFormat.Sentence],
+  [PracticeType.ParagraphVariation]: [ExerciseFormat.Paragraph],
+};
 
 @Injectable()
 export class PracticeService {
@@ -36,7 +47,7 @@ export class PracticeService {
     private readonly practiceExerciseRepository: PracticeExerciseRepository,
     @Inject(PRACTICE_ATTEMPT_REPOSITORY)
     private readonly practiceAttemptRepository: PracticeAttemptRepository,
-    private readonly responseEvaluationService: ResponseEvaluationService,
+    private readonly evaluationChain: EvaluationChain,
     @Inject(CONTEXT_SERVICE)
     private readonly contextService: ContextService,
   ) {}
@@ -51,6 +62,7 @@ export class PracticeService {
 
   async submitResponse(
     exerciseId: string,
+    practiceType: PracticeType,
     response: string,
   ): Promise<PracticeAttemptEntity> {
     const userId = this.contextService.getUserIdOrThrow();
@@ -66,30 +78,36 @@ export class PracticeService {
       throw new NotFoundException(`Exercise with id ${exerciseId} not found`);
     }
 
-    const evaluation = await this.responseEvaluationService.evaluate(
-      exercise,
-      trimmedResponse,
-    );
-    const appropriatenessScore =
-      (evaluation.appropriateness.clarity.score +
-        evaluation.appropriateness.politeness.score +
-        evaluation.appropriateness.tone.score) /
-      3;
-    const overallScore =
-      (evaluation.correctness.score + appropriatenessScore) / 2;
+    // Validate that practiceType is compatible with exercise format
+    const allowedFormats = PRACTICE_TYPE_FORMAT_MAP[practiceType];
+    if (!allowedFormats.includes(exercise.format)) {
+      throw new BadRequestException(
+        `Practice type '${practiceType}' is not compatible with exercise format '${exercise.format}'.`,
+      );
+    }
 
+    // Execute evaluation chain
+    const evaluationResult = await this.evaluationChain.evaluate({
+      exercise,
+      response: trimmedResponse,
+      practiceType,
+    });
+
+    if (!evaluationResult) {
+      throw new Error(`Evaluation failed for practice type: ${practiceType}`);
+    }
+
+    // Create practice attempt with evaluation result
     const submission = await this.practiceAttemptRepository.create(
       new PracticeAttemptEntity({
         userId,
         exerciseId,
+        practiceType,
         response: trimmedResponse,
-        score: overallScore,
-        feedback: evaluation.feedback,
-        correctness: evaluation.correctness,
-        appropriateness: {
-          ...evaluation.appropriateness,
-          score: appropriatenessScore,
-        },
+        score: evaluationResult.score,
+        feedback: evaluationResult.feedback,
+        correctness: evaluationResult.correctness,
+        appropriateness: evaluationResult.appropriateness,
       }),
     );
 

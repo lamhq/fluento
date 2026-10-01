@@ -223,7 +223,7 @@ Fields that do not apply to an exercise format are omitted from the payload. The
 | `correctness.score`             | Number            | Correctness score                  | Required                                             |
 | `correctness.feedback`          | String            | Correctness explanation            | Required                                             |
 | `correctness.fixes`             | Array of String   | Suggested corrections              | Optional; defaults to `[]`                           |
-| `correctness.correctedResponse` | String            | Corrected learner response         | Optional                                             |
+| `correctness.correctedSentence` | String            | Corrected sentence                 | Optional                                             |
 | `appropriateness`               | Embedded document | Contextual or task suitability     | Optional                                             |
 | `appropriateness.score`         | Number            | Appropriateness score              | Required when `appropriateness` is present           |
 | `appropriateness.feedback`      | String            | Appropriateness explanation        | Required when `appropriateness` is present           |
@@ -256,26 +256,8 @@ Fields that do not apply to an exercise format are omitted from the payload. The
 
 ## Scripts
 
-MongoDB replica set initialization and development seed data are maintained in `apps/db/init-rs.js` and `apps/db/seed.js`.
-
-The following snippets show the collection and index setup represented by the current application schemas:
-
-```javascript
-db.createCollection('exercises');
-db.createCollection('topics');
-db.createCollection('learner_exercise_progress');
-db.createCollection('practice_attempts');
-
-db.topics.createIndex({ name: 1 });
-db.learner_exercise_progress.createIndex(
-  { userId: 1, exerciseId: 1 },
-  { unique: true },
-);
-db.practice_attempts.createIndex({ userId: 1, exerciseId: 1 });
-db.practice_attempts.createIndex({ createdAt: -1 });
-```
-
-The development seed script creates users, topics, exercises, and learner practice records. It removes only the sample records it owns before inserting them, so it can be rerun during local development.
+- Init MongoDB replica set: `apps/db/init-rs.js`
+- Seed initial data: `apps/db/seed.js`
 
 ## Changelog
 

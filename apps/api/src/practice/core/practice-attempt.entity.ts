@@ -1,17 +1,35 @@
 import type { Entity } from '../../common/types/entity';
 
+export enum PracticeType {
+  Communication = 'communication',
+  UsingWord = 'usingWord',
+  JustOneWord = 'justOneWord',
+  WordGuessing = 'wordGuessing',
+  SentenceConstruction = 'sentenceConstruction',
+  SentenceVariation = 'sentenceVariation',
+  ParagraphVariation = 'paragraphVariation',
+}
+
 export class PracticeAttemptEntity implements Entity {
   id: string;
   userId: string;
   exerciseId: string;
+  practiceType: PracticeType;
   response: string;
   score: number;
   feedback: string;
-  correctness: {
+  correctness?: {
     score: number;
     feedback: string;
     fixes?: string[];
-    correctedResponse?: string;
+    correctedSentence?: string;
+    sentences?: {
+      sentence: string;
+      score: number;
+      feedback: string;
+      fixes?: string[];
+      correctedSentence?: string;
+    }[];
   };
   appropriateness?: {
     score: number;

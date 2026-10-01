@@ -51,7 +51,7 @@ Here are supported practice types to help learners improve different skills:
 
 ### Articulation
 
-- **Sentence Construction:** Make a sentence from provided words.
+- **Sentence Construction:** Make a sentence using provided words.
 - **Sentence Variation:** Rewrite a sentence with the same meaning.
 - **Paragraph Variation:** Rewrite a paragraph with the same meaning.
 
