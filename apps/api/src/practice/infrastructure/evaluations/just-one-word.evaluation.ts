@@ -6,7 +6,7 @@ import {
   type EvaluationService,
   type NextFunction,
 } from '../../core/evaluation.service';
-import { PracticeType } from '../../core/practice-attempt.entity';
+import { PracticeType } from '../../core/types';
 
 /**
  * Evaluates Just One Word practice type responses

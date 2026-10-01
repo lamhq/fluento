@@ -1,5 +1,5 @@
-import { PracticeType } from '../core/practice-attempt.entity';
 import { PracticeAttemptEntity } from '../core/practice-attempt.entity';
+import { PracticeType } from '../core/types';
 
 export class PracticeAttemptDto {
   id: string;
