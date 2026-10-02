@@ -3,9 +3,7 @@ import { PracticeType } from '../core/types';
 
 export class PracticeAttemptDto {
   id: string;
-  exerciseId: string;
   practiceType: PracticeType;
-  response: string;
   score: number;
   feedback: string;
   correctness?: PracticeAttemptEntity['correctness'];
@@ -18,9 +16,7 @@ export class PracticeAttemptDto {
   static fromEntity(entity: PracticeAttemptEntity): PracticeAttemptDto {
     return new PracticeAttemptDto({
       id: entity.id,
-      exerciseId: entity.exerciseId,
       practiceType: entity.practiceType,
-      response: entity.response,
       score: entity.score,
       feedback: entity.feedback,
       correctness: entity.correctness,

@@ -2,7 +2,7 @@ import { ExerciseEntity } from '../../content/core/exercise.entity';
 import { LearnerExerciseEntity } from './learner-exercise.entity';
 
 export class PracticeExerciseEntity extends ExerciseEntity {
-  practicedAt: Date;
+  practicedAt?: Date;
   practiceCount: number;
 
   constructor(data?: Partial<PracticeExerciseEntity>) {

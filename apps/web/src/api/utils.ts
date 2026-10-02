@@ -1,6 +1,8 @@
 import type { PracticeExercise, PracticeType } from './types';
 
-export function getPracticeType(format: PracticeExercise['format']): PracticeType {
+export function selectPracticeType(
+  format: PracticeExercise['format'],
+): PracticeType {
   switch (format) {
     case 'communication':
       return 'communication';

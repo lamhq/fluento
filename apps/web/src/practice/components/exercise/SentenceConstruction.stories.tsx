@@ -21,7 +21,6 @@ export const Default: Story = {
       topics: ['Job Interview', 'Software Engineering'],
       references: [],
       type: 'sentence-construction',
-      practicedAt: null,
       practiceCount: 0,
       words: ['study', 'computer science', 'university', "bachelor's degree"],
       sentence:

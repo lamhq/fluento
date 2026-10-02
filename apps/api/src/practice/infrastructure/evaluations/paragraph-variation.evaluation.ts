@@ -83,9 +83,7 @@ export class ParagraphVariationEvaluation implements EvaluationService {
 
   private buildPrompt(context: EvaluationContext): string {
     const originalParagraph = context.exercise.prompts?.[0] ?? '';
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const topic = context.exercise.topics?.[0] ?? 'N/A';
-
+    const topic = context.exercise.topics.join(',');
     return `## Task
 
 Review the rewritten paragraph and give feedback on correctness and appropriateness.

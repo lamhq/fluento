@@ -8,7 +8,6 @@ import { setUpApiTest } from '../utils/test';
 
 const responseBaseSchema = z.object({
   id: z.string(),
-  exerciseId: z.string(),
   practiceType: z.enum([
     'communication',
     'using-word',
@@ -18,21 +17,20 @@ const responseBaseSchema = z.object({
     'sentence-variation',
     'paragraph-variation',
   ]),
-  response: z.string(),
   score: z.number().min(0).max(100),
-  feedback: z.string(),
+  feedback: z.string().nonempty(),
 });
 
 const correctnessSchema = z.object({
   score: z.number().min(0).max(100),
-  feedback: z.string(),
-  fixes: z.array(z.string()).optional(),
-  correctedSentence: z.string().optional(),
+  feedback: z.string().nonempty(),
+  fixes: z.array(z.string().nonempty()).optional(),
+  correctedSentence: z.string().nonempty().optional(),
 });
 
 const appropriatenessSchema = z.object({
   score: z.number().min(0).max(100),
-  feedback: z.string(),
+  feedback: z.string().nonempty(),
 });
 
 const submitResponseSchema = z.discriminatedUnion('practiceType', [
@@ -42,15 +40,15 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
     appropriateness: appropriatenessSchema.extend({
       clarity: z.object({
         score: z.number().min(0).max(100),
-        feedback: z.string(),
+        feedback: z.string().nonempty(),
       }),
       politeness: z.object({
         score: z.number().min(0).max(100),
-        feedback: z.string(),
+        feedback: z.string().nonempty(),
       }),
       tone: z.object({
         score: z.number().min(0).max(100),
-        feedback: z.string(),
+        feedback: z.string().nonempty(),
       }),
     }),
   }),
@@ -76,9 +74,9 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
         z.object({
           sentence: z.string(),
           score: z.number().min(0).max(100),
-          feedback: z.string(),
-          fixes: z.array(z.string()).optional(),
-          correctedSentence: z.string().optional(),
+          feedback: z.string().nonempty(),
+          fixes: z.array(z.string().nonempty()).optional(),
+          correctedSentence: z.string().nonempty().optional(),
         }),
       ),
     }),
@@ -351,9 +349,9 @@ describe('submit response', () => {
 
       expect(response).toEqual(
         expect.objectContaining({
-          exerciseId,
           practiceType: submissionCase.request.practiceType,
-          response: submissionCase.request.response,
+          score: submissionCase.expectedEvaluation.score,
+          feedback: submissionCase.expectedEvaluation.feedback,
         }),
       );
 

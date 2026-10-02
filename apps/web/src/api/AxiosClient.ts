@@ -1,13 +1,14 @@
 import axios, { type AxiosInstance } from 'axios';
 
+import { paginatedPracticeExerciseSchema, practiceAttemptSchema } from './schemas';
+import type { PaginatedResponse } from './types';
 import type {
   ApiClient,
   Exercise,
-  PaginatedResponse,
   PracticeAttempt,
   PracticeExercise,
 } from './types';
-import { getPracticeType } from './utils';
+import { selectPracticeType } from './utils';
 
 export default class AxiosClient implements ApiClient {
   private readonly httpClient: AxiosInstance;
@@ -31,11 +32,13 @@ export default class AxiosClient implements ApiClient {
       },
     );
 
-    const items = response.data.items.map((exercise) => {
-      return { ...exercise, type: getPracticeType(exercise.format) };
-    });
-
-    return { ...response.data, items };
+    const data = paginatedPracticeExerciseSchema.parse(response.data);
+    const items = data.items.map((exercise) => ({
+      ...exercise,
+      // randomly select practice type for each exercise
+      type: selectPracticeType(exercise.format),
+    }));
+    return { ...data, items };
   }
 
   async submitPracticeResponse(
@@ -47,8 +50,7 @@ export default class AxiosClient implements ApiClient {
       `/v1/practice/exercises/${exerciseId}/responses`,
       { practiceType, response },
     );
-
-    return result.data;
+    return practiceAttemptSchema.parse(result.data);
   }
 
   async getExercises(

@@ -21,7 +21,6 @@ export const Default: Story = {
       topics: ['Job Interview', 'Software Engineering'],
       references: [],
       type: 'sentence-variation',
-      practicedAt: null,
       practiceCount: 0,
       words: [
         'over / more than',

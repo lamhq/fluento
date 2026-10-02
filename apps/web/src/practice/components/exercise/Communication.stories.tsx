@@ -23,7 +23,6 @@ export const Default: Story = {
         'https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS',
       ],
       type: 'communication',
-      practicedAt: null,
       practiceCount: 0,
       scenario: 'Answer small talk questions',
       prompts: ['What are you up to this weekend?'],

@@ -21,7 +21,6 @@ export const Default: Story = {
       topics: ['Mid-Autumn Festival'],
       references: [],
       type: 'paragraph-variation',
-      practicedAt: null,
       practiceCount: 0,
       paragraph:
         'The Mid-Autumn Festival is a major Vietnamese celebration held on the 15th day of the eighth lunar month. Families gather to enjoy mooncakes and admire the full moon. Children take part in lantern parades and lion dances. The festival promotes family unity and preserves cultural traditions.',

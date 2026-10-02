@@ -62,9 +62,7 @@ export class SentenceConstructionEvaluation implements EvaluationService {
 
   private buildPrompt(context: EvaluationContext): string {
     const words = (context.exercise.words ?? []).join(', ');
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const topic = context.exercise.topics?.[0] ?? 'N/A';
-
+    const topic = context.exercise.topics.join(',');
     return `## Task
 
 Review the provided sentence and give feedback on correctness and appropriateness.

@@ -21,11 +21,11 @@ export const Default: Story = {
       topics: ['Airport', 'Travel'],
       references: [],
       type: 'using-word',
-      practicedAt: null,
       practiceCount: 0,
       word: 'security',
       meaning:
         'The area where you have to get checked before entering the secure part of an airport (an ninh).',
+      clues: [],
       sentences: [
         "At security, they'll check your bags and ask you to remove your shoes.",
       ],

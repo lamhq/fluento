@@ -15,9 +15,7 @@ export const Communication: Story = {
   args: {
     feedback: {
       id: 'attempt-4',
-      exerciseId: 'exercise-4',
       practiceType: 'communication',
-      response: 'My parents are coming to visit. What about you?',
       score: 64,
       feedback: 'The response is relevant but could sound more natural.',
       correctness: {
@@ -54,9 +52,7 @@ export const JustOneWord: Story = {
   args: {
     feedback: {
       id: 'attempt-1',
-      exerciseId: 'exercise-1',
       practiceType: 'just-one-word',
-      response: 'customs',
       score: 100,
       feedback: 'You have the correct answer.',
     },
@@ -68,9 +64,7 @@ export const WordGuessing: Story = {
   args: {
     feedback: {
       id: 'attempt-2',
-      exerciseId: 'exercise-2',
       practiceType: 'word-guessing',
-      response: 'customs',
       score: 100,
       feedback: 'You have the correct answer.',
     },
@@ -82,9 +76,7 @@ export const UsingWord: Story = {
   args: {
     feedback: {
       id: 'attempt-3',
-      exerciseId: 'exercise-3',
       practiceType: 'using-word',
-      response: "At customs, they'll check my passport.",
       score: 92,
       feedback: 'The target word is used naturally and correctly.',
       correctness: {
@@ -109,10 +101,7 @@ export const SentenceConstruction: Story = {
   args: {
     feedback: {
       id: 'attempt-5',
-      exerciseId: 'exercise-5',
       practiceType: 'sentence-construction',
-      response:
-        "I studied computer science at university and had a bachelor's degree.",
       score: 92,
       feedback: 'The sentence uses all required words clearly.',
       correctness: {
@@ -138,9 +127,7 @@ export const SentenceVariation: Story = {
   args: {
     feedback: {
       id: 'attempt-6',
-      exerciseId: 'exercise-6',
       practiceType: 'sentence-variation',
-      response: "I earned a bachelor's degree in computer science from university.",
       score: 93,
       feedback: 'The sentence preserves the original meaning naturally.',
       correctness: {
@@ -165,10 +152,7 @@ export const ParagraphVariation: Story = {
   args: {
     feedback: {
       id: 'attempt-7',
-      exerciseId: 'exercise-7',
       practiceType: 'paragraph-variation',
-      response:
-        'The festival is an important Vietnamese tradition. Families gather to enjoy food, lanterns, and the full moon.',
       score: 91,
       feedback:
         'The paragraph preserves the original meaning clearly. But there are some minor grammatical issues.',
