@@ -9,58 +9,44 @@ import {
   type NextFunction,
 } from '../../core/evaluation.service';
 import { PracticeType } from '../../core/types';
+import { correctnessSchema } from './correctness.schema';
 
 /**
  * Schema for Communication practice type evaluation
  * Evaluates correctness and appropriateness including clarity, politeness, and tone
  */
 const CommunicationEvaluationSchema = z.object({
-  prompt: z.string().describe('The original prompt from the exercise.'),
-  response: z.string().describe("The learner's response."),
-  feedback: z
-    .string()
-    .describe('Overall feedback for the response. Max 20 words.'),
-  correctness: z
-    .object({
-      score: z.number().min(0).max(100).describe('Correctness score (0-100).'),
-      feedback: z.string().describe('Correctness feedback. Max 20 words.'),
-      fixes: z.array(z.string()).describe('List of grammar/spelling fixes.'),
-      correctedSentence: z
-        .string()
-        .describe('Corrected version of the response.'),
-    })
-    .describe("Check spelling & grammar of learner's response."),
+  feedback: z.string().describe('Overall feedback (max 120 char).'),
+  correctness: correctnessSchema,
   appropriateness: z
     .object({
       feedback: z
         .string()
-        .describe('Overall appropriateness feedback. Max 20 words.'),
+        .describe('Overall appropriateness feedback (max 120 char).'),
       clarity: z
         .object({
-          score: z.number().min(0).max(100).describe('Clarity score (0-100).'),
-          feedback: z.string().describe('Clarity feedback. Max 20 words.'),
+          score: z.number().describe('Clarity score (0-100).'),
+          feedback: z.string().describe('Clarity feedback (max 120 char).'),
         })
         .describe('Is the response easy to understand and free of ambiguity?'),
       politeness: z
         .object({
-          score: z
-            .number()
-            .min(0)
-            .max(100)
-            .describe('Politeness score (0-100).'),
-          feedback: z.string().describe('Politeness feedback. Max 20 words.'),
+          score: z.number().describe('Politeness score (0-100).'),
+          feedback: z.string().describe('Politeness feedback (max 120 char).'),
         })
         .describe('Does it show courtesy or acknowledge the other person?'),
       tone: z
         .object({
-          score: z.number().min(0).max(100).describe('Tone score (0-100).'),
-          feedback: z.string().describe('Tone feedback. Max 20 words.'),
+          score: z.number().describe('Tone score (0-100).'),
+          feedback: z.string().describe('Tone feedback (max 120 char).'),
         })
         .describe(
           'Does the emotional tone fit the situation (friendly, professional, humorous)?',
         ),
     })
-    .describe('Check response is relevant with the prompt'),
+    .describe(
+      'How natural the response is and how relevant it is with the scenario',
+    ),
 });
 
 /**
@@ -107,16 +93,20 @@ export class CommunicationEvaluation implements EvaluationService {
   }
 
   private buildPrompt(context: EvaluationContext): string {
-    const prompt = context.exercise.prompts?.[0] ?? '';
+    const prompts = context.exercise.prompts;
+    const topic = context.exercise.topics.join(', ');
+    if (!prompts?.length) throw new Error('Exercise prompt is missing.');
+
     return `## Task
 
-Review the learner's response to the conversation prompt and give feedback on correctness and appropriateness (relevant to the scenario).
+Review the learner's response and give feedback on correctness and appropriateness.
 
 ## Inputs
 
 - **Practice**: Communicate in a real-life conversation.
 - **Scenario:** ${context.exercise.scenario ?? 'N/A'}
-- **Prompt:** "${prompt}"
+- **Topic:** "${topic}"
+- **Prompt:** "${prompts[0]}"
 - **Learner Response:** "${context.response}"`;
   }
 }

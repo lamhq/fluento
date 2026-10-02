@@ -18,7 +18,6 @@ import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
-import { normalizeLearnerResponse } from '../../utils';
 import ColoredBadges from '../ColoredBadges';
 import ResponseFeedback from '../ResponseFeedback';
 
@@ -50,7 +49,7 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
         await submitResponse({
           exerciseId: exercise.id,
           practiceType: exercise.type,
-          response: normalizeLearnerResponse(values.response),
+          response: values.response,
         }),
       );
     } catch (error) {

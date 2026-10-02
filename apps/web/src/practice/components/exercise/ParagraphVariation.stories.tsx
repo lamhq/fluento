@@ -24,7 +24,7 @@ export const Default: Story = {
       practicedAt: null,
       practiceCount: 0,
       paragraph:
-        'The Mid-Autumn Festival is one of the most important traditional celebrations in Vietnam. It is usually held on the 15th day of the eighth lunar month when the moon is at its fullest and brightest. This festival is especially meaningful for children, who eagerly wait for the occasion each year. Families often gather together to enjoy mooncakes, fruits, and tea while admiring the beautiful moon. Children carry colorful lanterns and participate in joyful lantern parades around their neighborhoods. Lion dances are also a popular activity that brings excitement and good luck during the festival. Many people believe that the full moon symbolizes unity, happiness, and family reunion. Traditional folk stories, such as the tale of Cuội and the Moon Lady, are often shared with children. Schools and communities frequently organize cultural performances and games to celebrate the event. Overall, the Mid-Autumn Festival is a cherished Vietnamese tradition that strengthens family bonds and preserves cultural values.',
+        'The Mid-Autumn Festival is a major Vietnamese celebration held on the 15th day of the eighth lunar month. Families gather to enjoy mooncakes and admire the full moon. Children take part in lantern parades and lion dances. The festival promotes family unity and preserves cultural traditions.',
       words: [
         'Mid-Autumn Festival',
         '15th day',
@@ -32,7 +32,7 @@ export const Default: Story = {
         'lanterns',
         'lion dances',
         'full moon',
-        'family reunion',
+        'family',
       ],
     },
   },

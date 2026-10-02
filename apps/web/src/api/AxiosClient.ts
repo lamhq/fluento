@@ -25,7 +25,7 @@ export default class AxiosClient implements ApiClient {
       '/v1/practice/exercises',
       {
         params: {
-          sort: '-practicedAt',
+          sort: 'practicedAt',
           limit: 1,
         },
       },

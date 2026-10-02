@@ -15,5 +15,9 @@ describe('normalizeLearnerResponse', () => {
     expect(normalize('great! thanks')).toBe('Great! Thanks.');
 
     expect(normalize("what? i can't hear you")).toBe("What? I can't hear you.");
+
+    expect(normalize("i'm going to stay at home and relax, and you?")).toBe(
+      "I'm going to stay at home and relax, and you?",
+    );
   });
 });

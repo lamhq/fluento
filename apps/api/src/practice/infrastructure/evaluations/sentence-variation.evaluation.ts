@@ -9,36 +9,21 @@ import {
   type NextFunction,
 } from '../../core/evaluation.service';
 import { PracticeType } from '../../core/types';
+import { correctnessSchema } from './correctness.schema';
 
 /**
  * Schema for Sentence Variation practice type evaluation
  * Evaluates correctness and how well the rewritten sentence preserves the original meaning
  */
 const SentenceVariationEvaluationSchema = z.object({
-  score: z.number().min(0).max(100).describe('Overall score (0-100).'),
-  feedback: z.string().describe('Overall feedback. Max 20 words.'),
-  correctness: z.object({
-    score: z.number().min(0).max(100).describe('Correctness score (0-100).'),
-    feedback: z.string().describe('Correctness feedback. Max 20 words.'),
-    fixes: z
-      .array(z.string())
-      .describe('List of grammar/spelling fixes or improvements.'),
-    correctedSentence: z
-      .string()
-      .describe('Corrected version of the response (empty if no corrections).'),
-  }),
-  appropriateness: z.object({
-    score: z
-      .number()
-      .min(0)
-      .max(100)
-      .describe('Appropriateness score (0-100).'),
-    feedback: z
-      .string()
-      .describe(
-        'Feedback on how well the original meaning is preserved. Max 20 words.',
-      ),
-  }),
+  feedback: z.string().describe('Overall feedback (max 120 char).'),
+  correctness: correctnessSchema,
+  appropriateness: z
+    .object({
+      score: z.number().describe('Appropriateness score (0-100).'),
+      feedback: z.string().describe('Appropriateness feedback (max 120 char).'),
+    })
+    .describe('How well the original meaning is preserved.'),
 });
 
 /**
@@ -74,19 +59,18 @@ export class SentenceVariationEvaluation implements EvaluationService {
   }
 
   private buildPrompt(context: EvaluationContext): string {
-    const originalSentence = context.exercise.prompts?.[0] ?? '';
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const topic = context.exercise.topics?.[0] ?? 'N/A';
+    const originalSentence = context.exercise.sentence ?? '';
+    const topic = context.exercise.topics.join(', ');
 
     return `## Task
 
-Review the rewritten sentence and give feedback on correctness and appropriateness.
+Evaluate the rewrite's correctness and appropriateness; it must differ from the original.
 
 ## Inputs
 
 - **Practice**: Rewrite a sentence with the same meaning.
 - **Topic:** ${topic}
 - **Original sentence:** "${originalSentence}"
-- **Learner Response:** "${context.response}"`;
+- **Rewritten sentence:** "${context.response}"`;
   }
 }

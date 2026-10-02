@@ -9,36 +9,23 @@ import {
   type NextFunction,
 } from '../../core/evaluation.service';
 import { PracticeType } from '../../core/types';
+import { correctnessSchema } from './correctness.schema';
 
 /**
  * Schema for Sentence Construction practice type evaluation
  * Evaluates correctness and if all required words are used appropriately
  */
 const SentenceConstructionEvaluationSchema = z.object({
-  score: z.number().min(0).max(100).describe('Overall score (0-100).'),
-  feedback: z.string().describe('Overall feedback. Max 20 words.'),
-  correctness: z.object({
-    score: z.number().min(0).max(100).describe('Correctness score (0-100).'),
-    feedback: z.string().describe('Correctness feedback. Max 20 words.'),
-    fixes: z
-      .array(z.string())
-      .describe('List of grammar/spelling fixes or improvements.'),
-    correctedSentence: z
-      .string()
-      .describe('Corrected version of the response (empty if no corrections).'),
-  }),
-  appropriateness: z.object({
-    score: z
-      .number()
-      .min(0)
-      .max(100)
-      .describe('Appropriateness score (0-100).'),
-    feedback: z
-      .string()
-      .describe(
-        'Feedback on required words usage and naturalness. Max 20 words.',
-      ),
-  }),
+  feedback: z.string().describe('Overall feedback (max 120 char).'),
+  correctness: correctnessSchema,
+  appropriateness: z
+    .object({
+      score: z.number().describe('Appropriateness score (0-100).'),
+      feedback: z.string().describe('Appropriateness feedback (max 120 char).'),
+    })
+    .describe(
+      'Whether the required words are used appropriately and the sentence sounds natural.',
+    ),
 });
 
 /**
@@ -87,6 +74,6 @@ Review the provided sentence and give feedback on correctness and appropriatenes
 - **Practice**: Make a sentence using provided words
 - **Topic:** ${topic}
 - **Required words:** ${words}
-- **Learner Response:** "${context.response}"`;
+- **Sentence:** "${context.response}"`;
   }
 }

@@ -15,29 +15,22 @@ import { PracticeType } from '../../core/types';
  * Evaluates correctness per sentence and how well the rewritten paragraph preserves the original meaning
  */
 const ParagraphVariationEvaluationSchema = z.object({
-  score: z.number().min(0).max(100).describe('Overall score (0-100).'),
-  feedback: z.string().describe('Overall feedback. Max 20 words.'),
+  feedback: z.string().describe('Overall feedback (max 120 char).'),
   correctness: z.object({
-    score: z
-      .number()
-      .min(0)
-      .max(100)
-      .describe('Overall correctness score (0-100).'),
+    score: z.number().describe('Overall correctness score (0-100).'),
     feedback: z
       .string()
-      .describe('Overall correctness feedback. Max 20 words.'),
+      .describe('Overall correctness feedback (max 120 char).'),
     sentences: z
       .array(
         z.object({
           sentence: z.string().describe('The sentence from the response.'),
-          score: z
-            .number()
-            .min(0)
-            .max(100)
-            .describe('Per-sentence correctness score (0-100).'),
-          feedback: z.string().describe('Per-sentence feedback. Max 20 words.'),
+          score: z.number().describe('Per-sentence correctness score (0-100).'),
+          feedback: z
+            .string()
+            .describe('Per-sentence feedback (max 120 char).'),
           fixes: z
-            .array(z.string())
+            .array(z.string().describe("Example: change 'teh' to 'the'."))
             .describe('List of grammar/spelling fixes for this sentence.'),
           correctedSentence: z
             .string()
@@ -48,18 +41,12 @@ const ParagraphVariationEvaluationSchema = z.object({
       )
       .describe('Feedback for each sentence in the response.'),
   }),
-  appropriateness: z.object({
-    score: z
-      .number()
-      .min(0)
-      .max(100)
-      .describe('Appropriateness score (0-100).'),
-    feedback: z
-      .string()
-      .describe(
-        'Feedback on how well the overall meaning and structure are preserved. Max 20 words.',
-      ),
-  }),
+  appropriateness: z
+    .object({
+      score: z.number().describe('Appropriateness score (0-100).'),
+      feedback: z.string().describe('Appropriateness feedback (max 120 char).'),
+    })
+    .describe('How well the overall meaning and structure are preserved.'),
 });
 
 /**
@@ -108,6 +95,6 @@ Review the rewritten paragraph and give feedback on correctness and appropriaten
 - **Practice**: Rewrite a paragraph with the same meaning.
 - **Topic:** ${topic}
 - **Original paragraph:** "${originalParagraph}"
-- **Learner Response:** "${context.response}"`;
+- **Rewritten paragraph:** "${context.response}"`;
   }
 }
