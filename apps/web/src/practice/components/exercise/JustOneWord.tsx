@@ -32,6 +32,8 @@ interface JustOneWordProps {
 }
 
 export default function JustOneWord({ exercise }: JustOneWordProps) {
+  if (exercise.format !== 'word') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -76,7 +78,7 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
             </p>
 
             <div className="flex flex-wrap gap-2 my-4 justify-center">
-              <ColoredBadges values={exercise.clues ?? []} />
+              <ColoredBadges values={exercise.clues} />
             </div>
 
             <Controller

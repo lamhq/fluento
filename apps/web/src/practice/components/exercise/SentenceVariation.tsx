@@ -33,6 +33,8 @@ interface SentenceVariationProps {
 }
 
 export default function SentenceVariation({ exercise }: SentenceVariationProps) {
+  if (exercise.format !== 'sentence') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();

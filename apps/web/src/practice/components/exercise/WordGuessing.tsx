@@ -32,6 +32,8 @@ interface WordGuessingProps {
 }
 
 export default function WordGuessing({ exercise }: WordGuessingProps) {
+  if (exercise.format !== 'word') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();

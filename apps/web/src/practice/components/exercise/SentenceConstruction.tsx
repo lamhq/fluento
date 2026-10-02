@@ -36,6 +36,8 @@ interface SentenceConstructionProps {
 export default function SentenceConstruction({
   exercise,
 }: SentenceConstructionProps) {
+  if (exercise.format !== 'sentence') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -97,7 +99,7 @@ export default function SentenceConstruction({
               Make a sentence using the following words:
             </p>
             <div className="flex flex-wrap gap-2 my-4 justify-center">
-              <ColoredBadges values={exercise.words ?? []} />
+              <ColoredBadges values={exercise.words} />
             </div>
             <Controller
               name="response"
