@@ -14,6 +14,11 @@ export const PROTECTED_ROUTE = '/protected';
 export const PRACTICE_ROUTE = '/practice';
 
 /**
+ * Manage exercises list page
+ */
+export const MANAGE_EXERCISE_LIST_ROUTE = '/manage/exercises';
+
+/**
  * Where user is redirected after signing in on Identity Provider's page
  * This route contains an authorization code which is used to exchange for an access token
  */
