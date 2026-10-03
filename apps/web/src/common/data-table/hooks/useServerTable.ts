@@ -31,7 +31,7 @@ interface TableOptions<TData extends RowData> {
 
 export function useServerTable<TData extends RowData>({
   columns,
-  queryFn: fetchData,
+  queryFn,
   queryKeyPrefix,
   globalFilterFn,
 }: TableOptions<TData>) {
@@ -44,12 +44,12 @@ export function useServerTable<TData extends RowData>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const state = { pagination, columnFilters, globalFilter, sorting };
   const {
-    data: [totalCount, items] = [0, []],
+    data: [totalCount, items] = [],
     error,
     isFetching,
   } = useQuery({
     queryKey: [queryKeyPrefix, pagination, globalFilter, columnFilters, sorting],
-    queryFn: () => fetchData(state),
+    queryFn: () => queryFn(state),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   });
@@ -57,7 +57,7 @@ export function useServerTable<TData extends RowData>({
   if (error) throw error;
 
   const table = useAppTable({
-    data: items,
+    data: items ?? [],
     state,
     columns,
     rowCount: totalCount,
@@ -80,5 +80,5 @@ export function useServerTable<TData extends RowData>({
     onPaginationChange: setPagination,
   });
 
-  return { table, data: items, isFetching, pagination };
+  return { table, data: items, isFetching };
 }

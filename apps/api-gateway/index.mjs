@@ -108,7 +108,7 @@ async function startServer() {
   });
 }
 
-function runWithRetry(fn, maxRetries = 3, baseDelay = 1000) {
+function runWithRetry(fn, maxRetries = 10, baseDelay = 1000) {
   return new Promise(async (resolve, reject) => {
     let attempt = 0;
 

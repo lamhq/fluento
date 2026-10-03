@@ -14,27 +14,15 @@ export interface ExerciseRow extends RowData {
 
 export function useExercisesQuery(): QueryFn<ExerciseRow> {
   const apiClient = useApiClient();
-
-  return async (query) => {
+  return async ({ pagination }) => {
     try {
       const exerciseQuery: ExerciseQuery = {
-        limit: query.pagination.pageSize,
-        offset: query.pagination.pageIndex * query.pagination.pageSize,
+        limit: pagination.pageSize,
+        offset: pagination.pageIndex * pagination.pageSize,
       };
 
-      const [total, items] = await apiClient.getExercises(exerciseQuery);
-
-      return [
-        total,
-        items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          skill: item.skill,
-          format: item.format,
-          status: item.status,
-          topics: item.topics,
-        })),
-      ];
+      const result = await apiClient.getExercises(exerciseQuery);
+      return result;
     } catch (error) {
       if (error instanceof Error) {
         throw error;
