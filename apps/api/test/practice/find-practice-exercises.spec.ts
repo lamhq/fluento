@@ -5,10 +5,10 @@ import { deleteMany, insertMany } from '../utils/mongodb';
 import { setUpApiTest } from '../utils/test';
 
 const exerciseBaseSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  topics: z.array(z.string()),
-  references: z.array(z.string()),
+  id: z.string().nonempty(),
+  name: z.string().nonempty(),
+  topics: z.array(z.string().nonempty()).nonempty(),
+  references: z.array(z.string().nonempty()),
   practicedAt: z.iso.datetime().nullable().optional(),
   practiceCount: z.number().int().nonnegative(),
 });
@@ -17,31 +17,28 @@ const exerciseSchema = z.discriminatedUnion('format', [
   exerciseBaseSchema.extend({
     skill: z.literal('communication'),
     format: z.literal('communication'),
-    scenario: z.string(),
-    prompts: z.array(z.string()),
+    scenario: z.string().nonempty(),
+    prompts: z.array(z.string().nonempty()).nonempty(),
   }),
   exerciseBaseSchema.extend({
     skill: z.literal('vocabulary'),
     format: z.literal('word'),
-    word: z.string(),
-    meaning: z.string(),
-    clues: z.array(z.string()),
-    sentences: z.array(z.string()),
+    word: z.string().nonempty(),
+    meaning: z.string().nonempty(),
+    clues: z.array(z.string().nonempty()),
+    sentences: z.array(z.string().nonempty()),
   }),
   exerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('sentence'),
-    scenario: z.string(),
-    words: z.array(z.string()),
-    sentence: z.string(),
+    sentence: z.string().nonempty(),
+    words: z.array(z.string().nonempty()),
   }),
   exerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('paragraph'),
-    scenario: z.string(),
-    prompts: z.array(z.string()),
-    paragraph: z.string(),
-    words: z.array(z.string()),
+    paragraph: z.string().nonempty(),
+    words: z.array(z.string().nonempty()),
   }),
 ]);
 

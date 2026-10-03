@@ -1,7 +1,27 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
+import { PracticeType } from '../core/types';
+
 export type PracticeAttemptDocument = HydratedDocument<PracticeAttemptModel>;
+
+@Schema({ _id: false })
+export class PracticeAttemptSentenceCorrectness {
+  @Prop({ required: true })
+  sentence: string;
+
+  @Prop({ required: true })
+  score: number;
+
+  @Prop({ required: true })
+  feedback: string;
+
+  @Prop({ type: [String], default: [] })
+  fixes: string[];
+
+  @Prop({ required: true })
+  correctedSentence: string;
+}
 
 @Schema({ _id: false })
 export class PracticeAttemptCorrectness {
@@ -15,7 +35,10 @@ export class PracticeAttemptCorrectness {
   fixes: string[];
 
   @Prop()
-  correctedResponse?: string;
+  correctedSentence?: string;
+
+  @Prop({ type: [PracticeAttemptSentenceCorrectness] })
+  sentences?: PracticeAttemptSentenceCorrectness[];
 }
 
 @Schema({ _id: false })
@@ -75,6 +98,13 @@ export class PracticeAttemptModel {
   })
   exerciseId: mongoose.Types.ObjectId;
 
+  @Prop({
+    type: String,
+    enum: Object.values(PracticeType),
+    required: true,
+  })
+  practiceType: PracticeType;
+
   @Prop({ required: true })
   response: string;
 
@@ -84,8 +114,8 @@ export class PracticeAttemptModel {
   @Prop({ required: true })
   feedback: string;
 
-  @Prop({ type: PracticeAttemptCorrectness, required: true })
-  correctness: PracticeAttemptCorrectness;
+  @Prop({ type: PracticeAttemptCorrectness })
+  correctness?: PracticeAttemptCorrectness;
 
   @Prop({ type: PracticeAttemptAppropriateness })
   appropriateness?: PracticeAttemptAppropriateness;

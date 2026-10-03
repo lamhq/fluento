@@ -14,13 +14,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Field, FieldError } from '@/components/ui/field';
-import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
+import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 
 import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
-import { normalizeLearnerResponse } from '../../utils';
 import ColoredBadges from '../ColoredBadges';
 import ResponseFeedback from '../ResponseFeedback';
 
@@ -37,6 +36,8 @@ interface SentenceConstructionProps {
 export default function SentenceConstruction({
   exercise,
 }: SentenceConstructionProps) {
+  if (exercise.format !== 'sentence') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -53,7 +54,8 @@ export default function SentenceConstruction({
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
-          response: normalizeLearnerResponse(values.response),
+          practiceType: exercise.type,
+          response: values.response,
         }),
       );
     } catch (error) {
@@ -97,7 +99,7 @@ export default function SentenceConstruction({
               Make a sentence using the following words:
             </p>
             <div className="flex flex-wrap gap-2 my-4 justify-center">
-              <ColoredBadges values={exercise.words ?? []} />
+              <ColoredBadges values={exercise.words} />
             </div>
             <Controller
               name="response"
@@ -105,13 +107,14 @@ export default function SentenceConstruction({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <InputGroup>
-                    <InputGroupTextarea
+                    <InputGroupInput
                       {...field}
                       id="practice-form-response"
+                      type="text"
                       placeholder="Type your response here..."
-                      rows={4}
-                      className="min-h-24 resize-none"
+                      autoComplete="off"
                       aria-invalid={fieldState.invalid}
+                      aria-label="Your response"
                     />
                   </InputGroup>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

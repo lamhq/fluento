@@ -50,6 +50,7 @@ export default function Communication({ exercise }: CommunicationProps) {
     try {
       const result = await submitResponse({
         exerciseId: exercise.id,
+        practiceType: exercise.type,
         response: normalizeLearnerResponse(values.response),
       });
       setFeedback(result);

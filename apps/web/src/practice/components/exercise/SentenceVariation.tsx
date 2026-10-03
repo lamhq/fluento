@@ -14,13 +14,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Field, FieldError } from '@/components/ui/field';
-import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
+import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 
 import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
-import { normalizeLearnerResponse } from '../../utils';
 import ResponseFeedback from '../ResponseFeedback';
 
 const formSchema = z.object({
@@ -34,6 +33,8 @@ interface SentenceVariationProps {
 }
 
 export default function SentenceVariation({ exercise }: SentenceVariationProps) {
+  if (exercise.format !== 'sentence') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -50,7 +51,8 @@ export default function SentenceVariation({ exercise }: SentenceVariationProps) 
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
-          response: normalizeLearnerResponse(values.response),
+          practiceType: exercise.type,
+          response: values.response,
         }),
       );
     } catch (error) {
@@ -68,7 +70,7 @@ export default function SentenceVariation({ exercise }: SentenceVariationProps) 
     <>
       <Card size="sm" className="mb-4">
         <CardHeader className="border-b text-center">
-          <CardTitle>{exercise.name}</CardTitle>
+          <CardTitle>Sentence Variation</CardTitle>
           {exercise.topics.length > 0 && (
             <CardDescription className="mt-1">
               {exercise.topics.map((topic) => (
@@ -100,13 +102,14 @@ export default function SentenceVariation({ exercise }: SentenceVariationProps) 
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <InputGroup>
-                    <InputGroupTextarea
+                    <InputGroupInput
                       {...field}
                       id="practice-form-response"
+                      type="text"
                       placeholder="Type your response here..."
-                      rows={4}
-                      className="min-h-24 resize-none"
+                      autoComplete="off"
                       aria-invalid={fieldState.invalid}
+                      aria-label="Your response"
                     />
                   </InputGroup>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

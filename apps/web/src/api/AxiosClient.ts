@@ -1,13 +1,14 @@
 import axios, { type AxiosInstance } from 'axios';
 
+import { paginatedPracticeExerciseSchema, practiceAttemptSchema } from './schemas';
+import type { PaginatedResponse } from './types';
 import type {
   ApiClient,
   Exercise,
-  PaginatedResponse,
+  PracticeAttempt,
   PracticeExercise,
-  SubmitResponse,
 } from './types';
-import { getPracticeType } from './utils';
+import { selectPracticeType } from './utils';
 
 export default class AxiosClient implements ApiClient {
   private readonly httpClient: AxiosInstance;
@@ -25,29 +26,31 @@ export default class AxiosClient implements ApiClient {
       '/v1/practice/exercises',
       {
         params: {
-          sort: '-practicedAt',
+          sort: 'practicedAt',
           limit: 1,
         },
       },
     );
 
-    const items = response.data.items.map((exercise) => {
-      return { ...exercise, type: getPracticeType(exercise.format) };
-    });
-
-    return { ...response.data, items };
+    const data = paginatedPracticeExerciseSchema.parse(response.data);
+    const items = data.items.map((exercise) => ({
+      ...exercise,
+      // randomly select practice type for each exercise
+      type: selectPracticeType(exercise.format),
+    }));
+    return { ...data, items };
   }
 
   async submitPracticeResponse(
     exerciseId: string,
+    practiceType: PracticeExercise['type'],
     response: string,
-  ): Promise<SubmitResponse> {
-    const result = await this.httpClient.post<SubmitResponse>(
+  ): Promise<PracticeAttempt> {
+    const result = await this.httpClient.post<PracticeAttempt>(
       `/v1/practice/exercises/${exerciseId}/responses`,
-      { response },
+      { practiceType, response },
     );
-
-    return result.data;
+    return practiceAttemptSchema.parse(result.data);
   }
 
   async getExercises(

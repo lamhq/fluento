@@ -18,7 +18,6 @@ import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
-import { normalizeLearnerResponse } from '../../utils';
 import ColoredBadges from '../ColoredBadges';
 import ResponseFeedback from '../ResponseFeedback';
 
@@ -33,6 +32,8 @@ interface JustOneWordProps {
 }
 
 export default function JustOneWord({ exercise }: JustOneWordProps) {
+  if (exercise.format !== 'word') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -49,7 +50,8 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
-          response: normalizeLearnerResponse(values.response),
+          practiceType: exercise.type,
+          response: values.response,
         }),
       );
     } catch (error) {
@@ -76,7 +78,7 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
             </p>
 
             <div className="flex flex-wrap gap-2 my-4 justify-center">
-              <ColoredBadges values={exercise.clues ?? []} />
+              <ColoredBadges values={exercise.clues} />
             </div>
 
             <Controller

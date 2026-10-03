@@ -24,17 +24,17 @@ cp apps/api/.env.example apps/api/.env
 
 ## Getting Started
 
-Start the database service first:
+Start required services first:
 
 ```bash
 # start Docker (macOS)
 open -a Docker
 
-# start database service (MongoDB)
+# start MongoDB
 docker compose up -d db-service
 ```
 
-Start the API application in development mode:
+Start API application (development mode):
 
 ```bash
 pnpx turbo run api#dev
@@ -47,6 +47,14 @@ To start the production build locally:
 ```bash
 pnpm -F api run build
 pnpm -F api run start
+```
+
+## Seed database
+
+To seed the database with initial data:
+
+```bash
+docker compose exec db-service mongo --username admin --password 123123 --authenticationDatabase admin test /docker-entrypoint-initdb.d/seed.js
 ```
 
 ## Run end-to-end tests

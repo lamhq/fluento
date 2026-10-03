@@ -34,6 +34,8 @@ interface ParagraphVariationProps {
 }
 
 export default function ParagraphVariation({ exercise }: ParagraphVariationProps) {
+  if (exercise.format !== 'paragraph') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -50,6 +52,7 @@ export default function ParagraphVariation({ exercise }: ParagraphVariationProps
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
+          practiceType: exercise.type,
           response: normalizeLearnerResponse(values.response),
         }),
       );

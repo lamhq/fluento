@@ -1,3 +1,7 @@
+import {
+  ExerciseFormat,
+  ExerciseSkill,
+} from '../../content/core/exercise.entity';
 import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
 
 export class PracticeExerciseDto {
@@ -5,8 +9,8 @@ export class PracticeExerciseDto {
   id: string;
   userId: string;
   name: string;
-  skill: string;
-  format: string;
+  skill: ExerciseSkill;
+  format: ExerciseFormat;
 
   // Communication format fields
   scenario?: string;

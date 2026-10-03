@@ -14,13 +14,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Field, FieldError } from '@/components/ui/field';
-import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
+import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 
 import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
-import { normalizeLearnerResponse } from '../../utils';
 import ResponseFeedback from '../ResponseFeedback';
 const formSchema = z.object({
   response: z.string().trim().min(1, 'Please enter a response before submitting.'),
@@ -33,6 +32,8 @@ interface WordGuessingProps {
 }
 
 export default function WordGuessing({ exercise }: WordGuessingProps) {
+  if (exercise.format !== 'word') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -49,7 +50,8 @@ export default function WordGuessing({ exercise }: WordGuessingProps) {
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
-          response: normalizeLearnerResponse(values.response),
+          practiceType: exercise.type,
+          response: values.response,
         }),
       );
     } catch (error) {
@@ -99,13 +101,14 @@ export default function WordGuessing({ exercise }: WordGuessingProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <InputGroup>
-                    <InputGroupTextarea
+                    <InputGroupInput
                       {...field}
                       id="practice-form-response"
+                      type="text"
                       placeholder="Type your response here..."
-                      rows={2}
-                      className="min-h-fit resize-none"
+                      autoComplete="off"
                       aria-invalid={fieldState.invalid}
+                      aria-label="Your response"
                     />
                   </InputGroup>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

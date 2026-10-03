@@ -21,7 +21,6 @@ export const Default: Story = {
       topics: ['Airport', 'Travel'],
       references: [],
       type: 'just-one-word',
-      practicedAt: null,
       practiceCount: 0,
       word: 'baggage claim',
       meaning:

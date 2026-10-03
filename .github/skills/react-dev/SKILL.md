@@ -1,12 +1,12 @@
 ---
 name: react-dev
-description: React coding skills. Use when you want to run Storybook.
+description: React coding skills. Use when you want to start the web app, run Storybook.
 ---
+
+## Start the web app
+
+Refer to `Getting Started` section in `apps/web/README.md`.
 
 ## Run Storybook
 
 Refer to `Run Storybook` section in `apps/web/README.md`.
-
-## Develop data list page
-
-Follow steps defined in http://localhost:4173/web/react/tanstack-table/server-side.md

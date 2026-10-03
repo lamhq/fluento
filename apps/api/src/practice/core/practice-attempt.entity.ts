@@ -1,17 +1,26 @@
 import type { Entity } from '../../common/types/entity';
+import { PracticeType } from './types';
 
 export class PracticeAttemptEntity implements Entity {
   id: string;
   userId: string;
   exerciseId: string;
+  practiceType: PracticeType;
   response: string;
   score: number;
   feedback: string;
-  correctness: {
+  correctness?: {
     score: number;
     feedback: string;
     fixes?: string[];
-    correctedResponse?: string;
+    correctedSentence?: string;
+    sentences?: {
+      sentence: string;
+      score: number;
+      feedback: string;
+      fixes?: string[];
+      correctedSentence?: string;
+    }[];
   };
   appropriateness?: {
     score: number;

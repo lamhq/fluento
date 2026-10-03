@@ -53,6 +53,270 @@ flowchart TD
     I --> C
 ```
 
+## Feedback Model
+
+Each exercise type has its own specific feedback structure.
+
+### Communication
+
+**Feedback Structure**:
+
+- `score`: overall score.
+- `feedback`: overall feedback.
+- `correctness`: score, feedback, grammar or spelling fixes, and an optional corrected response.
+- `appropriateness`: score and feedback about relevance to the prompt and scenario.
+  - `clarity`: whether the message is easy to understand.
+  - `politeness`: whether the response is courteous and respectful.
+  - `tone`: whether the tone fits the conversation.
+
+**AI prompt**:
+
+```md
+## Task
+
+Review the learner's response to the conversation prompt and give feedback on correctness and appropriateness.
+
+## Inputs
+
+- **Practice**: Communicate in a real-life conversation.
+- **Scenario:** Answer small talk questions
+- **Topics:** Everyday Conversation
+- **Prompt:** "What are you up to this weekend?"
+- **Learner Response:** "My parents are coming to visit. What about you?"
+```
+
+**Example**:
+
+```json
+{
+  "score": 95,
+  "feedback": "Your response is clear, polite, and appropriate for the scenario.",
+  "correctness": {
+    "score": 100,
+    "feedback": "The response is grammatically correct.",
+    "correctedSentence": "",
+    "fixes": []
+  },
+  "appropriateness": {
+    "score": 95,
+    "feedback": "The response is relevant to the prompt and matches the expected tone.",
+    "clarity": {
+      "score": 96,
+      "feedback": "The message is easy to understand and free of ambiguity."
+    },
+    "politeness": {
+      "score": 97,
+      "feedback": "The response is courteous and respectful."
+    },
+    "tone": {
+      "score": 94,
+      "feedback": "The tone is appropriate for this conversation."
+    }
+  }
+}
+```
+
+### Using Word
+
+**Feedback Structure**:
+
+- `score`: overall score.
+- `feedback`: overall feedback.
+- `correctness`: score, spelling and grammar feedback, fixes, and corrected sentence (if applicable).
+- `appropriateness`: score and feedback about how naturally and accurately the target word or phrase is used in the given context.
+
+**AI prompt**:
+
+```md
+## Task
+
+Review the sentence and give feedback on correctness and appropriateness.
+
+## Inputs
+
+- **Practice**: Make a sentence using the study word.
+- **Topics:** Airport
+- **Target word:** customs
+- **Meaning:** The official procedures and formalities required by a country when entering or leaving it (hải quan).
+- **Learner Response:** "At customs, they're going to ask for your passport and stamp it."
+```
+
+**Example**:
+
+```json
+{
+  "score": 95,
+  "feedback": "The target word is used naturally and correctly.",
+  "correctness": {
+    "score": 100,
+    "feedback": "The sentence is grammatically correct.",
+    "correctedSentence": "",
+    "fixes": []
+  },
+  "appropriateness": {
+    "score": 95,
+    "feedback": "The word fits the airport context accurately."
+  }
+}
+```
+
+### Just One Word
+
+**Feedback Structure**:
+
+- `score`: overall score (`0` if incorrect, `100` if correct).
+- `feedback`: overall feedback.
+
+**AI prompt**: No AI needed to validate the guess, just check if it matches the target word.
+
+### Word Guessing
+
+**Feedback Structure**:
+
+- `score`: overall score (`0` if incorrect, `100` if correct).
+- `feedback`: overall feedback.
+
+**AI prompt**:No AI needed to validate the guess, just check if it matches the target word.
+
+### Sentence Construction
+
+**Feedback Structure**:
+
+- `score`: overall score.
+- `feedback`: overall feedback.
+- `correctness`: score, spelling and grammar feedback, fixes, and corrected sentence.
+- `appropriateness`: score and feedback identifying required words that are missing or improperly used.
+
+**AI prompt**:
+
+```md
+## Task
+
+Review the provided sentence and give feedback on correctness and appropriateness.
+
+## Inputs
+
+- **Practice**: Make a sentence using provided words
+- **Topics:**: IT
+- **Words:** study, computer science, university, bachelor's degree
+- **Learner Response:** "I studied computer science at university and had a bachelor's degree."
+```
+
+**Example**:
+
+```json
+{
+  "score": 92,
+  "feedback": "The sentence uses all the required words and communicates the idea clearly.",
+  "correctness": {
+    "score": 88,
+    "feedback": "The sentence is understandable but the degree phrasing can be improved.",
+    "fixes": [
+      "Use 'earned a bachelor's degree' instead of 'had a bachelor's degree'."
+    ],
+    "correctedSentence": "I studied computer science at university and earned a bachelor's degree."
+  },
+  "appropriateness": {
+    "score": 96,
+    "feedback": "All required words are included and used appropriately."
+  }
+}
+```
+
+### Sentence Variation
+
+**Feedback Structure**:
+
+- `score`: overall score.
+- `feedback`: overall feedback.
+- `correctness`: score, spelling and grammar feedback, fixes, and corrected sentence.
+- `appropriateness`: score and feedback about how well the rewritten sentence preserves the original meaning.
+
+**AI prompt**:
+
+```md
+## Task
+
+Review the rewritten sentence and give feedback on correctness and appropriateness.
+
+## Inputs
+
+- **Practice**: Rewrite a sentence with the same meaning.
+- **Topics:**: IT
+- **Original sentence:** "I studied computer science at university and had a bachelor's degree."
+- **Learner Response:** "I earned a bachelor's degree in computer science from university."
+```
+
+**Example**:
+
+```json
+{
+  "score": 96,
+  "feedback": "The rewritten sentence preserves the original meaning and sounds natural.",
+  "correctness": {
+    "score": 100,
+    "feedback": "The rewritten sentence is grammatically correct.",
+    "fixes": [],
+    "correctedSentence": ""
+  },
+  "appropriateness": {
+    "score": 100,
+    "feedback": "The original meaning is preserved clearly."
+  }
+}
+```
+
+### Paragraph Variation
+
+**Feedback Structure**:
+
+- `score`: overall score.
+- `feedback`: overall feedback.
+- `correctness`: score and feedback for the rewritten paragraph.
+  - `sentences`: per-sentence score, feedback, grammar or spelling fixes, and corrected sentence.
+- `appropriateness`: score and feedback about how well the overall meaning and structure are preserved.
+
+**AI prompt**:
+
+```md
+## Task
+
+Review the rewritten paragraph and give feedback on correctness and appropriateness.
+
+## Inputs
+
+- **Practice**: Rewrite a paragraph with the same meaning.
+- **Topics:**: IT
+- **Original paragraph:** "The Mid-Autumn Festival is one of Vietnam’s most important traditional celebrations, held on the 15th day of the eighth lunar month when the moon is full. Families gather to enjoy mooncakes, fruits, and tea while admiring the moon. Children carry colorful lanterns, join lantern parades, and watch lion dances. The festival symbolizes unity, happiness, and family reunion. Folk tales like Cuội and the Moon Lady are shared, while schools and communities host cultural activities to preserve tradition."
+- **Learner Response:** "The Mid-Autumn Festival is a cherished Vietnamese celebration held on the 15th day of the eighth lunar month. Families gather to enjoy mooncakes, fruits, tea, lanterns, and lion dances, while the full moon represents unity, happiness, and family reunion."
+```
+
+**Example**:
+
+```json
+{
+  "score": 90,
+  "feedback": "The rewritten paragraph captures the main ideas of the original.",
+  "correctness": {
+    "score": 96,
+    "feedback": "The rewritten paragraph is grammatically correct.",
+    "sentences": [
+      {
+        "sentence": "The Mid-Autumn Festival is a cherished Vietnamese celebration held on the 15th day of the eighth lunar month.",
+        "score": 100,
+        "feedback": "The sentences are clear and correctly formed.",
+        "fixes": [],
+        "correctedSentence": ""
+      }
+    ]
+  },
+  "appropriateness": {
+    "score": 90,
+    "feedback": "The main celebration details and meaning are preserved, though some supporting details are omitted."
+  }
+}
+```
+
 ## Acceptance Criteria
 
 - The app shows the practice screen when the learner selects an exercise-based learning section.
@@ -96,44 +360,3 @@ flowchart TD
 For each exercise, the app tracks the last time it was practiced. The selection logic prioritizes exercises that have not been practiced recently.
 
 The app fetches exercises from the backend API, which supports sorting by `practicedAt` (descending) and filtering by topic.
-
-## Feedback Model
-
-The backend returns standardized feedback for every exercise type. The response includes an overall `score` and learner-facing `feedback`; exercise-specific evaluation categories are optional and may be populated according to the exercise type.
-
-```json
-{
-  "score": 95,
-  "feedback": "Your response is clear, polite, and appropriate for the scenario.",
-  "correctness": {
-    "score": 95,
-    "feedback": "The response is grammatically correct, with one minor contraction improvement.",
-    "fixes": ["Use 'I am' instead of 'I'm' in a formal context."],
-    "correctedResponse": "I am pleased to confirm that we can proceed."
-  },
-  "appropriateness": {
-    "score": 95,
-    "feedback": "The response is relevant to the prompt and matches the expected tone.",
-    "clarity": {
-      "score": 96,
-      "feedback": "The message is easy to understand and free of ambiguity."
-    },
-    "politeness": {
-      "score": 97,
-      "feedback": "The response is courteous and respectful."
-    },
-    "tone": {
-      "score": 94,
-      "feedback": "The tone is appropriate for this conversation."
-    }
-  }
-}
-```
-
-- `score` is the overall score from 0 to 100.
-- `feedback` is the overall learner-facing feedback.
-- `correctness` evaluates whether the response is accurate and well-formed when applicable.
-- `appropriateness` evaluates whether the response fits the exercise goal when applicable.
-- `clarity`, `politeness`, and `tone` are optional fields used for communication exercises.
-- `fixes` and `correctedResponse` are optional and apply only when a correction is useful.
-- Other exercise types may provide additional evaluation fields appropriate to their learning goal.

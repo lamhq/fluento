@@ -28,15 +28,19 @@ export class MgPracticeAttemptRepository implements PracticeAttemptRepository {
       id: data._id.toString(),
       userId: data.userId.toString(),
       exerciseId: data.exerciseId.toString(),
+      practiceType: data.practiceType,
       response: data.response,
       score: data.score,
       feedback: data.feedback,
-      correctness: {
-        score: data.correctness.score,
-        feedback: data.correctness.feedback,
-        fixes: data.correctness.fixes,
-        correctedResponse: data.correctness.correctedResponse,
-      },
+      correctness: data.correctness
+        ? {
+            score: data.correctness.score,
+            feedback: data.correctness.feedback,
+            fixes: data.correctness.fixes,
+            correctedSentence: data.correctness.correctedSentence,
+            sentences: data.correctness.sentences,
+          }
+        : undefined,
       appropriateness: data.appropriateness
         ? {
             score: data.appropriateness.score,

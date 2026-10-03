@@ -15,6 +15,10 @@ Refer to `Run lint` section in `README.md`.
 
 Refer to `Run type check` section in `README.md`.
 
+## Run unit tests
+
+Refer to `Run unit tests` section in `README.md`.
+
 ## Repository Structure
 
 Refer to `Repository Structure` section in `README.md`.

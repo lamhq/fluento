@@ -24,17 +24,17 @@ cp apps/web/.env.example apps/web/.env
 
 ## Getting Started
 
-Start the required services first:
+Start required services first:
 
 ```bash
 # start Docker (macOS)
 open -a Docker
 
-# start required local services
-docker compose up -d auth-service api-gateway
+# start MongoDB and Keycloak
+docker compose up -d db-service auth-service
 ```
 
-Start the web application (the api app is automatically started by Turborepo)
+Start web application (API app is automatically started by Turborepo):
 
 ```bash
 pnpx turbo run web#dev

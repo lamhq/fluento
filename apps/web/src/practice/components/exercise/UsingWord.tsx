@@ -34,6 +34,8 @@ interface UsingWordProps {
 }
 
 export default function UsingWord({ exercise }: UsingWordProps) {
+  if (exercise.format !== 'word') throw new Error('Invalid exercise format');
+
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
   const handleError = useErrorHandler();
@@ -50,6 +52,7 @@ export default function UsingWord({ exercise }: UsingWordProps) {
       setFeedback(
         await submitResponse({
           exerciseId: exercise.id,
+          practiceType: exercise.type,
           response: normalizeLearnerResponse(values.response),
         }),
       );

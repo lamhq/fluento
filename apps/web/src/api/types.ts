@@ -1,11 +1,10 @@
-export type PracticeType =
-  | 'communication'
-  | 'using-word'
-  | 'just-one-word'
-  | 'word-guessing'
-  | 'sentence-construction'
-  | 'sentence-variation'
-  | 'paragraph-variation';
+import type { infer as Infer } from 'zod';
+
+import type {
+  practiceAttemptSchema,
+  practiceExerciseSchema,
+  practiceTypeSchema,
+} from './schemas';
 
 export interface ApiClient {
   setAccessToken(token: string): void;
@@ -14,11 +13,14 @@ export interface ApiClient {
 
   submitPracticeResponse(
     exerciseId: string,
+    practiceType: PracticeType,
     response: string,
-  ): Promise<SubmitResponse>;
+  ): Promise<PracticeAttempt>;
 
   getExercises(options?: ExerciseQuery): Promise<[number, Exercise[]]>;
 }
+
+export type PracticeType = Infer<typeof practiceTypeSchema>;
 
 export interface ExerciseQuery {
   scenario?: string;
@@ -29,35 +31,9 @@ export interface ExerciseQuery {
   limit?: number;
 }
 
-export interface PracticeExercise {
-  id: string;
-  format: 'communication' | 'word' | 'sentence' | 'paragraph';
-  name: string;
-  skill: 'communication' | 'vocabulary' | 'articulation';
-  topics: string[];
-  references: string[];
+export type PracticeExercise = Infer<typeof practiceExerciseSchema> & {
   type: PracticeType;
-  practicedAt: string | null;
-  practiceCount: number;
-
-  // Communication format fields
-  scenario?: string;
-  prompts?: string[];
-  validResponses?: string[];
-
-  // Word format fields
-  word?: string;
-  meaning?: string;
-  clues?: string[];
-  sentences?: string[];
-
-  // Sentence format fields
-  sentence?: string;
-  words?: string[];
-
-  // Paragraph format fields
-  paragraph?: string;
-}
+};
 
 export interface PaginatedResponse<T> {
   items: T[];
@@ -67,42 +43,13 @@ export interface PaginatedResponse<T> {
   hasPrevious: boolean;
 }
 
-export interface SubmitResponse {
-  id: string;
-  exerciseId: string;
-  response: string;
-  score: number;
-  feedback: string;
-  correctness: {
-    score: number;
-    feedback: string;
-    fixes: string[];
-    correctedSentence: string;
-  };
-  appropriateness: {
-    score: number;
-    feedback: string;
-    clarity: {
-      score: number;
-      feedback: string;
-    };
-    politeness: {
-      score: number;
-      feedback: string;
-    };
-    tone: {
-      score: number;
-      feedback: string;
-    };
-  };
-}
+export type PracticeAttempt = Infer<typeof practiceAttemptSchema>;
 
 export interface Exercise {
   id: string;
-  userId: string;
   name: string;
-  skill: string;
-  format: string;
+  skill: 'communication' | 'vocabulary' | 'articulation';
+  format: 'communication' | 'word' | 'sentence' | 'paragraph';
   scenario?: string;
   paragraph?: string;
   prompts?: string[];
@@ -115,8 +62,5 @@ export interface Exercise {
   sentence?: string;
   topics: string[];
   references: string[];
-  createdAt?: string;
-  updatedAt?: string;
-  practicedAt?: string;
-  practiceCount: number;
+  status: 'active' | 'archived';
 }
