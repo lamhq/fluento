@@ -1,4 +1,4 @@
-import type { Entity } from '../../common/core/entity';
+import type { Entity } from '../../common/data/entity';
 
 export enum ExerciseStatus {
   Active = 'active',

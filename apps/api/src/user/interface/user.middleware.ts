@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { ClsService } from 'nestjs-cls';
 
-import { USER_EMAIL_HEADER } from '../../common/constants';
+import { USER_EMAIL_HEADER } from '../../common/http/headers';
 import { UserService } from '../core/user.service';
 
 @Injectable()

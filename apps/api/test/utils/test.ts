@@ -4,8 +4,8 @@ import { ObjectId } from 'mongodb';
 import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
-import { RequestValidationPipe } from '../../src/common/interface/error';
-import { ExceptionFilter } from '../../src/common/interface/error';
+import { ExceptionFilter } from '../../src/common/error/exception.filter';
+import { RequestValidationPipe } from '../../src/common/error/request-validation.pipe';
 import { connect, deleteMany, disconnect, insert } from './mongodb';
 
 export function setUpApiTest() {

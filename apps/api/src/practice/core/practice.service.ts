@@ -5,16 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import {
-  CONTEXT_SERVICE,
-  type ContextService,
-} from '../../common/core/context.service';
-import type { CursorPaginationResult } from '../../common/core/pagination';
+import type { CursorPaginationResult } from '../../common/pagination';
 import { ExerciseFormat } from '../../content/core/exercise.entity';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
 } from '../../content/core/exercise.repository';
+import {
+  CONTEXT_SERVICE,
+  type ContextService,
+} from '../../context/context.service';
 import { EvaluationChain } from './evaluation-chain';
 import { PracticeAttemptEntity } from './practice-attempt.entity';
 import {

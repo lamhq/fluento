@@ -7,9 +7,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiVersion } from '../../../common/constants';
-import type { OffsetPaginationResult } from '../../../common/core/pagination';
-import { RequireUser } from '../../../common/interface/require-user.guard';
+import { RequireUser } from '../../../common/auth/require-user.guard';
+import { ApiVersion } from '../../../common/http/api-version';
+import type { OffsetPaginationResult } from '../../../common/pagination';
 import { ExerciseService } from '../../../content/core/exercise.service';
 import { ExerciseDto } from './exercise.dto';
 import { FindExercisesDto } from './find-exercises.dto';

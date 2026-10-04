@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 
-import { CONTEXT_SERVICE } from './core/context.service';
-import { NodeContextService } from './infrastructure/node-context.service';
+import { CONTEXT_SERVICE } from './context.service';
+import { NodeContextService } from './node-context.service';
 
 @Global()
 @Module({
@@ -14,4 +14,4 @@ import { NodeContextService } from './infrastructure/node-context.service';
   ],
   exports: [NodeContextService, CONTEXT_SERVICE],
 })
-export class CommonModule {}
+export class ContextModule {}

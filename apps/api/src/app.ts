@@ -2,10 +2,8 @@ import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
-import {
-  ExceptionFilter,
-  RequestValidationPipe,
-} from './common/interface/error';
+import { ExceptionFilter } from './common/error/exception.filter';
+import { RequestValidationPipe } from './common/error/request-validation.pipe';
 
 export async function createNestApp() {
   const app = await NestFactory.create(AppModule);

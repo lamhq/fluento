@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiVersion } from '../../../common/constants';
-import { RequireUser } from '../../../common/interface/require-user.guard';
+import { RequireUser } from '../../../common/auth/require-user.guard';
+import { ApiVersion } from '../../../common/http/api-version';
 import { ExerciseService } from '../../../content/core/exercise.service';
 import { ExerciseDto } from './exercise.dto';
 

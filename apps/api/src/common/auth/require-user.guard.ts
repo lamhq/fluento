@@ -6,7 +6,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { CONTEXT_SERVICE, type ContextService } from '../core/context.service';
+import {
+  CONTEXT_SERVICE,
+  type ContextService,
+} from '../../context/context.service';
 
 @Injectable()
 export class RequireUser implements CanActivate {

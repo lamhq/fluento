@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
-import type { CursorPaginationResult } from '../../common/core/pagination';
+import type { CursorPaginationResult } from '../../common/pagination';
 import { parseSortStr } from '../../common/utils';
 import {
   ExerciseFormat,
