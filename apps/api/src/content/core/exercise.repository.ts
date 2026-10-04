@@ -1,13 +1,20 @@
-import type { Repository } from '../../common/types/repository';
-import { ExerciseEntity, ExerciseStatus } from './exercise.entity';
+import type { Repository } from '../../common/core/repository';
+import {
+  ExerciseEntity,
+  ExerciseFormat,
+  ExerciseSkill,
+  ExerciseStatus,
+} from './exercise.entity';
 
 export const EXERCISE_REPOSITORY = Symbol('ExerciseRepository');
 
 export interface ExerciseQuery {
   userId?: string;
-  scenario?: string;
+  name?: string;
   topics?: string[];
-  status?: ExerciseStatus;
+  skills?: ExerciseSkill[];
+  formats?: ExerciseFormat[];
+  status?: ExerciseStatus[];
   sort?: string;
   offset?: number;
   limit?: number;

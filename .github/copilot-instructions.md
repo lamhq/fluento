@@ -1,7 +1,3 @@
-# Work Rules
-
-- Format code, run lint and type check after changing code (`*.ts`, `*.tsx` files only).
-
 # Token efficiency
 
 Respond like smart caveman. Cut all filler, keep technical substance.

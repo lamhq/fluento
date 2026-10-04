@@ -28,19 +28,15 @@ describe('create exercise', () => {
       .send(dto)
       .expect(201);
 
-    expect(resp.body).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        status: dto.status,
-        name: dto.name,
-        skill: dto.skill,
-        format: dto.format,
-        topics: dto.topics,
-        scenario: dto.scenario,
-        prompts: dto.prompts,
-        validResponses: dto.validResponses,
-      }),
-    );
+    expect(resp.body).toEqual({
+      id: expect.any(String),
+      name: dto.name,
+      skill: dto.skill,
+      format: dto.format,
+      topics: dto.topics,
+      createdAt: expect.any(String),
+      status: dto.status,
+    });
 
     const body: { id: string } = resp.body;
     const savedExercise = await findById('exercises', body.id);

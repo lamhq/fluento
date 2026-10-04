@@ -4,7 +4,8 @@ import { ObjectId } from 'mongodb';
 import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
-import { ValidateRequestBodyPipe } from '../../src/common/pipes/validate-request-body.pipe';
+import { RequestValidationPipe } from '../../src/common/interface/error';
+import { ExceptionFilter } from '../../src/common/interface/error';
 import { connect, deleteMany, disconnect, insert } from './mongodb';
 
 export function setUpApiTest() {
@@ -34,7 +35,8 @@ export function setUpApiTest() {
       defaultVersion: '1',
       prefix: 'v',
     });
-    app.useGlobalPipes(new ValidateRequestBodyPipe());
+    app.useGlobalPipes(new RequestValidationPipe());
+    app.useGlobalFilters(new ExceptionFilter());
     await app.init();
   });
 

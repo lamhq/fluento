@@ -75,13 +75,13 @@ Filters from different parameters are combined with AND logic. For each repeatab
 
 ```json
 {
-  "code": "INVALID_QUERY_PARAMETER",
-  "message": "Invalid query parameter.",
-  "details": "status must be one of: active, archived"
+  "code": "invalid_request_params",
+  "message": "Request validation failed",
+  "details": {
+    "status": "status must be one of: active, archived"
+  }
 }
 ```
-
-Return 400 for unsupported filter/sort values or invalid pagination values.
 
 **Error (500 Internal Server Error):**
 

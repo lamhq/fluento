@@ -29,18 +29,12 @@ describe('ExerciseDto', () => {
     expect(dto).toBeInstanceOf(ExerciseDto);
     expect(dto).toEqual({
       id: 'exercise-1',
-      userId: 'user-1',
       name: 'Introductions',
       skill: ExerciseSkill.Communication,
       format: ExerciseFormat.Communication,
-      status: ExerciseStatus.Active,
       topics: ['greetings'],
-      references: [],
-      scenario: 'Introductions',
-      prompts: ['Say hello'],
-      validResponses: ['Hello there!', 'Hello, how are you?'],
       createdAt: new Date('2024-01-01T00:00:00.000Z'),
-      updatedAt: new Date('2024-01-02T00:00:00.000Z'),
+      status: ExerciseStatus.Active,
     });
   });
 });

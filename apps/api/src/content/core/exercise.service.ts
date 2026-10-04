@@ -6,9 +6,10 @@ import {
 } from '../../common/core/context.service';
 import { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto';
 import { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto';
-import { ExerciseEntity, ExerciseStatus } from './exercise.entity';
+import { ExerciseEntity } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,
+  type ExerciseQuery,
   type ExerciseRepository,
 } from './exercise.repository';
 
@@ -28,16 +29,7 @@ export class ExerciseService {
     });
   }
 
-  async findAllPaginated(
-    query: {
-      scenario?: string;
-      topics?: string[];
-      status?: ExerciseStatus;
-      sort?: string;
-      offset?: number;
-      limit?: number;
-    } = {},
-  ): Promise<{
+  async findAllPaginated(query: Omit<ExerciseQuery, 'userId'> = {}): Promise<{
     total: number;
     offset: number;
     limit: number;

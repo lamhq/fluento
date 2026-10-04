@@ -1,4 +1,4 @@
-import type { Repository } from '../../common/types/repository';
+import type { Repository } from '../../common/core/repository';
 import { TopicEntity } from './topic.entity';
 
 export const TOPIC_REPOSITORY = Symbol('TopicRepository');

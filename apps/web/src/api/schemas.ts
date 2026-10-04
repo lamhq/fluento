@@ -1,6 +1,38 @@
 import { z } from 'zod';
 
-const exerciseBaseSchema = z.object({
+export const exerciseSkillSchema = z.enum([
+  'communication',
+  'vocabulary',
+  'articulation',
+]);
+
+export const exerciseFormatSchema = z.enum([
+  'communication',
+  'word',
+  'sentence',
+  'paragraph',
+]);
+
+export const exerciseStatusSchema = z.enum(['active', 'archived']);
+
+export const exerciseSchema = z.object({
+  id: z.string().nonempty(),
+  name: z.string().nonempty(),
+  skill: exerciseSkillSchema,
+  format: exerciseFormatSchema,
+  topics: z.array(z.string()),
+  createdAt: z.iso.datetime(),
+  status: exerciseStatusSchema,
+});
+
+export const paginatedExerciseSchema = z.object({
+  total: z.number().int().nonnegative(),
+  offset: z.number().int().nonnegative(),
+  limit: z.number().int().positive(),
+  items: z.array(exerciseSchema),
+});
+
+const practiceExerciseBaseSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty(),
   topics: z.array(z.string().nonempty()).nonempty(),
@@ -13,13 +45,13 @@ const exerciseBaseSchema = z.object({
 });
 
 export const practiceExerciseSchema = z.discriminatedUnion('format', [
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('communication'),
     format: z.literal('communication'),
     scenario: z.string().nonempty(),
     prompts: z.array(z.string().nonempty()).nonempty(),
   }),
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('vocabulary'),
     format: z.literal('word'),
     word: z.string().nonempty(),
@@ -27,13 +59,13 @@ export const practiceExerciseSchema = z.discriminatedUnion('format', [
     clues: z.array(z.string().nonempty()),
     sentences: z.array(z.string().nonempty()),
   }),
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('sentence'),
     sentence: z.string().nonempty(),
     words: z.array(z.string().nonempty()),
   }),
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('paragraph'),
     paragraph: z.string().nonempty(),

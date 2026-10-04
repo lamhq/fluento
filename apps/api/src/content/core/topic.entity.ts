@@ -1,4 +1,4 @@
-import type { Entity } from '../../common/types/entity';
+import type { Entity } from '../../common/core/entity';
 
 export class TopicEntity implements Entity {
   id: string;

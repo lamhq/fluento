@@ -22,7 +22,7 @@ export function useExercisesQuery(): QueryFn<ExerciseRow> {
       };
 
       const result = await apiClient.getExercises(exerciseQuery);
-      return result;
+      return [result.total, result.items];
     } catch (error) {
       if (error instanceof Error) {
         throw error;

@@ -1,4 +1,4 @@
-import type { Entity } from '../../common/types/entity';
+import type { Entity } from '../../common/core/entity';
 import { PracticeType } from './types';
 
 export class PracticeAttemptEntity implements Entity {

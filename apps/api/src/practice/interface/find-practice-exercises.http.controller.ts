@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 
 import { ApiVersion } from '../../common/constants';
+import type { CursorPaginationResult } from '../../common/core/pagination';
 import { RequireUser } from '../../common/interface/require-user.guard';
-import type { CursorPaginationResult } from '../../common/types/pagination';
 import { PracticeService } from '../core/practice.service';
 import { PracticeExerciseQuery } from '../core/practice-exercise.repository';
 import { PracticeExerciseDto } from './practice-exercise.dto';

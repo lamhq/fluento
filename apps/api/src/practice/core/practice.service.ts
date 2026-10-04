@@ -9,7 +9,7 @@ import {
   CONTEXT_SERVICE,
   type ContextService,
 } from '../../common/core/context.service';
-import type { CursorPaginationResult } from '../../common/types/pagination';
+import type { CursorPaginationResult } from '../../common/core/pagination';
 import { ExerciseFormat } from '../../content/core/exercise.entity';
 import {
   EXERCISE_REPOSITORY,

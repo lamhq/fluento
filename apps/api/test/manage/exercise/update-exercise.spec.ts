@@ -42,19 +42,15 @@ describe('update exercise', () => {
       .send(dto)
       .expect(200);
 
-    expect(resp.body).toEqual(
-      expect.objectContaining({
-        id: exerciseId,
-        status: dto.status,
-        name: dto.name,
-        skill: dto.skill,
-        format: dto.format,
-        topics: dto.topics,
-        scenario: dto.scenario,
-        prompts: dto.prompts,
-        validResponses: dto.validResponses,
-      }),
-    );
+    expect(resp.body).toEqual({
+      id: exerciseId,
+      name: dto.name,
+      skill: dto.skill,
+      format: dto.format,
+      topics: dto.topics,
+      createdAt: expect.any(String),
+      status: dto.status,
+    });
 
     const updatedExercise = await findById('exercises', exerciseId);
 

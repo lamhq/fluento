@@ -3,7 +3,7 @@ import request from 'supertest';
 import { deleteMany, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
 
-describe('get exercise', () => {
+describe('get exercise by id', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();
 
   it('should return a record from database', async () => {
@@ -31,20 +31,15 @@ describe('get exercise', () => {
       .set('x-user-email', userEmail)
       .expect(200);
 
-    expect(resp.body).toEqual(
-      expect.objectContaining({
-        id: seededExerciseId,
-        topics: expect.arrayContaining(['School', cleanupMarker]),
-        scenario: 'asking for explanation',
-        name: 'Asking for an explanation',
-        skill: 'communication',
-        format: 'communication',
-        prompts: ['Ask the teacher guidance for solving a math problem.'],
-        validResponses: [
-          "Could you please help me with this math problem? I'm having trouble understanding it.",
-        ],
-      }),
-    );
+    expect(resp.body).toEqual({
+      id: seededExerciseId,
+      name: 'Asking for an explanation',
+      skill: 'communication',
+      format: 'communication',
+      topics: expect.arrayContaining(['School', cleanupMarker]),
+      createdAt: expect.any(String),
+      status: 'active',
+    });
   });
 
   afterEach(async () => {

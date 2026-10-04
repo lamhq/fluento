@@ -1,10 +1,16 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import { paginatedPracticeExerciseSchema, practiceAttemptSchema } from './schemas';
-import type { PaginatedResponse } from './types';
+import {
+  paginatedExerciseSchema,
+  paginatedPracticeExerciseSchema,
+  practiceAttemptSchema,
+} from './schemas';
+import type { CursorPaginatedResponse } from './types';
 import type {
   ApiClient,
   Exercise,
+  ExerciseQuery,
+  OffsetPaginatedResponse,
   PracticeAttempt,
   PracticeExercise,
 } from './types';
@@ -22,15 +28,14 @@ export default class AxiosClient implements ApiClient {
   }
 
   async getPracticeExercise() {
-    const response = await this.httpClient.get<PaginatedResponse<PracticeExercise>>(
-      '/v1/practice/exercises',
-      {
-        params: {
-          sort: 'practicedAt',
-          limit: 1,
-        },
+    const response = await this.httpClient.get<
+      CursorPaginatedResponse<PracticeExercise>
+    >('/v1/practice/exercises', {
+      params: {
+        sort: 'practicedAt',
+        limit: 1,
       },
-    );
+    });
 
     const data = paginatedPracticeExerciseSchema.parse(response.data);
     const items = data.items.map((exercise) => ({
@@ -54,23 +59,14 @@ export default class AxiosClient implements ApiClient {
   }
 
   async getExercises(
-    options: {
-      scenario?: string;
-      topics?: string[];
-      status?: 'active' | 'archived' | 'all';
-      sort?: string;
-      offset?: number;
-      limit?: number;
-    } = {},
-  ): Promise<[number, Exercise[]]> {
+    options: ExerciseQuery = {},
+  ): Promise<OffsetPaginatedResponse<Exercise>> {
     const params = options;
-    const response = await this.httpClient.get<{
-      total: number;
-      items: Exercise[];
-    }>('/v1/manage/exercises', {
+    const response = await this.httpClient.get<unknown>('/v1/manage/exercises', {
       params,
     });
 
-    return [response.data.total, response.data.items];
+    const data = paginatedExerciseSchema.parse(response.data);
+    return data;
   }
 }

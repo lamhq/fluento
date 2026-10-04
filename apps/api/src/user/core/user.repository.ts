@@ -1,4 +1,4 @@
-import type { Repository } from '../../common/types/repository';
+import type { Repository } from '../../common/core/repository';
 import type { UserEntity } from './user.entity';
 
 export type UserQuery = Partial<Pick<UserEntity, 'email'>>;

@@ -1,4 +1,4 @@
-import type { CursorPaginationResult } from '../../common/types/pagination';
+import type { CursorPaginationResult } from '../../common/core/pagination';
 import { PracticeExerciseEntity } from './practice-exercise.entity';
 
 export const PRACTICE_EXERCISE_REPOSITORY = Symbol(

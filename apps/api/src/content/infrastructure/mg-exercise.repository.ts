@@ -28,8 +28,8 @@ export class MgExerciseRepository implements ExerciseRepository {
     const exercises = await this.exerciseModel
       .find(filter)
       .sort(sortableQuery)
-      .skip(Math.max(query.offset ?? 0, 0))
-      .limit(Math.max(query.limit ?? 10, 0))
+      .skip(query.offset ?? 0)
+      .limit(query.limit ?? 10)
       .exec();
 
     return [total, exercises.map((exercise) => this.dbModelToEntity(exercise))];
@@ -80,39 +80,43 @@ export class MgExerciseRepository implements ExerciseRepository {
       filter.userId = new Types.ObjectId(query.userId);
     }
 
-    if (query.status) {
-      filter.status = query.status;
+    if (query.status?.length) {
+      filter.status = { $in: query.status };
     }
 
-    if (query.scenario) {
-      filter.scenario = { $regex: query.scenario, $options: 'i' };
+    if (query.name) {
+      filter.name = {
+        $regex: query.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        $options: 'i',
+      };
     }
 
     if (query.topics && query.topics.length > 0) {
       filter.topics = { $in: query.topics };
     }
 
+    if (query.skills?.length) {
+      filter.skill = { $in: query.skills };
+    }
+
+    if (query.formats?.length) {
+      filter.format = { $in: query.formats };
+    }
+
     return filter;
   }
 
   private buildSort(sort?: string): Record<string, SortOrder> {
-    const sortEntries = (sort ?? '-created-at').split(',').filter(Boolean);
-    const fieldMap: Record<string, string> = {
-      'created-at': 'createdAt',
-      createdAt: 'createdAt',
-      status: 'status',
-      scenario: 'scenario',
-    };
+    const sortEntries = (sort ?? 'name').split(',');
     const normalized: Record<string, SortOrder> = {};
 
     for (const entry of sortEntries) {
       const isDescending = entry.startsWith('-');
       const field = entry.replace(/^-/, '');
-      const normalizedField = fieldMap[field] ?? 'createdAt';
-      normalized[normalizedField] = isDescending ? -1 : 1;
+      normalized[field] = isDescending ? -1 : 1;
     }
 
-    return Object.keys(normalized).length > 0 ? normalized : { createdAt: -1 };
+    return normalized;
   }
 
   private dbModelToEntity(data: ExerciseDocument): ExerciseEntity {

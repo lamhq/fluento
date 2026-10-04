@@ -7,25 +7,12 @@ import {
 
 export class ExerciseDto {
   id: string;
-  userId: string;
   name: string;
   skill: ExerciseSkill;
   format: ExerciseFormat;
-  scenario?: string;
-  paragraph?: string;
-  prompts?: string[];
-  validResponses?: string[];
-  word?: string;
-  meaning?: string;
-  clues?: string[];
-  sentences?: string[];
-  words?: string[];
-  sentence?: string;
   topics: string[];
-  references: string[];
-  status: ExerciseStatus;
   createdAt: Date;
-  updatedAt: Date;
+  status: ExerciseStatus;
 
   constructor(data?: Partial<ExerciseDto>) {
     Object.assign(this, data);
@@ -34,25 +21,12 @@ export class ExerciseDto {
   static fromEntity(entity: ExerciseEntity): ExerciseDto {
     return new ExerciseDto({
       id: entity.id,
-      userId: entity.userId,
       name: entity.name,
       skill: entity.skill,
       format: entity.format,
-      scenario: entity.scenario,
-      paragraph: entity.paragraph,
-      prompts: entity.prompts,
-      validResponses: entity.validResponses,
-      word: entity.word,
-      meaning: entity.meaning,
-      clues: entity.clues,
-      sentences: entity.sentences,
-      words: entity.words,
-      sentence: entity.sentence,
       topics: entity.topics,
-      references: entity.references,
-      status: entity.status,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
+      status: entity.status,
     });
   }
 }
