@@ -1,4 +1,4 @@
-# Get Topics API
+# Find Topics API
 
 ## Introduction
 
