@@ -1,6 +1,12 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import {
   Select,
   SelectContent,
@@ -11,7 +17,7 @@ import {
 
 import { getPageNumbers, useTableContext } from '../utils';
 
-export default function Pagination() {
+export default function TablePagination() {
   const table = useTableContext();
   return (
     <table.Subscribe selector={(state) => ({ pagination: state.pagination })}>
@@ -52,81 +58,75 @@ export default function Pagination() {
               </p>
             </div>
 
-            <div className="flex items-center space-x-2">
-              {/* Previous page button */}
-              <Button
-                variant="outline"
-                className="size-8 p-0"
-                onClick={() => {
-                  onPageChange(currentPage - 1);
-                }}
-                hidden={!canPreviousPage}
-              >
-                <span className="sr-only">Go to previous page</span>
-                <ChevronLeft size={16} />
-              </Button>
+            <Pagination className="mx-0 w-auto">
+              <PaginationContent>
+                {/* Previous page button */}
+                <PaginationItem>
+                  <PaginationPrevious
+                    text=""
+                    className="size-8 p-0"
+                    onClick={() => {
+                      onPageChange(currentPage - 1);
+                    }}
+                    hidden={!canPreviousPage}
+                  />
+                </PaginationItem>
 
-              {/* First page button */}
-              <Button
-                variant="outline"
-                className="size-8 p-0"
-                onClick={() => {
-                  onPageChange(1);
-                }}
-                hidden={pageNumbers.includes(1)}
-              >
-                <span className="sr-only">Go to first page</span>1
-              </Button>
+                {/* First page button */}
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => {
+                      onPageChange(1);
+                    }}
+                    hidden={pageNumbers.includes(1)}
+                  >
+                    1
+                  </PaginationLink>
+                </PaginationItem>
 
-              {/* Page number buttons */}
-              {pageNumbers.map((pageNumber, index) => (
-                <div
-                  key={`${String(pageNumber)}-${String(index)}`}
-                  className="flex items-center"
-                >
-                  {pageNumber === '...' ? (
-                    <span className="px-1 text-sm text-muted-foreground">...</span>
-                  ) : (
-                    <Button
-                      variant={currentPage === pageNumber ? 'default' : 'outline'}
-                      className="h-8 min-w-8 px-2"
-                      onClick={() => {
-                        onPageChange(pageNumber as number);
-                      }}
-                    >
-                      <span className="sr-only">Go to page {pageNumber}</span>
-                      {pageNumber}
-                    </Button>
-                  )}
-                </div>
-              ))}
+                {/* Page number buttons */}
+                {pageNumbers.map((pageNumber, index) => (
+                  <PaginationItem key={`${String(pageNumber)}-${String(index)}`}>
+                    {pageNumber === '...' ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        isActive={pageNumber === currentPage}
+                        onClick={() => {
+                          onPageChange(pageNumber as number);
+                        }}
+                      >
+                        {pageNumber}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
 
-              {/* Last page button */}
-              <Button
-                variant="outline"
-                className="size-8 p-0"
-                onClick={() => {
-                  onPageChange(totalPages);
-                }}
-                hidden={pageNumbers.includes(totalPages)}
-              >
-                <span className="sr-only">Go to last page</span>
-                {totalPages}
-              </Button>
+                {/* Last page button */}
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => {
+                      onPageChange(totalPages);
+                    }}
+                    hidden={pageNumbers.includes(totalPages)}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
 
-              {/* Next page button */}
-              <Button
-                variant="outline"
-                className="size-8 p-0"
-                onClick={() => {
-                  onPageChange(currentPage + 1);
-                }}
-                hidden={!canNextPage}
-              >
-                <span className="sr-only">Go to next page</span>
-                <ChevronRight size={16} />
-              </Button>
-            </div>
+                {/* Next page button */}
+                <PaginationItem>
+                  <PaginationNext
+                    text=""
+                    className="size-8 p-0"
+                    onClick={() => {
+                      onPageChange(currentPage + 1);
+                    }}
+                    hidden={!canNextPage}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         );
       }}
