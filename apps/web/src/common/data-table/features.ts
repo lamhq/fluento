@@ -9,22 +9,20 @@ import {
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFn_text,
   tableFeatures,
 } from '@tanstack/react-table';
 
 import type { ColumnMeta } from './types';
 
 export const features = tableFeatures({
+  columnMeta: metaHelper<ColumnMeta>(),
   rowPaginationFeature,
-  columnFilteringFeature,
   globalFilteringFeature,
+  columnFilteringFeature,
   rowSortingFeature,
   rowSelectionFeature,
   columnVisibilityFeature,
-  columnMeta: metaHelper<ColumnMeta>(),
   paginatedRowModel: createPaginatedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  sortFns: { text: sortFn_text },
 });
