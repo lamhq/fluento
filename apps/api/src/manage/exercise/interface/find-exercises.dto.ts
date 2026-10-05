@@ -60,9 +60,9 @@ export class FindExercisesDto {
 
   @IsOptional()
   @IsString({ message: 'sort must be a string' })
-  @Matches(/^(?:-?name(?:,-?status)?|-?status(?:,-?name)?)$/, {
+  @Matches(/^(?:-?name(?:,-?createdAt)?|-?createdAt(?:,-?name)?)$/, {
     message:
-      'sort must contain unique name and status fields, optionally prefixed with -',
+      'sort must contain unique name and createdAt fields, optionally prefixed with -',
   })
   sort?: string;
 

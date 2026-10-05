@@ -74,7 +74,6 @@ const communicationExercises = [
     references: [
       'https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS',
     ],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -95,7 +94,6 @@ const communicationExercises = [
     references: [
       'https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS',
     ],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -114,7 +112,6 @@ const communicationExercises = [
     references: [
       'https://www.youtube.com/post/UgkxxlFNH4jWYGJjnF80H7-9OdHlbtvRpBtS',
     ],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -136,7 +133,6 @@ const communicationExercises = [
     userId,
     status: 'active',
     references: ['https://youtu.be/H-HVm6hRbsI?si=UwH6Z34fGJwlNQQW'],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -156,7 +152,6 @@ const communicationExercises = [
     userId,
     status: 'active',
     references: ['https://www.youtube.com/watch?v=FinOIdu21XA'],
-    createdAt: now,
     updatedAt: now,
   },
 ];
@@ -177,7 +172,6 @@ const vocabularyExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -196,7 +190,6 @@ const vocabularyExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -213,7 +206,6 @@ const vocabularyExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -230,7 +222,6 @@ const vocabularyExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -247,7 +238,6 @@ const vocabularyExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
 ];
@@ -267,7 +257,6 @@ const articulationExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -290,7 +279,6 @@ const articulationExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -314,7 +302,6 @@ const articulationExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
   {
@@ -341,16 +328,22 @@ const articulationExercises = [
     userId,
     status: 'active',
     references: [],
-    createdAt: now,
     updatedAt: now,
   },
 ];
 
-exercisesCol.insertMany([
+const exercises = [
   ...communicationExercises,
   ...vocabularyExercises,
   ...articulationExercises,
-]);
+];
+
+exercisesCol.insertMany(
+  exercises.map((exercise) => ({
+    ...exercise,
+    createdAt: new Date(now.getTime() - Math.random() * 365 * 24 * 60 * 60 * 1000),
+  })),
+);
 
 // Create practice records for all exercises
 const practiceRecords = exerciseIds.map((exerciseId, index) => ({

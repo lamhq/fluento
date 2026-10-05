@@ -29,12 +29,12 @@ export const exerciseColumns = columnHelper.columns([
   }),
   columnHelper.accessor('createdAt', {
     header: 'Date Created',
-    enableSorting: false,
+    enableMultiSort: true,
     cell: (info) => formatDate(info.getValue()),
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    enableMultiSort: true,
+    enableSorting: false,
     cell: (info) => createElement(ExerciseStatusBadge, { status: info.getValue() }),
   }),
   columnHelper.display({

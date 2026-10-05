@@ -62,7 +62,7 @@
 
 ### Sorting
 
-- Name and status columns can be sorted.
+- Name and Date Created columns can be sorted.
 - Multiple sort columns are supported; earlier selections have higher priority.
 - Show sort direction on each active sort column.
 
@@ -91,6 +91,7 @@
 
 - Changing the sort order immediately requests updated results from the backend.
 - When multiple columns are sorted, preserve their selection priority.
+- Supported sort fields are `name` and `createdAt`.
 
 ### Row Actions
 
@@ -130,3 +131,8 @@
 - Support keyboard navigation for all interactive controls.
 - Announce loading, errors, empty results, and active sort direction to assistive technologies.
 - Ensure text, controls, and focus indicators meet WCAG 2.1 AA contrast requirements.
+
+## Related Documents
+
+- [Find Exercises API](../../api/manage/find-exercises.md)
+- [View My Exercises requirements](../../../requirements/manage/view-my-exercises.md)

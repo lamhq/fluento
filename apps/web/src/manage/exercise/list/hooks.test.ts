@@ -14,7 +14,7 @@ describe('buildExerciseQuery', () => {
         { id: 'status', value: ['active', 'archived'] },
       ],
       sorting: [
-        { id: 'status', desc: true },
+        { id: 'createdAt', desc: true },
         { id: 'name', desc: false },
       ],
     });
@@ -25,7 +25,7 @@ describe('buildExerciseQuery', () => {
       skills: ['communication'],
       formats: ['word', 'sentence'],
       status: ['active', 'archived'],
-      sort: '-status,name',
+      sort: '-createdAt,name',
       limit: 20,
       offset: 40,
     });

@@ -1,11 +1,10 @@
-import { Input } from '@/components/ui/input';
-
 import type {
   Exercise,
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
 } from '../../../api/types';
+import DebouncedInput from '../../../common/components/DebouncedInput';
 import { ColumnFilter, useTableContext } from '../../../common/data-table';
 import TopicFilter from './TopicFilter';
 
@@ -46,11 +45,11 @@ export default function ExerciseToolbar() {
 
   return (
     <>
-      <Input
+      <DebouncedInput
         id="exercise-name-filter"
         aria-label="Filter by exercise name"
         placeholder="Filter by exercise name"
-        value={getFilterValue(table, 'name', '')}
+        defaultValue={getFilterValue(table, 'name', '')}
         onChange={(event) =>
           table.getColumn('name')?.setFilterValue(event.target.value)
         }

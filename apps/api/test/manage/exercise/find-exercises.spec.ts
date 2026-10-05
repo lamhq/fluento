@@ -1,8 +1,26 @@
 import { ObjectId } from 'mongodb';
 import request from 'supertest';
+import { z } from 'zod';
 
 import { deleteMany, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
+
+const findExercisesResponseSchema = z.object({
+  total: z.number().int().nonnegative(),
+  offset: z.number().int().nonnegative(),
+  limit: z.number().int().positive(),
+  items: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      name: z.string().nonempty(),
+      skill: z.enum(['communication', 'vocabulary', 'articulation']),
+      format: z.enum(['communication', 'word', 'sentence', 'paragraph']),
+      topics: z.array(z.string()),
+      createdAt: z.iso.datetime(),
+      status: z.enum(['active', 'archived']),
+    }),
+  ),
+});
 
 interface Exercise {
   name?: string;
@@ -173,29 +191,48 @@ describe('find exercises', () => {
   });
 
   describe('sorting', () => {
-    it('should sort by name asc, then status desc', async () => {
+    it('should sort by creation date ascending, then name ascending', async () => {
       const { email: userEmail } = getUser();
       await seedExercises(
-        { name: 'Twin', status: 'active' },
-        { name: 'Twin', status: 'archived' },
-        { name: 'Alpha', status: 'active' },
+        { name: 'Zulu', createdAt: new Date('2026-08-08T09:30:00.000Z') },
+        { name: 'Bravo', createdAt: new Date('2026-08-10T09:30:00.000Z') },
+        { name: 'Alpha', createdAt: new Date('2026-08-10T09:30:00.000Z') },
       );
 
       const resp = await request(getApp().getHttpServer())
         .get('/v1/manage/exercises')
-        .query({ sort: 'name,-status' })
+        .query({ sort: 'createdAt,name' })
         .set('x-user-email', userEmail)
         .expect(200);
+      const response = findExercisesResponseSchema.parse(resp.body);
 
-      expect(resp.body).toEqual(
-        expect.objectContaining({
-          items: [
-            expect.objectContaining({ name: 'Alpha', status: 'active' }),
-            expect.objectContaining({ name: 'Twin', status: 'archived' }),
-            expect.objectContaining({ name: 'Twin', status: 'active' }),
-          ],
-        }),
+      expect(response.items.map((item) => item.name)).toEqual([
+        'Zulu',
+        'Alpha',
+        'Bravo',
+      ]);
+    });
+
+    it('should sort by creation date descending, then name ascending', async () => {
+      const { email: userEmail } = getUser();
+      await seedExercises(
+        { name: 'Zulu', createdAt: new Date('2026-08-08T09:30:00.000Z') },
+        { name: 'Bravo', createdAt: new Date('2026-08-10T09:30:00.000Z') },
+        { name: 'Alpha', createdAt: new Date('2026-08-10T09:30:00.000Z') },
       );
+
+      const resp = await request(getApp().getHttpServer())
+        .get('/v1/manage/exercises')
+        .query({ sort: '-createdAt,name' })
+        .set('x-user-email', userEmail)
+        .expect(200);
+      const response = findExercisesResponseSchema.parse(resp.body);
+
+      expect(response.items.map((item) => item.name)).toEqual([
+        'Alpha',
+        'Bravo',
+        'Zulu',
+      ]);
     });
   });
 
@@ -250,30 +287,30 @@ describe('find exercises', () => {
       ],
       [
         'unsupported sort',
-        { sort: 'createdAt' },
+        { sort: 'status' },
         {
-          sort: 'sort must contain unique name and status fields, optionally prefixed with -',
+          sort: 'sort must contain unique name and createdAt fields, optionally prefixed with -',
         },
       ],
       [
         'duplicate sort field',
         { sort: 'name,-name' },
         {
-          sort: 'sort must contain unique name and status fields, optionally prefixed with -',
+          sort: 'sort must contain unique name and createdAt fields, optionally prefixed with -',
         },
       ],
       [
         'invalid sort direction',
-        { sort: 'name,asc-status' },
+        { sort: 'name,asc-createdAt' },
         {
-          sort: 'sort must contain unique name and status fields, optionally prefixed with -',
+          sort: 'sort must contain unique name and createdAt fields, optionally prefixed with -',
         },
       ],
       [
         'empty sort',
         { sort: '' },
         {
-          sort: 'sort must contain unique name and status fields, optionally prefixed with -',
+          sort: 'sort must contain unique name and createdAt fields, optionally prefixed with -',
         },
       ],
       [

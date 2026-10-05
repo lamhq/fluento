@@ -64,10 +64,15 @@ flowchart TD
 
 ### Sorting Requirements
 
-- Backend API sorts by status and name; multiple sort columns are supported, with earlier selections taking priority.
+- Backend API sorts by name and Date Created; multiple sort columns are supported, with earlier selections taking priority.
 - Changing sorting immediately refreshes results.
 
 ### Pagination Requirements
 
 - Backend API handles pagination; changing page size or index immediately refreshes results.
 - Cancel in-flight requests when filters, sorting, page size, or page index change.
+
+## Related Documents
+
+- [Exercise List Screen](../../design/web/manage/exercise-list.md)
+- [Find Exercises API](../../design/api/manage/find-exercises.md)
