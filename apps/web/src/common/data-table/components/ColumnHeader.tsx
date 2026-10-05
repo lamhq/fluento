@@ -51,6 +51,11 @@ export default function ColumnHeader({
           }
         >
           <span>{children}</span>
+          <span className="sr-only">
+            {isUnsorted
+              ? 'Not sorted'
+              : `Sorted ${isAsc ? 'ascending' : 'descending'}`}
+          </span>
           {isDesc && <ArrowDown size={16} className="ms-2" />}
           {isAsc && <ArrowUp size={16} className="ms-2" />}
           {isUnsorted && <ChevronsUpDown size={16} className="ms-2" />}

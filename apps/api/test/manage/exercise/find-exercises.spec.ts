@@ -116,6 +116,44 @@ describe('find exercises', () => {
       );
     });
 
+    it('should accept single values for array filters', async () => {
+      const { email: userEmail } = getUser();
+      await seedExercises(
+        {
+          name: 'Coffee Shop',
+          topics: ['Travel'],
+          skill: 'communication',
+          format: 'communication',
+          status: 'active',
+        },
+        {
+          name: 'Coffee Break',
+          topics: ['Food'],
+          skill: 'vocabulary',
+          format: 'word',
+          status: 'archived',
+        },
+      );
+
+      const resp = await request(getApp().getHttpServer())
+        .get('/v1/manage/exercises')
+        .query({
+          topics: 'Travel',
+          skills: 'communication',
+          formats: 'communication',
+          status: 'active',
+        })
+        .set('x-user-email', userEmail)
+        .expect(200);
+
+      expect(resp.body).toEqual(
+        expect.objectContaining({
+          total: 1,
+          items: [expect.objectContaining({ name: 'Coffee Shop' })],
+        }),
+      );
+    });
+
     it('should filter by name case-insensitive', async () => {
       const { email: userEmail } = getUser();
       await seedExercises({ name: 'Coffee. Shop' }, { name: 'CoffeeX Shop' });

@@ -1,12 +1,7 @@
 /**
- * Home
+ * Default page shown when opening the website
  */
-export const HOME_ROUTE = '/';
-
-/**
- * Protected page accessible only to authenticated users
- */
-export const PROTECTED_ROUTE = '/protected';
+export const DEFAULT_ROUTE = '/';
 
 /**
  * Practice page

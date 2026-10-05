@@ -24,7 +24,7 @@
 | Coffee shop      | Speaking     | Conversation | 2026-08-10   | Active   | Update                     |
 | Meeting practice | Listening    | Work         | 2026-08-08   | Archived | Delete                     |
 +----------------------------------------------------------------------------------------------------------+
-| Rows per page: [10 ▾]                     [Previous] 1 [Next]    |
+| Page 1 of 3 (30)  Rows per page: [10 ▾]  [First] [Previous] [1] [2] [3] [Next] [Last] |
 +-------------------------------------------------------------------+
 ```
 
@@ -68,8 +68,9 @@
 
 ### Pagination
 
-- Provide page index and page-size controls.
-- Show the current range and total result count when available.
+- Provide page index and page-size controls. Page-size options are 10, 20, 30, 40, and 50 rows.
+- Show the current page number and total page count.
+- Provide first, previous, numbered-page, next, and last controls. Hide first and last controls on narrow screens.
 
 ### Empty State
 

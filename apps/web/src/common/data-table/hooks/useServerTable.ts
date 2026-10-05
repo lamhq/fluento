@@ -16,6 +16,7 @@ interface QueryOptions {
   columnFilters: ColumnFiltersState;
   globalFilter?: string;
   sorting: SortingState;
+  signal?: AbortSignal;
 }
 
 export type QueryFn<TData extends RowData> = (
@@ -49,7 +50,7 @@ export function useServerTable<TData extends RowData>({
     isFetching,
   } = useQuery({
     queryKey: [queryKeyPrefix, pagination, globalFilter, columnFilters, sorting],
-    queryFn: () => queryFn(state),
+    queryFn: ({ signal }) => queryFn({ ...state, signal }),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   });

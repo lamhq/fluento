@@ -36,7 +36,14 @@ export default function ColumnFilter({
   return (
     <Popover>
       <PopoverTrigger
-        render={<Button variant="outline" size="sm" className="h-8 border-dashed" />}
+        render={
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 border-dashed"
+            aria-label={title ? `${title} filter` : 'Column filter'}
+          />
+        }
       >
         <PlusCircle size={12} />
         <span>{title}</span>

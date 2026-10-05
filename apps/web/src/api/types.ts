@@ -21,7 +21,11 @@ export interface ApiClient {
     response: string,
   ): Promise<PracticeAttempt>;
 
-  getExercises(options?: ExerciseQuery): Promise<OffsetPaginatedResponse<Exercise>>;
+  getExercises(
+    options?: ExerciseQuery,
+    signal?: AbortSignal,
+  ): Promise<OffsetPaginatedResponse<Exercise>>;
+  getTopics(signal?: AbortSignal): Promise<Topic[]>;
 }
 
 export type PracticeType = Infer<typeof practiceTypeSchema>;
@@ -44,6 +48,12 @@ export type ExerciseFormat = Infer<typeof exerciseFormatSchema>;
 export type ExerciseStatus = Infer<typeof exerciseStatusSchema>;
 
 export type Exercise = Infer<typeof exerciseSchema>;
+
+export interface Topic {
+  id: string;
+  name: string;
+  createdAt: string;
+}
 
 export type PracticeExercise = Infer<typeof practiceExerciseSchema> & {
   type: PracticeType;

@@ -1,13 +1,13 @@
 import { Link, Navigate } from 'react-router';
 
 import { useAuth } from '../../auth';
-import { HOME_ROUTE } from '../../routes';
+import { DEFAULT_ROUTE } from '../../routes';
 
 export default function SignOutCallbackPage() {
   const auth = useAuth();
 
   if (auth.isAuthenticated) {
-    return <Navigate to={HOME_ROUTE} />;
+    return <Navigate to={DEFAULT_ROUTE} />;
   }
 
   return (
@@ -18,7 +18,7 @@ export default function SignOutCallbackPage() {
       </p>
       <p>
         Or return to &nbsp;
-        <Link to={HOME_ROUTE}>home page</Link>.
+        <Link to={DEFAULT_ROUTE}>practice page</Link>.
       </p>
       <p>
         <button onClick={auth.signIn}>sign in</button>

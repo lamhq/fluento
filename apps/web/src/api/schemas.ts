@@ -32,6 +32,12 @@ export const paginatedExerciseSchema = z.object({
   items: z.array(exerciseSchema),
 });
 
+export const topicSchema = z.object({
+  id: z.string().nonempty(),
+  name: z.string().nonempty(),
+  createdAt: z.iso.datetime(),
+});
+
 const practiceExerciseBaseSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty(),

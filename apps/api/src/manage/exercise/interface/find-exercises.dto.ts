@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -10,6 +10,7 @@ import {
   Min,
 } from 'class-validator';
 
+import { stringToArray } from '../../../common/utils';
 import {
   ExerciseFormat,
   ExerciseSkill,
@@ -22,11 +23,13 @@ export class FindExercisesDto {
   name?: string;
 
   @IsOptional()
+  @Transform(stringToArray)
   @IsArray()
   @IsString({ each: true, message: 'topics must contain only string values' })
   topics?: string[];
 
   @IsOptional()
+  @Transform(stringToArray)
   @IsArray()
   @IsString({ each: true, message: 'skills must contain only string values' })
   @IsEnum(ExerciseSkill, {
@@ -36,6 +39,7 @@ export class FindExercisesDto {
   skills?: ExerciseSkill[];
 
   @IsOptional()
+  @Transform(stringToArray)
   @IsArray()
   @IsString({ each: true, message: 'formats must contain only string values' })
   @IsEnum(ExerciseFormat, {
@@ -45,6 +49,7 @@ export class FindExercisesDto {
   formats?: ExerciseFormat[];
 
   @IsOptional()
+  @Transform(stringToArray)
   @IsArray()
   @IsString({ each: true, message: 'status must contain only string values' })
   @IsEnum(ExerciseStatus, {

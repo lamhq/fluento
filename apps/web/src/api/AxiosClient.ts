@@ -4,6 +4,7 @@ import {
   paginatedExerciseSchema,
   paginatedPracticeExerciseSchema,
   practiceAttemptSchema,
+  topicSchema,
 } from './schemas';
 import type { CursorPaginatedResponse } from './types';
 import type {
@@ -60,13 +61,24 @@ export default class AxiosClient implements ApiClient {
 
   async getExercises(
     options: ExerciseQuery = {},
+    signal?: AbortSignal,
   ): Promise<OffsetPaginatedResponse<Exercise>> {
     const params = options;
     const response = await this.httpClient.get<unknown>('/v1/manage/exercises', {
       params,
+      paramsSerializer: { indexes: null },
+      signal,
     });
 
     const data = paginatedExerciseSchema.parse(response.data);
     return data;
+  }
+
+  async getTopics(signal?: AbortSignal) {
+    const response = await this.httpClient.get<unknown>('/v1/practice/topics', {
+      signal,
+    });
+
+    return topicSchema.array().parse(response.data);
   }
 }

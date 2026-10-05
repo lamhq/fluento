@@ -2,6 +2,14 @@ export function getAbsoluteURL(route: string) {
   return `${window.location.protocol}//${window.location.host}${route}`;
 }
 
+export function formatDate(date: string | Date): string {
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(date));
+}
+
 export function getEnv(key: string, defaultValue?: string): string {
   const value = import.meta.env[key];
   if (value === undefined) {
