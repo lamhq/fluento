@@ -108,7 +108,7 @@ Do not include internal database or implementation details in error responses.
 ## Non-Functional Requirements
 
 - **Performance:** Return filtered and sorted results in under 500 ms for typical queries under normal traffic conditions.
-- **Security:** All traffic must use HTTPS. Ensure users can only access their own exercises.
+- **Security:** API Gateway enforces HTTPS; the API app does not require HTTPS. Ensure users can only access their own exercises.
 - **Reliability:** Return descriptive, safe error responses without leaking internal implementation details.
 - **Scalability:** Support growth in exercise volume and concurrent user requests without degrading retrieval performance.
 - **Input Validation:** Validate supported filter and sort values and pagination parameters; return 400 Bad Request for invalid values.

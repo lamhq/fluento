@@ -4,8 +4,8 @@ import { ObjectId } from 'mongodb';
 import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
+import { ClassValidorPipe } from '../../src/common/error/class-validator.pipe';
 import { ExceptionFilter } from '../../src/common/error/exception.filter';
-import { RequestValidationPipe } from '../../src/common/error/request-validation.pipe';
 import { connect, deleteMany, disconnect, insert } from './mongodb';
 
 export function setUpApiTest() {
@@ -35,7 +35,7 @@ export function setUpApiTest() {
       defaultVersion: '1',
       prefix: 'v',
     });
-    app.useGlobalPipes(new RequestValidationPipe());
+    app.useGlobalPipes(new ClassValidorPipe());
     app.useGlobalFilters(new ExceptionFilter());
     await app.init();
   });

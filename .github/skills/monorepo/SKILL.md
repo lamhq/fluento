@@ -5,20 +5,20 @@ description: Skills for working with a monorepo. Use it to perform tasks such as
 
 ## Format code
 
-Refer to `Format code` section in `README.md`.
+Refer to `Format code` section in the root `README.md`.
 
 ## Run lint
 
-Refer to `Run lint` section in `README.md`.
+Refer to `Run lint` section in the root `README.md`.
 
 ## Run type check
 
-Refer to `Run type check` section in `README.md`.
+Refer to `Run type check` section in the root `README.md`.
 
 ## Run unit tests
 
-Refer to `Run unit tests` section in `README.md`.
+Refer to `Run unit tests` section in the root `README.md`.
 
 ## Repository Structure
 
-Refer to `Repository Structure` section in `README.md`.
+Refer to `Repository Structure` section in the root `README.md`.

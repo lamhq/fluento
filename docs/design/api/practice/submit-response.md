@@ -31,10 +31,10 @@ Body:
 }
 ```
 
-| Name           | Type   | Required | Description                                                                                                                                                         |
-| -------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `practiceType` | string | Yes      | Evaluation discriminator. One of `communication`, `usingWord`, `justOneWord`, `wordGuessing`, `sentenceConstruction`, `sentenceVariation`, or `paragraphVariation`. |
-| `response`     | string | Yes      | Learner's answer. The server trims it and rejects empty or whitespace-only values.                                                                                  |
+| Name           | Type   | Required | Description                                                                                                                                                               |
+| -------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `practiceType` | string | Yes      | Evaluation discriminator. Value must be compatible with exercise's format follow the [practice data specification](../../../requirements/practice/data.md#practice-type). |
+| `response`     | string | Yes      | Learner's answer. The server trims it and rejects empty or whitespace-only values.                                                                                        |
 
 The client supplies `practiceType` because one exercise `format` can support multiple practice types. The server validates that it is compatible with the exercise.
 
@@ -54,7 +54,7 @@ The client supplies `practiceType` because one exercise `format` can support mul
     "score": 100,
     "feedback": "The response is grammatically correct.",
     "fixes": [],
-    "correctedResponse": ""
+    "correctedSentence": ""
   },
   "appropriateness": {
     "score": 95,
@@ -70,17 +70,7 @@ Every success response contains `id`, `exerciseId`, `practiceType`, `response`, 
 
 ### Feedback Contract
 
-| Practice type         | Evaluation                                  | Additional fields                                                                              |
-| --------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Communication         | AI correctness and scenario appropriateness | `correctness`, `appropriateness.clarity`, `appropriateness.politeness`, `appropriateness.tone` |
-| Using Word            | AI correctness and target-word usage        | `correctness`, `appropriateness`                                                               |
-| Sentence Construction | AI correctness and required-word usage      | `correctness`, `appropriateness`                                                               |
-| Sentence Variation    | AI correctness and meaning preservation     | `correctness`, `appropriateness`                                                               |
-| Paragraph Variation   | AI paragraph and sentence evaluation        | `correctness.sentences`, `appropriateness`                                                     |
-| Just One Word         | Exact target comparison                     | Score `0` or `100`; no correctness details required                                            |
-| Word Guessing         | Exact target comparison                     | Score `0` or `100`; no correctness details required                                            |
-
-AI `correctness` contains `score`, `feedback`, `fixes`, and `correctedResponse`. A grammatically correct sentence has `score: 100`, `fixes: []`, and `correctedResponse: ""`. Paragraph `correctness.sentences` additionally contains `sentence`, `score`, `feedback`, `fixes`, and `correctedSentence`; a correct sentence has `score: 100`, `fixes: []`, and `correctedSentence: ""`.
+Practice-type-specific feedback fields and their nested schemas are defined in the [practice data specification](../../../requirements/practice/data.md#feedback-availability) and the `practice_attempts` schema in [Database Design](../../data.md#practice_attempts-collection).
 
 ### Errors
 
@@ -107,7 +97,7 @@ Error responses contain a stable `code` and user-safe `message`.
 ## Non-Functional Requirements
 
 - Complete exact matches immediately and AI evaluations within 3 seconds under normal traffic.
-- Require HTTPS and authenticated learner identity.
+- Require authenticated learner identity. HTTPS is enforced by API Gateway; the API service does not require HTTPS.
 - Avoid exposing evaluation-provider or implementation details in errors.
 - Support concurrent learners without degrading standard response times.
 

@@ -32,4 +32,4 @@ Read Feature Specification Document.
 ## Write Feature Specification Documents
 
 1. Read the Feature Idea Document.
-2. Follow the [feature specification guide](http://localhost:4173/se/process/requirements/feature-spec.md).
+2. Follow the Feature Specification Guide at `http://localhost:4173/se/process/requirements/feature-spec.md`.

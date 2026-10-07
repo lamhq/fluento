@@ -81,7 +81,7 @@ After submission:
 
 ## Practice Type Determination
 
-- After fetching an exercise, the app randomly chooses the appropriate practice type based on the exercise format. See [Choosing Practice Types](../../../requirements/practice/view-practice-exercise.md#choosing-practice-types).
+- After fetching an exercise, the app randomly chooses a practice type allowed for the exercise's skill and format, as defined in the [practice data specification](../../../requirements/practice/data.md#practice-type).
 
 ## Error Handling
 

@@ -13,4 +13,8 @@ description: Ability to design software and produce technical design documentati
 
 ## Write UI Specification Documents
 
-Refer to http://localhost:4173/se/process/design/ui-spec.md for guidelines on writing UI specification documents.
+Follow the UI Specification Guide at `http://localhost:4173/se/process/design/ui-spec.md`.
+
+## Design API
+
+Follow the API Design Standard at `http://localhost:4173/se/process/design/api-design-standards.md`.

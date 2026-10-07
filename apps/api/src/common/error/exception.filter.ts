@@ -28,7 +28,7 @@ import {
 import { Response } from 'express';
 
 import { ErrorResponse, ValidationErrorResponse } from './error-response';
-import { RequestValidationException } from './request-validation.pipe';
+import { RequestValidationException } from './request-validation.exception';
 
 /**
  * A NestJS exception filter that catches exceptions and return a response to client

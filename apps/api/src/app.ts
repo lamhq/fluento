@@ -2,8 +2,9 @@ import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
+import { ClassValidorPipe } from './common/error/class-validator.pipe';
 import { ExceptionFilter } from './common/error/exception.filter';
-import { RequestValidationPipe } from './common/error/request-validation.pipe';
+import { SchemaValidationPipe } from './common/error/schema-validation.pipe';
 
 export async function createNestApp() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,7 @@ export async function createNestApp() {
   });
 
   // auto validate request using class-validator
-  app.useGlobalPipes(new RequestValidationPipe());
+  app.useGlobalPipes(new ClassValidorPipe(), new SchemaValidationPipe());
 
   // handle exceptions and return error response to client
   app.useGlobalFilters(new ExceptionFilter());

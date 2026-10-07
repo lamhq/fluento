@@ -70,7 +70,7 @@ No query parameters are supported for this endpoint. All available topics are re
 ## Non-Functional Requirements
 
 - **Performance:** Return topic list in under 200 ms for typical queries under normal traffic conditions.
-- **Security:** All traffic must use HTTPS.
+- **Security:** API Gateway enforces HTTPS; the API app does not require HTTPS.
 - **Reliability:** Gracefully handle server errors and return descriptive error responses without leaking internal implementation details.
 - **Scalability:** Support growth in topic volume and concurrent user requests.
 

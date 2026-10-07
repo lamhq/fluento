@@ -24,7 +24,9 @@ export class ExerciseService {
 
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
     return this.repository.create({
-      ...data.toEntity(),
+      ...data,
+      topics: data.topics ?? [],
+      references: data.references ?? [],
       userId: this.contextService.getUserIdOrThrow(),
     });
   }

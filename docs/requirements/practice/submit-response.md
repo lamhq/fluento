@@ -53,6 +53,50 @@ flowchart TD
     I --> C
 ```
 
+## Acceptance Criteria
+
+- The app shows the practice screen when the learner selects an exercise-based learning section.
+- The app fetches one exercise at a time.
+- The prompt includes the exercise context and the input area required for that exercise.
+- The app validates the learner response before sending it.
+- The app submits a valid response for every supported exercise type.
+- The app shows feedback with an overall score and actionable suggestions appropriate to the exercise type.
+- The learner can retry after evaluation, and the response input resets.
+- The learner can move to the next exercise if it is new.
+- If no exercise is available, the app shows an empty state.
+- If the backend fails, the app shows a retry message.
+
+## Alternate Flows
+
+### Learner submits an empty response
+
+- The app prevents submission and shows a validation message such as "Please enter a response before submitting".
+- The learner can keep typing and submit again.
+
+### Exercise fetch returns no results
+
+- The app shows an empty state when no exercises are available.
+- The learner can retry later or switch to another learning module.
+
+### Backend evaluation fails or times out
+
+- The app keeps the response and shows an error message.
+- The learner can retry without losing typed text.
+
+## Edge Cases
+
+- The learner submits only whitespace or very short text.
+- The learner double-taps submit; the app blocks duplicates.
+- Exercise data is missing required fields.
+- The learner leaves during evaluation and returns later.
+- The learner changes devices; recent state remains synced.
+
+## Exercise Selection Logic
+
+For each exercise, the app tracks the last time it was practiced. The selection logic prioritizes exercises that have not been practiced recently.
+
+The app fetches exercises from the backend API, which supports sorting by `practicedAt` (descending) and filtering by topic.
+
 ## Feedback Model
 
 Each exercise type has its own specific feedback structure.
@@ -316,47 +360,3 @@ Review the rewritten paragraph and give feedback on correctness and appropriaten
   }
 }
 ```
-
-## Acceptance Criteria
-
-- The app shows the practice screen when the learner selects an exercise-based learning section.
-- The app fetches one exercise at a time.
-- The prompt includes the exercise context and the input area required for that exercise.
-- The app validates the learner response before sending it.
-- The app submits a valid response for every supported exercise type.
-- The app shows feedback with an overall score and actionable suggestions appropriate to the exercise type.
-- The learner can retry after evaluation, and the response input resets.
-- The learner can move to the next exercise if it is new.
-- If no exercise is available, the app shows an empty state.
-- If the backend fails, the app shows a retry message.
-
-## Alternate Flows
-
-### Learner submits an empty response
-
-- The app prevents submission and shows a validation message such as "Please enter a response before submitting".
-- The learner can keep typing and submit again.
-
-### Exercise fetch returns no results
-
-- The app shows an empty state when no exercises are available.
-- The learner can retry later or switch to another learning module.
-
-### Backend evaluation fails or times out
-
-- The app keeps the response and shows an error message.
-- The learner can retry without losing typed text.
-
-## Edge Cases
-
-- The learner submits only whitespace or very short text.
-- The learner double-taps submit; the app blocks duplicates.
-- Exercise data is missing required fields.
-- The learner leaves during evaluation and returns later.
-- The learner changes devices; recent state remains synced.
-
-## Exercise Selection Logic
-
-For each exercise, the app tracks the last time it was practiced. The selection logic prioritizes exercises that have not been practiced recently.
-
-The app fetches exercises from the backend API, which supports sorting by `practicedAt` (descending) and filtering by topic.

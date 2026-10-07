@@ -55,32 +55,11 @@ Here are supported practice types to help learners improve different skills:
 - **Sentence Variation:** Rewrite a sentence with the same meaning.
 - **Paragraph Variation:** Rewrite a paragraph with the same meaning.
 
-## Choosing Practice Types
+## Choosing Practice Types and Exercise Data
 
-An exercise's `format` determines which practice types are applicable:
+Choose a practice type compatible with the exercise's `skill` and `format`. Allowed practice types are defined in the [practice data specification](./data.md#practice-type); exercise content fields are defined in the [manage data specification](../manage/data.md#exercise).
 
-| Exercise format | Skill         | Allowed practice types                    |
-| --------------- | ------------- | ----------------------------------------- |
-| `communication` | communication | Communication                             |
-| `word`          | vocabulary    | Just One Word, Word Guessing, Word Usage  |
-| `paragraph`     | articulation  | Paragraph Variation                       |
-| `sentence`      | articulation  | Sentence Construction, Sentence Variation |
-
-## Data Requirements
-
-Required fields for displaying based on practice type:
-
-| Practice type         | Required exercise fields                         |
-| --------------------- | ------------------------------------------------ |
-| Communication         | `scenario`, `prompts`, `validResponses` (result) |
-| Using Word            | `word`, `meaning`, `sentences` (result)          |
-| Word Guessing         | `meaning`, `word` (result)                       |
-| Just One Word         | `clues`, `word` (result)                         |
-| Paragraph Variation   | `paragraph`                                      |
-| Sentence Construction | `words`, `sentence` (result)                     |
-| Sentence Variation    | `sentence`                                       |
-
-Optional `id`, `name`, `skill`, `topics`, `references`, `practicedAt`, and `practiceCount` support context, tracking, or selection but do not replace required content.
+`id`, `name`, and `topics` are required exercise data. Optional `references`, `practicedAt`, and `practiceCount` support context, tracking, or selection but do not replace format-specific content. Omitted optional fields without a specified default are not persisted.
 
 ## Exercise Display
 

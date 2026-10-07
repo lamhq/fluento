@@ -70,15 +70,17 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
   responseBaseSchema.extend({
     practiceType: z.literal('paragraph-variation'),
     correctness: correctnessSchema.extend({
-      sentences: z.array(
-        z.object({
-          sentence: z.string(),
-          score: z.number().min(0).max(100),
-          feedback: z.string().nonempty(),
-          fixes: z.array(z.string().nonempty()).optional(),
-          correctedSentence: z.string().nonempty().optional(),
-        }),
-      ),
+      sentences: z
+        .array(
+          z.object({
+            sentence: z.string(),
+            score: z.number().min(0).max(100),
+            feedback: z.string().nonempty(),
+            fixes: z.array(z.string().nonempty()).optional(),
+            correctedSentence: z.string().nonempty().optional(),
+          }),
+        )
+        .optional(),
     }),
     appropriateness: appropriatenessSchema,
   }),

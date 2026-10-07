@@ -141,7 +141,7 @@ Retrieve a paginated list of exercises available to a learner for practice, with
 ## Non-Functional Requirements
 
 - **Performance:** The endpoint should return standard exercise lists in under 500 ms under normal traffic and keep pagination efficient for large datasets.
-- **Security:** All traffic must use HTTPS.
+- **Security:** API Gateway enforces HTTPS; the API service does not require HTTPS.
 - **Reliability:** The service should gracefully handle server errors and return a clear 500 error response without leaking internal implementation details.
 - **Scalability:** The endpoint must support growth in exercise volume and concurrent learner requests without degrading list retrieval performance.
 

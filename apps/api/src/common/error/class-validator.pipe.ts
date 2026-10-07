@@ -1,26 +1,8 @@
-import {
-  ArgumentMetadata,
-  BadRequestException,
-  Injectable,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ArgumentMetadata, Injectable, ValidationPipe } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 
 import { ErrorDetails } from './error-response';
-
-/**
- * Exception thrown when class-validator validation fails
- */
-export class RequestValidationException extends BadRequestException {
-  /**
-   * Type of the request data that caused the validation error (e.g., 'body', 'query').
-   */
-  public type?: string;
-
-  constructor(public readonly errors: ErrorDetails) {
-    super('Request validation failed');
-  }
-}
+import { RequestValidationException } from './request-validation.exception';
 
 /**
  * NestJS pipe that validates and transforms incoming request using class-validator
@@ -28,7 +10,7 @@ export class RequestValidationException extends BadRequestException {
  * https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe
  */
 @Injectable()
-export class RequestValidationPipe extends ValidationPipe {
+export class ClassValidorPipe extends ValidationPipe {
   constructor() {
     super({
       // required properties cannot be omitted from the request body
