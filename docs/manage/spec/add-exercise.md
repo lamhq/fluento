@@ -66,19 +66,19 @@ flowchart TD
 
 ### Common Fields
 
-| Field      | Requirement                                                         |
-| ---------- | ------------------------------------------------------------------- |
-| Name       | Required; non-empty exercise name.                                  |
-| Skill      | Required: `communication`, `vocabulary`, or `articulation`.         |
-| Format     | Required; limited to formats for the selected skill.                |
-| Topics     | Required; select existing values or add one or more new ones.      |
-| References | Optional source links, one per line.                                |
-| Status     | Required: `active` or `archived`; default `active`.                 |
+| Field      | Requirement                                                   |
+| ---------- | ------------------------------------------------------------- |
+| Name       | Required; non-empty exercise name.                            |
+| Skill      | Required: `communication`, `vocabulary`, or `articulation`.   |
+| Format     | Required; limited to formats for the selected skill.          |
+| Topics     | Required; select existing values or add one or more new ones. |
+| References | Optional source links, one per line.                          |
+| Status     | Required: `active` or `archived`; default `active`.           |
 
 ### Format-Specific Fields
 
 - Enter string arrays in textareas, one value per line. Use a creatable multi-select for topics.
-- Show only fields available for the selected format; required and optional fields follow the [manage data specification](./data.md#exercise).
+- Show only fields available for the selected format; required and optional fields follow the [core data specification](../../core/spec/data.md#format-specific-fields).
 - References are optional; each required list needs at least one non-empty line.
 - On submit, remove empty or whitespace-only lines before validation; users need not remove them manually.
 - Validate required lists after cleanup; each must retain at least one value.
@@ -96,5 +96,5 @@ flowchart TD
 
 ## Related Documents
 
-- [Database Design](../../design/data.md)
-- [Find Topics API](../../design/api/manage/find-topics.md)
+- [Core Exercise Data Specification](../../core/spec/data.md)
+- [Find Topics API](../design/api/find-topics.md)

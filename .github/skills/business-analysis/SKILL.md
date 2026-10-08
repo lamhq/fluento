@@ -5,20 +5,24 @@ description: Ability to define software requirements and produce requirements do
 
 ## Document Location
 
-| Document                       | Location                                       |
-| ------------------------------ | ---------------------------------------------- |
-| Project Overview Document      | `docs/project-overview.md`                     |
-| Feature Idea Document          | `docs/ideas/{module}/{feature-name}.md`        |
-| Feature Specification Document | `docs/requirements/{module}/{feature-name}.md` |
+| Document                       | Location                                |
+| ------------------------------ | --------------------------------------- |
+| Project Overview Document      | `docs/core/spec/project-overview.md`    |
+| Idea Document                  | `docs/{module}/ideas/{feature-name}.md` |
+| Feature Specification Document | `docs/{module}/spec/{feature-name}.md`  |
+| Data Specification Document    | `docs/{module}/spec/data.md`            |
 
 **Available modules**:
 
-- `manage`:
+- `core`: define shared entities and structures
+  - exercise structure
+  - topics
+- `manage`: add management features
   - create, list, update, and delete exercises created by current user
   - create, list, update, and delete topics created by current user
 - `practice`:
-  - return exercises for user to practice
-  - receive user's responses and give feedback
+  - retrieve exercises for user to practice
+  - submit user's responses and get feedback
   - track user's practice progress
 
 ## Get high-level summary of the project
@@ -32,4 +36,8 @@ Read Feature Specification Document.
 ## Write Feature Specification Documents
 
 1. Read the Feature Idea Document.
-2. Follow the Feature Specification Guide at `http://localhost:4173/se/process/requirements/feature-spec.md`.
+2. Follow the Feature Specification Guide at `http://localhost:4173/se/documentation/requirement-analysis/feature-spec.md`.
+
+## Write Data Specification Documents
+
+Follow the Data Specification Guide at `http://localhost:4173/se/documentation/requirement-analysis/data-spec.md`.

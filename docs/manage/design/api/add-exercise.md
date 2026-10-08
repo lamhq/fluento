@@ -25,13 +25,13 @@ Common fields:
 | Name         | Type     | Required | Description                                                                                                                              |
 | ------------ | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`       | string   | Yes      | Exercise name.                                                                                                                           |
-| `skill`      | string   | Yes      | Skill to practice, enum values defined in [manage data specification](../../../requirements/manage/data.md#skill).                       |
-| `format`     | string   | Yes      | Exercise format, value depends on `skill`, defined in [manage data specification](../../../requirements/manage/data.md#exercise-format). |
+| `skill`      | string   | Yes      | Skill to practice, enum values defined in [core data specification](../../../core/spec/data.md#skill).                       |
+| `format`     | string   | Yes      | Exercise format, value depends on `skill`, defined in [core data specification](../../../core/spec/data.md#exercise-format). |
 | `topics`     | string[] | Yes      | At least one topic name; each name must be a non-empty string.                                                                           |
 | `references` | string[] | No       | Source references.                                                                                                                       |
 | `status`     | string   | Yes      | `active` or `archived`. The client supplies `active` by default.                                                                         |
 
-The request's format-specific fields and requiredness follow the [manage data specification](../../../requirements/manage/data.md#exercise). `topics` is required for every format; `references` is optional.
+The request's format-specific fields and requiredness follow the [core data specification](../../../core/spec/data.md#format-specific-fields). `topics` is required for every format; `references` is optional.
 
 - Trim scalar content and each array item.
 - Remove blank or whitespace-only array entries before validating required lists.
@@ -128,14 +128,14 @@ Returned when the request has no authenticated user context.
 - HTTPS is enforced by API Gateway; the API app does not require HTTPS.
 - Prevent users from creating exercises on behalf of another user.
 - Return actionable validation errors without exposing internal implementation details.
-- Persist common fields and format-specific content consistently with the [Exercise data design](../../data.md).
+- Persist common fields and format-specific content consistently with the [core data specification](../../../core/spec/data.md).
 
 ## Related Documents
 
-- [Create Exercise requirements](../../../requirements/manage/add-exercise.md)
-- [Create Exercise dialog](../../web/manage/add-exercise.md)
+- [Create Exercise Feature Specification](../../spec/add-exercise.md)
+- [Create Exercise dialog](../web/add-exercise.md)
 - [Find Topics API](./find-topics.md)
-- [Database Design](../../data.md)
+- [Core Exercise Data Specification](../../../core/spec/data.md)
 
 ## Changelog
 

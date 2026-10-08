@@ -57,7 +57,7 @@ Here are supported practice types to help learners improve different skills:
 
 ## Choosing Practice Types and Exercise Data
 
-Choose a practice type compatible with the exercise's `skill` and `format`. Allowed practice types are defined in the [practice data specification](./data.md#practice-type); exercise content fields are defined in the [manage data specification](../manage/data.md#exercise).
+Choose a practice type compatible with the exercise's `skill` and `format`. Allowed practice types are defined in the [practice data specification](./data.md#practice-type); exercise content fields are defined in the [core data specification](../../core/spec/data.md#format-specific-fields).
 
 `id`, `name`, and `topics` are required exercise data. Optional `references`, `practicedAt`, and `practiceCount` support context, tracking, or selection but do not replace format-specific content. Omitted optional fields without a specified default are not persisted.
 
@@ -141,6 +141,6 @@ Each practice type has a specific way it is displayed.
 
 ## Related Documents
 
-- [Practice Exercise Screen UI Specification](../../design/web/practice/practice-screen.md)
-- [Get Practice Exercises API](../../design/api/practice/get-practice-exercises.md)
+- [Practice Exercise Screen UI Specification](../design/web/practice-screen.md)
+- [Get Practice Exercises API](../design/api/get-practice-exercises.md)
 - [Submit Exercise Response Feature Specification](./submit-response.md)

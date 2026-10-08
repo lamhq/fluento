@@ -69,7 +69,9 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
   }),
   responseBaseSchema.extend({
     practiceType: z.literal('paragraph-variation'),
-    correctness: correctnessSchema.extend({
+    correctness: z.object({
+      score: z.number().min(0).max(100),
+      feedback: z.string().nonempty(),
       sentences: z
         .array(
           z.object({

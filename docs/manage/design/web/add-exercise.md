@@ -64,7 +64,7 @@
 
 ### Skill, Format, and additional fields
 
-Use the [manage data specification](../../../requirements/manage/data.md#exercise) as the source of truth for allowed skill-format pairs and available content fields, including requiredness. Show only fields available for the selected format. Use one-value-per-line textareas for arrays; each required list needs one non-empty line.
+Use the [core data specification](../../../core/spec/data.md#skill-format-compatibility) as the source of truth for allowed skill-format pairs and [format-specific fields](../../../core/spec/data.md#format-specific-fields), including requiredness. Show only fields available for the selected format. Use one-value-per-line textareas for arrays; each required list needs one non-empty line.
 
 Before Skill and Format are selected, show: “Select a skill and format to show the required content fields.”
 
@@ -129,6 +129,6 @@ Before Skill and Format are selected, show: “Select a skill and format to show
 ## Related Documents
 
 - [Exercise List Screen](./exercise-list.md)
-- [Create Exercise requirements](../../../requirements/manage/add-exercise.md)
-- [Find Topics API](../../api/manage/find-topics.md)
-- [Database Design](../../data.md)
+- [Create Exercise Feature Specification](../../spec/add-exercise.md)
+- [Find Topics API](../api/find-topics.md)
+- [Core Exercise Data Specification](../../../core/spec/data.md)

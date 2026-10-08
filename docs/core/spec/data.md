@@ -2,16 +2,16 @@
 
 ## Introduction
 
-The manage module lets an authenticated user create and maintain their practice exercises and topics.
+The core module owns the exercise data model, including exercise content and related topic data.
 
-This document defines the business meaning, required data, allowed values, and validation rules for those records.
+This document defines the business meaning, required data, allowed values, and validation rules for the core module.
 
 ## Assumptions
 
 1. Each exercise belongs to the authenticated user who created it.
-2. Every exercise has at least one topic. Exercises retain topic names directly; a topic record supports topic discovery and selection.
+2. Every exercise has at least one topic. Exercises retain topic names directly; topic records support topic discovery and selection.
 3. Timestamps use UTC.
-4. Authentication identity is managed outside this module; only the authenticated user's stable identifier is used for ownership.
+4. Authentication identity is managed outside the core module; the authenticated user's stable identifier is used for ownership.
 
 ## Entity-Relationship Diagram
 
@@ -53,9 +53,9 @@ Represents reusable user-created English practice material across supported skil
 | Owner ID        | `ownerId`        | Identifier                    | Defined                    | —                | Authenticated user who created the exercise.                     |
 | Name            | `name`           | Text                          | Defined, NonEmpty          | —                | Name shown to the exercise owner.                                |
 | Skill           | `skill`          | Skill (Enumeration)           | Defined, SkillFormat       | —                | English skill the exercise practices.                            |
-| Format          | `format`         | Exercise Format (Enumeration) | Defined, SkillFormat       | —                | Define exercise additional fields.                               |
+| Format          | `format`         | Exercise Format (Enumeration) | Defined, SkillFormat       | —                | Defines the additional fields required for the exercise.         |
 | Topics          | `topics`         | List of Text                  | Defined, NonEmptyList      | —                | Topic labels used for grouping and filtering.                    |
-| References      | `references`     | List of Text                  | NonEmptyList               | `[]`             | Source links associated with the exercise.                       |
+| References      | `references`     | List of Text                  | Optional                   | `[]`             | Source links associated with the exercise.                       |
 | Status          | `status`         | Exercise Status (Enumeration) | Defined                    | `active`         | Whether the exercise is available to practice or archived.       |
 | Creation Time   | `createdAt`      | Timestamp                     | Defined                    | System generated | Time the exercise was created.                                   |
 | Update Time     | `updatedAt`      | Timestamp                     | Defined                    | System generated | Time the exercise was last changed.                              |
@@ -72,7 +72,7 @@ Represents reusable user-created English practice material across supported skil
 
 ### Topic
 
-Represents a label that users can select to categorize and find exercises. Topics may be user-owned or shared.
+Represents a label users can select to categorize and find exercises. Topics may be user-owned or shared.
 
 | Name          | ID          | Type       | Constraints       | Default          | Description                                            |
 | ------------- | ----------- | ---------- | ----------------- | ---------------- | ------------------------------------------------------ |
@@ -112,15 +112,15 @@ Topic names are not globally unique. An exercise stores selected topic names, no
 
 ## Constraints
 
-| Rule ID      | Trigger                                                 | Business Rule                                                                                             | Violation                                                             |
-| ------------ | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Defined      | When a record is created or updated                     | Field must be present in the object; it cannot be `undefined` or `null`.                                  | Reject the record and identify the omitted field.                     |
-| Unique       | When assigning a record identifier                      | An entity's identifier must identify only one record.                                                     | Reject the record.                                                    |
-| NonEmpty     | When text is required                                   | Required text must contain a non-whitespace character after trimming.                                     | Reject the value and identify the field.                              |
-| SkillFormat  | When an exercise is created or its skill/format changes | The selected format must be allowed for the selected skill, see "Skill-Format Compatibility" table below. | Reject the exercise and identify the incompatible values.             |
-| FormatFields | When an exercise is created or its format changes       | The field must be present (defined) based on format value, see "Format-Specific Fields" table below.      | Reject the exercise and identify missing or inapplicable fields.      |
-| NonEmptyList | When a list is supplied or required                     | List contains at least one non-empty item.                                                                | Reject non-text items or a required list that is empty after cleanup. |
-| OptionalPersistence | When a record is created or updated               | Do not persist an omitted optional field unless it has a specified default; persist that default when omitted. | Omit the field or apply its specified default.                      |
+| Rule ID             | Trigger                                                 | Business Rule                                                                                            | Violation                                                             |
+| ------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Defined             | When a record is created or updated                     | Field must be present in the object; it cannot be `undefined` or `null`.                                 | Reject the record and identify the omitted field.                     |
+| Unique              | When assigning a record identifier                      | An entity's identifier must identify only one record.                                                    | Reject the record.                                                    |
+| NonEmpty            | When text is required                                   | Required text must contain a non-whitespace character after trimming.                                    | Reject the value and identify the field.                              |
+| SkillFormat         | When an exercise is created or its skill/format changes | The selected format must be allowed for the selected skill, see "Skill-Format Compatibility" below.      | Reject the exercise and identify the incompatible values.             |
+| FormatFields        | When an exercise is created or its format changes       | Required fields must be present; fields that do not apply to the format must be omitted.                 | Reject the exercise and identify missing or inapplicable fields.      |
+| NonEmptyList        | When a list is required                                 | List contains at least one non-empty item after blank entries are removed.                               | Reject non-text items or a required list that is empty after cleanup. |
+| OptionalPersistence | When a record is created or updated                     | Do not persist an omitted optional field unless it has a specified default; persist that default if set. | Omit the field or apply its specified default.                        |
 
 ### Skill-Format Compatibility
 
@@ -141,8 +141,10 @@ Common fields (`name`, `skill`, `format`, `topics`, `references`, and `status`) 
 | `sentence`      | `scenario`, `sentence`, `words`         |
 | `paragraph`     | `scenario`, `paragraph`, `words`        |
 
+The manage module implements user-facing features for creating and maintaining these Core-owned exercise and topic records.
+
 ## Revision History
 
-| Version | Date       | Author       | Changes                                                                                   |
-| ------- | ---------- | ------------ | ----------------------------------------------------------------------------------------- |
-| 1.0     | 2026-10-07 | Fluento team | Initial manage data specification based on existing project requirements and data design. |
+| Version | Date       | Author       | Changes                                                                                             |
+| ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------- |
+| 1.2     | 2026-10-07 | Fluento team | Clarified Core ownership of exercise content and related data; Manage provides management features. |

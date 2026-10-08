@@ -6,7 +6,7 @@ The practice module presents active exercises to learners, evaluates submitted r
 
 This document defines the business meaning, data structure, allowed values, and validation rules for practice data.
 
-Exercise content and its skill-format constraints are defined in the [manage data specification](../manage/data.md#exercise).
+Exercise fields, content, and skill-format compatibility are defined in the [core data specification](../../core/spec/data.md#exercise).
 
 ## Assumptions
 
@@ -50,7 +50,7 @@ erDiagram
     }
 ```
 
-`Exercise` is managed in the [manage module](../manage/data.md#exercise). Practice module reads its active content and does not own or modify the exercise's content.
+The core module owns `Exercise` data and content. The manage module provides user-facing features for creating and maintaining exercises; the practice module reads active exercise content and does not own or modify it.
 
 ## Exercise Progress
 
