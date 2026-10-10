@@ -1,11 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import {
-  CONTEXT_SERVICE,
-  type ContextService,
-} from '../../context/context.service';
-import { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto';
-import { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto';
+import { CONTEXT_SERVICE, type ContextService } from '../../context/context.service';
+import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto';
+import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto';
 import { ExerciseEntity } from './exercise.entity';
 import {
   EXERCISE_REPOSITORY,
@@ -25,8 +22,6 @@ export class ExerciseService {
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
     return this.repository.create({
       ...data,
-      topics: data.topics ?? [],
-      references: data.references ?? [],
       userId: this.contextService.getUserIdOrThrow(),
     });
   }
@@ -80,7 +75,7 @@ export class ExerciseService {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.update(id, data.toEntity());
+    return this.repository.update(id, data);
   }
 
   async delete(id: string): Promise<void> {

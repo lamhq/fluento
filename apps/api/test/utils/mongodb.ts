@@ -2,7 +2,7 @@ import { Db, MongoClient, ObjectId } from 'mongodb';
 
 type PlainObject = Record<string, unknown>;
 
-interface MongoDocument {
+export interface MongoDocument {
   _id: ObjectId;
   [key: string]: unknown;
 }

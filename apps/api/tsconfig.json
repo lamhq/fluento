@@ -2,26 +2,28 @@
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2022",
+    "target": "ES2023",
     "sourceMap": true,
-    "rootDir": ".",
     "outDir": "./dist",
     "incremental": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "resolvePackageJsonExports": true,
-    "types": ["node", "jest", "express", "supertest"],
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "types": ["vitest/globals", "node"],
 
+    /* strictness options */
     "strictNullChecks": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true, // Ensures function parameters are more strictly checked
-    "strictPropertyInitialization": false, // Makes sure class properties are correctly initialized
     "noImplicitAny": true,
     "noImplicitThis": true, // Disallows `this` keyword with an implicit `any` type
     "alwaysStrict": true, // Ensures `use strict` is always used

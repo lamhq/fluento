@@ -50,26 +50,26 @@ Use:
 - nested `describe` blocks for behavior groups
 - `it` cases that state expected outcomes.
 
-Begin each case name with `should`.
+Test case name starts with `should`, at the end is the test case ID in parentheses (if available).
 
 Examples:
 
 ```ts title="tests/manage/product/find-products.spec.ts"
 describe('find products', () => {
   describe('filtering', () => {
-    it('should return active products', async () => {
+    it('should return active products (TC_API_FP_01)', async () => {
       // Arrange, call the API, and assert response and persisted state.
     });
   });
 
   describe('sorting', () => {
-    it('should sort products by name', async () => {
+    it('should sort products by name (TC_API_FP_02)', async () => {
       // Assert the sorting response.
     });
   });
 
   describe('pagination', () => {
-    it('should return first 10 products', async () => {
+    it('should return first 10 products (TC_API_FP_03)', async () => {
       // Assert the pagination response.
     });
   });

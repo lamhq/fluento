@@ -60,7 +60,7 @@ describe('create exercise', () => {
         words: ['articulation', 'practice'],
       },
     ])(
-      'TC_API_CE_01: should create exercise with $format format',
+      'should create exercise with $format format (TC_API_CE_01)',
       async (requestData) => {
         const { id: userId, email } = getUser();
         const body = {
@@ -98,7 +98,7 @@ describe('create exercise', () => {
   });
 
   describe('unauthenticated', () => {
-    it('TC_API_CE_02: should reject unauthenticated requests', async () => {
+    it('should reject unauthenticated requests (TC_API_CE_02)', async () => {
       const name = `${cleanupMarker} unauthenticated`;
       const body = {
         name,
@@ -121,7 +121,7 @@ describe('create exercise', () => {
   });
 
   describe('normalize field values', () => {
-    it('TC_API_CE_03: should trim and remove blank items', async () => {
+    it('should trim and remove blank items (TC_API_CE_03)', async () => {
       const name = `${cleanupMarker} normalized`;
       const body = {
         name: `  ${name}  `,
@@ -219,7 +219,7 @@ describe('create exercise', () => {
         missingFields: ['scenario', 'paragraph', 'words'],
       },
     ])(
-      'TC_API_CE_04: should reject missing $label fields',
+      'should reject missing $label fields (TC_API_CE_04)',
       async ({ body, missingFields }) => {
         const response = await request(getApp().getHttpServer())
           .post('/v1/manage/exercises')
@@ -256,14 +256,7 @@ describe('create exercise', () => {
           status: 1,
           references: 1,
         },
-        invalidFields: [
-          'name',
-          'skill',
-          'format',
-          'topics',
-          'status',
-          'references',
-        ],
+        invalidFields: ['name', 'skill', 'format', 'topics', 'status', 'references'],
       },
       // Gives communication-specific fields incorrect types.
       {
@@ -327,7 +320,7 @@ describe('create exercise', () => {
         invalidFields: ['paragraph', 'words', 'scenario'],
       },
     ])(
-      'TC_API_CE_05: should reject invalid $label field types',
+      'should reject invalid $label field types (TC_API_CE_05)',
       async ({ body, invalidFields }) => {
         const response = await request(getApp().getHttpServer())
           .post('/v1/manage/exercises')
@@ -474,7 +467,7 @@ describe('create exercise', () => {
         invalidFields: ['references'],
       },
     ])(
-      'TC_API_CE_06: should reject invalid $label field values',
+      'should reject invalid $label field values (TC_API_CE_06)',
       async ({ body, invalidFields }) => {
         const response = await request(getApp().getHttpServer())
           .post('/v1/manage/exercises')
@@ -499,7 +492,7 @@ describe('create exercise', () => {
   });
 
   describe('unknown fields', () => {
-    it('TC_API_CE_07: should reject inapplicable and unknown properties', async () => {
+    it('should reject inapplicable and unknown properties (TC_API_CE_07)', async () => {
       const name = `${cleanupMarker} inapplicable and unknown properties`;
       const body = {
         name,
@@ -535,7 +528,7 @@ describe('create exercise', () => {
   });
 
   describe('optional fields', () => {
-    it('TC_API_CE_08: should not persist omitted optional references', async () => {
+    it('should not persist omitted optional references (TC_API_CE_08)', async () => {
       const { id: userId, email } = getUser();
       const name = `${cleanupMarker} communication-without-references`;
       const body = {
@@ -563,7 +556,7 @@ describe('create exercise', () => {
   });
 
   describe('server error', () => {
-    it('TC_API_CE_09: should hide internal details on service failure', async () => {
+    it('should hide internal details on service failure (TC_API_CE_09)', async () => {
       const name = `${cleanupMarker} persistence-failure`;
       const body = {
         name,

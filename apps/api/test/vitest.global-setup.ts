@@ -6,7 +6,7 @@ import { GenericContainer, Wait } from 'testcontainers';
 
 import deferred from './utils/deferred';
 
-export default async function startMongoDB() {
+async function startMongoDB() {
   console.log(`Start MongoDB`);
 
   const container = await new GenericContainer('mongo:4.2')
@@ -57,5 +57,14 @@ export default async function startMongoDB() {
       console.error(line);
       rejectRs(new Error('Replica set initialization failed'));
     });
-  return rsPromise;
+  await rsPromise;
+  return container;
+}
+
+export default async function setup() {
+  const container = await startMongoDB();
+
+  return async () => {
+    await container.stop();
+  };
 }
