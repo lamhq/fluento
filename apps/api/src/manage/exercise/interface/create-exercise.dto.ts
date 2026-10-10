@@ -6,12 +6,19 @@ import {
   ExerciseStatus,
 } from '../../../content/core/exercise.entity';
 
-const text = z.string().trim();
+const trimmedText = z.string().trim();
+const nonEmptyText = trimmedText.min(1);
+const nonEmptyTextList = z
+  .array(trimmedText)
+  .transform((items) => items.filter((item) => item.length > 0))
+  .pipe(
+    z.array(trimmedText).min(1, 'must contain at least one non-empty value'),
+  );
 
 const commonFields = {
-  name: text,
-  topics: z.array(text).optional(),
-  references: z.array(text).optional(),
+  name: nonEmptyText,
+  topics: nonEmptyTextList,
+  references: nonEmptyTextList.optional(),
   status: z.enum(ExerciseStatus),
 };
 
@@ -19,52 +26,44 @@ const communicationFields = z.strictObject({
   ...commonFields,
   skill: z.literal(ExerciseSkill.Communication),
   format: z.literal(ExerciseFormat.Communication),
-  scenario: text,
-  prompts: z.array(text).min(1, 'must contain at least one non-empty value'),
-  validResponses: z
-    .array(text)
-    .min(1, 'must contain at least one non-empty value'),
+  scenario: nonEmptyText,
+  prompts: nonEmptyTextList,
+  validResponses: nonEmptyTextList,
 });
 
 const wordFields = z.strictObject({
   ...commonFields,
   skill: z.literal(ExerciseSkill.Vocabulary),
   format: z.literal(ExerciseFormat.Word),
-  word: text,
-  meaning: text,
-  sentences: z.array(text).min(1, 'must contain at least one non-empty value'),
-  clues: z.array(text).min(1, 'must contain at least one non-empty value'),
+  word: nonEmptyText,
+  meaning: nonEmptyText,
+  sentences: nonEmptyTextList,
+  clues: nonEmptyTextList,
 });
 
 const sentenceFields = z.strictObject({
   ...commonFields,
   skill: z.literal(ExerciseSkill.Articulation),
   format: z.literal(ExerciseFormat.Sentence),
-  sentence: text,
-  words: z.array(text).min(1, 'must contain at least one non-empty value'),
-  scenario: text.optional(),
+  sentence: nonEmptyText,
+  words: nonEmptyTextList,
+  scenario: nonEmptyText,
 });
 
 const paragraphFields = z.strictObject({
   ...commonFields,
   skill: z.literal(ExerciseSkill.Articulation),
   format: z.literal(ExerciseFormat.Paragraph),
-  paragraph: text,
-  words: z.array(text).min(1, 'must contain at least one non-empty value'),
-  scenario: text.optional(),
+  paragraph: nonEmptyText,
+  words: nonEmptyTextList,
+  scenario: nonEmptyText,
 });
 
-const articulationFields = z.discriminatedUnion('format', [
+export const createExerciseSchema = z.union([
+  communicationFields,
+  wordFields,
   sentenceFields,
   paragraphFields,
 ]);
-
-const CreateExerciseSchema = z.discriminatedUnion('skill', [
-  communicationFields,
-  wordFields,
-  articulationFields,
-]);
-
-export const createExerciseSchema = CreateExerciseSchema;
 
 export type CreateExerciseDto = z.output<typeof createExerciseSchema>;

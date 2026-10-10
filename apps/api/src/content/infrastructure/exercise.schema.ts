@@ -40,8 +40,8 @@ export class ExerciseModel {
   @Prop({ type: [String], default: [] })
   validResponses?: string[];
 
-  @Prop({ type: [String], default: [] })
-  references: string[];
+  @Prop({ type: [String], default: undefined })
+  references?: string[];
 
   @Prop()
   word?: string;

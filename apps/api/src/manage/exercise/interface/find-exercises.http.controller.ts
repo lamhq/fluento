@@ -12,7 +12,8 @@ import { ApiVersion } from '../../../common/http/api-version';
 import type { OffsetPaginationResult } from '../../../common/pagination';
 import { ExerciseService } from '../../../content/core/exercise.service';
 import { ExerciseDto } from './exercise.dto';
-import { FindExercisesDto } from './find-exercises.dto';
+import type { FindExercisesDto } from './find-exercises.dto';
+import { findExercisesSchema } from './find-exercises.dto';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -22,7 +23,8 @@ export class FindExercisesHttpController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @Query() query: FindExercisesDto,
+    @Query({ schema: findExercisesSchema })
+    query: FindExercisesDto,
   ): Promise<OffsetPaginationResult<ExerciseDto>> {
     const { total, items, offset, limit } =
       await this.exerciseService.findAllPaginated(query);

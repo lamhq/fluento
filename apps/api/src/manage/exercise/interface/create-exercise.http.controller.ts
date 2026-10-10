@@ -22,7 +22,8 @@ export class CreateExerciseHttpController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(
-    @Body({ schema: createExerciseSchema }) body: CreateExerciseDto,
+    @Body({ schema: createExerciseSchema })
+    body: CreateExerciseDto,
   ): Promise<ExerciseDto> {
     return ExerciseDto.fromEntity(await this.exerciseService.create(body));
   }

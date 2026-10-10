@@ -26,7 +26,7 @@ export class ExerciseEntity implements Entity {
   skill: ExerciseSkill;
   format: ExerciseFormat;
   topics: string[];
-  references: string[];
+  references?: string[];
   createdAt: Date;
   updatedAt: Date;
 

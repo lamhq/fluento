@@ -1,27 +1,21 @@
-import 'reflect-metadata';
-
-import { plainToInstance } from 'class-transformer';
-import { validateSync } from 'class-validator';
-
-import { FindExercisesDto } from './find-exercises.dto';
+import { findExercisesSchema } from './find-exercises.dto';
 
 describe('FindExercisesDto', () => {
-  it('normalizes single array-filter query values', () => {
-    const dto = plainToInstance(FindExercisesDto, {
+  it('normalizes query filters and applies pagination defaults', () => {
+    const result = findExercisesSchema.parse({
       topics: 'Travel',
       skills: 'communication',
       formats: 'communication',
       status: 'active',
     });
 
-    expect(dto).toEqual(
-      expect.objectContaining({
-        topics: ['Travel'],
-        skills: ['communication'],
-        formats: ['communication'],
-        status: ['active'],
-      }),
-    );
-    expect(validateSync(dto)).toEqual([]);
+    expect(result).toEqual({
+      topics: ['Travel'],
+      skills: ['communication'],
+      formats: ['communication'],
+      status: ['active'],
+      offset: 0,
+      limit: 10,
+    });
   });
 });
