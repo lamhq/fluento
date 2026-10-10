@@ -4,7 +4,7 @@ import 'dotenv/config';
 import path from 'path';
 import { GenericContainer, Wait } from 'testcontainers';
 
-import deferred from './utils/deferred';
+import deferred from './utils/deferred.js';
 
 async function startMongoDB() {
   console.log(`Start MongoDB`);

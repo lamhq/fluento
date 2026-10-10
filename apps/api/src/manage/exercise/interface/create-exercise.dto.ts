@@ -4,16 +4,14 @@ import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../../../content/core/exercise.entity';
+} from '../../../content/core/exercise.entity.js';
 
 const trimmedText = z.string().trim();
 const nonEmptyText = trimmedText.min(1);
 const nonEmptyTextList = z
   .array(trimmedText)
   .transform((items) => items.filter((item) => item.length > 0))
-  .pipe(
-    z.array(trimmedText).min(1, 'must contain at least one non-empty value'),
-  );
+  .pipe(z.array(trimmedText).min(1, 'must contain at least one non-empty value'));
 
 const commonFields = {
   name: nonEmptyText,

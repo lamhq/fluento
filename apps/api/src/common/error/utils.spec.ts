@@ -1,10 +1,10 @@
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 
-import { ErrorResponse, ValidationErrorResponse } from './response';
+import { ErrorResponse, ValidationErrorResponse } from './response.js';
 import {
   SchemaValidationException,
   SchemaValidationIssues,
-} from './schema-validation.exception';
+} from './schema-validation.exception.js';
 import {
   getErrorCode,
   getErrorDetails,
@@ -12,7 +12,7 @@ import {
   getErrorResponse,
   getStatusCode,
   tranformSchemaErrorToFieldError,
-} from './utils';
+} from './utils.js';
 
 describe('tranformSchemaErrorToFieldError', () => {
   it('maps issue paths to field messages and uses body for pathless issues', () => {
@@ -57,9 +57,7 @@ describe('tranformSchemaErrorToFieldError', () => {
 
 describe('getStatusCode', () => {
   it('returns status code for HttpException and internal server error otherwise', () => {
-    expect(getStatusCode(new BadRequestException())).toBe(
-      HttpStatus.BAD_REQUEST,
-    );
+    expect(getStatusCode(new BadRequestException())).toBe(HttpStatus.BAD_REQUEST);
     expect(getStatusCode(new Error('failure'))).toBe(
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
@@ -72,9 +70,7 @@ describe('getErrorCode', () => {
   });
 
   it('uses safe defaults for unknown HTTP statuses and generic errors', () => {
-    expect(getErrorCode(new HttpException('failure', 499))).toBe(
-      'internal_error',
-    );
+    expect(getErrorCode(new HttpException('failure', 499))).toBe('internal_error');
     expect(getErrorCode(new Error('failure'))).toBe('internal_error');
   });
 
@@ -98,12 +94,9 @@ describe('getErrorMessage', () => {
   });
 
   it('uses safe defaults for unknown HTTP statuses and generic errors', () => {
-    const defaultMessage =
-      'An unexpected error occurred. Please try again later.';
+    const defaultMessage = 'An unexpected error occurred. Please try again later.';
 
-    expect(getErrorMessage(new HttpException('failure', 499))).toBe(
-      defaultMessage,
-    );
+    expect(getErrorMessage(new HttpException('failure', 499))).toBe(defaultMessage);
     expect(getErrorMessage(new Error('failure'))).toBe(defaultMessage);
   });
 

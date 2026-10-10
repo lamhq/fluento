@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createExerciseSchema } from './create-exercise.dto';
+import { createExerciseSchema } from './create-exercise.dto.js';
 
 export const updateExerciseSchema = createExerciseSchema;
 

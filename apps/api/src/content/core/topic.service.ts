@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { TopicEntity } from './topic.entity';
-import { TOPIC_REPOSITORY, type TopicRepository } from './topic.repository';
+import { TopicEntity } from './topic.entity.js';
+import { TOPIC_REPOSITORY, type TopicRepository } from './topic.repository.js';
 
 @Injectable()
 export class TopicService {

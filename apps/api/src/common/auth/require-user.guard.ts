@@ -9,7 +9,7 @@ import {
 import {
   CONTEXT_SERVICE,
   type ContextService,
-} from '../../context/context.service';
+} from '../../context/context.service.js';
 
 @Injectable()
 export class RequireUser implements CanActivate {

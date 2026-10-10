@@ -2,18 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 
-import type { CursorPaginationResult } from '../../common/pagination';
-import { parseSortStr } from '../../common/utils';
+import type { CursorPaginationResult } from '../../common/pagination.js';
+import { parseSortStr } from '../../common/utils.js';
 import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../../content/core/exercise.entity';
-import { ExerciseModel } from '../../content/infrastructure/exercise.schema';
-import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
-import type { PracticeExerciseQuery } from '../core/practice-exercise.repository';
-import { PracticeExerciseRepository } from '../core/practice-exercise.repository';
-import { LearnerExerciseModel } from './learner-exercise.schema';
+} from '../../content/core/exercise.entity.js';
+import { ExerciseModel } from '../../content/infrastructure/exercise.schema.js';
+import { PracticeExerciseEntity } from '../core/practice-exercise.entity.js';
+import type { PracticeExerciseQuery } from '../core/practice-exercise.repository.js';
+import { PracticeExerciseRepository } from '../core/practice-exercise.repository.js';
+import { LearnerExerciseModel } from './learner-exercise.schema.js';
 
 interface RawPracticeExercise {
   _id: Types.ObjectId;
@@ -98,11 +98,7 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
         },
       },
       {
-        $sort: parseSortStr(sort, [
-          'practicedAt',
-          'practiceCount',
-          'createdAt',
-        ]),
+        $sort: parseSortStr(sort, ['practicedAt', 'practiceCount', 'createdAt']),
       },
       { $limit: safeLimit },
     );

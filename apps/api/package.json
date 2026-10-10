@@ -4,6 +4,7 @@
   "description": "Fluento API repository",
   "author": "",
   "private": true,
+  "type": "module",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "nest start --watch --debug",

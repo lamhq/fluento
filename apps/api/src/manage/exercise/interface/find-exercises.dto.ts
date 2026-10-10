@@ -4,7 +4,7 @@ import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../../../content/core/exercise.entity';
+} from '../../../content/core/exercise.entity.js';
 
 const enumValues = (value: Record<string, string>) =>
   Object.values(value).join(', ');

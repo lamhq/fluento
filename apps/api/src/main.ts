@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 
-import { createNestApp } from './app';
+import { createNestApp } from './app.js';
 
 async function bootstrap() {
   const app = await createNestApp();

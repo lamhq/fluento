@@ -1,5 +1,5 @@
-import type { Repository } from '../../common/data/repository';
-import type { UserEntity } from './user.entity';
+import type { Repository } from '../../common/data/repository.js';
+import type { UserEntity } from './user.entity.js';
 
 export type UserQuery = Partial<Pick<UserEntity, 'email'>>;
 

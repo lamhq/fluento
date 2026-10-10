@@ -1,15 +1,9 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 
-import { RequireUser } from '../../common/auth/require-user.guard';
-import { ApiVersion } from '../../common/http/api-version';
-import { TopicService } from '../core/topic.service';
-import { TopicDto } from './topic.dto';
+import { RequireUser } from '../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../common/http/api-version.js';
+import { TopicService } from '../core/topic.service.js';
+import { TopicDto } from './topic.dto.js';
 
 @Controller({ path: 'practice/topics', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

@@ -1,4 +1,4 @@
-import { parseSortStr } from './utils';
+import { parseSortStr } from './utils.js';
 
 describe('buildSort', () => {
   const allowedFields = ['createdAt', 'practicedAt'];
@@ -26,8 +26,6 @@ describe('buildSort', () => {
     expect(() => parseSortStr('unknown', allowedFields)).toThrow();
     expect(() => parseSortStr('-unknown', allowedFields)).toThrow();
     expect(() => parseSortStr('-', allowedFields)).toThrow();
-    expect(() =>
-      parseSortStr('createdAt,,practicedAt', allowedFields),
-    ).toThrow();
+    expect(() => parseSortStr('createdAt,,practicedAt', allowedFields)).toThrow();
   });
 });

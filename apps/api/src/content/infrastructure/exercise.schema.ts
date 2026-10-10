@@ -5,7 +5,7 @@ import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../core/exercise.entity';
+} from '../core/exercise.entity.js';
 
 export type ExerciseDocument = HydratedDocument<ExerciseModel>;
 

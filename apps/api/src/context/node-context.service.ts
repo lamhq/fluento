@@ -1,7 +1,7 @@
 import { Global, Injectable } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
 
-import { ContextService } from './context.service';
+import { ContextService } from './context.service.js';
 
 @Global()
 @Injectable()

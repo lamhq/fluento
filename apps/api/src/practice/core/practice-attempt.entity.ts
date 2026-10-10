@@ -1,5 +1,5 @@
-import type { Entity } from '../../common/data/entity';
-import { PracticeType } from './types';
+import type { Entity } from '../../common/data/entity.js';
+import { PracticeType } from './types.js';
 
 export class PracticeAttemptEntity implements Entity {
   id: string;

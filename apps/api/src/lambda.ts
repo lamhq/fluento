@@ -1,8 +1,8 @@
-import serverlessExpress from '@codegenie/serverless-express';
+import { configure as serverlessExpress } from '@codegenie/serverless-express';
 import type { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { RequestListener } from 'http';
 
-import { createNestApp } from './app';
+import { createNestApp } from './app.js';
 
 let server: APIGatewayProxyHandler | undefined;
 
@@ -14,11 +14,7 @@ async function bootstrap(): Promise<APIGatewayProxyHandler> {
   return serverlessExpress({ app: expressApp });
 }
 
-export const handler: APIGatewayProxyHandler = async (
-  event,
-  context,
-  callback,
-) => {
+export const handler: APIGatewayProxyHandler = async (event, context, callback) => {
   server = server ?? (await bootstrap());
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   return server(event, context, callback) as Promise<APIGatewayProxyResult>;

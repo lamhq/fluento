@@ -3,9 +3,9 @@ import request from 'supertest';
 import { vi } from 'vitest';
 import { z } from 'zod';
 
-import { EvaluationChain } from '../../src/practice/core/evaluation-chain';
-import { deleteMany, findOne, insertMany } from '../utils/mongodb';
-import { setUpApiTest } from '../utils/test';
+import { EvaluationChain } from '../../src/practice/core/evaluation-chain.js';
+import { deleteMany, findOne, insertMany } from '../utils/mongodb.js';
+import { setUpApiTest } from '../utils/test.js';
 
 const responseBaseSchema = z.object({
   id: z.string(),
@@ -236,8 +236,7 @@ const submissionCases = [
   {
     request: {
       practiceType: 'sentence-variation' as const,
-      response:
-        "I earned a bachelor's degree in computer science from university.",
+      response: "I earned a bachelor's degree in computer science from university.",
     },
     exercise: {
       format: 'sentence',
@@ -295,12 +294,10 @@ const submissionCases = [
             score: 90,
             feedback: 'The sentence is clear and correct.',
             fixes: [],
-            correctedSentence:
-              'The festival is an important Vietnamese tradition.',
+            correctedSentence: 'The festival is an important Vietnamese tradition.',
           },
           {
-            sentence:
-              'Families gather to enjoy food, lanterns, and the full moon.',
+            sentence: 'Families gather to enjoy food, lanterns, and the full moon.',
             score: 90,
             feedback: 'The sentence is clear and correct.',
             fixes: [],

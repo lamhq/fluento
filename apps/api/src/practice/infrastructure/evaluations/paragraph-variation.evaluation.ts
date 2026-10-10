@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 
-import { AI_SERVICE, type AiService } from '../../core/ai.service';
+import { AI_SERVICE, type AiService } from '../../core/ai.service.js';
 import {
   type EvaluationContext,
   type EvaluationResult,
   type EvaluationService,
   type NextFunction,
-} from '../../core/evaluation.service';
-import { PracticeType } from '../../core/types';
+} from '../../core/evaluation.service.js';
+import { PracticeType } from '../../core/types.js';
 
 /**
  * Schema for Paragraph Variation practice type evaluation
@@ -18,17 +18,13 @@ const ParagraphVariationEvaluationSchema = z.object({
   feedback: z.string().describe('Overall feedback (max 120 char).'),
   correctness: z.object({
     score: z.number().describe('Overall correctness score (0-100).'),
-    feedback: z
-      .string()
-      .describe('Overall correctness feedback (max 120 char).'),
+    feedback: z.string().describe('Overall correctness feedback (max 120 char).'),
     sentences: z
       .array(
         z.object({
           sentence: z.string().describe('The sentence from the response.'),
           score: z.number().describe('Per-sentence correctness score (0-100).'),
-          feedback: z
-            .string()
-            .describe('Per-sentence feedback (max 120 char).'),
+          feedback: z.string().describe('Per-sentence feedback (max 120 char).'),
           fixes: z
             .array(z.string().describe("Example: change 'teh' to 'the'."))
             .describe('List of grammar/spelling fixes for this sentence.'),

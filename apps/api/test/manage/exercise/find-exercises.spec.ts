@@ -2,8 +2,8 @@ import { ObjectId } from 'mongodb';
 import request from 'supertest';
 import { z } from 'zod';
 
-import { deleteMany, insertMany } from '../../utils/mongodb';
-import { setUpApiTest } from '../../utils/test';
+import { deleteMany, insertMany } from '../../utils/mongodb.js';
+import { setUpApiTest } from '../../utils/test.js';
 
 const findExercisesResponseSchema = z.object({
   total: z.number().int().nonnegative(),
@@ -239,11 +239,7 @@ describe('find exercises', () => {
   describe('pagination', () => {
     it('should return correct items and total count', async () => {
       const { email: userEmail } = getUser();
-      await seedExercises(
-        { name: 'Alpha' },
-        { name: 'Bravo' },
-        { name: 'Charlie' },
-      );
+      await seedExercises({ name: 'Alpha' }, { name: 'Bravo' }, { name: 'Charlie' });
 
       const resp = await request(getApp().getHttpServer())
         .get('/v1/manage/exercises')
@@ -273,8 +269,7 @@ describe('find exercises', () => {
         'unsupported skill',
         { skills: 'writing' },
         {
-          skills:
-            'skills must be one of: communication, vocabulary, articulation',
+          skills: 'skills must be one of: communication, vocabulary, articulation',
         },
       ],
       [
@@ -318,11 +313,7 @@ describe('find exercises', () => {
         { offset: '-1' },
         { offset: 'offset must be a non-negative integer' },
       ],
-      [
-        'zero limit',
-        { limit: '0' },
-        { limit: 'limit must be a positive integer' },
-      ],
+      ['zero limit', { limit: '0' }, { limit: 'limit must be a positive integer' }],
       [
         'non-integer limit',
         { limit: '1.5' },

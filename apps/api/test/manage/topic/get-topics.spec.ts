@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { z } from 'zod';
 
-import { deleteMany, insert, insertMany } from '../../utils/mongodb';
-import { setUpApiTest } from '../../utils/test';
+import { deleteMany, insert, insertMany } from '../../utils/mongodb.js';
+import { setUpApiTest } from '../../utils/test.js';
 
 const getTopicsResponseSchema = z.array(
   z.strictObject({
@@ -85,9 +85,7 @@ describe('get topics', () => {
   });
 
   it('should reject unauthenticated requests', async () => {
-    await request(getApp().getHttpServer())
-      .get('/v1/practice/topics')
-      .expect(401);
+    await request(getApp().getHttpServer()).get('/v1/practice/topics').expect(401);
   });
 
   it('should return topics regardless of their user', async () => {

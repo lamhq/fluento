@@ -1,4 +1,4 @@
-import { findExercisesSchema } from './find-exercises.dto';
+import { findExercisesSchema } from './find-exercises.dto.js';
 
 describe('FindExercisesDto', () => {
   it('normalizes query filters and applies pagination defaults', () => {

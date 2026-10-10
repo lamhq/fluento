@@ -1,4 +1,4 @@
-import type { Entity, EntityId } from './entity';
+import type { Entity, EntityId } from './entity.js';
 
 // CRUD interface for generic entities
 export interface Repository<TEntity extends Entity, TQuery extends object> {
@@ -12,9 +12,7 @@ export interface Repository<TEntity extends Entity, TQuery extends object> {
   findAllPaginated(query?: TQuery): Promise<[number, TEntity[]]>;
 
   // Create a new entity
-  create(
-    entity: Omit<TEntity, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<TEntity>;
+  create(entity: Omit<TEntity, 'id' | 'createdAt' | 'updatedAt'>): Promise<TEntity>;
 
   // Update entity by ID
   update(

@@ -1,12 +1,12 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ObjectId } from 'mongodb';
-import { App } from 'supertest/types';
+import { App } from 'supertest/types.js';
 
-import { AppModule } from '../../src/app.module';
-import { ExceptionFilter } from '../../src/common/error/exception.filter';
-import { SchemaValidationPipe } from '../../src/common/error/schema-validation.pipe';
-import { connect, deleteMany, disconnect, insert } from './mongodb';
+import { AppModule } from '../../src/app.module.js';
+import { ExceptionFilter } from '../../src/common/error/exception.filter.js';
+import { SchemaValidationPipe } from '../../src/common/error/schema-validation.pipe.js';
+import { connect, deleteMany, disconnect, insert } from './mongodb.js';
 
 export function setUpApiTest() {
   // create a unique string for clean up db records after each test run

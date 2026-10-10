@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { setUpApiTest } from './utils/test';
+import { setUpApiTest } from './utils/test.js';
 
 describe('AppController (e2e)', () => {
   const { getApp } = setUpApiTest();

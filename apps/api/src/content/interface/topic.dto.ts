@@ -1,4 +1,4 @@
-import { TopicEntity } from '../core/topic.entity';
+import { TopicEntity } from '../core/topic.entity.js';
 
 export class TopicDto {
   id: string;

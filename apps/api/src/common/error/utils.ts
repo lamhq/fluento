@@ -1,14 +1,10 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-import {
-  ErrorResponse,
-  FieldErrors,
-  ValidationErrorResponse,
-} from './response';
+import { ErrorResponse, FieldErrors, ValidationErrorResponse } from './response.js';
 import {
   SchemaValidationException,
   SchemaValidationIssues,
-} from './schema-validation.exception';
+} from './schema-validation.exception.js';
 
 const DEFAULT_ERROR_RESPONSE = {
   code: 'internal_error',

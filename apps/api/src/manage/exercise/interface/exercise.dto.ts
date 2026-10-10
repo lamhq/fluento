@@ -3,7 +3,7 @@ import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../../../content/core/exercise.entity';
+} from '../../../content/core/exercise.entity.js';
 
 export class ExerciseDto {
   id: string;

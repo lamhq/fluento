@@ -7,13 +7,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { RequireUser } from '../../common/auth/require-user.guard';
-import { ApiVersion } from '../../common/http/api-version';
-import type { CursorPaginationResult } from '../../common/pagination';
-import { PracticeService } from '../core/practice.service';
-import type { FindPracticeExercisesDto } from './find-practice-exercises.dto';
-import { findPracticeExercisesSchema } from './find-practice-exercises.dto';
-import { PracticeExerciseDto } from './practice-exercise.dto';
+import { RequireUser } from '../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../common/http/api-version.js';
+import type { CursorPaginationResult } from '../../common/pagination.js';
+import { PracticeService } from '../core/practice.service.js';
+import type { FindPracticeExercisesDto } from './find-practice-exercises.dto.js';
+import { findPracticeExercisesSchema } from './find-practice-exercises.dto.js';
+import { PracticeExerciseDto } from './practice-exercise.dto.js';
 
 @Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

@@ -1,9 +1,7 @@
-import type { CursorPaginationResult } from '../../common/pagination';
-import { PracticeExerciseEntity } from './practice-exercise.entity';
+import type { CursorPaginationResult } from '../../common/pagination.js';
+import { PracticeExerciseEntity } from './practice-exercise.entity.js';
 
-export const PRACTICE_EXERCISE_REPOSITORY = Symbol(
-  'PracticeExerciseRepository',
-);
+export const PRACTICE_EXERCISE_REPOSITORY = Symbol('PracticeExerciseRepository');
 
 export interface PracticeExerciseQuery {
   topics?: string[];

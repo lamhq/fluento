@@ -1,14 +1,14 @@
 import request from 'supertest';
 
-import { ExerciseService } from '../../../src/content/core/exercise.service';
+import { ExerciseService } from '../../../src/content/core/exercise.service.js';
 import {
   deleteMany,
   findById,
   insertMany,
   MongoDocument,
-} from '../../utils/mongodb';
-import { setUpApiTest } from '../../utils/test';
-import { createExerciseResponseSchema } from './create-exercise.schema';
+} from '../../utils/mongodb.js';
+import { setUpApiTest } from '../../utils/test.js';
+import { createExerciseResponseSchema } from './create-exercise.schema.js';
 
 describe('update exercise', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();

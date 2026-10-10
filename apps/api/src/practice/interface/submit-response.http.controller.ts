@@ -8,12 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { RequireUser } from '../../common/auth/require-user.guard';
-import { ApiVersion } from '../../common/http/api-version';
-import { PracticeService } from '../core/practice.service';
-import { PracticeAttemptDto } from './practice-attempt.dto';
-import type { SubmitResponseDto } from './submit-response.dto';
-import { submitResponseSchema } from './submit-response.dto';
+import { RequireUser } from '../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../common/http/api-version.js';
+import { PracticeService } from '../core/practice.service.js';
+import { PracticeAttemptDto } from './practice-attempt.dto.js';
+import type { SubmitResponseDto } from './submit-response.dto.js';
+import { submitResponseSchema } from './submit-response.dto.js';
 
 @Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

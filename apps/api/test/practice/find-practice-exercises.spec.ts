@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { z } from 'zod';
 
-import { deleteMany, insertMany } from '../utils/mongodb';
-import { setUpApiTest } from '../utils/test';
+import { deleteMany, insertMany } from '../utils/mongodb.js';
+import { setUpApiTest } from '../utils/test.js';
 
 const exerciseBaseSchema = z.object({
   id: z.string().nonempty(),
@@ -174,12 +174,7 @@ describe('find practice exercises', () => {
 
     expect(response.items).toHaveLength(4);
     expect(response.items.map((item) => item.format)).toEqual(
-      expect.arrayContaining([
-        'communication',
-        'word',
-        'sentence',
-        'paragraph',
-      ]),
+      expect.arrayContaining(['communication', 'word', 'sentence', 'paragraph']),
     );
   });
 
@@ -226,9 +221,7 @@ describe('find practice exercises', () => {
     const response = paginatedExercisesSchema.parse(resp.body);
 
     expect(response.items).toHaveLength(1);
-    expect(response.items[0].topics).toEqual(
-      expect.arrayContaining(['Restaurant']),
-    );
+    expect(response.items[0].topics).toEqual(expect.arrayContaining(['Restaurant']));
   });
 
   afterEach(async () => {

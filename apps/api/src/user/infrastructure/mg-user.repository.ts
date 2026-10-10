@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import type { UserEntity } from '../core/user.entity';
-import { UserQuery, UserRepository } from '../core/user.repository';
-import { UserDocument, UserModel } from './schemas/user.schema';
+import type { UserEntity } from '../core/user.entity.js';
+import { UserQuery, UserRepository } from '../core/user.repository.js';
+import { UserDocument, UserModel } from './schemas/user.schema.js';
 
 @Injectable()
 export class MgUserRepository implements UserRepository {

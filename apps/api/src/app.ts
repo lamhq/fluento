@@ -1,9 +1,9 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from './app.module';
-import { ExceptionFilter } from './common/error/exception.filter';
-import { SchemaValidationPipe } from './common/error/schema-validation.pipe';
+import { AppModule } from './app.module.js';
+import { ExceptionFilter } from './common/error/exception.filter.js';
+import { SchemaValidationPipe } from './common/error/schema-validation.pipe.js';
 
 export async function createNestApp() {
   const app = await NestFactory.create(AppModule);

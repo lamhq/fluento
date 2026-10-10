@@ -3,8 +3,8 @@ import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../../../content/core/exercise.entity';
-import { ExerciseDto } from './exercise.dto';
+} from '../../../content/core/exercise.entity.js';
+import { ExerciseDto } from './exercise.dto.js';
 
 describe('ExerciseDto', () => {
   it('maps an entity into a response DTO', () => {

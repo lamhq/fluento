@@ -7,13 +7,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { RequireUser } from '../../../common/auth/require-user.guard';
-import { ApiVersion } from '../../../common/http/api-version';
-import type { OffsetPaginationResult } from '../../../common/pagination';
-import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseDto } from './exercise.dto';
-import type { FindExercisesDto } from './find-exercises.dto';
-import { findExercisesSchema } from './find-exercises.dto';
+import { RequireUser } from '../../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../../common/http/api-version.js';
+import type { OffsetPaginationResult } from '../../../common/pagination.js';
+import { ExerciseService } from '../../../content/core/exercise.service.js';
+import { ExerciseDto } from './exercise.dto.js';
+import type { FindExercisesDto } from './find-exercises.dto.js';
+import { findExercisesSchema } from './find-exercises.dto.js';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

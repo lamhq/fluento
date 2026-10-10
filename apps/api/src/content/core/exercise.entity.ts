@@ -1,4 +1,4 @@
-import type { Entity } from '../../common/data/entity';
+import type { Entity } from '../../common/data/entity.js';
 
 export enum ExerciseStatus {
   Active = 'active',

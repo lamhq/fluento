@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { PracticeType } from '../core/types';
+import { PracticeType } from '../core/types.js';
 
 export const submitResponseSchema = z.strictObject({
   practiceType: z.enum(PracticeType),

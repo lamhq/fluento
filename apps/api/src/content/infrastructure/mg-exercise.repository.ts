@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, SortOrder, Types } from 'mongoose';
 
-import { ExerciseEntity } from '../core/exercise.entity';
-import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository';
-import { ExerciseDocument, ExerciseModel } from './exercise.schema';
+import { ExerciseEntity } from '../core/exercise.entity.js';
+import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository.js';
+import { ExerciseDocument, ExerciseModel } from './exercise.schema.js';
 
 @Injectable()
 export class MgExerciseRepository implements ExerciseRepository {
@@ -19,9 +19,7 @@ export class MgExerciseRepository implements ExerciseRepository {
     return this.dbModelToEntity(createdExercise);
   }
 
-  async findAllPaginated(
-    query: ExerciseQuery,
-  ): Promise<[number, ExerciseEntity[]]> {
+  async findAllPaginated(query: ExerciseQuery): Promise<[number, ExerciseEntity[]]> {
     const filter = this.buildFilter(query);
     const total = await this.exerciseModel.countDocuments(filter).exec();
     const sortableQuery = this.buildSort(query.sort);
@@ -48,10 +46,7 @@ export class MgExerciseRepository implements ExerciseRepository {
     return exercise ? this.dbModelToEntity(exercise) : null;
   }
 
-  async update(
-    id: string,
-    data: Partial<ExerciseEntity>,
-  ): Promise<ExerciseEntity> {
+  async update(id: string, data: Partial<ExerciseEntity>): Promise<ExerciseEntity> {
     const updatedExercise = await this.exerciseModel
       .findByIdAndUpdate(id, data, { new: true, runValidators: true })
       .exec();
@@ -64,9 +59,7 @@ export class MgExerciseRepository implements ExerciseRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const deletedExercise = await this.exerciseModel
-      .findByIdAndDelete(id)
-      .exec();
+    const deletedExercise = await this.exerciseModel.findByIdAndDelete(id).exec();
 
     if (!deletedExercise) {
       throw new NotFoundException(`Exercise with id ${id} not found`);

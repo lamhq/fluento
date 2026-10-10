@@ -1,14 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { CONTEXT_SERVICE, type ContextService } from '../../context/context.service';
-import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto';
-import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto';
-import { ExerciseEntity } from './exercise.entity';
+import {
+  CONTEXT_SERVICE,
+  type ContextService,
+} from '../../context/context.service.js';
+import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto.js';
+import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto.js';
+import { ExerciseEntity } from './exercise.entity.js';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseQuery,
   type ExerciseRepository,
-} from './exercise.repository';
+} from './exercise.repository.js';
 
 @Injectable()
 export class ExerciseService {

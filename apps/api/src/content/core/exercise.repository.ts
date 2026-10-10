@@ -1,10 +1,10 @@
-import type { Repository } from '../../common/data/repository';
+import type { Repository } from '../../common/data/repository.js';
 import {
   ExerciseEntity,
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from './exercise.entity';
+} from './exercise.entity.js';
 
 export const EXERCISE_REPOSITORY = Symbol('ExerciseRepository');
 

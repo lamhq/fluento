@@ -1,9 +1,9 @@
 import request from 'supertest';
 
-import { ExerciseService } from '../../../src/content/core/exercise.service';
-import { deleteMany, findAll, findById } from '../../utils/mongodb';
-import { setUpApiTest } from '../../utils/test';
-import { createExerciseResponseSchema } from './create-exercise.schema';
+import { ExerciseService } from '../../../src/content/core/exercise.service.js';
+import { deleteMany, findAll, findById } from '../../utils/mongodb.js';
+import { setUpApiTest } from '../../utils/test.js';
+import { createExerciseResponseSchema } from './create-exercise.schema.js';
 
 describe('create exercise', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();

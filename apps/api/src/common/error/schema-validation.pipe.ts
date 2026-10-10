@@ -1,6 +1,6 @@
 import { ArgumentMetadata, StandardSchemaValidationPipe } from '@nestjs/common';
 
-import { SchemaValidationException } from './schema-validation.exception';
+import { SchemaValidationException } from './schema-validation.exception.js';
 
 export class SchemaValidationPipe extends StandardSchemaValidationPipe {
   constructor() {
@@ -9,10 +9,7 @@ export class SchemaValidationPipe extends StandardSchemaValidationPipe {
     });
   }
 
-  async transform<T = unknown>(
-    value: T,
-    metadata: ArgumentMetadata,
-  ): Promise<T> {
+  async transform<T = unknown>(value: T, metadata: ArgumentMetadata): Promise<T> {
     try {
       return await super.transform(value, metadata);
     } catch (exception) {

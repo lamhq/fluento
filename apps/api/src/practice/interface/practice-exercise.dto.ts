@@ -1,8 +1,8 @@
 import {
   ExerciseFormat,
   ExerciseSkill,
-} from '../../content/core/exercise.entity';
-import { PracticeExerciseEntity } from '../core/practice-exercise.entity';
+} from '../../content/core/exercise.entity.js';
+import { PracticeExerciseEntity } from '../core/practice-exercise.entity.js';
 
 export class PracticeExerciseDto {
   // Common exercise fields
