@@ -43,6 +43,8 @@ await build({
     '@nestjs/microservices',
     '@nestjs/microservices/*',
     '@nestjs/websockets/*',
+    'class-transformer',
+    'class-validator',
   ],
   plugins: [
     fixMongooseImportPlugin,
