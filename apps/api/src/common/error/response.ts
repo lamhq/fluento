@@ -1,8 +1,8 @@
 /**
  * Errors object that maps field names to error messages or nested errors.
  */
-export class ErrorDetails {
-  [field: string]: string | ErrorDetails;
+export class FieldErrors {
+  [field: string]: string | FieldErrors;
 }
 
 /**
@@ -19,8 +19,9 @@ export class ErrorResponse {
    */
   message: string;
 
-  constructor(data: Partial<ErrorResponse>) {
-    Object.assign(this, data);
+  constructor(code: string, message: string) {
+    this.code = code;
+    this.message = message;
   }
 }
 
@@ -28,10 +29,13 @@ export class ErrorResponse {
  * Response sent to client in case of a validation error
  */
 export class ValidationErrorResponse extends ErrorResponse {
-  details: ErrorDetails;
+  /**
+   * Detailed validation errors for each field.
+   */
+  details: FieldErrors;
 
-  constructor(data: Partial<ValidationErrorResponse>) {
-    super(data);
-    Object.assign(this, data);
+  constructor(code: string, message: string, details: FieldErrors) {
+    super(code, message);
+    this.details = details;
   }
 }

@@ -4,8 +4,8 @@ import { ObjectId } from 'mongodb';
 import { App } from 'supertest/types';
 
 import { AppModule } from '../../src/app.module';
-import { ClassValidorPipe } from '../../src/common/error/class-validator.pipe';
 import { ExceptionFilter } from '../../src/common/error/exception.filter';
+import { SchemaValidationPipe } from '../../src/common/error/schema-validation.pipe';
 import { connect, deleteMany, disconnect, insert } from './mongodb';
 
 export function setUpApiTest() {
@@ -35,7 +35,7 @@ export function setUpApiTest() {
       defaultVersion: '1',
       prefix: 'v',
     });
-    app.useGlobalPipes(new ClassValidorPipe());
+    app.useGlobalPipes(new SchemaValidationPipe());
     app.useGlobalFilters(new ExceptionFilter());
     await app.init();
   });
@@ -44,7 +44,7 @@ export function setUpApiTest() {
     // close NestJS application
     await app.close();
 
-    // clean up database
+    // remove test user
     await deleteMany('users', { email: user.email });
 
     // disconnect from database
