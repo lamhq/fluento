@@ -56,15 +56,15 @@ The core module owns `Exercise` data and content. The manage module provides use
 
 Represents a learner's aggregate history for one exercise. It is used to show practice count and most recent practice time and to help select exercises.
 
-| Name                      | ID              | Type       | Constraints                                   | Default          | Description                                                              |
-| ------------------------- | --------------- | ---------- | --------------------------------------------- | ---------------- | ------------------------------------------------------------------------ |
-| Progress ID               | `id`            | Identifier | Defined, Unique                               | —                | Stable identifier for the aggregate progress record.                     |
-| Learner ID                | `learnerId`     | Identifier | Defined, UserOwnership, LearnerExerciseUnique | —                | Learner whose progress is tracked.                                       |
-| Exercise ID               | `exerciseId`    | Identifier | Defined, ExerciseAvailable                    | —                | Exercise associated with the progress record.                            |
-| Practice Count            | `practiceCount` | Integer    | Defined, NonNegative                          | `0`              | Number of accepted, evaluated submissions for this learner and exercise. |
-| Most Recent Practice Time | `practicedAt`   | Timestamp  | Optional, ProgressUpdate                      | —                | Time of the learner's most recent completed practice.                    |
-| Creation Time             | `createdAt`     | Timestamp  | Defined                                       | System generated | Time the progress record was created.                                    |
-| Update Time               | `updatedAt`     | Timestamp  | Defined                                       | System generated | Time the progress record was last changed.                               |
+| Name                      | ID              | Type       | Constraints                                    | Default          | Description                                                              |
+| ------------------------- | --------------- | ---------- | ---------------------------------------------- | ---------------- | ------------------------------------------------------------------------ |
+| Progress ID               | `id`            | Identifier | Required, Unique                               | —                | Stable identifier for the aggregate progress record.                     |
+| Learner ID                | `learnerId`     | Identifier | Required, UserOwnership, LearnerExerciseUnique | —                | Learner whose progress is tracked.                                       |
+| Exercise ID               | `exerciseId`    | Identifier | Required, ExerciseAvailable                    | —                | Exercise associated with the progress record.                            |
+| Practice Count            | `practiceCount` | Integer    | Required, NonNegative                          | `0`              | Number of accepted, evaluated submissions for this learner and exercise. |
+| Most Recent Practice Time | `practicedAt`   | Timestamp  | ProgressUpdate                                 | —                | Time of the learner's most recent completed practice.                    |
+| Creation Time             | `createdAt`     | Timestamp  | Required                                       | System generated | Time the progress record was created.                                    |
+| Update Time               | `updatedAt`     | Timestamp  | Required                                       | System generated | Time the progress record was last changed.                               |
 
 There is at most one progress record for a learner-exercise pair. Before the first practice, `practicedAt` is not persisted; a missing progress record is presented as `practiceCount: 0` and `practicedAt: null`.
 
@@ -74,17 +74,17 @@ A collection of exercise submissions and feedback.
 
 Here're common fields for each practice attempt:
 
-| Name          | ID             | Type                        | Constraints                | Default          | Description                                               |
-| ------------- | -------------- | --------------------------- | -------------------------- | ---------------- | --------------------------------------------------------- |
-| Attempt ID    | `id`           | Identifier                  | Defined, Unique            | —                | Stable identifier for this submission and its evaluation. |
-| Learner ID    | `learnerId`    | Identifier                  | Defined, UserOwnership     | —                | Authenticated learner who submitted the response.         |
-| Exercise ID   | `exerciseId`   | Identifier                  | Defined, ExerciseAvailable | —                | Exercise being answered.                                  |
-| Practice Type | `practiceType` | Practice Type (Enumeration) | Defined, PracticeType      | —                | Activity used to select the matching evaluation method.   |
-| Response      | `response`     | Text                        | Defined, NonEmpty          | —                | Learner's submitted answer.                               |
-| Score         | `score`        | Number                      | Defined, ScoreRange        | —                | Overall evaluation score.                                 |
-| Feedback      | `feedback`     | Text                        | Defined, NonEmpty          | —                | Overall feedback for the submission.                      |
-| Creation Time | `createdAt`    | Timestamp                   | Defined                    | System generated | Time the response was submitted and evaluated.            |
-| Update Time   | `updatedAt`    | Timestamp                   | Defined                    | System generated | Time the attempt record was last changed.                 |
+| Name          | ID             | Type                        | Constraints                 | Default          | Description                                               |
+| ------------- | -------------- | --------------------------- | --------------------------- | ---------------- | --------------------------------------------------------- |
+| Attempt ID    | `id`           | Identifier                  | Required, Unique            | —                | Stable identifier for this submission and its evaluation. |
+| Learner ID    | `learnerId`    | Identifier                  | Required, UserOwnership     | —                | Authenticated learner who submitted the response.         |
+| Exercise ID   | `exerciseId`   | Identifier                  | Required, ExerciseAvailable | —                | Exercise being answered.                                  |
+| Practice Type | `practiceType` | Practice Type (Enumeration) | Required, PracticeType      | —                | Activity used to select the matching evaluation method.   |
+| Response      | `response`     | Text                        | Required, NonEmpty          | —                | Learner's submitted answer.                               |
+| Score         | `score`        | Number                      | Required, ScoreRange        | —                | Overall evaluation score.                                 |
+| Feedback      | `feedback`     | Text                        | Required, NonEmpty          | —                | Overall feedback for the submission.                      |
+| Creation Time | `createdAt`    | Timestamp                   | Required                    | System generated | Time the response was submitted and evaluated.            |
+| Update Time   | `updatedAt`    | Timestamp                   | Required                    | System generated | Time the attempt record was last changed.                 |
 
 ### Correctness Evaluation
 
@@ -146,6 +146,10 @@ Enumeration-typed fields accept only values listed under their enumeration.
 
 | Rule ID               | Trigger                                 | Business Rule                                                                                             | Violation                                                          |
 | --------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Required              | When a record is created or updated     | Field must be present in the object; it cannot be `undefined` or `null`.                                  | Reject the record and identify the omitted field.                  |
+| Unique                | When assigning a record identifier      | An entity's identifier must identify only one record.                                                     | Reject the record.                                                 |
+| NonEmpty              | When value is supplied                  | Value must contain a non-whitespace character after trimming.                                             | Reject the value and identify the field.                           |
+| NonEmptyList          | When value is supplied                  | After trimming and removing blank entries, list contains at least one non-empty text item.                | Reject non-text items or a list that is empty after cleanup.       |
 | UserOwnership         | On submission or progress lookup/update | A learner may submit responses and access progress only under their authenticated identity.               | Reject or hide access outside the learner's scope.                 |
 | ExerciseAvailable     | When a response is submitted            | The referenced exercise must exist and be active.                                                         | Reject the submission as unavailable.                              |
 | LearnerExerciseUnique | When progress is created or updated     | Keep at most one aggregate progress record per learner-exercise pair.                                     | Update the existing aggregate instead of creating a duplicate.     |
@@ -183,3 +187,4 @@ Applicable fields per practice type (unknown fields are stripped duirng validati
 | Version | Date       | Author       | Changes                                                                                     |
 | ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------- |
 | 1.0     | 2026-10-07 | Fluento team | Initial practice data specification based on existing project requirements and data design. |
+| 1.1     | 2026-10-09 | Fluento team | Aligned shared constraint definitions and triggers with the core data specification.        |

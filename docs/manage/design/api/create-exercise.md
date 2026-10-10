@@ -22,24 +22,25 @@
 
 Common fields:
 
-| Name         | Type     | Required | Description                                                                                                                              |
-| ------------ | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`       | string   | Yes      | Exercise name.                                                                                                                           |
+| Name         | Type     | Required | Description                                                                                                                  |
+| ------------ | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `name`       | string   | Yes      | Exercise name.                                                                                                               |
 | `skill`      | string   | Yes      | Skill to practice, enum values defined in [core data specification](../../../core/spec/data.md#skill).                       |
 | `format`     | string   | Yes      | Exercise format, value depends on `skill`, defined in [core data specification](../../../core/spec/data.md#exercise-format). |
-| `topics`     | string[] | Yes      | At least one topic name; each name must be a non-empty string.                                                                           |
-| `references` | string[] | No       | Source references.                                                                                                                       |
-| `status`     | string   | Yes      | `active` or `archived`. The client supplies `active` by default.                                                                         |
+| `topics`     | string[] | Yes      | At least one topic name; each name must be a non-empty string.                                                               |
+| `references` | string[] | No       | Optional source references; when supplied, must contain at least one non-empty text item.                                    |
+| `status`     | string   | Yes      | `active` or `archived`. The client supplies `active` by default.                                                             |
 
-The request's format-specific fields and requiredness follow the [core data specification](../../../core/spec/data.md#format-specific-fields). `topics` is required for every format; `references` is optional.
+The request's format-specific fields and requiredness follow the [core data specification](../../../core/spec/data.md#format-specific-fields). `topics` is required for every format; `references` is optional and is not persisted when omitted.
 
 - Trim scalar content and each array item.
-- Remove blank or whitespace-only array entries before validating required lists.
-- Allow empty optional `references`.
+- Remove blank or whitespace-only array entries before validating lists.
+- If supplied, `references` must contain at least one non-empty text item after cleanup.
 - Reject:
   - Non-string values and malformed arrays.
   - Missing required fields.
   - Missing or empty `topics` after trimming and removing blank entries.
+  - Empty `references` after trimming and removing blank entries when supplied.
   - Unsupported skill-format pairs.
   - Content fields that do not apply to the selected format.
   - Unknown body properties.
@@ -55,7 +56,7 @@ Example (`communication`):
   "prompts": ["Say that you would like to order a meal."],
   "validResponses": ["I would like to order the grilled salmon, please."],
   "topics": ["Restaurant"],
-  "references": [],
+  "references": ["https://example.test/source"],
   "status": "active"
 }
 ```

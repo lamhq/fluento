@@ -202,7 +202,7 @@ Available modules:
 | NestJS     | Backend framework            |
 | Node.js    | Runtime environment          |
 | TypeScript | Type-safe JavaScript         |
-| Jest       | Unit and integration testing |
+| Vitest     | Unit and integration testing |
 | Supertest  | HTTP endpoint testing        |
 | esbuild    | Fast application bundling    |
 | Docker     | Containerization             |

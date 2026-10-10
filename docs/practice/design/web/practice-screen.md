@@ -1,4 +1,4 @@
-# Practice Exercise Screen
+# Practice Screen
 
 ## Introduction
 

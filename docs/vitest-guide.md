@@ -42,12 +42,45 @@ Create `vitest.config.e2e.ts` for end-to-end tests:
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   test: {
     globals: true,
     root: './',
     include: ['**/*.e2e-spec.ts'],
   },
+});
+```
+
+For a sample e2e test, create `test/app.e2e-spec.ts`:
+
+```ts title="test/app.e2e-spec.ts"
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import request from 'supertest';
+import { App } from 'supertest/types';
+import { AppModule } from '../src/app.module.js';
+
+describe('App (e2e)', () => {
+  let app: INestApplication<App>;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
 });
 ```
 

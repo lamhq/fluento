@@ -1,24 +1,24 @@
 ---
 name: monorepo
-description: Skills for working with a monorepo. Use it to perform tasks such as code formatting, linting, type checking, and running unit tests in a monorepo project.
+description: Skills for working with a monorepo. Use it to understand the repository structure, format code, run lint, run type checking, run unit tests.
 ---
 
 ## Format code
 
-Refer to `Format code` section in the root `README.md`.
+Follow the [Format code section](../../../README.md#format-code).
 
 ## Run lint
 
-Refer to `Run lint` section in the root `README.md`.
+Follow the [Run lint section](../../../README.md#run-lint).
 
 ## Run type check
 
-Refer to `Run type check` section in the root `README.md`.
+Follow the [Run type check section](../../../README.md#run-type-check).
 
 ## Run unit tests
 
-Refer to `Run unit tests` section in the root `README.md`.
+Follow the [Run unit tests section](../../../README.md#run-unit-tests).
 
 ## Repository Structure
 
-Refer to `Repository Structure` section in the root `README.md`.
+Follow the [Repository Structure section](../../../README.md#repository-structure).
