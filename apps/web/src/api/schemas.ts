@@ -45,7 +45,6 @@ const practiceExerciseBaseSchema = z.object({
   references: z.array(z.string().nonempty()),
   practicedAt: z.iso.datetime().optional(),
   practiceCount: z.number().int().nonnegative(),
-  scenario: z.string().optional(),
   prompts: z.array(z.string()).optional(),
   validResponses: z.array(z.string()).optional(),
 });
@@ -68,12 +67,14 @@ export const practiceExerciseSchema = z.discriminatedUnion('format', [
   practiceExerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('sentence'),
+    scenario: z.string().nonempty(),
     sentence: z.string().nonempty(),
     words: z.array(z.string().nonempty()),
   }),
   practiceExerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('paragraph'),
+    scenario: z.string().nonempty(),
     paragraph: z.string().nonempty(),
     words: z.array(z.string().nonempty()),
   }),

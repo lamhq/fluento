@@ -23,7 +23,7 @@ interface RawPracticeExercise {
   skill: string;
   format: string;
   topics: string[];
-  references: string[];
+  references?: string[];
   scenario?: string;
   paragraph?: string;
   prompts: string[];
@@ -163,7 +163,7 @@ export class MgPracticeExerciseRepository implements PracticeExerciseRepository 
       skill: item.skill as ExerciseSkill,
       format: item.format as ExerciseFormat,
       topics: item.topics,
-      references: item.references,
+      references: item.references ?? [],
       scenario: item.scenario,
       paragraph: item.paragraph,
       prompts: item.prompts,

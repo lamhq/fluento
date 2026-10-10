@@ -20,6 +20,7 @@ export const Default: Story = {
       skill: 'articulation',
       topics: ['Mid-Autumn Festival'],
       references: [],
+      scenario: 'Introduce the Mid-Autumn Festival to an international audience.',
       type: 'paragraph-variation',
       practiceCount: 0,
       paragraph:

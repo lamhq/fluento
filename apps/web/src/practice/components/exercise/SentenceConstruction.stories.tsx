@@ -20,6 +20,7 @@ export const Default: Story = {
       skill: 'articulation',
       topics: ['Job Interview', 'Software Engineering'],
       references: [],
+      scenario: 'Describe your educational background in a job interview.',
       type: 'sentence-construction',
       practiceCount: 0,
       words: ['study', 'computer science', 'university', "bachelor's degree"],

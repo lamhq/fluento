@@ -1,9 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import request from 'supertest';
+import { z } from 'zod';
 
 import { deleteMany, insert, insertMany } from '../../utils/mongodb';
 import { setUpApiTest } from '../../utils/test';
+
+const getTopicsResponseSchema = z.array(
+  z.strictObject({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    createdAt: z.iso.datetime(),
+  }),
+);
 
 describe('get topics', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();
@@ -47,16 +54,17 @@ describe('get topics', () => {
       .get('/v1/practice/topics')
       .set('x-user-email', userEmail)
       .expect(200);
+    const topics = getTopicsResponseSchema.parse(resp.body);
 
-    expect(resp.body).toHaveLength(5);
-    expect(resp.body.map((topic: { name: string }) => topic.name)).toEqual([
+    expect(topics).toHaveLength(5);
+    expect(topics.map((topic) => topic.name)).toEqual([
       'Communication',
       'Grammar',
       'Secret',
       'Speaking',
       'Vocabulary',
     ]);
-    expect(resp.body[0]).toEqual(
+    expect(topics[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
         name: 'Communication',
@@ -73,7 +81,7 @@ describe('get topics', () => {
       .set('x-user-email', userEmail)
       .expect(200);
 
-    expect(resp.body).toEqual([]);
+    expect(getTopicsResponseSchema.parse(resp.body)).toEqual([]);
   });
 
   it('should reject unauthenticated requests', async () => {
@@ -105,11 +113,9 @@ describe('get topics', () => {
       .get('/v1/practice/topics')
       .set('x-user-email', userEmail)
       .expect(200);
+    const topics = getTopicsResponseSchema.parse(resp.body);
 
-    expect(resp.body).toHaveLength(2);
-    expect(resp.body.map((topic: { name: string }) => topic.name)).toEqual([
-      'Mine',
-      'Theirs',
-    ]);
+    expect(topics).toHaveLength(2);
+    expect(topics.map((topic) => topic.name)).toEqual(['Mine', 'Theirs']);
   });
 });
