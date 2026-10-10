@@ -1,4 +1,4 @@
-import type { Entity } from '../../common/types/entity';
+import type { Entity } from '../../common/data/entity.js';
 
 export enum ExerciseStatus {
   Active = 'active',
@@ -26,7 +26,7 @@ export class ExerciseEntity implements Entity {
   skill: ExerciseSkill;
   format: ExerciseFormat;
   topics: string[];
-  references: string[];
+  references?: string[];
   createdAt: Date;
   updatedAt: Date;
 

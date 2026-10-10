@@ -1,25 +1,62 @@
 import { z } from 'zod';
 
-const exerciseBaseSchema = z.object({
+export const exerciseSkillSchema = z.enum([
+  'communication',
+  'vocabulary',
+  'articulation',
+]);
+
+export const exerciseFormatSchema = z.enum([
+  'communication',
+  'word',
+  'sentence',
+  'paragraph',
+]);
+
+export const exerciseStatusSchema = z.enum(['active', 'archived']);
+
+export const exerciseSchema = z.object({
+  id: z.string().nonempty(),
+  name: z.string().nonempty(),
+  skill: exerciseSkillSchema,
+  format: exerciseFormatSchema,
+  topics: z.array(z.string()),
+  createdAt: z.iso.datetime(),
+  status: exerciseStatusSchema,
+});
+
+export const paginatedExerciseSchema = z.object({
+  total: z.number().int().nonnegative(),
+  offset: z.number().int().nonnegative(),
+  limit: z.number().int().positive(),
+  items: z.array(exerciseSchema),
+});
+
+export const topicSchema = z.object({
+  id: z.string().nonempty(),
+  name: z.string().nonempty(),
+  createdAt: z.iso.datetime(),
+});
+
+const practiceExerciseBaseSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty(),
   topics: z.array(z.string().nonempty()).nonempty(),
   references: z.array(z.string().nonempty()),
   practicedAt: z.iso.datetime().optional(),
   practiceCount: z.number().int().nonnegative(),
-  scenario: z.string().optional(),
   prompts: z.array(z.string()).optional(),
   validResponses: z.array(z.string()).optional(),
 });
 
 export const practiceExerciseSchema = z.discriminatedUnion('format', [
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('communication'),
     format: z.literal('communication'),
     scenario: z.string().nonempty(),
     prompts: z.array(z.string().nonempty()).nonempty(),
   }),
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('vocabulary'),
     format: z.literal('word'),
     word: z.string().nonempty(),
@@ -27,15 +64,17 @@ export const practiceExerciseSchema = z.discriminatedUnion('format', [
     clues: z.array(z.string().nonempty()),
     sentences: z.array(z.string().nonempty()),
   }),
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('sentence'),
+    scenario: z.string().nonempty(),
     sentence: z.string().nonempty(),
     words: z.array(z.string().nonempty()),
   }),
-  exerciseBaseSchema.extend({
+  practiceExerciseBaseSchema.extend({
     skill: z.literal('articulation'),
     format: z.literal('paragraph'),
+    scenario: z.string().nonempty(),
     paragraph: z.string().nonempty(),
     words: z.array(z.string().nonempty()),
   }),
@@ -69,18 +108,20 @@ const responseBaseSchema = z.object({
 const correctnessSchema = z.object({
   score: z.number().min(0).max(100),
   feedback: z.string().nonempty(),
-  fixes: z.array(z.string().nonempty()).optional(),
-  correctedSentence: z.string().nonempty().optional(),
+  fixes: z.array(z.string().nonempty()),
+  correctedSentence: z.string(),
 });
 
-const sentenceCorrectnessSchema = correctnessSchema.extend({
+const sentenceCorrectnessSchema = z.object({
+  score: z.number().min(0).max(100),
+  feedback: z.string().nonempty(),
   sentences: z.array(
     z.object({
       sentence: z.string(),
       score: z.number().min(0).max(100),
       feedback: z.string().nonempty(),
-      fixes: z.array(z.string().nonempty()).optional(),
-      correctedSentence: z.string().nonempty().optional(),
+      fixes: z.array(z.string().nonempty()),
+      correctedSentence: z.string(),
     }),
   ),
 });

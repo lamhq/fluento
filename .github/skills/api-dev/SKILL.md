@@ -5,8 +5,8 @@ description: API development skills. Use when you want to start the API applicat
 
 ## Start API application
 
-Refer to `Getting Started` section in `apps/api/README.md`.
+Follow the [Getting Started section](../../../apps/api/README.md#getting-started).
 
 ## Seed the local database
 
-Refer to `Seed database` section in `apps/api/README.md`.
+Follow the [Seed database section](../../../apps/api/README.md#seed-database).

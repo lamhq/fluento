@@ -1,4 +1,4 @@
-import { PracticeAttemptEntity } from './practice-attempt.entity';
+import { PracticeAttemptEntity } from './practice-attempt.entity.js';
 
 export const PRACTICE_ATTEMPT_REPOSITORY = Symbol('PracticeAttemptRepository');
 

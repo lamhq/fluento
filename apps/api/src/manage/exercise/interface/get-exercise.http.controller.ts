@@ -8,10 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiVersion } from '../../../common/constants';
-import { RequireUser } from '../../../common/interface/require-user.guard';
-import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseDto } from './exercise.dto';
+import { RequireUser } from '../../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../../common/http/api-version.js';
+import { ExerciseService } from '../../../content/core/exercise.service.js';
+import { ExerciseDto } from './exercise.dto.js';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)

@@ -3,14 +3,15 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   CONTEXT_SERVICE,
   type ContextService,
-} from '../../common/core/context.service';
-import { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto';
-import { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto';
-import { ExerciseEntity, ExerciseStatus } from './exercise.entity';
+} from '../../context/context.service.js';
+import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto.js';
+import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto.js';
+import { ExerciseEntity } from './exercise.entity.js';
 import {
   EXERCISE_REPOSITORY,
+  type ExerciseQuery,
   type ExerciseRepository,
-} from './exercise.repository';
+} from './exercise.repository.js';
 
 @Injectable()
 export class ExerciseService {
@@ -23,21 +24,12 @@ export class ExerciseService {
 
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
     return this.repository.create({
-      ...data.toEntity(),
+      ...data,
       userId: this.contextService.getUserIdOrThrow(),
     });
   }
 
-  async findAllPaginated(
-    query: {
-      scenario?: string;
-      topics?: string[];
-      status?: ExerciseStatus;
-      sort?: string;
-      offset?: number;
-      limit?: number;
-    } = {},
-  ): Promise<{
+  async findAllPaginated(query: Omit<ExerciseQuery, 'userId'> = {}): Promise<{
     total: number;
     offset: number;
     limit: number;
@@ -86,7 +78,7 @@ export class ExerciseService {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.update(id, data.toEntity());
+    return this.repository.update(id, data);
   }
 
   async delete(id: string): Promise<void> {

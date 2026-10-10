@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 
-import { AI_SERVICE, type AiService } from '../../core/ai.service';
+import { AI_SERVICE, type AiService } from '../../core/ai.service.js';
 import {
   type EvaluationContext,
   type EvaluationResult,
   type EvaluationService,
   type NextFunction,
-} from '../../core/evaluation.service';
-import { PracticeType } from '../../core/types';
-import { correctnessSchema } from './correctness.schema';
+} from '../../core/evaluation.service.js';
+import { PracticeType } from '../../core/types.js';
+import { correctnessSchema } from './correctness.schema.js';
 
 /**
  * Schema for Sentence Variation practice type evaluation

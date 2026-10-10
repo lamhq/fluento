@@ -1,6 +1,10 @@
 import type { infer as Infer } from 'zod';
 
 import type {
+  exerciseFormatSchema,
+  exerciseSchema,
+  exerciseSkillSchema,
+  exerciseStatusSchema,
   practiceAttemptSchema,
   practiceExerciseSchema,
   practiceTypeSchema,
@@ -9,7 +13,7 @@ import type {
 export interface ApiClient {
   setAccessToken(token: string): void;
 
-  getPracticeExercise(): Promise<PaginatedResponse<PracticeExercise>>;
+  getPracticeExercise(): Promise<CursorPaginatedResponse<PracticeExercise>>;
 
   submitPracticeResponse(
     exerciseId: string,
@@ -17,25 +21,52 @@ export interface ApiClient {
     response: string,
   ): Promise<PracticeAttempt>;
 
-  getExercises(options?: ExerciseQuery): Promise<[number, Exercise[]]>;
+  getExercises(
+    options?: ExerciseQuery,
+    signal?: AbortSignal,
+  ): Promise<OffsetPaginatedResponse<Exercise>>;
+  getTopics(signal?: AbortSignal): Promise<Topic[]>;
 }
 
 export type PracticeType = Infer<typeof practiceTypeSchema>;
 
 export interface ExerciseQuery {
-  scenario?: string;
+  name?: string;
   topics?: string[];
-  status?: 'active' | 'archived' | 'all';
+  skills?: ExerciseSkill[];
+  formats?: ExerciseFormat[];
+  status?: ExerciseStatus[];
   sort?: string;
   offset?: number;
   limit?: number;
+}
+
+export type ExerciseSkill = Infer<typeof exerciseSkillSchema>;
+
+export type ExerciseFormat = Infer<typeof exerciseFormatSchema>;
+
+export type ExerciseStatus = Infer<typeof exerciseStatusSchema>;
+
+export type Exercise = Infer<typeof exerciseSchema>;
+
+export interface Topic {
+  id: string;
+  name: string;
+  createdAt: string;
 }
 
 export type PracticeExercise = Infer<typeof practiceExerciseSchema> & {
   type: PracticeType;
 };
 
-export interface PaginatedResponse<T> {
+export interface OffsetPaginatedResponse<T> {
+  total: number;
+  offset: number;
+  limit: number;
+  items: T[];
+}
+
+export interface CursorPaginatedResponse<T> {
   items: T[];
   nextCursor: string | null;
   previousCursor: string | null;
@@ -44,23 +75,3 @@ export interface PaginatedResponse<T> {
 }
 
 export type PracticeAttempt = Infer<typeof practiceAttemptSchema>;
-
-export interface Exercise {
-  id: string;
-  name: string;
-  skill: 'communication' | 'vocabulary' | 'articulation';
-  format: 'communication' | 'word' | 'sentence' | 'paragraph';
-  scenario?: string;
-  paragraph?: string;
-  prompts?: string[];
-  validResponses?: string[];
-  word?: string;
-  meaning?: string;
-  clues?: string[];
-  sentences?: string[];
-  words?: string[];
-  sentence?: string;
-  topics: string[];
-  references: string[];
-  status: 'active' | 'archived';
-}

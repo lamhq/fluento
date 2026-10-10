@@ -5,8 +5,8 @@ import {
   type EvaluationResult,
   type EvaluationService,
   type NextFunction,
-} from '../../core/evaluation.service';
-import { PracticeType } from '../../core/types';
+} from '../../core/evaluation.service.js';
+import { PracticeType } from '../../core/types.js';
 
 /**
  * Evaluates Word Guessing practice type responses

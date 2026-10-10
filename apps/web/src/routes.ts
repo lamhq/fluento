@@ -1,17 +1,17 @@
 /**
- * Home
+ * Default page shown when opening the website
  */
-export const HOME_ROUTE = '/';
-
-/**
- * Protected page accessible only to authenticated users
- */
-export const PROTECTED_ROUTE = '/protected';
+export const DEFAULT_ROUTE = '/';
 
 /**
  * Practice page
  */
 export const PRACTICE_ROUTE = '/practice';
+
+/**
+ * Manage exercises list page
+ */
+export const MANAGE_EXERCISE_LIST_ROUTE = '/manage/exercises';
 
 /**
  * Where user is redirected after signing in on Identity Provider's page

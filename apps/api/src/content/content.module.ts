@@ -1,18 +1,15 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { EXERCISE_REPOSITORY } from './core/exercise.repository';
-import { ExerciseService } from './core/exercise.service';
-import { TOPIC_REPOSITORY } from './core/topic.repository';
-import { TopicService } from './core/topic.service';
-import {
-  ExerciseModel,
-  ExerciseSchema,
-} from './infrastructure/exercise.schema';
-import { MgExerciseRepository } from './infrastructure/mg-exercise.repository';
-import { MgTopicRepository } from './infrastructure/mg-topic.repository';
-import { TopicModel, TopicSchema } from './infrastructure/topic.schema';
-import { FindTopicsHttpController } from './interface/find-topics.http.controller';
+import { EXERCISE_REPOSITORY } from './core/exercise.repository.js';
+import { ExerciseService } from './core/exercise.service.js';
+import { TOPIC_REPOSITORY } from './core/topic.repository.js';
+import { TopicService } from './core/topic.service.js';
+import { ExerciseModel, ExerciseSchema } from './infrastructure/exercise.schema.js';
+import { MgExerciseRepository } from './infrastructure/mg-exercise.repository.js';
+import { MgTopicRepository } from './infrastructure/mg-topic.repository.js';
+import { TopicModel, TopicSchema } from './infrastructure/topic.schema.js';
+import { FindTopicsHttpController } from './interface/find-topics.http.controller.js';
 
 @Module({
   imports: [

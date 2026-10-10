@@ -1,111 +1,67 @@
-import {
-  IsArray,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { z } from 'zod';
 
 import {
-  ExerciseEntity,
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../../../content/core/exercise.entity';
+} from '../../../content/core/exercise.entity.js';
 
-export class CreateExerciseDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+const trimmedText = z.string().trim();
+const nonEmptyText = trimmedText.min(1);
+const nonEmptyTextList = z
+  .array(trimmedText)
+  .transform((items) => items.filter((item) => item.length > 0))
+  .pipe(z.array(trimmedText).min(1, 'must contain at least one non-empty value'));
 
-  @IsEnum(ExerciseSkill)
-  @IsNotEmpty()
-  skill: ExerciseSkill;
+const commonFields = {
+  name: nonEmptyText,
+  topics: nonEmptyTextList,
+  references: nonEmptyTextList.optional(),
+  status: z.enum(ExerciseStatus),
+};
 
-  @IsEnum(ExerciseFormat)
-  @IsNotEmpty()
-  format: ExerciseFormat;
+const communicationFields = z.strictObject({
+  ...commonFields,
+  skill: z.literal(ExerciseSkill.Communication),
+  format: z.literal(ExerciseFormat.Communication),
+  scenario: nonEmptyText,
+  prompts: nonEmptyTextList,
+  validResponses: nonEmptyTextList,
+});
 
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  topics?: string[];
+const wordFields = z.strictObject({
+  ...commonFields,
+  skill: z.literal(ExerciseSkill.Vocabulary),
+  format: z.literal(ExerciseFormat.Word),
+  word: nonEmptyText,
+  meaning: nonEmptyText,
+  sentences: nonEmptyTextList,
+  clues: nonEmptyTextList,
+});
 
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  references?: string[];
+const sentenceFields = z.strictObject({
+  ...commonFields,
+  skill: z.literal(ExerciseSkill.Articulation),
+  format: z.literal(ExerciseFormat.Sentence),
+  sentence: nonEmptyText,
+  words: nonEmptyTextList,
+  scenario: nonEmptyText,
+});
 
-  @IsOptional()
-  @IsString()
-  scenario?: string;
+const paragraphFields = z.strictObject({
+  ...commonFields,
+  skill: z.literal(ExerciseSkill.Articulation),
+  format: z.literal(ExerciseFormat.Paragraph),
+  paragraph: nonEmptyText,
+  words: nonEmptyTextList,
+  scenario: nonEmptyText,
+});
 
-  @IsOptional()
-  @IsString()
-  paragraph?: string;
+export const createExerciseSchema = z.union([
+  communicationFields,
+  wordFields,
+  sentenceFields,
+  paragraphFields,
+]);
 
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  prompts?: string[];
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  validResponses?: string[];
-
-  @IsOptional()
-  @IsString()
-  word?: string;
-
-  @IsOptional()
-  @IsString()
-  meaning?: string;
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  clues?: string[];
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  sentences?: string[];
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  words?: string[];
-
-  @IsOptional()
-  @IsString()
-  sentence?: string;
-
-  @IsNotEmpty()
-  @IsEnum(ExerciseStatus)
-  status: ExerciseStatus;
-
-  toEntity(): Omit<
-    ExerciseEntity,
-    'id' | 'userId' | 'createdAt' | 'updatedAt'
-  > {
-    return {
-      name: this.name,
-      skill: this.skill,
-      format: this.format,
-      topics: this.topics ?? [],
-      references: this.references ?? [],
-      status: this.status,
-      scenario: this.scenario,
-      paragraph: this.paragraph,
-      prompts: this.prompts,
-      validResponses: this.validResponses,
-      word: this.word,
-      meaning: this.meaning,
-      clues: this.clues,
-      sentences: this.sentences,
-      words: this.words,
-      sentence: this.sentence,
-    };
-  }
-}
+export type CreateExerciseDto = z.output<typeof createExerciseSchema>;

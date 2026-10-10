@@ -5,29 +5,29 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import {
-  CONTEXT_SERVICE,
-  type ContextService,
-} from '../../common/core/context.service';
-import type { CursorPaginationResult } from '../../common/types/pagination';
-import { ExerciseFormat } from '../../content/core/exercise.entity';
+import type { CursorPaginationResult } from '../../common/pagination.js';
+import { ExerciseFormat } from '../../content/core/exercise.entity.js';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseRepository,
-} from '../../content/core/exercise.repository';
-import { EvaluationChain } from './evaluation-chain';
-import { PracticeAttemptEntity } from './practice-attempt.entity';
+} from '../../content/core/exercise.repository.js';
+import {
+  CONTEXT_SERVICE,
+  type ContextService,
+} from '../../context/context.service.js';
+import { EvaluationChain } from './evaluation-chain.js';
+import { PracticeAttemptEntity } from './practice-attempt.entity.js';
 import {
   PRACTICE_ATTEMPT_REPOSITORY,
   type PracticeAttemptRepository,
-} from './practice-attempt.repository';
-import { PracticeExerciseEntity } from './practice-exercise.entity';
+} from './practice-attempt.repository.js';
+import { PracticeExerciseEntity } from './practice-exercise.entity.js';
 import {
   PRACTICE_EXERCISE_REPOSITORY,
   type PracticeExerciseQuery,
   type PracticeExerciseRepository,
-} from './practice-exercise.repository';
-import { PracticeType } from './types';
+} from './practice-exercise.repository.js';
+import { PracticeType } from './types.js';
 
 const PRACTICE_TYPE_FORMAT_MAP: Record<PracticeType, ExerciseFormat[]> = {
   [PracticeType.Communication]: [ExerciseFormat.Communication],
@@ -69,9 +69,7 @@ export class PracticeService {
     const userId = this.contextService.getUserIdOrThrow();
     const trimmedResponse = response.trim();
     if (!trimmedResponse) {
-      throw new BadRequestException(
-        'Response is required and must not be empty.',
-      );
+      throw new BadRequestException('Response is required and must not be empty.');
     }
 
     const exercise = await this.exerciseRepository.findById(exerciseId);

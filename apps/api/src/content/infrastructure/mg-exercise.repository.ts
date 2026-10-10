@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, SortOrder, Types } from 'mongoose';
 
-import { ExerciseEntity } from '../core/exercise.entity';
-import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository';
-import { ExerciseDocument, ExerciseModel } from './exercise.schema';
+import { ExerciseEntity } from '../core/exercise.entity.js';
+import { ExerciseQuery, ExerciseRepository } from '../core/exercise.repository.js';
+import { ExerciseDocument, ExerciseModel } from './exercise.schema.js';
 
 @Injectable()
 export class MgExerciseRepository implements ExerciseRepository {
@@ -19,17 +19,15 @@ export class MgExerciseRepository implements ExerciseRepository {
     return this.dbModelToEntity(createdExercise);
   }
 
-  async findAllPaginated(
-    query: ExerciseQuery,
-  ): Promise<[number, ExerciseEntity[]]> {
+  async findAllPaginated(query: ExerciseQuery): Promise<[number, ExerciseEntity[]]> {
     const filter = this.buildFilter(query);
     const total = await this.exerciseModel.countDocuments(filter).exec();
     const sortableQuery = this.buildSort(query.sort);
     const exercises = await this.exerciseModel
       .find(filter)
       .sort(sortableQuery)
-      .skip(Math.max(query.offset ?? 0, 0))
-      .limit(Math.max(query.limit ?? 10, 0))
+      .skip(query.offset ?? 0)
+      .limit(query.limit ?? 10)
       .exec();
 
     return [total, exercises.map((exercise) => this.dbModelToEntity(exercise))];
@@ -48,10 +46,7 @@ export class MgExerciseRepository implements ExerciseRepository {
     return exercise ? this.dbModelToEntity(exercise) : null;
   }
 
-  async update(
-    id: string,
-    data: Partial<ExerciseEntity>,
-  ): Promise<ExerciseEntity> {
+  async update(id: string, data: Partial<ExerciseEntity>): Promise<ExerciseEntity> {
     const updatedExercise = await this.exerciseModel
       .findByIdAndUpdate(id, data, { new: true, runValidators: true })
       .exec();
@@ -64,9 +59,7 @@ export class MgExerciseRepository implements ExerciseRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const deletedExercise = await this.exerciseModel
-      .findByIdAndDelete(id)
-      .exec();
+    const deletedExercise = await this.exerciseModel.findByIdAndDelete(id).exec();
 
     if (!deletedExercise) {
       throw new NotFoundException(`Exercise with id ${id} not found`);
@@ -80,39 +73,43 @@ export class MgExerciseRepository implements ExerciseRepository {
       filter.userId = new Types.ObjectId(query.userId);
     }
 
-    if (query.status) {
-      filter.status = query.status;
+    if (query.status?.length) {
+      filter.status = { $in: query.status };
     }
 
-    if (query.scenario) {
-      filter.scenario = { $regex: query.scenario, $options: 'i' };
+    if (query.name) {
+      filter.name = {
+        $regex: query.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        $options: 'i',
+      };
     }
 
     if (query.topics && query.topics.length > 0) {
       filter.topics = { $in: query.topics };
     }
 
+    if (query.skills?.length) {
+      filter.skill = { $in: query.skills };
+    }
+
+    if (query.formats?.length) {
+      filter.format = { $in: query.formats };
+    }
+
     return filter;
   }
 
   private buildSort(sort?: string): Record<string, SortOrder> {
-    const sortEntries = (sort ?? '-created-at').split(',').filter(Boolean);
-    const fieldMap: Record<string, string> = {
-      'created-at': 'createdAt',
-      createdAt: 'createdAt',
-      status: 'status',
-      scenario: 'scenario',
-    };
+    const sortEntries = (sort ?? 'name').split(',');
     const normalized: Record<string, SortOrder> = {};
 
     for (const entry of sortEntries) {
       const isDescending = entry.startsWith('-');
       const field = entry.replace(/^-/, '');
-      const normalizedField = fieldMap[field] ?? 'createdAt';
-      normalized[normalizedField] = isDescending ? -1 : 1;
+      normalized[field] = isDescending ? -1 : 1;
     }
 
-    return Object.keys(normalized).length > 0 ? normalized : { createdAt: -1 };
+    return normalized;
   }
 
   private dbModelToEntity(data: ExerciseDocument): ExerciseEntity {

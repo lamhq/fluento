@@ -1,8 +1,9 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from './app.module';
-import { ValidateRequestBodyPipe } from './common/pipes/validate-request-body.pipe';
+import { AppModule } from './app.module.js';
+import { ExceptionFilter } from './common/error/exception.filter.js';
+import { SchemaValidationPipe } from './common/error/schema-validation.pipe.js';
 
 export async function createNestApp() {
   const app = await NestFactory.create(AppModule);
@@ -13,8 +14,11 @@ export async function createNestApp() {
     prefix: 'v',
   });
 
-  // auto validate request body
-  app.useGlobalPipes(new ValidateRequestBodyPipe());
+  // validate request body & query parameters using schema
+  app.useGlobalPipes(new SchemaValidationPipe());
+
+  // handle exceptions and return error response to client
+  app.useGlobalFilters(new ExceptionFilter());
 
   return app;
 }

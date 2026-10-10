@@ -4,26 +4,28 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiVersion } from '../../../common/constants';
-import { RequireUser } from '../../../common/interface/require-user.guard';
-import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseDto } from './exercise.dto';
-import { UpdateExerciseDto } from './update-exercise.dto';
+import { RequireUser } from '../../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../../common/http/api-version.js';
+import { ExerciseService } from '../../../content/core/exercise.service.js';
+import { ExerciseDto } from './exercise.dto.js';
+import type { UpdateExerciseDto } from './update-exercise.dto.js';
+import { updateExerciseSchema } from './update-exercise.dto.js';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
 export class UpdateExerciseHttpController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
-  @Patch(':id')
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id') id: string,
-    @Body() body: UpdateExerciseDto,
+    @Body({ schema: updateExerciseSchema })
+    body: UpdateExerciseDto,
   ): Promise<ExerciseDto> {
     return ExerciseDto.fromEntity(await this.exerciseService.update(id, body));
   }

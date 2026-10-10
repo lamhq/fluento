@@ -5,7 +5,7 @@ import {
   ExerciseFormat,
   ExerciseSkill,
   ExerciseStatus,
-} from '../core/exercise.entity';
+} from '../core/exercise.entity.js';
 
 export type ExerciseDocument = HydratedDocument<ExerciseModel>;
 
@@ -40,8 +40,8 @@ export class ExerciseModel {
   @Prop({ type: [String], default: [] })
   validResponses?: string[];
 
-  @Prop({ type: [String], default: [] })
-  references: string[];
+  @Prop({ type: [String], default: undefined })
+  references?: string[];
 
   @Prop()
   word?: string;

@@ -1,5 +1,5 @@
-import { ExerciseEntity } from '../../content/core/exercise.entity';
-import { LearnerExerciseEntity } from './learner-exercise.entity';
+import { ExerciseEntity } from '../../content/core/exercise.entity.js';
+import { LearnerExerciseEntity } from './learner-exercise.entity.js';
 
 export class PracticeExerciseEntity extends ExerciseEntity {
   practicedAt?: Date;

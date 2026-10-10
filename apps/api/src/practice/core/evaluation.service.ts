@@ -1,6 +1,6 @@
-import { ExerciseEntity } from '../../content/core/exercise.entity';
-import { PracticeAttemptEntity } from './practice-attempt.entity';
-import { PracticeType } from './types';
+import { ExerciseEntity } from '../../content/core/exercise.entity.js';
+import { PracticeAttemptEntity } from './practice-attempt.entity.js';
+import { PracticeType } from './types.js';
 
 export interface EvaluationContext {
   exercise: ExerciseEntity;

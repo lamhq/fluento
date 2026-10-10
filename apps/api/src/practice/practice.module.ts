@@ -1,36 +1,36 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { ContentModule } from '../content/content.module';
+import { ContentModule } from '../content/content.module.js';
 import {
   ExerciseModel,
   ExerciseSchema,
-} from '../content/infrastructure/exercise.schema';
-import { AI_SERVICE } from './core/ai.service';
-import { EvaluationChain } from './core/evaluation-chain';
-import { PracticeService } from './core/practice.service';
-import { PRACTICE_ATTEMPT_REPOSITORY } from './core/practice-attempt.repository';
-import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repository';
-import { CommunicationEvaluation } from './infrastructure/evaluations/communication.evaluation';
-import { JustOneWordEvaluation } from './infrastructure/evaluations/just-one-word.evaluation';
-import { ParagraphVariationEvaluation } from './infrastructure/evaluations/paragraph-variation.evaluation';
-import { SentenceConstructionEvaluation } from './infrastructure/evaluations/sentence-construction.evaluation';
-import { SentenceVariationEvaluation } from './infrastructure/evaluations/sentence-variation.evaluation';
-import { UsingWordEvaluation } from './infrastructure/evaluations/using-word.evaluation';
-import { WordGuessingEvaluation } from './infrastructure/evaluations/word-guessing.evaluation';
+} from '../content/infrastructure/exercise.schema.js';
+import { AI_SERVICE } from './core/ai.service.js';
+import { EvaluationChain } from './core/evaluation-chain.js';
+import { PracticeService } from './core/practice.service.js';
+import { PRACTICE_ATTEMPT_REPOSITORY } from './core/practice-attempt.repository.js';
+import { PRACTICE_EXERCISE_REPOSITORY } from './core/practice-exercise.repository.js';
+import { CommunicationEvaluation } from './infrastructure/evaluations/communication.evaluation.js';
+import { JustOneWordEvaluation } from './infrastructure/evaluations/just-one-word.evaluation.js';
+import { ParagraphVariationEvaluation } from './infrastructure/evaluations/paragraph-variation.evaluation.js';
+import { SentenceConstructionEvaluation } from './infrastructure/evaluations/sentence-construction.evaluation.js';
+import { SentenceVariationEvaluation } from './infrastructure/evaluations/sentence-variation.evaluation.js';
+import { UsingWordEvaluation } from './infrastructure/evaluations/using-word.evaluation.js';
+import { WordGuessingEvaluation } from './infrastructure/evaluations/word-guessing.evaluation.js';
 import {
   LearnerExerciseModel,
   LearnerExerciseSchema,
-} from './infrastructure/learner-exercise.schema';
-import { MgPracticeAttemptRepository } from './infrastructure/mg-practice-attempt.repository';
-import { MgPracticeExerciseRepository } from './infrastructure/mg-practice-exercise.repository';
-import { OpenAiService } from './infrastructure/openai.service';
+} from './infrastructure/learner-exercise.schema.js';
+import { MgPracticeAttemptRepository } from './infrastructure/mg-practice-attempt.repository.js';
+import { MgPracticeExerciseRepository } from './infrastructure/mg-practice-exercise.repository.js';
+import { OpenAiService } from './infrastructure/openai.service.js';
 import {
   PracticeAttemptModel,
   PracticeAttemptSchema,
-} from './infrastructure/practice-attempt.schema';
-import { FindPracticeExercisesHttpController } from './interface/find-practice-exercises.http.controller';
-import { SubmitResponseHttpController } from './interface/submit-response.http.controller';
+} from './infrastructure/practice-attempt.schema.js';
+import { FindPracticeExercisesHttpController } from './interface/find-practice-exercises.http.controller.js';
+import { SubmitResponseHttpController } from './interface/submit-response.http.controller.js';
 
 @Module({
   imports: [
@@ -44,10 +44,7 @@ import { SubmitResponseHttpController } from './interface/submit-response.http.c
       { name: PracticeAttemptModel.name, schema: PracticeAttemptSchema },
     ]),
   ],
-  controllers: [
-    FindPracticeExercisesHttpController,
-    SubmitResponseHttpController,
-  ],
+  controllers: [FindPracticeExercisesHttpController, SubmitResponseHttpController],
   providers: [
     PracticeService,
     MgPracticeExerciseRepository,

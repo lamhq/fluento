@@ -4,14 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClsModule } from 'nestjs-cls';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CommonModule } from './common/common.module';
-import { configFactory } from './config';
-import { ContentModule } from './content/content.module';
-import { ManageModule } from './manage/manage.module';
-import { PracticeModule } from './practice/practice.module';
-import { UserModule } from './user/user.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { configFactory } from './config.js';
+import { ContentModule } from './content/content.module.js';
+import { ContextModule } from './context/context.module.js';
+import { ManageModule } from './manage/manage.module.js';
+import { PracticeModule } from './practice/practice.module.js';
+import { UserModule } from './user/user.module.js';
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { UserModule } from './user/user.module';
       }),
       inject: [ConfigService],
     }),
-    CommonModule,
+    ContextModule,
     UserModule,
     ContentModule,
     PracticeModule,

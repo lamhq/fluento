@@ -1,11 +1,12 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ObjectId } from 'mongodb';
-import { App } from 'supertest/types';
+import { App } from 'supertest/types.js';
 
-import { AppModule } from '../../src/app.module';
-import { ValidateRequestBodyPipe } from '../../src/common/pipes/validate-request-body.pipe';
-import { connect, deleteMany, disconnect, insert } from './mongodb';
+import { AppModule } from '../../src/app.module.js';
+import { ExceptionFilter } from '../../src/common/error/exception.filter.js';
+import { SchemaValidationPipe } from '../../src/common/error/schema-validation.pipe.js';
+import { connect, deleteMany, disconnect, insert } from './mongodb.js';
 
 export function setUpApiTest() {
   // create a unique string for clean up db records after each test run
@@ -34,7 +35,8 @@ export function setUpApiTest() {
       defaultVersion: '1',
       prefix: 'v',
     });
-    app.useGlobalPipes(new ValidateRequestBodyPipe());
+    app.useGlobalPipes(new SchemaValidationPipe());
+    app.useGlobalFilters(new ExceptionFilter());
     await app.init();
   });
 
@@ -42,7 +44,7 @@ export function setUpApiTest() {
     // close NestJS application
     await app.close();
 
-    // clean up database
+    // remove test user
     await deleteMany('users', { email: user.email });
 
     // disconnect from database

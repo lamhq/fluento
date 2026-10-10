@@ -4,7 +4,7 @@ import {
   type EvaluationContext,
   type EvaluationResult,
   type EvaluationService,
-} from '../core/evaluation.service';
+} from '../core/evaluation.service.js';
 
 /**
  * Composes and executes evaluation middleware chain

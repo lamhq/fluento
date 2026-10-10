@@ -1,21 +1,19 @@
 import {
   Controller,
-  DefaultValuePipe,
   Get,
   HttpCode,
   HttpStatus,
-  ParseArrayPipe,
-  ParseIntPipe,
   Query,
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiVersion } from '../../../common/constants';
-import { RequireUser } from '../../../common/interface/require-user.guard';
-import type { OffsetPaginationResult } from '../../../common/types/pagination';
-import { ExerciseStatus } from '../../../content/core/exercise.entity';
-import { ExerciseService } from '../../../content/core/exercise.service';
-import { ExerciseDto } from './exercise.dto';
+import { RequireUser } from '../../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../../common/http/api-version.js';
+import type { OffsetPaginationResult } from '../../../common/pagination.js';
+import { ExerciseService } from '../../../content/core/exercise.service.js';
+import { ExerciseDto } from './exercise.dto.js';
+import type { FindExercisesDto } from './find-exercises.dto.js';
+import { findExercisesSchema } from './find-exercises.dto.js';
 
 @Controller({ path: 'manage/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -25,31 +23,16 @@ export class FindExercisesHttpController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @Query('scenario') scenario?: string,
-    @Query('topics', new ParseArrayPipe({ optional: true })) topics?: string[],
-    @Query('status') status?: ExerciseStatus,
-    @Query('sort') sort?: string,
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
+    @Query({ schema: findExercisesSchema })
+    query: FindExercisesDto,
   ): Promise<OffsetPaginationResult<ExerciseDto>> {
-    const {
-      total,
-      items,
-      offset: normalizedOffset,
-      limit: normalizedLimit,
-    } = await this.exerciseService.findAllPaginated({
-      scenario,
-      topics,
-      status,
-      sort,
-      offset,
-      limit,
-    });
+    const { total, items, offset, limit } =
+      await this.exerciseService.findAllPaginated(query);
 
     return {
       total,
-      offset: normalizedOffset,
-      limit: normalizedLimit,
+      offset,
+      limit,
       items: items.map((exercise) => ExerciseDto.fromEntity(exercise)),
     };
   }

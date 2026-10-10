@@ -1,7 +1,7 @@
 import request from 'supertest';
 
-import { deleteMany, findById, insertMany } from '../../utils/mongodb';
-import { setUpApiTest } from '../../utils/test';
+import { deleteMany, findById, insertMany } from '../../utils/mongodb.js';
+import { setUpApiTest } from '../../utils/test.js';
 
 describe('delete exercise', () => {
   const { cleanupMarker, getApp, getUser } = setUpApiTest();

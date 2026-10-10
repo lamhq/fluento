@@ -2,8 +2,8 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import type { Cache } from 'cache-manager';
 
-import type { UserEntity } from './user.entity';
-import { USER_REPOSITORY, type UserRepository } from './user.repository';
+import type { UserEntity } from './user.entity.js';
+import { USER_REPOSITORY, type UserRepository } from './user.repository.js';
 
 @Injectable()
 export class UserService {

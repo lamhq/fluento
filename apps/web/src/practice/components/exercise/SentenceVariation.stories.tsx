@@ -20,6 +20,7 @@ export const Default: Story = {
       skill: 'articulation',
       topics: ['Job Interview', 'Software Engineering'],
       references: [],
+      scenario: 'Describe your software development experience in an interview.',
       type: 'sentence-variation',
       practiceCount: 0,
       words: [

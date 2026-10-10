@@ -1,7 +1,7 @@
 import { Link, Navigate } from 'react-router';
 
 import { useAuth } from '../../auth';
-import { HOME_ROUTE } from '../../routes';
+import { DEFAULT_ROUTE } from '../../routes';
 import { LAST_ROUTE_KEY } from '../constants';
 
 export default function SignInCallbackPage() {
@@ -11,14 +11,14 @@ export default function SignInCallbackPage() {
     return (
       <>
         <p>{auth.error.message}</p>
-        <Link to={HOME_ROUTE}>Return</Link>
+        <Link to={DEFAULT_ROUTE}>Return</Link>
       </>
     );
   }
 
   if (auth.isAuthenticated) {
-    // Redirect user to saved route (before sign-in) or home.
-    const route = window.localStorage.getItem(LAST_ROUTE_KEY) ?? HOME_ROUTE;
+    // Redirect user to saved route (before sign-in) or default page.
+    const route = window.localStorage.getItem(LAST_ROUTE_KEY) ?? DEFAULT_ROUTE;
     return <Navigate to={route} />;
   }
 

@@ -143,8 +143,8 @@ aws logs tail /aws/lambda/fluento-dev-api-handler --since 10m
 If port 5600 is already in use:
 
 ```bash
-# Find and kill process using the port
-lsof -ti tcp:5600 | xargs kill -9
+# Find and kill API, API Gateway, Web dev server processes
+lsof -tiTCP:5600 -iTCP:5601 -iTCP:5602 -sTCP:LISTEN | while IFS= read -r pid; do kill "$pid"; done
 ```
 
 Or change the `PORT` in `.env`.
@@ -202,7 +202,7 @@ Available modules:
 | NestJS     | Backend framework            |
 | Node.js    | Runtime environment          |
 | TypeScript | Type-safe JavaScript         |
-| Jest       | Unit and integration testing |
+| Vitest     | Unit and integration testing |
 | Supertest  | HTTP endpoint testing        |
 | esbuild    | Fast application bundling    |
 | Docker     | Containerization             |

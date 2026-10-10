@@ -83,12 +83,20 @@ To start Storybook for the web application, run the following command:
 pnpx -F web storybook
 ```
 
-## Init Shadcn/ui
+## Init shadcn/ui
 
-When you want to re-initialize Shadcn/ui setup, run the following command:
+To re-initialize shadcn/ui setup:
 
 ```bash
+cd apps/web
 pnpm dlx shadcn@latest init --preset b2CPkFibI --template vite --pointer
+```
+
+## Install shadcn/ui components
+
+```bash
+cd apps/web
+pnpm dlx shadcn@latest add <component>
 ```
 
 ## Project Structure

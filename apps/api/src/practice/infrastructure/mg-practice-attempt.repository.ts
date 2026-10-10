@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { PracticeAttemptEntity } from '../core/practice-attempt.entity';
-import { PracticeAttemptRepository } from '../core/practice-attempt.repository';
+import { PracticeAttemptEntity } from '../core/practice-attempt.entity.js';
+import { PracticeAttemptRepository } from '../core/practice-attempt.repository.js';
 import {
   PracticeAttemptDocument,
   PracticeAttemptModel,
-} from './practice-attempt.schema';
+} from './practice-attempt.schema.js';
 
 @Injectable()
 export class MgPracticeAttemptRepository implements PracticeAttemptRepository {
@@ -21,9 +21,7 @@ export class MgPracticeAttemptRepository implements PracticeAttemptRepository {
     return this.dbModelToEntity(created);
   }
 
-  private dbModelToEntity(
-    data: PracticeAttemptDocument,
-  ): PracticeAttemptEntity {
+  private dbModelToEntity(data: PracticeAttemptDocument): PracticeAttemptEntity {
     return new PracticeAttemptEntity({
       id: data._id.toString(),
       userId: data.userId.toString(),

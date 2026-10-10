@@ -1,10 +1,11 @@
 import { ObjectId } from 'mongodb';
 import request from 'supertest';
+import { vi } from 'vitest';
 import { z } from 'zod';
 
-import { EvaluationChain } from '../../src/practice/core/evaluation-chain';
-import { deleteMany, findOne, insertMany } from '../utils/mongodb';
-import { setUpApiTest } from '../utils/test';
+import { EvaluationChain } from '../../src/practice/core/evaluation-chain.js';
+import { deleteMany, findOne, insertMany } from '../utils/mongodb.js';
+import { setUpApiTest } from '../utils/test.js';
 
 const responseBaseSchema = z.object({
   id: z.string(),
@@ -24,8 +25,8 @@ const responseBaseSchema = z.object({
 const correctnessSchema = z.object({
   score: z.number().min(0).max(100),
   feedback: z.string().nonempty(),
-  fixes: z.array(z.string().nonempty()).optional(),
-  correctedSentence: z.string().nonempty().optional(),
+  fixes: z.array(z.string().nonempty()),
+  correctedSentence: z.string(),
 });
 
 const appropriatenessSchema = z.object({
@@ -69,16 +70,20 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
   }),
   responseBaseSchema.extend({
     practiceType: z.literal('paragraph-variation'),
-    correctness: correctnessSchema.extend({
-      sentences: z.array(
-        z.object({
-          sentence: z.string(),
-          score: z.number().min(0).max(100),
-          feedback: z.string().nonempty(),
-          fixes: z.array(z.string().nonempty()).optional(),
-          correctedSentence: z.string().nonempty().optional(),
-        }),
-      ),
+    correctness: z.object({
+      score: z.number().min(0).max(100),
+      feedback: z.string().nonempty(),
+      sentences: z
+        .array(
+          z.object({
+            sentence: z.string(),
+            score: z.number().min(0).max(100),
+            feedback: z.string().nonempty(),
+            fixes: z.array(z.string().nonempty()),
+            correctedSentence: z.string(),
+          }),
+        )
+        .optional(),
     }),
     appropriateness: appropriatenessSchema,
   }),
@@ -110,7 +115,7 @@ const submissionCases = [
         score: 95,
         feedback: 'Correct and natural.',
         fixes: [],
-        correctedSentence: 'My parents are coming to visit. What about you?',
+        correctedSentence: '',
       },
       appropriateness: {
         score: 93,
@@ -231,8 +236,7 @@ const submissionCases = [
   {
     request: {
       practiceType: 'sentence-variation' as const,
-      response:
-        "I earned a bachelor's degree in computer science from university.",
+      response: "I earned a bachelor's degree in computer science from university.",
     },
     exercise: {
       format: 'sentence',
@@ -281,21 +285,16 @@ const submissionCases = [
       correctness: {
         score: 90,
         feedback: 'The rewritten paragraph is grammatically correct.',
-        fixes: [],
-        correctedSentence:
-          'The festival is an important Vietnamese tradition. Families gather to enjoy food, lanterns, and the full moon.',
         sentences: [
           {
             sentence: 'The festival is an important Vietnamese tradition.',
-            score: 90,
+            score: 100,
             feedback: 'The sentence is clear and correct.',
             fixes: [],
-            correctedSentence:
-              'The festival is an important Vietnamese tradition.',
+            correctedSentence: '',
           },
           {
-            sentence:
-              'Families gather to enjoy food, lanterns, and the full moon.',
+            sentence: 'Families gather to enjoy food, lanterns, and the full moon.',
             score: 90,
             feedback: 'The sentence is clear and correct.',
             fixes: [],
@@ -321,9 +320,9 @@ describe('submit response', () => {
       const { email, id: userId } = getUser();
 
       // Mock the evaluation chain to avoid calling the AI provider.
-      jest
-        .spyOn(getApp().get(EvaluationChain), 'evaluate')
-        .mockResolvedValue(submissionCase.expectedEvaluation);
+      vi.spyOn(getApp().get(EvaluationChain), 'evaluate').mockResolvedValue(
+        submissionCase.expectedEvaluation,
+      );
 
       const exerciseIds = await insertMany('exercises', [
         {
@@ -353,6 +352,9 @@ describe('submit response', () => {
           score: submissionCase.expectedEvaluation.score,
           feedback: submissionCase.expectedEvaluation.feedback,
         }),
+      );
+      expect(response).toEqual(
+        expect.objectContaining(submissionCase.expectedEvaluation),
       );
 
       const storedSubmission = await findOne('practice_attempts', {

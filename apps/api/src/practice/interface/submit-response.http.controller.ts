@@ -8,11 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { ApiVersion } from '../../common/constants';
-import { RequireUser } from '../../common/interface/require-user.guard';
-import { PracticeService } from '../core/practice.service';
-import { PracticeAttemptDto } from './practice-attempt.dto';
-import { SubmitResponseDto } from './submit-response.dto';
+import { RequireUser } from '../../common/auth/require-user.guard.js';
+import { ApiVersion } from '../../common/http/api-version.js';
+import { PracticeService } from '../core/practice.service.js';
+import { PracticeAttemptDto } from './practice-attempt.dto.js';
+import type { SubmitResponseDto } from './submit-response.dto.js';
+import { submitResponseSchema } from './submit-response.dto.js';
 
 @Controller({ path: 'practice/exercises', version: ApiVersion.V1 })
 @UseGuards(RequireUser)
@@ -23,7 +24,8 @@ export class SubmitResponseHttpController {
   @HttpCode(HttpStatus.CREATED)
   async submitResponse(
     @Param('exerciseId') exerciseId: string,
-    @Body() body: SubmitResponseDto,
+    @Body({ schema: submitResponseSchema })
+    body: SubmitResponseDto,
   ): Promise<PracticeAttemptDto> {
     const submission = await this.practiceService.submitResponse(
       exerciseId,

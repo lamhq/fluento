@@ -37,3 +37,7 @@ export function parseSortStr(
 
   return { ...sortOrder, _id: 1 };
 }
+
+export function stringToArray({ value }: { value: string | string[] }) {
+  return typeof value === 'string' ? [value] : value;
+}

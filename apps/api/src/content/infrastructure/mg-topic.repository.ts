@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { TopicEntity } from '../core/topic.entity';
-import { TopicQuery, TopicRepository } from '../core/topic.repository';
-import { TopicDocument, TopicModel } from './topic.schema';
+import { TopicEntity } from '../core/topic.entity.js';
+import { TopicQuery, TopicRepository } from '../core/topic.repository.js';
+import { TopicDocument, TopicModel } from './topic.schema.js';
 
 @Injectable()
 export class MgTopicRepository implements TopicRepository {

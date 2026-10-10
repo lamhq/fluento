@@ -1,14 +1,15 @@
 import { z } from 'zod';
 
-// Avoid `.max()` for string lengths or number ranges
-// AI may not receive those constraints, and its output
-// can be truncated and incomplete.
+/**
+ * Note: avoid using `.max()` for string lengths or number ranges,
+ * as AI may not receive those constraints and its output can be truncated and incomplete.
+ */
 export const correctnessSchema = z
   .object({
     score: z.number().describe('Correctness score (0-100).'),
     feedback: z.string().describe('Correctness feedback (max 120 char).'),
     fixes: z
-      .array(z.string())
+      .array(z.string().nonempty())
       .describe(
         'List of grammar/spelling fixes or improvements (empty if none are needed).',
       ),
