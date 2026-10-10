@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0](https://github.com/lamhq/fluento/compare/web-v1.1.0...web-v1.2.0) (2026-10-10)
+
+
+### Features
+
+* display all exercise types ([#18](https://github.com/lamhq/fluento/issues/18)) ([c0ccf48](https://github.com/lamhq/fluento/commit/c0ccf4848209a61befba405357792f11374be5b5))
+* implement list exercises API ([#15](https://github.com/lamhq/fluento/issues/15)) ([e5e1846](https://github.com/lamhq/fluento/commit/e5e1846632e5556fabd0c3f52a7df20f58c54b37))
+* submit exercise response ([#19](https://github.com/lamhq/fluento/issues/19)) ([05aa1a0](https://github.com/lamhq/fluento/commit/05aa1a023fe6c88865576929cf21c99f4b11c09b))
+* view my exercise ([#20](https://github.com/lamhq/fluento/issues/20)) ([8f250cb](https://github.com/lamhq/fluento/commit/8f250cb7728ea24676e797d1a56ab061483e2257))
+
 ## [1.1.0](https://github.com/lamhq/fluento/compare/web-v1.0.0...web-v1.1.0) (2026-08-28)
 
 
