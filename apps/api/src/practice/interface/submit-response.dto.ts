@@ -1,15 +1,10 @@
-import { Transform } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { z } from 'zod';
 
 import { PracticeType } from '../core/types';
 
-export class SubmitResponseDto {
-  @IsEnum(PracticeType)
-  @IsNotEmpty()
-  practiceType: PracticeType;
+export const submitResponseSchema = z.strictObject({
+  practiceType: z.enum(PracticeType),
+  response: z.string().trim().min(1),
+});
 
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }: { value: string }) => value.trim())
-  response: string;
-}
+export type SubmitResponseDto = z.output<typeof submitResponseSchema>;

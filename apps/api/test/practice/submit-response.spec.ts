@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import request from 'supertest';
+import { vi } from 'vitest';
 import { z } from 'zod';
 
 import { EvaluationChain } from '../../src/practice/core/evaluation-chain';
@@ -325,9 +326,9 @@ describe('submit response', () => {
       const { email, id: userId } = getUser();
 
       // Mock the evaluation chain to avoid calling the AI provider.
-      jest
-        .spyOn(getApp().get(EvaluationChain), 'evaluate')
-        .mockResolvedValue(submissionCase.expectedEvaluation);
+      vi.spyOn(getApp().get(EvaluationChain), 'evaluate').mockResolvedValue(
+        submissionCase.expectedEvaluation,
+      );
 
       const exerciseIds = await insertMany('exercises', [
         {
