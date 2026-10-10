@@ -1,11 +1,11 @@
 import storybook from 'eslint-plugin-storybook';
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
-import jest from 'eslint-plugin-jest';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import vitest from '@vitest/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'path';
@@ -96,23 +96,19 @@ export default defineConfig([
     },
   },
 
-  // Jest test files
+  // Vitest test files
   {
-    name: 'Jest test files',
+    ...vitest.configs.recommended,
+    name: 'Vitest test files',
     files: ['apps/api/**/*.spec.ts'],
-    plugins: { jest },
     languageOptions: {
       globals: {
-        ...globals.node,
-        ...jest.environments.globals.globals,
+        ...globals.vitest,
       },
     },
     rules: {
+      // Relax strict typing in tests to reduce boilerplate when using mocks, spies, and test fixtures
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      'jest/no-disabled-tests': 'warn',
-      'jest/no-focused-tests': 'error',
-      'jest/no-identical-title': 'error',
-      'jest/valid-expect': 'error',
     },
   },
 

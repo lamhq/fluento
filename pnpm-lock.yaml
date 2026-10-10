@@ -20,6 +20,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.5
         version: 9.39.5
+      '@vitest/eslint-plugin':
+        specifier: ^1.6.27
+        version: 1.6.27(eslint@9.39.5)(typescript@6.0.3)
       eslint:
         specifier: ^9.7.0
         version: 9.39.5
@@ -4136,6 +4139,30 @@ packages:
       std-env: 4.2.0
       tinyrainbow: 3.1.0
       vitest: 4.1.11(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(vite@8.1.5)
+    dev: true
+
+  /@vitest/eslint-plugin@1.6.27(eslint@9.39.5)(typescript@6.0.3):
+    resolution: {integrity: sha512-X1RCAfwbatG4GFbJ/1PIHP9MSZMt0JJThqbYID+vS4L783k6QGlLPe421wQE8dHXuGCcenVLsydiM4qzsYWxhg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': '*'
+      eslint: '>=8.57.0'
+      typescript: '>=5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+      typescript:
+        optional: true
+      vitest:
+        optional: true
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.65.0
+      '@typescript-eslint/utils': 8.65.0(eslint@9.39.5)(typescript@6.0.3)
+      eslint: 9.39.5
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@vitest/expect@3.2.4:
