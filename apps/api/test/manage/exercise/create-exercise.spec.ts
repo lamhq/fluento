@@ -570,7 +570,7 @@ describe('create exercise', () => {
       };
       const createSpy = vi
         .spyOn(getApp().get(ExerciseService), 'create')
-        .mockRejectedValue(new Error('database connection secret'));
+        .mockRejectedValue(new Error('database connection reset'));
 
       try {
         const response = await request(getApp().getHttpServer())
@@ -584,7 +584,7 @@ describe('create exercise', () => {
           message: 'An unexpected error occurred. Please try again later.',
         });
         expect(JSON.stringify(response.body)).not.toContain(
-          'database connection secret',
+          'database connection reset',
         );
         expect(await findAll('exercises', { name })).toHaveLength(0);
       } finally {

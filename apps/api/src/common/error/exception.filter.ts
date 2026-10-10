@@ -2,6 +2,7 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter as IExceptionFilter,
+  HttpException,
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -16,9 +17,12 @@ export class ExceptionFilter implements IExceptionFilter<Error> {
   private readonly logger = new Logger(ExceptionFilter.name);
 
   catch(exception: Error, host: ArgumentsHost) {
+    if (!(exception instanceof HttpException)) {
+      this.logger.error(exception.message, exception.stack);
+    }
+
     // TODO: log exception to error tracking service
     // if exception not instanceof HttpException
-    this.logger.error(exception.message, exception.stack);
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

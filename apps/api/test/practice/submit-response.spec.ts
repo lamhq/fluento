@@ -25,8 +25,8 @@ const responseBaseSchema = z.object({
 const correctnessSchema = z.object({
   score: z.number().min(0).max(100),
   feedback: z.string().nonempty(),
-  fixes: z.array(z.string().nonempty()).optional(),
-  correctedSentence: z.string().nonempty().optional(),
+  fixes: z.array(z.string().nonempty()),
+  correctedSentence: z.string(),
 });
 
 const appropriatenessSchema = z.object({
@@ -79,8 +79,8 @@ const submitResponseSchema = z.discriminatedUnion('practiceType', [
             sentence: z.string(),
             score: z.number().min(0).max(100),
             feedback: z.string().nonempty(),
-            fixes: z.array(z.string().nonempty()).optional(),
-            correctedSentence: z.string().nonempty().optional(),
+            fixes: z.array(z.string().nonempty()),
+            correctedSentence: z.string(),
           }),
         )
         .optional(),
@@ -115,7 +115,7 @@ const submissionCases = [
         score: 95,
         feedback: 'Correct and natural.',
         fixes: [],
-        correctedSentence: 'My parents are coming to visit. What about you?',
+        correctedSentence: '',
       },
       appropriateness: {
         score: 93,
@@ -285,16 +285,13 @@ const submissionCases = [
       correctness: {
         score: 90,
         feedback: 'The rewritten paragraph is grammatically correct.',
-        fixes: [],
-        correctedSentence:
-          'The festival is an important Vietnamese tradition. Families gather to enjoy food, lanterns, and the full moon.',
         sentences: [
           {
             sentence: 'The festival is an important Vietnamese tradition.',
-            score: 90,
+            score: 100,
             feedback: 'The sentence is clear and correct.',
             fixes: [],
-            correctedSentence: 'The festival is an important Vietnamese tradition.',
+            correctedSentence: '',
           },
           {
             sentence: 'Families gather to enjoy food, lanterns, and the full moon.',
@@ -355,6 +352,9 @@ describe('submit response', () => {
           score: submissionCase.expectedEvaluation.score,
           feedback: submissionCase.expectedEvaluation.feedback,
         }),
+      );
+      expect(response).toEqual(
+        expect.objectContaining(submissionCase.expectedEvaluation),
       );
 
       const storedSubmission = await findOne('practice_attempts', {

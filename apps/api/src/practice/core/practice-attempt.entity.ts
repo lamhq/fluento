@@ -18,8 +18,8 @@ export class PracticeAttemptEntity implements Entity {
       sentence: string;
       score: number;
       feedback: string;
-      fixes?: string[];
-      correctedSentence?: string;
+      fixes: string[];
+      correctedSentence: string;
     }[];
   };
   appropriateness?: {

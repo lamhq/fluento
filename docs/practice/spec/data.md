@@ -90,17 +90,17 @@ Here're common fields for each practice attempt:
 
 Additional fields for correctness evaluation:
 
-| Name                     | ID                                          | Type         | Constraints                  | Default | Description                                                  |
-| ------------------------ | ------------------------------------------- | ------------ | ---------------------------- | ------- | ------------------------------------------------------------ |
-| Correctness Score        | `correctness.score`                         | Number       | ScoreRange, FeedbackFields   | —       | Correctness score for the full response.                     |
-| Correctness Feedback     | `correctness.feedback`                      | Text         | NonEmpty, FeedbackFields     | —       | Explanation of the full response's correctness result.       |
-| Grammar & Spelling Fixes | `correctness.fixes`                         | List of Text | NonEmptyList, FeedbackFields | -       | Suggested grammar or spelling corrections for the response.  |
-| Corrected Sentence       | `correctness.correctedSentence`             | Text         | NonEmpty, FeedbackFields     | —       | Corrected version of the full response, when needed.         |
-| Sentence to evaluate     | `correctness.sentences[].sentence`          | Text         | NonEmpty, FeedbackFields     | —       | Sentence from the response being evaluated.                  |
-| Sentence Score           | `correctness.sentences[].score`             | Number       | ScoreRange, FeedbackFields   | —       | Correctness score for this sentence.                         |
-| Sentence Feedback        | `correctness.sentences[].feedback`          | Text         | NonEmpty, FeedbackFields     | —       | Explanation of this sentence's correctness result.           |
-| Sentence Fixes           | `correctness.sentences[].fixes`             | List of Text | NonEmptyList, FeedbackFields | -       | Suggested grammar or spelling corrections for this sentence. |
-| Corrected Sentence       | `correctness.sentences[].correctedSentence` | Text         | NonEmpty, FeedbackFields     | —       | Corrected version of this sentence, when needed.             |
+| Name                     | ID                                          | Type         | Constraints                   | Default | Description                                                                              |
+| ------------------------ | ------------------------------------------- | ------------ | ----------------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| Correctness Score        | `correctness.score`                         | Number       | ScoreRange, FeedbackFields    | —       | Correctness score for the full response.                                                 |
+| Correctness Feedback     | `correctness.feedback`                      | Text         | NonEmpty, FeedbackFields      | —       | Explanation of the full response's correctness result.                                   |
+| Grammar & Spelling Fixes | `correctness.fixes`                         | List of Text | NonEmptyItems, FeedbackFields | —       | Suggested grammar or spelling corrections; empty when none are needed.                   |
+| Corrected Sentence       | `correctness.correctedSentence`             | Text         | FeedbackFields                | —       | Corrected version of the full response; empty when no correction is needed.              |
+| Sentence to evaluate     | `correctness.sentences[].sentence`          | Text         | NonEmpty, FeedbackFields      | —       | Sentence from the response being evaluated.                                              |
+| Sentence Score           | `correctness.sentences[].score`             | Number       | ScoreRange, FeedbackFields    | —       | Correctness score for this sentence.                                                     |
+| Sentence Feedback        | `correctness.sentences[].feedback`          | Text         | NonEmpty, FeedbackFields      | —       | Explanation of this sentence's correctness result.                                       |
+| Sentence Fixes           | `correctness.sentences[].fixes`             | List of Text | NonEmptyItems, FeedbackFields | —       | Suggested grammar or spelling corrections for this sentence; empty when none are needed. |
+| Corrected Sentence       | `correctness.sentences[].correctedSentence` | Text         | FeedbackFields                | —       | Corrected version of this sentence; empty when no correction is needed.                  |
 
 ### Appropriateness Evaluation
 
@@ -149,7 +149,7 @@ Enumeration-typed fields accept only values listed under their enumeration.
 | Required              | When a record is created or updated     | Field must be present in the object; it cannot be `undefined` or `null`.                                  | Reject the record and identify the omitted field.                  |
 | Unique                | When assigning a record identifier      | An entity's identifier must identify only one record.                                                     | Reject the record.                                                 |
 | NonEmpty              | When value is supplied                  | Value must contain a non-whitespace character after trimming.                                             | Reject the value and identify the field.                           |
-| NonEmptyList          | When value is supplied                  | After trimming and removing blank entries, list contains at least one non-empty text item.                | Reject non-text items or a list that is empty after cleanup.       |
+| NonEmptyItems         | When a list value is supplied           | Every list item must not be empty after trimming;                                                         | Reject non-text items or blank items.                              |
 | UserOwnership         | On submission or progress lookup/update | A learner may submit responses and access progress only under their authenticated identity.               | Reject or hide access outside the learner's scope.                 |
 | ExerciseAvailable     | When a response is submitted            | The referenced exercise must exist and be active.                                                         | Reject the submission as unavailable.                              |
 | LearnerExerciseUnique | When progress is created or updated     | Keep at most one aggregate progress record per learner-exercise pair.                                     | Update the existing aggregate instead of creating a duplicate.     |
@@ -172,15 +172,17 @@ Enumeration-typed fields accept only values listed under their enumeration.
 
 Applicable fields per practice type (unknown fields are stripped duirng validation):
 
-| Practice type           | Required fields                                                                                  | Optional fields                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------- |
-| `communication`         | `correctness.{score,feedback}`; `appropriateness.{score,feedback,clarity.*,politeness.*,tone.*}` | `correctness.{fixes,correctedSentence}` |
-| `using-word`            | `correctness.{score,feedback}`; `appropriateness.{score,feedback}`                               | `correctness.{fixes,correctedSentence}` |
-| `sentence-construction` | `correctness.{score,feedback}`; `appropriateness.{score,feedback}`                               | `correctness.{fixes,correctedSentence}` |
-| `sentence-variation`    | `correctness.{score,feedback}`; `appropriateness.{score,feedback}`                               | `correctness.{fixes,correctedSentence}` |
-| `paragraph-variation`   | `correctness.{score,feedback}`; `appropriateness.{score,feedback}`                               | `correctness.{sentences}`               |
-| `just-one-word`         | None                                                                                             | None                                    |
-| `word-guessing`         | None                                                                                             | None                                    |
+| Practice type           | Required fields                                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `communication`         | `correctness.{score,feedback,fixes,correctedSentence}`; `appropriateness.{score,feedback,clarity.*,politeness.*,tone.*}` |
+| `using-word`            | `correctness.{score,feedback,fixes,correctedSentence}`; `appropriateness.{score,feedback}`                               |
+| `sentence-construction` | `correctness.{score,feedback,fixes,correctedSentence}`; `appropriateness.{score,feedback}`                               |
+| `sentence-variation`    | `correctness.{score,feedback,fixes,correctedSentence}`; `appropriateness.{score,feedback}`                               |
+| `paragraph-variation`   | `correctness.{score,feedback,sentences}`; `appropriateness.{score,feedback}`                                             |
+| `just-one-word`         | None                                                                                                                     |
+| `word-guessing`         | None                                                                                                                     |
+
+For correctness evaluations, `fixes` can be empty list and `correctedSentence` can be an empty string when no correction are needed.
 
 ## Revision History
 
@@ -188,3 +190,4 @@ Applicable fields per practice type (unknown fields are stripped duirng validati
 | ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------- |
 | 1.0     | 2026-10-07 | Fluento team | Initial practice data specification based on existing project requirements and data design. |
 | 1.1     | 2026-10-09 | Fluento team | Aligned shared constraint definitions and triggers with the core data specification.        |
+| 1.2     | 2026-10-10 | Fluento team | Allow empty correctness fixes and corrected sentences while requiring applicable fields.    |

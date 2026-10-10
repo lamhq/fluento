@@ -107,7 +107,7 @@ Each exercise type has its own specific feedback structure.
 
 - `score`: overall score.
 - `feedback`: overall feedback.
-- `correctness`: score, feedback, grammar or spelling fixes, and an optional corrected response.
+- `correctness`: score, feedback, grammar or spelling fixes, and corrected response.
 - `appropriateness`: score and feedback about relevance to the prompt and scenario.
   - `clarity`: whether the message is easy to understand.
   - `politeness`: whether the response is courteous and respectful.
@@ -166,7 +166,7 @@ Review the learner's response to the conversation prompt and give feedback on co
 
 - `score`: overall score.
 - `feedback`: overall feedback.
-- `correctness`: score, spelling and grammar feedback, fixes, and corrected sentence (if applicable).
+- `correctness`: score, spelling and grammar feedback, fixes, and corrected sentence.
 - `appropriateness`: score and feedback about how naturally and accurately the target word or phrase is used in the given context.
 
 **AI prompt**:

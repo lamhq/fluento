@@ -16,10 +16,10 @@ export class PracticeAttemptSentenceCorrectness {
   @Prop({ required: true })
   feedback: string;
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], required: true, default: [] })
   fixes: string[];
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   correctedSentence: string;
 }
 
@@ -31,8 +31,8 @@ export class PracticeAttemptCorrectness {
   @Prop({ required: true })
   feedback: string;
 
-  @Prop({ type: [String], default: [] })
-  fixes: string[];
+  @Prop({ type: [String], default: undefined })
+  fixes?: string[];
 
   @Prop()
   correctedSentence?: string;

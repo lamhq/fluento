@@ -108,18 +108,20 @@ const responseBaseSchema = z.object({
 const correctnessSchema = z.object({
   score: z.number().min(0).max(100),
   feedback: z.string().nonempty(),
-  fixes: z.array(z.string().nonempty()).optional(),
-  correctedSentence: z.string().nonempty().optional(),
+  fixes: z.array(z.string().nonempty()),
+  correctedSentence: z.string(),
 });
 
-const sentenceCorrectnessSchema = correctnessSchema.extend({
+const sentenceCorrectnessSchema = z.object({
+  score: z.number().min(0).max(100),
+  feedback: z.string().nonempty(),
   sentences: z.array(
     z.object({
       sentence: z.string(),
       score: z.number().min(0).max(100),
       feedback: z.string().nonempty(),
-      fixes: z.array(z.string().nonempty()).optional(),
-      correctedSentence: z.string().nonempty().optional(),
+      fixes: z.array(z.string().nonempty()),
+      correctedSentence: z.string(),
     }),
   ),
 });

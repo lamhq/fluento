@@ -26,8 +26,10 @@ const ParagraphVariationEvaluationSchema = z.object({
           score: z.number().describe('Per-sentence correctness score (0-100).'),
           feedback: z.string().describe('Per-sentence feedback (max 120 char).'),
           fixes: z
-            .array(z.string().describe("Example: change 'teh' to 'the'."))
-            .describe('List of grammar/spelling fixes for this sentence.'),
+            .array(z.string().nonempty().describe("Example: change 'teh' to 'the'."))
+            .describe(
+              'List of grammar/spelling fixes for this sentence (empty if none are needed).',
+            ),
           correctedSentence: z
             .string()
             .describe(
