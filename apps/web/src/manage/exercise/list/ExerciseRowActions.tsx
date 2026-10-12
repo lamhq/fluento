@@ -10,8 +10,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import type { Exercise } from '../../../api/types';
+import { useExerciseDialogs } from '../create/useExerciseDialogs';
 
 export default function ExerciseRowActions({ exercise }: { exercise: Exercise }) {
+  const { setOpen, setCurrentRow } = useExerciseDialogs();
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -26,7 +29,13 @@ export default function ExerciseRowActions({ exercise }: { exercise: Exercise })
         <MoreHorizontal size={16} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem aria-label="Update">
+        <DropdownMenuItem
+          aria-label="Update"
+          onClick={() => {
+            setCurrentRow(exercise);
+            setOpen('update');
+          }}
+        >
           <Pencil size={16} />
           Update
         </DropdownMenuItem>

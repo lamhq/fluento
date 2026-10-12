@@ -1,10 +1,10 @@
 import type { Exercise } from '../../../api/types';
 import { createAppColumnHelper } from '../../../common/data-table';
 import { formatDate } from '../../../common/utils';
-import ExerciseFormat from './cells/ExerciseFormat';
-import ExerciseSkill from './cells/ExerciseSkill';
-import ExerciseStatus from './cells/ExerciseStatus';
-import ExerciseTopics from './cells/ExerciseTopics';
+import ExerciseFormat from '../ExerciseFormat';
+import ExerciseSkill from '../ExerciseSkill';
+import ExerciseStatus from '../ExerciseStatus';
+import ExerciseTopics from '../ExerciseTopics';
 import ExerciseRowActions from './ExerciseRowActions';
 
 const columnHelper = createAppColumnHelper<Exercise>();

@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 
-import type { ExerciseSkill } from '../../../../api/types';
+import type { ExerciseSkill } from '../../api/types';
 
 export default function ExerciseSkill({ skill }: { skill: ExerciseSkill }) {
   return (

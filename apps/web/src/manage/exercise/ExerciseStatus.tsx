@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 
-import type { ExerciseStatus } from '../../../../api/types';
+import type { ExerciseStatus } from '../../api/types';
 
 export default function ExerciseStatus({ status }: { status: ExerciseStatus }) {
   return (

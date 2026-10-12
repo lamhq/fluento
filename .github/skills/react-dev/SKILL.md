@@ -1,6 +1,6 @@
 ---
 name: react-dev
-description: React coding skills. Use when you want to start the web app, run Storybook.
+description: Use when developing React UI in this project, including starting the web app, running Storybook, installing shadcn/ui components, building data lists, or implementing create, update, and delete interfaces.
 ---
 
 ## Start the web app
@@ -15,6 +15,10 @@ Follow the [Run Storybook section](../../../apps/web/README.md#run-storybook).
 
 Follow the [Install shadcn/ui components section](../../../apps/web/README.md#install-shadcnui-components).
 
-## Implement Data List
+## Build a Data List UI
 
-To implement a data list component (User List, Product List, etc.), follow the code snippets in [Data List](http://localhost:4173/web/react/tanstack-table/data-list.md).
+Use the code snippet in [Data List](http://localhost:4173/web/react/tanstack-table/data-list.md).
+
+## Render Create/Update/Delete UI
+
+Use the code snippets in [Action UIs](http://localhost:4173/web/react/shadcn-ui/action-ui.md)
