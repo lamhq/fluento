@@ -21,11 +21,14 @@ export interface ApiClient {
     response: string,
   ): Promise<PracticeAttempt>;
 
+  getTopics(signal?: AbortSignal): Promise<Topic[]>;
+
   getExercises(
     options?: ExerciseQuery,
     signal?: AbortSignal,
   ): Promise<OffsetPaginatedResponse<Exercise>>;
-  getTopics(signal?: AbortSignal): Promise<Topic[]>;
+
+  createExercise(input: CreateExerciseInput): Promise<Exercise>;
 }
 
 export type PracticeType = Infer<typeof practiceTypeSchema>;
@@ -48,6 +51,44 @@ export type ExerciseFormat = Infer<typeof exerciseFormatSchema>;
 export type ExerciseStatus = Infer<typeof exerciseStatusSchema>;
 
 export type Exercise = Infer<typeof exerciseSchema>;
+
+interface CreateExerciseCommonInput {
+  name: string;
+  topics: string[];
+  references?: string[];
+  status: ExerciseStatus;
+}
+
+export type CreateExerciseInput =
+  | (CreateExerciseCommonInput & {
+      skill: 'communication';
+      format: 'communication';
+      scenario: string;
+      prompts: string[];
+      validResponses: string[];
+    })
+  | (CreateExerciseCommonInput & {
+      skill: 'vocabulary';
+      format: 'word';
+      word: string;
+      meaning: string;
+      sentences: string[];
+      clues: string[];
+    })
+  | (CreateExerciseCommonInput & {
+      skill: 'articulation';
+      format: 'sentence';
+      scenario: string;
+      sentence: string;
+      words: string[];
+    })
+  | (CreateExerciseCommonInput & {
+      skill: 'articulation';
+      format: 'paragraph';
+      scenario: string;
+      paragraph: string;
+      words: string[];
+    });
 
 export interface Topic {
   id: string;
