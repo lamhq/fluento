@@ -6,7 +6,7 @@ import {
 } from '../../context/context.service.js';
 import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto.js';
 import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto.js';
-import { ExerciseEntity } from './exercise.entity.js';
+import { ExerciseEntity, ExerciseFormat, ExerciseSkill } from './exercise.entity.js';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseQuery,
@@ -23,8 +23,32 @@ export class ExerciseService {
   ) {}
 
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
+    const metadata = (() => {
+      switch (data.format) {
+        case ExerciseFormat.Communication:
+          return {
+            name: data.scenario,
+            skill: ExerciseSkill.Communication,
+          };
+        case ExerciseFormat.Word:
+          return {
+            name: data.word,
+            skill: ExerciseSkill.Vocabulary,
+          };
+        case ExerciseFormat.Sentence:
+        case ExerciseFormat.Paragraph:
+          return {
+            name: data.scenario,
+            skill: ExerciseSkill.Articulation,
+          };
+        default:
+          throw new Error('Unsupported exercise format');
+      }
+    })();
+
     return this.repository.create({
       ...data,
+      ...metadata,
       userId: this.contextService.getUserIdOrThrow(),
     });
   }

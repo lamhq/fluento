@@ -33,19 +33,20 @@ interface Exercise {
 }
 
 describe('find exercises', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
 
   async function seedExercises(...items: Exercise[]) {
+    const { id: userId } = getUser();
     await insertMany(
       'exercises',
       items.map((item) => ({
-        userId: item.userId ?? getUser().id,
+        userId: item.userId ?? userId,
         status: item.status ?? 'active',
         name: item.name ?? 'Coffee Shop Order',
         skill: item.skill ?? 'communication',
         format: item.format ?? 'communication',
         topics: item.topics ?? [],
-        scenario: cleanupMarker,
+        scenario: 'Order a coffee.',
         prompts: ['Order a coffee.'],
         validResponses: ['I would like a coffee.'],
         createdAt: item.createdAt ?? new Date('2026-08-10T09:30:00.000Z'),
@@ -334,11 +335,10 @@ describe('find exercises', () => {
         details,
       });
     });
-  });
 
-  afterEach(async () => {
-    await deleteMany('exercises', {
-      scenario: { $regex: cleanupMarker },
+    afterEach(async () => {
+      const { id: userId } = getUser();
+      await deleteMany('exercises', { userId });
     });
   });
 });

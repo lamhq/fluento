@@ -1,4 +1,4 @@
-import { Db, MongoClient, ObjectId } from 'mongodb';
+import { ClientSession, Db, MongoClient, ObjectId } from 'mongodb';
 
 type PlainObject = Record<string, unknown>;
 
@@ -12,9 +12,10 @@ const dbName = 'test';
 
 let client: MongoClient | undefined;
 let db: Db | undefined;
+let session: ClientSession | undefined;
 
 // CONNECT
-async function connect(): Promise<void> {
+export async function connect(): Promise<void> {
   if (!client) {
     if (!uri) throw new Error('DATABASE_URL environment variable is not set');
 
@@ -25,7 +26,7 @@ async function connect(): Promise<void> {
 }
 
 // DISCONNECT
-async function disconnect(): Promise<void> {
+export async function disconnect(): Promise<void> {
   if (client) {
     await client.close();
     client = undefined;
@@ -33,8 +34,23 @@ async function disconnect(): Promise<void> {
   }
 }
 
+export function startSession() {
+  if (!client) throw new Error('Not connected to database');
+  session = client.startSession();
+  session.startTransaction();
+}
+
+export async function endSession() {
+  if (!session) throw new Error('No active session');
+  try {
+    if (session.inTransaction()) await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
+}
+
 // INSERT
-async function insert(
+export async function insert(
   collectionName: string,
   data: PlainObject,
 ): Promise<MongoDocument> {
@@ -45,7 +61,7 @@ async function insert(
 }
 
 // INSERT MANY
-async function insertMany(
+export async function insertMany(
   collectionName: string,
   data: PlainObject[],
 ): Promise<string[]> {
@@ -56,7 +72,7 @@ async function insertMany(
 }
 
 // FIND ONE
-async function findById(
+export async function findById(
   collectionName: string,
   id: string,
 ): Promise<MongoDocument | null> {
@@ -66,7 +82,7 @@ async function findById(
 }
 
 // FIND ONE
-async function findOne(
+export async function findOne(
   collectionName: string,
   query: PlainObject = {},
 ): Promise<MongoDocument | null> {
@@ -76,7 +92,7 @@ async function findOne(
 }
 
 // FIND ONE OR FAIL
-async function findOneOrFail(
+export async function findOneOrFail(
   collectionName: string,
   query: PlainObject = {},
 ): Promise<MongoDocument> {
@@ -90,7 +106,7 @@ async function findOneOrFail(
 }
 
 // FIND MANY
-async function findAll(
+export async function findAll(
   collectionName: string,
   query: PlainObject = {},
 ): Promise<MongoDocument[]> {
@@ -100,7 +116,7 @@ async function findAll(
 }
 
 // UPDATE
-async function updateOne(
+export async function updateOne(
   collectionName: string,
   id: string,
   updates: PlainObject,
@@ -115,7 +131,10 @@ async function updateOne(
 }
 
 // DELETE ONE
-async function deleteOne(collectionName: string, id: string): Promise<boolean> {
+export async function deleteOne(
+  collectionName: string,
+  id: string,
+): Promise<boolean> {
   if (!db) throw new Error('Not connected to database');
   const collection = db.collection(collectionName);
 
@@ -124,27 +143,14 @@ async function deleteOne(collectionName: string, id: string): Promise<boolean> {
 }
 
 // DELETE MANY
-async function deleteMany(
+export async function deleteMany(
   collectionName: string,
   query: PlainObject,
+  session?: ClientSession,
 ): Promise<number> {
   if (!db) throw new Error('Not connected to database');
   const collection = db.collection(collectionName);
 
-  const result = await collection.deleteMany(query);
+  const result = await collection.deleteMany(query, { session });
   return result.deletedCount;
 }
-
-export {
-  connect,
-  deleteMany,
-  deleteOne,
-  disconnect,
-  findAll,
-  findById,
-  findOne,
-  findOneOrFail,
-  insert,
-  insertMany,
-  updateOne,
-};

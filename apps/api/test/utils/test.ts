@@ -9,21 +9,19 @@ import { SchemaValidationPipe } from '../../src/common/error/schema-validation.p
 import { connect, deleteMany, disconnect, insert } from './mongodb.js';
 
 export function setUpApiTest() {
-  // create a unique string for clean up db records after each test run
-  const cleanupMarker = `#ApiTest-${Date.now().toString(36)}`;
-
   // NestJS application instance for testing
   let app!: INestApplication<App>;
-  let user!: { email: string; id: ObjectId };
+  const user = {
+    id: new ObjectId(),
+    email: 'learner@example.com',
+  };
 
   beforeAll(async () => {
     // connect to database
     await connect();
 
     // create a test user in database
-    const email = `learner-${cleanupMarker}@example.com`;
-    const insertedUser = await insert('users', { email });
-    user = { email, id: insertedUser._id };
+    await insert('users', { _id: user.id, email: user.email });
 
     // create NestJS app
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -54,6 +52,5 @@ export function setUpApiTest() {
   return {
     getApp: () => app,
     getUser: () => user,
-    cleanupMarker,
   };
 }

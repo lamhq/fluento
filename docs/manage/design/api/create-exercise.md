@@ -20,37 +20,28 @@
 
 ### Request Body
 
-Common fields:
+**Common fields**:
 
-| Name         | Type     | Required | Description                                                                                                                  |
-| ------------ | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `name`       | string   | Yes      | Exercise name.                                                                                                               |
-| `skill`      | string   | Yes      | Skill to practice, enum values defined in [core data specification](../../../core/spec/data.md#skill).                       |
-| `format`     | string   | Yes      | Exercise format, value depends on `skill`, defined in [core data specification](../../../core/spec/data.md#exercise-format). |
-| `topics`     | string[] | Yes      | At least one topic name; each name must be a non-empty string.                                                               |
-| `references` | string[] | No       | Optional source references; when supplied, must contain at least one non-empty text item.                                    |
-| `status`     | string   | Yes      | `active` or `archived`. The client supplies `active` by default.                                                             |
+| Name         | Type     | Required | Description                                                                                                    |
+| ------------ | -------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `format`     | string   | Yes      | Exercise format, enum values defined in [core data specification](../../../core/spec/data.md#exercise-format). |
+| `topics`     | string[] | Yes      | At least one topic name; each name must be a non-empty string.                                                 |
+| `references` | string[] | No       | Optional source references; when supplied, must contain at least one non-empty text item.                      |
+| `status`     | string   | Yes      | `active` or `archived`. The client supplies `active` by default.                                               |
 
-The request's format-specific fields and requiredness follow the [core data specification](../../../core/spec/data.md#format-specific-fields). `topics` is required for every format; `references` is optional and is not persisted when omitted.
+**Other format-specific fields** and **Validation constraints** follow the [core data specification](../../../core/spec/data.md#format-specific-fields).
+
+**Normalizations**:
 
 - Trim scalar content and each array item.
+- Generate `name` according to the [Exercise Name Mapping](../../../core/spec/data.md#exercise-name-mapping).
+- Infer `skill` from `format` using the [Format-Skill Mapping](../../../core/spec/data.md#format-skill-mapping).
 - Remove blank or whitespace-only array entries before validating lists.
-- If supplied, `references` must contain at least one non-empty text item after cleanup.
-- Reject:
-  - Non-string values and malformed arrays.
-  - Missing required fields.
-  - Missing or empty `topics` after trimming and removing blank entries.
-  - Empty `references` after trimming and removing blank entries when supplied.
-  - Unsupported skill-format pairs.
-  - Content fields that do not apply to the selected format.
-  - Unknown body properties.
 
-Example (`communication`):
+### Example (`communication`)
 
 ```json
 {
-  "name": "Ordering food",
-  "skill": "communication",
   "format": "communication",
   "scenario": "Order a meal at a restaurant.",
   "prompts": ["Say that you would like to order a meal."],
@@ -68,7 +59,7 @@ Example (`communication`):
 ```json
 {
   "id": "ex_123",
-  "name": "Ordering food",
+  "name": "Order a meal at a restaurant.",
   "skill": "communication",
   "format": "communication",
   "topics": ["Restaurant"],
@@ -77,7 +68,7 @@ Example (`communication`):
 }
 ```
 
-- The server generates `id` and `createdAt`.
+- The server generates `id` and `createdAt`, and derives `name` and `skill` from the request's format-specific content and `format`.
 - This endpoint returns a summary; it does not return format-specific content or references.
 
 ### Errors
@@ -92,7 +83,7 @@ Example (`communication`):
   "code": "invalid_request_body",
   "message": "Request validation failed",
   "details": {
-    "format": "format must be compatible with skill",
+    "format": "Invalid exercise format",
     "prompts": "prompts must contain at least one non-empty value"
   }
 }
@@ -106,8 +97,8 @@ Returned when the request has no authenticated user context.
 
 ```json
 {
-  "code": "INTERNAL_SERVER_ERROR",
-  "message": "Unable to create exercise"
+  "code": "internal_error",
+  "message": "An unexpected error occurred. Please try again later."
 }
 ```
 
@@ -116,7 +107,8 @@ Returned when the request has no authenticated user context.
 ## Functional Requirements
 
 - Require authenticated user context identified by `x-user-email`. Associate the created exercise with that user.
-- Validate common fields, enums, and the allowed `skill`-`format` combination.
+- Validate common fields and the exercise format.
+- Generate `name` according to the [Exercise Name Mapping](../../../core/spec/data.md#exercise-name-mapping).
 - Validate only fields corresponding to `format`.
 - Reject missing, blank, incorrectly typed, or inapplicable content fields.
 - Normalize whitespace and remove blank array values before checking required fields.
@@ -133,8 +125,8 @@ Returned when the request has no authenticated user context.
 
 ## Related Documents
 
-- [Create Exercise Feature Specification](../../spec/add-exercise.md)
-- [Create Exercise dialog](../web/add-exercise.md)
+- [Create Exercise Feature Specification](../../spec/create-exercise.md)
+- [Create Exercise dialog](../web/create-exercise-dialog.md)
 - [Find Topics API](./find-topics.md)
 - [Core Exercise Data Specification](../../../core/spec/data.md)
 
@@ -143,3 +135,5 @@ Returned when the request has no authenticated user context.
 | Date       | Version | Changes                                                               |
 | ---------- | ------- | --------------------------------------------------------------------- |
 | 2026-10-06 | v1.0    | Initial create exercise API contract with format-specific validation. |
+| 2026-10-12 | v1.1    | Use format as the exercise type selector.                             |
+| 2026-10-12 | v1.2    | Generate exercise name from format-specific content.                  |

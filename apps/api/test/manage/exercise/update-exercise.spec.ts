@@ -11,23 +11,22 @@ import { setUpApiTest } from '../../utils/test.js';
 import { createExerciseResponseSchema } from './create-exercise.schema.js';
 
 describe('update exercise', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
   let exerciseId: string;
   let originalExercise: MongoDocument;
 
   beforeEach(async () => {
-    // Clean up any existing exercises before each test
-    await deleteMany('exercises', {});
     const { id: userId } = getUser();
+    await deleteMany('exercises', { userId });
 
     // Insert a new exercise for testing
     [exerciseId] = await insertMany('exercises', [
       {
         userId,
-        name: `${cleanupMarker} original exercise`,
+        name: `${userId.toHexString()} original exercise`,
         skill: 'communication',
         format: 'communication',
-        topics: ['Test topic', cleanupMarker],
+        topics: ['Test topic', 'Restaurant'],
         status: 'archived',
         scenario: 'Order a meal at a restaurant.',
         prompts: ['Ask to order a meal.'],
@@ -51,7 +50,7 @@ describe('update exercise', () => {
         skill: 'communication',
         format: 'communication',
         name: 'Communication exercise',
-        topics: ['Test topic', cleanupMarker],
+        topics: ['Test topic', 'Restaurant'],
         status: 'active',
         scenario: 'Order a meal at a restaurant.',
         prompts: ['Ask to order a meal.'],
@@ -61,7 +60,7 @@ describe('update exercise', () => {
         skill: 'vocabulary',
         format: 'word',
         name: 'Vocabulary exercise',
-        topics: ['Test topic', cleanupMarker],
+        topics: ['Test topic', 'Restaurant'],
         status: 'archived',
         word: 'serendipity',
         meaning: 'Finding something valuable by chance.',
@@ -72,7 +71,7 @@ describe('update exercise', () => {
         skill: 'articulation',
         format: 'sentence',
         name: 'Articulation sentence exercise',
-        topics: ['Test topic', cleanupMarker],
+        topics: ['Test topic', 'Restaurant'],
         status: 'active',
         scenario: 'Practice saying the sentence clearly.',
         sentence: 'The quick brown fox jumps over the lazy dog.',
@@ -82,7 +81,7 @@ describe('update exercise', () => {
         skill: 'articulation',
         format: 'paragraph',
         name: 'Articulation paragraph exercise',
-        topics: ['Test topic', cleanupMarker],
+        topics: ['Test topic', 'Restaurant'],
         status: 'active',
         scenario: 'Practice reading the paragraph aloud.',
         paragraph: 'A short paragraph for articulation practice.',
@@ -92,9 +91,10 @@ describe('update exercise', () => {
       'should update exercise with $format format (TC_API_UE_01)',
       async (requestData) => {
         const { id: userId, email } = getUser();
+        const { skill, ...inputData } = requestData;
         const body = {
-          ...requestData,
-          name: `${cleanupMarker} ${requestData.format}`,
+          ...inputData,
+          name: `${userId.toHexString()} ${requestData.format}`,
         };
 
         const response = await request(getApp().getHttpServer())
@@ -107,7 +107,7 @@ describe('update exercise', () => {
         expect(exercise).toEqual({
           id: exerciseId,
           name: body.name,
-          skill: requestData.skill,
+          skill,
           format: requestData.format,
           topics: requestData.topics,
           createdAt: expect.any(String),
@@ -130,11 +130,11 @@ describe('update exercise', () => {
 
   describe('unauthenticated', () => {
     it('should reject unauthenticated requests (TC_API_UE_02)', async () => {
+      const { id: userId } = getUser();
       await request(getApp().getHttpServer())
         .put(`/v1/manage/exercises/${exerciseId}`)
         .send({
-          name: `${cleanupMarker} unauthenticated`,
-          skill: 'communication',
+          name: `${userId.toHexString()} unauthenticated`,
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -150,10 +150,10 @@ describe('update exercise', () => {
 
   describe('normalize field values', () => {
     it('should trim and remove blank items (TC_API_UE_03)', async () => {
-      const name = `${cleanupMarker} normalized`;
+      const { id: userId } = getUser();
+      const name = `${userId.toHexString()} normalized`;
       const body = {
         name: `  ${name}  `,
-        skill: 'communication',
         format: 'communication',
         topics: ['  Cafe  ', ' ', 'Restaurant  '],
         status: 'active',
@@ -195,13 +195,12 @@ describe('update exercise', () => {
       {
         label: 'common',
         body: {},
-        missingFields: ['name', 'skill', 'format', 'topics', 'status'],
+        missingFields: ['name', 'format', 'topics', 'status'],
       },
       {
         label: 'communication',
         body: {
           name: 'Communication exercise',
-          skill: 'communication',
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -212,7 +211,6 @@ describe('update exercise', () => {
         label: 'word',
         body: {
           name: 'Vocabulary exercise',
-          skill: 'vocabulary',
           format: 'word',
           topics: ['Test topic'],
           status: 'active',
@@ -223,7 +221,6 @@ describe('update exercise', () => {
         label: 'sentence',
         body: {
           name: 'Articulation sentence exercise',
-          skill: 'articulation',
           format: 'sentence',
           topics: ['Test topic'],
           status: 'active',
@@ -234,7 +231,6 @@ describe('update exercise', () => {
         label: 'paragraph',
         body: {
           name: 'Articulation paragraph exercise',
-          skill: 'articulation',
           format: 'paragraph',
           topics: ['Test topic'],
           status: 'active',
@@ -284,7 +280,6 @@ describe('update exercise', () => {
         label: 'communication',
         body: {
           name: 'Communication exercise',
-          skill: 'communication',
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -298,7 +293,6 @@ describe('update exercise', () => {
         label: 'word',
         body: {
           name: 'Vocabulary exercise',
-          skill: 'vocabulary',
           format: 'word',
           topics: ['Test topic'],
           status: 'active',
@@ -313,7 +307,6 @@ describe('update exercise', () => {
         label: 'sentence',
         body: {
           name: 'Articulation sentence exercise',
-          skill: 'articulation',
           format: 'sentence',
           topics: ['Test topic'],
           status: 'active',
@@ -327,7 +320,6 @@ describe('update exercise', () => {
         label: 'paragraph',
         body: {
           name: 'Articulation paragraph exercise',
-          skill: 'articulation',
           format: 'paragraph',
           topics: ['Test topic'],
           status: 'active',
@@ -368,18 +360,16 @@ describe('update exercise', () => {
         label: 'common',
         body: {
           name: '  ',
-          skill: 'grammar',
           format: 'dialogue',
           topics: [' ', ''],
           status: 'draft',
         },
-        invalidFields: ['name', 'skill', 'format', 'topics', 'status'],
+        invalidFields: ['name', 'format', 'topics', 'status'],
       },
       {
         label: 'communication',
         body: {
           name: 'Communication exercise',
-          skill: 'communication',
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -393,7 +383,6 @@ describe('update exercise', () => {
         label: 'word',
         body: {
           name: 'Vocabulary exercise',
-          skill: 'vocabulary',
           format: 'word',
           topics: ['Test topic'],
           status: 'active',
@@ -408,7 +397,6 @@ describe('update exercise', () => {
         label: 'sentence',
         body: {
           name: 'Articulation sentence exercise',
-          skill: 'articulation',
           format: 'sentence',
           topics: ['Test topic'],
           status: 'active',
@@ -422,7 +410,6 @@ describe('update exercise', () => {
         label: 'paragraph',
         body: {
           name: 'Articulation paragraph exercise',
-          skill: 'articulation',
           format: 'paragraph',
           topics: ['Test topic'],
           status: 'active',
@@ -433,7 +420,7 @@ describe('update exercise', () => {
         invalidFields: ['paragraph', 'words', 'scenario'],
       },
       {
-        label: 'format-skill',
+        label: 'supplied-skill',
         body: {
           name: 'Vocabulary exercise',
           skill: 'communication',
@@ -445,13 +432,12 @@ describe('update exercise', () => {
           sentences: ['We met by serendipity.'],
           clues: ['An unexpected fortunate discovery.'],
         },
-        invalidFields: ['format'],
+        invalidFields: ['skill'],
       },
       {
         label: 'empty-references',
         body: {
           name: 'Communication exercise',
-          skill: 'communication',
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -466,7 +452,6 @@ describe('update exercise', () => {
         label: 'blank-references',
         body: {
           name: 'Communication exercise',
-          skill: 'communication',
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -504,8 +489,9 @@ describe('update exercise', () => {
 
   describe('unknown fields', () => {
     it('should reject inapplicable and unknown properties (TC_API_UE_07)', async () => {
+      const { id: userId } = getUser();
       const body = {
-        name: `${cleanupMarker} inapplicable and unknown properties`,
+        name: `${userId.toHexString()} inapplicable and unknown properties`,
         skill: 'communication',
         format: 'communication',
         topics: ['Test topic'],
@@ -530,6 +516,7 @@ describe('update exercise', () => {
           details: expect.objectContaining({
             word: expect.any(String),
             unexpected: expect.any(String),
+            skill: expect.any(String),
           }),
         }),
       );
@@ -539,11 +526,10 @@ describe('update exercise', () => {
 
   describe('optional fields', () => {
     it('should not persist omitted optional references (TC_API_UE_08)', async () => {
-      const { email } = getUser();
-      const name = `${cleanupMarker} communication-without-references`;
+      const { id: userId, email } = getUser();
+      const name = `${userId.toHexString()} communication-without-references`;
       const body = {
         name,
-        skill: 'communication',
         format: 'communication',
         topics: ['Test topic'],
         status: 'active',
@@ -567,9 +553,9 @@ describe('update exercise', () => {
 
   describe('server error', () => {
     it('should hide internal details on service failure (TC_API_UE_09)', async () => {
+      const { id: userId } = getUser();
       const body = {
-        name: `${cleanupMarker} persistence-failure`,
-        skill: 'communication',
+        name: `${userId.toHexString()} persistence-failure`,
         format: 'communication',
         topics: ['Test topic'],
         status: 'active',

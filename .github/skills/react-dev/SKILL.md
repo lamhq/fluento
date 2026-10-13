@@ -1,6 +1,6 @@
 ---
 name: react-dev
-description: Use when developing React UI in this project, including starting the web app, running Storybook, installing shadcn/ui components, building data lists, or implementing create, update, and delete interfaces.
+description: Use when developing React UI in this project, including starting the web app, running Storybook, installing shadcn/ui components, building data lists, or implementing create, update, and delete, form interfaces.
 ---
 
 ## Start the web app
@@ -17,8 +17,12 @@ Follow the [Install shadcn/ui components section](../../../apps/web/README.md#in
 
 ## Build a Data List UI
 
-Use the code snippet in [Data List](http://localhost:4173/web/react/tanstack-table/data-list.md).
+Copy the code snippet in [Data List](http://localhost:4173/web/react/tanstack-table/data-list.md).
 
 ## Render Create/Update/Delete UI
 
-Use the code snippets in [Action UIs](http://localhost:4173/web/react/shadcn-ui/action-ui.md)
+Copy the code snippets in [Action UIs](http://localhost:4173/web/react/shadcn-ui/action-ui.md)
+
+## Implement Form UI
+
+Copy the code snippets in [React Hook Form](http://localhost:4173/web/react/shadcn-ui/react-hook-form.md).

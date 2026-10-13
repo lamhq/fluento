@@ -2,20 +2,20 @@
 
 ## Introduction
 
-- **Description:** Create an exercise for a chosen skill and format.
+- **Description:** Create an exercise with all supported formats.
 - **User Goal:** Add practice content with the fields its format requires.
 - **Related Features:** View, update, and delete exercises.
 
 ## User Story
 
-- As a user, I want to choose a skill and format so I can enter the right practice content.
+- As a user, I want to choose a format so I can enter the right practice content.
 
 ## Scope
 
 ### Inclusions
 
-- Choose a skill and a supported format.
-- Enter a name and format-specific content.
+- Choose a supported format.
+- Enter format-specific content.
 - Add one or more topics and optionally add references.
 - Select a status.
 
@@ -35,25 +35,23 @@
 
 ```mermaid
 flowchart TD
-    A[Open Create Exercise] --> B[Enter name]
-    B --> C[Select skill]
-    C --> D[Select allowed format]
-    D --> E[Show matching fields]
-    E --> F[Enter required content]
-    F --> G[Select or add one or more topics and optionally enter references]
-    G --> H[Select status]
-    H --> I[Save]
-    I --> J{Save result}
-    J -->|Success| K[Confirm and return to exercise list]
-    J -->|Failure| L[Show error and retain values]
+    A[Open Create Exercise] --> B[Select format]
+    B --> C[Show matching fields]
+    C --> D[Enter required content]
+    D --> E[Select or add one or more topics and optionally enter references]
+    E --> F[Select status]
+    F --> G[Save]
+    G --> H{Save result}
+    H -->|Success| I[Confirm and return to exercise list]
+    H -->|Failure| J[Show error and retain values]
 ```
 
 ## Acceptance Criteria
 
-- Require a name, skill, and format supported by that skill.
-- Hide Format until a skill is selected.
-- When Skill changes, clear Format and format-specific values, then show valid formats.
-- Show only fields for the selected format.
+- Require a supported format.
+- Infer the exercise name according to the [Exercise Name Mapping](../../core/spec/data.md#exercise-name-mapping).
+- Infer skill from the selected format when saving.
+- Show format-specific fields based on the selected format.
 - Block saving if required values are missing or whitespace-only.
 - Let the user select `active` or `archived`; default to `active`.
 - Require at least one topic.
@@ -66,28 +64,24 @@ flowchart TD
 
 ### Common Fields
 
-| Field      | Requirement                                                   |
-| ---------- | ------------------------------------------------------------- |
-| Name       | Required; non-empty exercise name.                            |
-| Skill      | Required: `communication`, `vocabulary`, or `articulation`.   |
-| Format     | Required; limited to formats for the selected skill.          |
-| Topics     | Required; select existing values or add one or more new ones. |
-| References | Optional source links, one per line.                          |
-| Status     | Required: `active` or `archived`; default `active`.           |
+| Field      | Requirement                                                |
+| ---------- | ---------------------------------------------------------- |
+| Format     | Required; single select box containing supported format.   |
+| Topics     | Required; use a multi-select that allows adding new ones.  |
+| References | Source links; Optional; Textarea input, one link per line. |
+| Status     | Required: single select box containing supported statuses. |
 
 ### Format-Specific Fields
 
-- Enter string arrays in textareas, one value per line. Use a creatable multi-select for topics.
-- Show only fields available for the selected format; required and optional fields follow the [core data specification](../../core/spec/data.md#format-specific-fields).
-- References are optional; each required list needs at least one non-empty line.
-- On submit, remove empty or whitespace-only lines before validation; users need not remove them manually.
-- Validate required lists after cleanup; each must retain at least one value.
-- Include only fields for the selected format in the create request.
-- Keep format-specific values only while that format remains selected; clear them when Skill or Format changes.
+- Show only fields available for the selected format; constraints follow the [core data specification](../../core/spec/data.md#format-specific-fields).
+- Keep format-specific values only while that format remains selected; clear them when Format changes.
 
 ## Save and Error Handling
 
-- Send common fields, selected format, and only its content to Create Exercise API.
+- On submit, remove empty or whitespace-only lines before validation; users need not remove them manually.
+- Validate required lists after cleanup; each must retain at least one value.
+- The API generates `name` according to the [Exercise Name Mapping](../../core/spec/data.md#exercise-name-mapping).
+- The API infers and stores `skill` from `format` using the mapping in the core data specification.
 - Include one or more selected topics (including new values) and references; use an empty references list if omitted.
 - Prevent duplicate submissions while saving.
 - For validation errors, identify fields and retain entered values.

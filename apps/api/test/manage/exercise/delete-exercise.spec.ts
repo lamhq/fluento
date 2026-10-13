@@ -1,18 +1,17 @@
 import request from 'supertest';
 
-import { deleteMany, findById, insertMany } from '../../utils/mongodb.js';
+import { findById, insertMany } from '../../utils/mongodb.js';
 import { setUpApiTest } from '../../utils/test.js';
 
 describe('delete exercise', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
 
   it('should remove a record from database', async () => {
     const { email: userEmail, id: userId } = getUser();
-
     const [exerciseId] = await insertMany('exercises', [
       {
         userId,
-        topics: ['Restaurant', cleanupMarker],
+        topics: ['Restaurant', userId.toHexString()],
         scenario: 'ordering food in a restaurant',
         learnerRole: 'customer',
         counterpartRole: 'waiter',
@@ -32,15 +31,8 @@ describe('delete exercise', () => {
       .delete(`/v1/manage/exercises/${exerciseId}`)
       .set('x-user-email', userEmail)
       .expect(204);
-
     const deletedExercise = await findById('exercises', exerciseId);
 
     expect(deletedExercise).toBeNull();
-  });
-
-  afterEach(async () => {
-    await deleteMany('exercises', {
-      topics: { $elemMatch: { $regex: cleanupMarker } },
-    });
   });
 });

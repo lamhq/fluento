@@ -53,7 +53,6 @@ export type ExerciseStatus = Infer<typeof exerciseStatusSchema>;
 export type Exercise = Infer<typeof exerciseSchema>;
 
 interface CreateExerciseCommonInput {
-  name: string;
   topics: string[];
   references?: string[];
   status: ExerciseStatus;
@@ -61,14 +60,12 @@ interface CreateExerciseCommonInput {
 
 export type CreateExerciseInput =
   | (CreateExerciseCommonInput & {
-      skill: 'communication';
       format: 'communication';
       scenario: string;
       prompts: string[];
       validResponses: string[];
     })
   | (CreateExerciseCommonInput & {
-      skill: 'vocabulary';
       format: 'word';
       word: string;
       meaning: string;
@@ -76,14 +73,12 @@ export type CreateExerciseInput =
       clues: string[];
     })
   | (CreateExerciseCommonInput & {
-      skill: 'articulation';
       format: 'sentence';
       scenario: string;
       sentence: string;
       words: string[];
     })
   | (CreateExerciseCommonInput & {
-      skill: 'articulation';
       format: 'paragraph';
       scenario: string;
       paragraph: string;

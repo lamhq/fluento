@@ -4,7 +4,7 @@ import { deleteMany, insertMany } from '../../utils/mongodb.js';
 import { setUpApiTest } from '../../utils/test.js';
 
 describe('get exercise by id', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
 
   it('should return a record from database', async () => {
     const { email: userEmail, id: userId } = getUser();
@@ -15,7 +15,7 @@ describe('get exercise by id', () => {
         name: 'Asking for an explanation',
         skill: 'communication',
         format: 'communication',
-        topics: ['School', cleanupMarker],
+        topics: ['School'],
         scenario: 'asking for explanation',
         prompts: ['Ask the teacher guidance for solving a math problem.'],
         validResponses: [
@@ -36,15 +36,14 @@ describe('get exercise by id', () => {
       name: 'Asking for an explanation',
       skill: 'communication',
       format: 'communication',
-      topics: expect.arrayContaining(['School', cleanupMarker]),
+      topics: expect.arrayContaining(['School']),
       createdAt: expect.any(String),
       status: 'active',
     });
   });
 
   afterEach(async () => {
-    await deleteMany('exercises', {
-      topics: { $elemMatch: { $regex: cleanupMarker } },
-    });
+    const { id: userId } = getUser();
+    await deleteMany('exercises', { userId });
   });
 });
