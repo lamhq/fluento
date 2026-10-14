@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import type { PracticeAttempt, PracticeExercise } from '../../api/types';
+import type { PracticeAttempt } from '../../core/types/practice-attempt';
+import type { PracticeExercise } from '../../core/types/practice-exercise';
+import { PracticeType } from '../../core/types/practice-type';
 import { getFeedbackIcon, getFeedbackTitle } from '../utils';
 
 export interface ResponseFeedbackProps {
@@ -14,7 +16,7 @@ export default function ResponseFeedback({
 }: ResponseFeedbackProps) {
   return (
     <Card size="sm" className="text-sm">
-      <CardHeader className="border-b flex justify-between">
+      <CardHeader className="flex justify-between border-b">
         <CardTitle className="flex items-center gap-2">
           <span aria-hidden="true">{getFeedbackIcon(feedback.score)}</span>
           <h3>{getFeedbackTitle(feedback.score)}</h3>
@@ -25,10 +27,10 @@ export default function ResponseFeedback({
       <CardContent className="space-y-5">
         <p>{feedback.feedback}</p>
 
-        {feedback.practiceType !== 'just-one-word' &&
-          feedback.practiceType !== 'word-guessing' && (
+        {feedback.practiceType !== PracticeType.JUST_ONE_WORD &&
+          feedback.practiceType !== PracticeType.WORD_GUESSING && (
             <section className="space-y-3">
-              {feedback.practiceType !== 'paragraph-variation' && (
+              {feedback.practiceType !== PracticeType.PARAGRAPH_VARIATION && (
                 <>
                   {feedback.correctness.fixes.length > 0 && (
                     <div>
@@ -44,7 +46,7 @@ export default function ResponseFeedback({
                   {feedback.correctness.correctedSentence && (
                     <div>
                       <h5 className="mb-2">Corrected sentence:</h5>
-                      <blockquote className="border-l-2 border-primary/60 pl-3 italic text-foreground/80">
+                      <blockquote className="border-l-2 border-primary/60 pl-3 text-foreground/80 italic">
                         &quot;{feedback.correctness.correctedSentence}&quot;
                       </blockquote>
                     </div>
@@ -52,7 +54,7 @@ export default function ResponseFeedback({
                 </>
               )}
 
-              {feedback.practiceType === 'paragraph-variation' &&
+              {feedback.practiceType === PracticeType.PARAGRAPH_VARIATION &&
                 feedback.correctness.sentences.length > 0 && (
                   <div className="space-y-4">
                     {feedback.correctness.sentences.map((sentence, index) => (
@@ -61,7 +63,7 @@ export default function ResponseFeedback({
                         className="space-y-2"
                       >
                         {sentence.correctedSentence && (
-                          <blockquote className="border-l-2 border-primary/60 pl-3 italic text-foreground/80">
+                          <blockquote className="border-l-2 border-primary/60 pl-3 text-foreground/80 italic">
                             &quot;{sentence.correctedSentence}&quot;
                           </blockquote>
                         )}
@@ -89,7 +91,7 @@ export default function ResponseFeedback({
             <ul className="list-disc space-y-1 pl-5">
               {validResponses.map((validResponse, index) => (
                 <li key={`alternative-${index.toString()}`}>
-                  <span className="italic text-foreground/80">{validResponse}</span>
+                  <span className="text-foreground/80 italic">{validResponse}</span>
                 </li>
               ))}
             </ul>

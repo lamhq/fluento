@@ -16,8 +16,9 @@ import {
 import { Field, FieldError } from '@/components/ui/field';
 import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 
-import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
+import { ExerciseFormat } from '../../../core/types/exercise-format';
+import type { PracticeExercise } from '../../../core/types/practice-exercise';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from '../../utils';
@@ -34,7 +35,8 @@ interface ParagraphVariationProps {
 }
 
 export default function ParagraphVariation({ exercise }: ParagraphVariationProps) {
-  if (exercise.format !== 'paragraph') throw new Error('Invalid exercise format');
+  if (exercise.format !== ExerciseFormat.PARAGRAPH)
+    throw new Error('Invalid exercise format');
 
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();

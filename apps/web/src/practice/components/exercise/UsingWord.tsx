@@ -16,8 +16,9 @@ import {
 import { Field, FieldError } from '@/components/ui/field';
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 
-import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
+import { ExerciseFormat } from '../../../core/types/exercise-format';
+import type { PracticeExercise } from '../../../core/types/practice-exercise';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from '../../utils';
@@ -34,7 +35,8 @@ interface UsingWordProps {
 }
 
 export default function UsingWord({ exercise }: UsingWordProps) {
-  if (exercise.format !== 'word') throw new Error('Invalid exercise format');
+  if (exercise.format !== ExerciseFormat.WORD)
+    throw new Error('Invalid exercise format');
 
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
@@ -96,10 +98,10 @@ export default function UsingWord({ exercise }: UsingWordProps) {
             <p className="text-xs tracking-wide text-muted-foreground">
               Write a sentence using the word:
             </p>
-            <p className="text-lg text-foreground my-4 text-center">
+            <p className="my-4 text-center text-lg text-foreground">
               &quot;{exercise.word}&quot;
             </p>
-            <p className="text-muted-foreground text-xs italic">
+            <p className="text-xs text-muted-foreground italic">
               {exercise.meaning}
             </p>
             <Controller

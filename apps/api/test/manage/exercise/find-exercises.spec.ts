@@ -55,6 +55,11 @@ describe('find exercises', () => {
     );
   }
 
+  afterEach(async () => {
+    const { id: userId } = getUser();
+    await deleteMany('exercises', { userId });
+  });
+
   describe('filtering', () => {
     it('should return exercises of current user', async () => {
       const { email: userEmail } = getUser();
@@ -334,11 +339,6 @@ describe('find exercises', () => {
         message: 'Request validation failed',
         details,
       });
-    });
-
-    afterEach(async () => {
-      const { id: userId } = getUser();
-      await deleteMany('exercises', { userId });
     });
   });
 });

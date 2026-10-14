@@ -1,21 +1,18 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import {
-  exerciseSchema,
-  paginatedExerciseSchema,
-  paginatedPracticeExerciseSchema,
-  practiceAttemptSchema,
-  topicSchema,
-} from './schemas';
+import type { Exercise } from '../core/types/exercise';
+import { exerciseSchema, paginatedExerciseSchema } from '../core/types/exercise';
+import type { PracticeAttempt } from '../core/types/practice-attempt';
+import { practiceAttemptSchema } from '../core/types/practice-attempt';
+import type { PracticeExercise } from '../core/types/practice-exercise';
+import { paginatedExerciseSchema as paginatedPracticeExerciseSchema } from '../core/types/practice-exercise';
+import { topicSchema } from '../core/types/topic';
 import type { CursorPaginatedResponse } from './types';
 import type {
   ApiClient,
   CreateExerciseInput,
-  Exercise,
   ExerciseQuery,
   OffsetPaginatedResponse,
-  PracticeAttempt,
-  PracticeExercise,
 } from './types';
 import { selectPracticeType } from './utils';
 

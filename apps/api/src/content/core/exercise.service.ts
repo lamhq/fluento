@@ -13,6 +13,37 @@ import {
   type ExerciseRepository,
 } from './exercise.repository.js';
 
+function getExerciseMetadata(
+  data:
+    | { format: ExerciseFormat.Communication; scenario: string }
+    | { format: ExerciseFormat.Word; word: string }
+    | {
+        format: ExerciseFormat.Sentence | ExerciseFormat.Paragraph;
+        scenario: string;
+      },
+): Pick<ExerciseEntity, 'name' | 'skill'> {
+  switch (data.format) {
+    case ExerciseFormat.Communication:
+      return {
+        name: data.scenario,
+        skill: ExerciseSkill.Communication,
+      };
+    case ExerciseFormat.Word:
+      return {
+        name: data.word,
+        skill: ExerciseSkill.Vocabulary,
+      };
+    case ExerciseFormat.Sentence:
+    case ExerciseFormat.Paragraph:
+      return {
+        name: data.scenario,
+        skill: ExerciseSkill.Articulation,
+      };
+    default:
+      throw new Error('Unsupported exercise format');
+  }
+}
+
 @Injectable()
 export class ExerciseService {
   constructor(
@@ -23,32 +54,9 @@ export class ExerciseService {
   ) {}
 
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
-    const metadata = (() => {
-      switch (data.format) {
-        case ExerciseFormat.Communication:
-          return {
-            name: data.scenario,
-            skill: ExerciseSkill.Communication,
-          };
-        case ExerciseFormat.Word:
-          return {
-            name: data.word,
-            skill: ExerciseSkill.Vocabulary,
-          };
-        case ExerciseFormat.Sentence:
-        case ExerciseFormat.Paragraph:
-          return {
-            name: data.scenario,
-            skill: ExerciseSkill.Articulation,
-          };
-        default:
-          throw new Error('Unsupported exercise format');
-      }
-    })();
-
     return this.repository.create({
       ...data,
-      ...metadata,
+      ...getExerciseMetadata(data),
       userId: this.contextService.getUserIdOrThrow(),
     });
   }
@@ -102,7 +110,10 @@ export class ExerciseService {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.update(id, data);
+    return this.repository.update(id, {
+      ...data,
+      ...getExerciseMetadata(data),
+    });
   }
 
   async delete(id: string): Promise<void> {

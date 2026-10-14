@@ -1,6 +1,6 @@
 import { createContext, type Dispatch, type SetStateAction } from 'react';
 
-import type { Exercise } from '../../../api/types';
+import type { Exercise } from '../../../core/types/exercise';
 
 export type ExerciseDialogType = 'create' | 'update' | 'import';
 

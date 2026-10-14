@@ -1,7 +1,7 @@
 import { type ReactNode, useState } from 'react';
 
-import type { Exercise } from '../../api/types';
 import { useDialogState } from '../../common/hooks';
+import type { Exercise } from '../../core/types/exercise';
 import { ExerciseContext, type ExerciseDialogType } from './create/context';
 
 export function ExerciseProvider({ children }: { children: ReactNode }) {

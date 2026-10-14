@@ -1,6 +1,6 @@
 import { useApiClient } from '../../../api';
-import type { Exercise } from '../../../api/types';
 import { type QueryFn, useServerTable } from '../../../common/data-table';
+import type { Exercise } from '../../../core/types/exercise';
 import { exerciseColumns } from './columns';
 import { buildExerciseQuery } from './utils';
 

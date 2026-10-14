@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import type { Exercise } from '../../../api/types';
+import type { Exercise } from '../../../core/types/exercise';
 import { useExerciseDialogs } from '../create/useExerciseDialogs';
 
 export default function ExerciseRowActions({ exercise }: { exercise: Exercise }) {
