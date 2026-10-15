@@ -33,7 +33,11 @@ interface JustOneWordProps {
 }
 
 export default function JustOneWord({ exercise }: JustOneWordProps) {
-  if (exercise.format !== ExerciseFormat.WORD)
+  if (
+    exercise.format !== ExerciseFormat.Word ||
+    !Array.isArray(exercise.clues) ||
+    exercise.clues.length === 0
+  )
     throw new Error('Invalid exercise format');
 
   const submitResponse = useSubmitResponse();

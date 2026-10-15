@@ -35,7 +35,7 @@ interface ParagraphVariationProps {
 }
 
 export default function ParagraphVariation({ exercise }: ParagraphVariationProps) {
-  if (exercise.format !== ExerciseFormat.PARAGRAPH)
+  if (exercise.format !== ExerciseFormat.Paragraph)
     throw new Error('Invalid exercise format');
 
   const submitResponse = useSubmitResponse();

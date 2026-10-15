@@ -150,14 +150,17 @@ Common fields (`name`, `format`, `skill`, `topics`, `references`, and `status`) 
 | Format          | Required fields                         | Optional format-specific fields |
 | --------------- | --------------------------------------- | ------------------------------- |
 | `communication` | `scenario`, `prompts`, `validResponses` | —                               |
-| `word`          | `word`, `meaning`, `sentences`, `clues` | —                               |
-| `sentence`      | `sentence`, `scenario`, `words`         | —                               |
-| `paragraph`     | `paragraph`, `scenario`, `words`        | —                               |
+| `word`          | `word`, `meaning`                       | `sentences`, `clues`            |
+| `sentence`      | `sentence`, `scenario`                  | `words`                         |
+| `paragraph`     | `paragraph`, `scenario`                 | `words`                         |
+
+Optional array fields, when supplied, must contain at least one non-empty value.
 
 ## Revision History
 
 | Version | Date       | Author       | Changes                                                                                             |
 | ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------- |
+| 1.5     | 2026-10-15 | Fluento team | Made word-format sentences and clues, and sentence/paragraph-format words optional.                 |
 | 1.4     | 2026-10-12 | Fluento team | Defined exercise name derivation by format.                                                         |
 | 1.3     | 2026-10-12 | Fluento team | Made exercise skill depend on format; defined the Format-Skill Mapping.                             |
 | 1.2     | 2026-10-07 | Fluento team | Clarified Core ownership of exercise content and related data; Manage provides management features. |

@@ -3,56 +3,61 @@ import { z } from 'zod';
 import { ExerciseFormat } from '../../../core/types/exercise-format';
 import { exerciseStatusSchema } from '../../../core/types/exercise-status';
 
-const nonEmptyStr = z.string().trim().nonempty();
-const nonEmptyLines = z
-  .string()
-  .trim()
-  .transform(
-    (val) =>
-      val
-        .split(/\r?\n/) // 1. Split into individual lines (handles \n and \r\n)
-        .map((line) => line.trim()) // 2. Trim whitespace/tabs from each line
-        .filter((line) => line.length > 0) // 3. Remove empty lines
-        .join('\n'), // 4. Recombine lines back into a single string
+const nonEmptyText = z.string().trim().nonempty();
+const nonEmptyList = z
+  .array(z.string())
+  .transform((items) =>
+    items.flatMap((item) => {
+      const trimmed = item.trim();
+      return trimmed.length > 0 ? [trimmed] : [];
+    }),
   )
-  .pipe(z.string().nonempty());
+  .pipe(z.array(z.string()).nonempty());
 
 const commonFields = {
-  topics: z.array(nonEmptyStr),
-  references: nonEmptyLines.optional().or(z.literal('')),
+  topics: nonEmptyList,
+  references: nonEmptyList.optional(),
   status: exerciseStatusSchema,
 };
 
+const communicationFields = z.strictObject({
+  ...commonFields,
+  format: z.literal(ExerciseFormat.Communication),
+  scenario: nonEmptyText,
+  prompts: nonEmptyList,
+  validResponses: nonEmptyList,
+});
+
+const wordFields = z.strictObject({
+  ...commonFields,
+  format: z.literal(ExerciseFormat.Word),
+  word: nonEmptyText,
+  meaning: nonEmptyText,
+  sentences: nonEmptyList.optional(),
+  clues: nonEmptyList.optional(),
+});
+
+const sentenceFields = z.strictObject({
+  ...commonFields,
+  format: z.literal(ExerciseFormat.Sentence),
+  sentence: nonEmptyText,
+  scenario: nonEmptyText,
+  words: nonEmptyList.optional(),
+});
+
+const paragraphFields = z.strictObject({
+  ...commonFields,
+  format: z.literal(ExerciseFormat.Paragraph),
+  paragraph: nonEmptyText,
+  scenario: nonEmptyText,
+  words: nonEmptyList.optional(),
+});
+
 export const exerciseFormSchema = z.discriminatedUnion('format', [
-  z.strictObject({
-    ...commonFields,
-    format: z.literal(ExerciseFormat.COMMUNICATION),
-    scenario: nonEmptyStr,
-    prompts: nonEmptyLines,
-    validResponses: nonEmptyLines,
-  }),
-  z.strictObject({
-    ...commonFields,
-    format: z.literal(ExerciseFormat.WORD),
-    word: nonEmptyStr,
-    meaning: nonEmptyStr,
-    sentences: nonEmptyLines,
-    clues: nonEmptyLines,
-  }),
-  z.strictObject({
-    ...commonFields,
-    format: z.literal(ExerciseFormat.SENTENCE),
-    sentence: nonEmptyStr,
-    words: nonEmptyLines,
-    scenario: nonEmptyStr,
-  }),
-  z.strictObject({
-    ...commonFields,
-    format: z.literal(ExerciseFormat.PARAGRAPH),
-    paragraph: nonEmptyStr,
-    words: nonEmptyLines,
-    scenario: nonEmptyStr,
-  }),
+  communicationFields,
+  wordFields,
+  sentenceFields,
+  paragraphFields,
 ]);
 
 export type ExerciseFormData = z.infer<typeof exerciseFormSchema>;

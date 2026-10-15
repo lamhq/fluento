@@ -144,9 +144,9 @@ Verify requests with missing required fields are rejected.
 
 - One request omits `format`, `status` fields
 - One request with `format: "communication"`; omits `scenario`, `prompts`, and `validResponses` fields.
-- One request with `format: "word"`; omits `word`, `meaning`, `sentences`, and `clues` fields.
-- One request with `format: "sentence"`; omits `sentence`, `scenario`, and `words` fields.
-- One request with `format: "paragraph"`; omits `paragraph`, `scenario`, and `words` fields.
+- One request with `format: "word"`; omits `word` and `meaning` fields.
+- One request with `format: "sentence"`; omits `sentence` and `scenario` fields.
+- One request with `format: "paragraph"`; omits `paragraph` and `scenario` fields.
 
 ### Test Steps
 
@@ -214,9 +214,9 @@ Verify requests with correctly typed but invalid field values are rejected.
 
 - One request with `format`, `topics`, `references`, `status` fields having invalid values.
 - One request with `format: "communication"`; `scenario`, `prompts`, and `validResponses` fields having invalid values.
-- One request with `format: "word"`; `word`, `meaning`, `sentences`, and `clues` fields having invalid values.
-- One request with `format: "sentence"`; `sentence`, `scenario`, and `words` fields having invalid values.
-- One request with `format: "paragraph"`; `paragraph`, `scenario`, and `words` fields having invalid values.
+- One request with `format: "word"`; `word` and `meaning` fields having invalid values.
+- One request with `format: "sentence"`; `sentence` and `scenario` fields having invalid values.
+- One request with `format: "paragraph"`; `paragraph` and `scenario` fields having invalid values.
 
 **Invalid values** include wrong enum values, empty strings, and arrays containing only blank or whitespace-only entries.
 

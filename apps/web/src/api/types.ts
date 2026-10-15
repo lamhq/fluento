@@ -47,29 +47,29 @@ interface CreateExerciseCommonInput {
 
 export type CreateExerciseInput =
   | (CreateExerciseCommonInput & {
-      format: ExerciseFormat.COMMUNICATION;
+      format: ExerciseFormat.Communication;
       scenario: string;
       prompts: string[];
       validResponses: string[];
     })
   | (CreateExerciseCommonInput & {
-      format: ExerciseFormat.WORD;
+      format: ExerciseFormat.Word;
       word: string;
       meaning: string;
-      sentences: string[];
-      clues: string[];
+      sentences?: string[];
+      clues?: string[];
     })
   | (CreateExerciseCommonInput & {
-      format: ExerciseFormat.SENTENCE;
+      format: ExerciseFormat.Sentence;
       scenario: string;
       sentence: string;
-      words: string[];
+      words?: string[];
     })
   | (CreateExerciseCommonInput & {
-      format: ExerciseFormat.PARAGRAPH;
+      format: ExerciseFormat.Paragraph;
       scenario: string;
       paragraph: string;
-      words: string[];
+      words?: string[];
     });
 
 export interface OffsetPaginatedResponse<T> {

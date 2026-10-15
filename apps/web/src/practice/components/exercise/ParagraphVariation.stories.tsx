@@ -18,7 +18,7 @@ export const Default: Story = {
   args: {
     exercise: {
       id: '65f00000000000000000000e',
-      format: ExerciseFormat.PARAGRAPH,
+      format: ExerciseFormat.Paragraph,
       name: 'Mid-Autumn Festival Introduction',
       skill: ExerciseSkill.ARTICULATION,
       topics: ['Mid-Autumn Festival'],

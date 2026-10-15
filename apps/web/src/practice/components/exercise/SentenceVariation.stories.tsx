@@ -18,7 +18,7 @@ export const Default: Story = {
   args: {
     exercise: {
       id: '65f00000000000000000000c',
-      format: ExerciseFormat.SENTENCE,
+      format: ExerciseFormat.Sentence,
       name: 'Describe work experiences',
       skill: ExerciseSkill.ARTICULATION,
       topics: ['Job Interview', 'Software Engineering'],

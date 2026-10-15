@@ -61,10 +61,10 @@ function isExerciseSkill(value: unknown): value is ExerciseSkill {
 
 function isExerciseFormat(value: unknown): value is ExerciseFormat {
   return (
-    value === ExerciseFormat.COMMUNICATION ||
-    value === ExerciseFormat.WORD ||
-    value === ExerciseFormat.SENTENCE ||
-    value === ExerciseFormat.PARAGRAPH
+    value === ExerciseFormat.Communication ||
+    value === ExerciseFormat.Word ||
+    value === ExerciseFormat.Sentence ||
+    value === ExerciseFormat.Paragraph
   );
 }
 

@@ -83,6 +83,8 @@ To start Storybook for the web application, run the following command:
 pnpx -F web storybook
 ```
 
+Storybook uses MSW to mock network requests in individual stories.
+
 ## Init shadcn/ui
 
 To re-initialize shadcn/ui setup:

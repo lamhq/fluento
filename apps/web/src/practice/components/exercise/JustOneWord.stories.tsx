@@ -18,7 +18,7 @@ export const Default: Story = {
   args: {
     exercise: {
       id: '65f000000000000000000007',
-      format: ExerciseFormat.WORD,
+      format: ExerciseFormat.Word,
       name: 'baggage claim',
       skill: ExerciseSkill.VOCABULARY,
       topics: ['Airport', 'Travel'],

@@ -5,16 +5,20 @@ import {
   ExerciseStatus,
 } from '../../../content/core/exercise.entity.js';
 
-const trimmedText = z.string().trim();
-const nonEmptyText = trimmedText.min(1);
-const nonEmptyTextList = z
-  .array(trimmedText)
-  .transform((items) => items.filter((item) => item.length > 0))
-  .pipe(z.array(trimmedText).min(1, 'must contain at least one non-empty value'));
+const nonEmptyText = z.string().trim().nonempty();
+const nonEmptyList = z
+  .array(z.string())
+  .transform((items) =>
+    items.flatMap((item) => {
+      const trimmed = item.trim();
+      return trimmed.length > 0 ? [trimmed] : [];
+    }),
+  )
+  .pipe(z.array(z.string()).nonempty());
 
 const commonFields = {
-  topics: nonEmptyTextList,
-  references: nonEmptyTextList.optional(),
+  topics: nonEmptyList,
+  references: nonEmptyList.optional(),
   status: z.enum(ExerciseStatus),
 };
 
@@ -22,8 +26,8 @@ const communicationFields = z.strictObject({
   ...commonFields,
   format: z.literal(ExerciseFormat.Communication),
   scenario: nonEmptyText,
-  prompts: nonEmptyTextList,
-  validResponses: nonEmptyTextList,
+  prompts: nonEmptyList,
+  validResponses: nonEmptyList,
 });
 
 const wordFields = z.strictObject({
@@ -31,24 +35,24 @@ const wordFields = z.strictObject({
   format: z.literal(ExerciseFormat.Word),
   word: nonEmptyText,
   meaning: nonEmptyText,
-  sentences: nonEmptyTextList,
-  clues: nonEmptyTextList,
+  sentences: nonEmptyList.optional(),
+  clues: nonEmptyList.optional(),
 });
 
 const sentenceFields = z.strictObject({
   ...commonFields,
   format: z.literal(ExerciseFormat.Sentence),
   sentence: nonEmptyText,
-  words: nonEmptyTextList,
   scenario: nonEmptyText,
+  words: nonEmptyList.optional(),
 });
 
 const paragraphFields = z.strictObject({
   ...commonFields,
   format: z.literal(ExerciseFormat.Paragraph),
   paragraph: nonEmptyText,
-  words: nonEmptyTextList,
   scenario: nonEmptyText,
+  words: nonEmptyList.optional(),
 });
 
 export const createExerciseSchema = z.discriminatedUnion('format', [

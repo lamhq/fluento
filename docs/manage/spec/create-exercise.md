@@ -74,6 +74,7 @@ flowchart TD
 ### Format-Specific Fields
 
 - Show only fields available for the selected format; constraints follow the [core data specification](../../core/spec/data.md#format-specific-fields).
+- Mark required fields according to the core data specification.
 - Keep format-specific values only while that format remains selected; clear them when Format changes.
 
 ## Save and Error Handling

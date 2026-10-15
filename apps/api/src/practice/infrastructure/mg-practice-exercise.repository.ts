@@ -30,9 +30,9 @@ interface RawPracticeExercise {
   validResponses: string[];
   word?: string;
   meaning?: string;
-  clues: string[];
-  sentences: string[];
-  words: string[];
+  clues?: string[];
+  sentences?: string[];
+  words?: string[];
   sentence?: string;
   practiceCount: number;
   practicedAt: Date | null;

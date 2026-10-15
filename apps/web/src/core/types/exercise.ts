@@ -17,26 +17,26 @@ const exerciseBaseSchema = z.object({
 
 export const exerciseSchema = z.discriminatedUnion('format', [
   exerciseBaseSchema.extend({
-    format: z.literal(ExerciseFormat.COMMUNICATION),
+    format: z.literal(ExerciseFormat.Communication),
     scenario: z.string().optional(),
     prompts: z.array(z.string()),
     validResponses: z.array(z.string()),
   }),
   exerciseBaseSchema.extend({
-    format: z.literal(ExerciseFormat.WORD),
+    format: z.literal(ExerciseFormat.Word),
     word: z.string(),
     meaning: z.string(),
     sentences: z.array(z.string()).optional(),
     clues: z.array(z.string()).optional(),
   }),
   exerciseBaseSchema.extend({
-    format: z.literal(ExerciseFormat.SENTENCE),
+    format: z.literal(ExerciseFormat.Sentence),
     sentence: z.string().optional(),
     scenario: z.string(),
     words: z.array(z.string()).optional(),
   }),
   exerciseBaseSchema.extend({
-    format: z.literal(ExerciseFormat.PARAGRAPH),
+    format: z.literal(ExerciseFormat.Paragraph),
     paragraph: z.string().optional(),
     scenario: z.string(),
     words: z.array(z.string()).optional(),

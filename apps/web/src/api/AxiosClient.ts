@@ -41,7 +41,7 @@ export default class AxiosClient implements ApiClient {
     const items = data.items.map((exercise) => ({
       ...exercise,
       // randomly select practice type for each exercise
-      type: selectPracticeType(exercise.format),
+      type: selectPracticeType(exercise),
     }));
     return { ...data, items };
   }

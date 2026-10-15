@@ -322,8 +322,6 @@ describe('create exercise', () => {
           details: expect.objectContaining({
             word: expect.any(String),
             meaning: expect.any(String),
-            sentences: expect.any(String),
-            clues: expect.any(String),
           }),
         },
       },
@@ -337,7 +335,6 @@ describe('create exercise', () => {
           details: expect.objectContaining({
             scenario: expect.any(String),
             sentence: expect.any(String),
-            words: expect.any(String),
           }),
         },
       },
@@ -351,7 +348,6 @@ describe('create exercise', () => {
           details: expect.objectContaining({
             scenario: expect.any(String),
             paragraph: expect.any(String),
-            words: expect.any(String),
           }),
         },
       },
@@ -524,12 +520,14 @@ describe('create exercise', () => {
           scenario: '  ',
           prompts: [' ', ''],
           validResponses: [],
+          references: [],
         },
         response: {
           details: expect.objectContaining({
             scenario: expect.any(String),
             prompts: expect.any(String),
             validResponses: expect.any(String),
+            references: expect.any(String),
           }),
         },
       },
@@ -542,15 +540,11 @@ describe('create exercise', () => {
           status: 'active',
           word: '  ',
           meaning: '  ',
-          sentences: ['  '],
-          clues: [],
         },
         response: {
           details: expect.objectContaining({
             word: expect.any(String),
             meaning: expect.any(String),
-            sentences: expect.any(String),
-            clues: expect.any(String),
           }),
         },
       },
@@ -562,13 +556,11 @@ describe('create exercise', () => {
           topics: ['Test topic'],
           status: 'active',
           sentence: '  ',
-          words: [''],
           scenario: '  ',
         },
         response: {
           details: expect.objectContaining({
             sentence: expect.any(String),
-            words: expect.any(String),
             scenario: expect.any(String),
           }),
         },
@@ -581,13 +573,11 @@ describe('create exercise', () => {
           topics: ['Test topic'],
           status: 'active',
           paragraph: '  ',
-          words: [''],
           scenario: '  ',
         },
         response: {
           details: expect.objectContaining({
             paragraph: expect.any(String),
-            words: expect.any(String),
             scenario: expect.any(String),
           }),
         },

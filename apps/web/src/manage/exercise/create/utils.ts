@@ -11,7 +11,7 @@ export function toFormData(exercise?: Exercise): DefaultValues<ExerciseFormData>
     id: '',
     name: '',
     createdAt: new Date().toISOString(),
-    format: ExerciseFormat.COMMUNICATION,
+    format: ExerciseFormat.Communication,
     skill: ExerciseSkill.COMMUNICATION,
     topics: [],
     status: ExerciseStatus.ACTIVE,
@@ -23,42 +23,42 @@ export function toFormData(exercise?: Exercise): DefaultValues<ExerciseFormData>
   const common = {
     topics: entity.topics,
     status: entity.status,
-    references: entity.references?.join('\n') ?? '',
+    references: entity.references ?? [],
   };
 
   switch (entity.format) {
-    case ExerciseFormat.COMMUNICATION:
+    case ExerciseFormat.Communication:
       return {
         ...common,
-        format: ExerciseFormat.COMMUNICATION,
+        format: ExerciseFormat.Communication,
         scenario: entity.scenario,
-        prompts: entity.prompts.join('\n'),
-        validResponses: entity.validResponses.join('\n'),
+        prompts: entity.prompts,
+        validResponses: entity.validResponses,
       };
-    case ExerciseFormat.WORD:
+    case ExerciseFormat.Word:
       return {
         ...common,
-        format: ExerciseFormat.WORD,
+        format: ExerciseFormat.Word,
         word: entity.word,
         meaning: entity.meaning,
-        sentences: entity.sentences?.join('\n') ?? '',
-        clues: entity.clues?.join('\n') ?? '',
+        sentences: entity.sentences,
+        clues: entity.clues,
       };
-    case ExerciseFormat.SENTENCE:
+    case ExerciseFormat.Sentence:
       return {
         ...common,
-        format: ExerciseFormat.SENTENCE,
+        format: ExerciseFormat.Sentence,
         sentence: entity.sentence,
         scenario: entity.scenario,
-        words: entity.words?.join('\n') ?? '',
+        words: entity.words,
       };
-    case ExerciseFormat.PARAGRAPH:
+    case ExerciseFormat.Paragraph:
       return {
         ...common,
-        format: ExerciseFormat.PARAGRAPH,
+        format: ExerciseFormat.Paragraph,
         paragraph: entity.paragraph,
         scenario: entity.scenario,
-        words: entity.words?.join('\n') ?? '',
+        words: entity.words,
       };
     default:
       throw new Error('Unsupported exercise format');

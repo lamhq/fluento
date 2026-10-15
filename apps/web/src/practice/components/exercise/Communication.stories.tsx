@@ -18,7 +18,7 @@ export const Default: Story = {
   args: {
     exercise: {
       id: '65f000000000000000000001',
-      format: ExerciseFormat.COMMUNICATION,
+      format: ExerciseFormat.Communication,
       name: 'Answer small talk questions',
       skill: ExerciseSkill.COMMUNICATION,
       topics: ['Everyday Conversation'],

@@ -1,17 +1,17 @@
 import { z } from 'zod';
 
 export enum ExerciseFormat {
-  COMMUNICATION = 'communication',
-  WORD = 'word',
-  SENTENCE = 'sentence',
-  PARAGRAPH = 'paragraph',
+  Communication = 'communication',
+  Word = 'word',
+  Sentence = 'sentence',
+  Paragraph = 'paragraph',
 }
 
 export const exerciseFormatSchema = z.enum(ExerciseFormat);
 
 export const exerciseFormats: { label: string; value: ExerciseFormat }[] = [
-  { label: 'Communication', value: ExerciseFormat.COMMUNICATION },
-  { label: 'Word', value: ExerciseFormat.WORD },
-  { label: 'Sentence', value: ExerciseFormat.SENTENCE },
-  { label: 'Paragraph', value: ExerciseFormat.PARAGRAPH },
+  { label: 'Communication', value: ExerciseFormat.Communication },
+  { label: 'Word', value: ExerciseFormat.Word },
+  { label: 'Sentence', value: ExerciseFormat.Sentence },
+  { label: 'Paragraph', value: ExerciseFormat.Paragraph },
 ];

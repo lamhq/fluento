@@ -37,7 +37,11 @@ interface SentenceConstructionProps {
 export default function SentenceConstruction({
   exercise,
 }: SentenceConstructionProps) {
-  if (exercise.format !== ExerciseFormat.SENTENCE)
+  if (
+    exercise.format !== ExerciseFormat.Sentence ||
+    !Array.isArray(exercise.words) ||
+    exercise.words.length === 0
+  )
     throw new Error('Invalid exercise format');
 
   const submitResponse = useSubmitResponse();
