@@ -1,12 +1,12 @@
 import { useApiClient } from '../../../api';
 import { type QueryFn, useServerTable } from '../../../common/data-table';
-import type { Exercise } from '../../../core/types/exercise';
+import type { ExerciseSummary } from '../../../core/types/exercise-summary';
 import { exerciseColumns } from './columns';
 import { buildExerciseQuery } from './utils';
 
 export function useExercisesTable() {
   const apiClient = useApiClient();
-  const queryFn: QueryFn<Exercise> = async ({
+  const queryFn: QueryFn<ExerciseSummary> = async ({
     pagination,
     columnFilters,
     sorting,

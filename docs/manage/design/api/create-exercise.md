@@ -25,18 +25,11 @@
 | Name         | Type     | Required | Description                                                                                                    |
 | ------------ | -------- | -------- | -------------------------------------------------------------------------------------------------------------- |
 | `format`     | string   | Yes      | Exercise format, enum values defined in [core data specification](../../../core/spec/data.md#exercise-format). |
-| `topics`     | string[] | Yes      | At least one topic name; each name must be a non-empty string.                                                 |
-| `references` | string[] | No       | Optional source references; when supplied, must contain at least one non-empty text item.                      |
-| `status`     | string   | Yes      | `active` or `archived`. The client supplies `active` by default.                                               |
+| `topics`     | string[] | Yes      | Topic labels for the exercise; at least one topic name.                                                        |
+| `status`     | string   | Yes      | Exercise status; `active` or `archived`.                                                                       |
+| `references` | string[] | No       | Source links associated with the exercise.                                                                     |
 
-**Other format-specific fields** and **Validation constraints** follow the [core data specification](../../../core/spec/data.md#format-specific-fields).
-
-**Normalizations**:
-
-- Trim scalar content and each array item.
-- Generate `name` according to the [Exercise Name Mapping](../../../core/spec/data.md#exercise-name-mapping).
-- Infer `skill` from `format` using the [Format-Skill Mapping](../../../core/spec/data.md#format-skill-mapping).
-- Remove blank or whitespace-only array entries before validating lists.
+**Format-specific fields** and their constraints follow the [core data specification](../../../core/spec/data.md#format-specific-fields).
 
 ### Example (`communication`)
 
@@ -107,11 +100,13 @@ Returned when the request has no authenticated user context.
 ## Functional Requirements
 
 - Require authenticated user context identified by `x-user-email`. Associate the created exercise with that user.
-- Validate common fields and the exercise format.
+- Validate common fields, format-specific fields, and the exercise format.
 - Generate `name` according to the [Exercise Name Mapping](../../../core/spec/data.md#exercise-name-mapping).
 - Validate only fields corresponding to `format`.
 - Reject missing, blank, incorrectly typed, or inapplicable content fields.
-- Normalize whitespace and remove blank array values before checking required fields.
+- Trim scalar values and array items, then remove blank array entries before validating lists.
+- Reject required lists that are empty after cleanup. Omit optional arrays that have no remaining values; do not persist empty optional arrays.
+- Infer `skill` from `format` using the [Format-Skill Mapping](../../../core/spec/data.md#format-skill-mapping).
 - Save the selected `status`.
   - The form defaults to `active`; `archived` is also accepted.
 - Return the created exercise summary with its server-generated identifier and creation timestamp.

@@ -92,7 +92,8 @@ Before a format is selected, show: “Select a format to show the required conte
 - Validate Format, at least one Topic, and selected format's required fields.
 - Treat whitespace-only values as empty.
 - On submit, remove empty or whitespace-only lines from line-based textareas before validation and save. Do not show errors for removed lines.
-- After cleanup, require one or more values in each required list.
+- If an optional list is empty after normalization, omit it from the API request.
+- After normalization, require one or more values in each required list.
 - Show errors beside invalid fields and focus first invalid field.
 - Clear each error when its field becomes valid.
 - Block submission until required fields pass validation.

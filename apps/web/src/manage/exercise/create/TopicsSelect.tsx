@@ -4,8 +4,8 @@ import MultiSelect from '../../../common/components/MultiSelect';
 import { useTopicsQuery } from '../hooks';
 
 interface TopicsSelectProps {
-  value: string[];
-  onChange: (values: string[]) => void;
+  value?: string[];
+  onChange?: (values: string[]) => void;
   onBlur?: () => void;
   invalid?: boolean;
   ref?: Ref<HTMLInputElement>;
@@ -19,7 +19,6 @@ export default function TopicsSelect({
   ref,
 }: TopicsSelectProps) {
   const { data, isLoading } = useTopicsQuery();
-
   return (
     <MultiSelect
       options={data?.map(({ name }) => name)}

@@ -1,9 +1,10 @@
-import { Controller, type UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn } from 'react-hook-form';
 
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
+import Controller from '../../../common/components/Controller';
 import type { ExerciseFormData } from './exerciseFormSchema';
 
 type AllowedFields = 'scenario' | 'word' | 'meaning' | 'sentence' | 'paragraph';
@@ -12,8 +13,8 @@ export default function TextFormField({
   form,
   name,
   label,
-  multiline = false,
-  required = true,
+  multiline,
+  required,
   placeholder,
   className,
 }: {
@@ -31,6 +32,7 @@ export default function TextFormField({
     <Controller
       name={name}
       control={form.control}
+      defaultValue=""
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor={controlId}>

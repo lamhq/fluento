@@ -44,7 +44,6 @@ Verify all exercises are created successfully with correct data when requests ar
   - `createdAt`: timestamp string
   - `format`: string
   - `topics`: array of non-empty strings
-  - `references`: array of non-empty strings
   - `status`: string
 
 ### Postconditions
@@ -122,13 +121,12 @@ Prepare requests for each supported format with:
 ### Expected Result
 
 - The response status is `201 Created`.
-- The response contains:
-  - `topics`: array of trimmed strings
-  - `references`: array of trimmed strings
+- The response contains `topics` as an array of trimmed strings.
 
 ### Postconditions
 
 - Each field in the created exercise is normalized according to the rules: strings are trimmed, and arrays have blank entries removed.
+- Empty arrays (after normalization) are not persisted.
 
 ## Reject missing required fields (TC_API_CE_04)
 
@@ -212,13 +210,13 @@ Verify requests with correctly typed but invalid field values are rejected.
 
 ### Test Data
 
-- One request with `format`, `topics`, `references`, `status` fields having invalid values.
+- One request with `format`, `topics`, and `status` fields having invalid values.
 - One request with `format: "communication"`; `scenario`, `prompts`, and `validResponses` fields having invalid values.
 - One request with `format: "word"`; `word` and `meaning` fields having invalid values.
 - One request with `format: "sentence"`; `sentence` and `scenario` fields having invalid values.
 - One request with `format: "paragraph"`; `paragraph` and `scenario` fields having invalid values.
 
-**Invalid values** include wrong enum values, empty strings, and arrays containing only blank or whitespace-only entries.
+**Invalid values** include wrong enum values, empty required strings, and required arrays containing only blank or whitespace-only entries.
 
 ### Test Steps
 
@@ -272,7 +270,7 @@ Verify requests containing inapplicable or unknown properties are rejected.
 
 ### Description
 
-Verify optional `references` can be omitted and remains absent from stored exercises.
+Verify omitted fields or empty optional array values (e.g., `references`, `sentences`, `clues`) are not persisted.
 
 ### Pre-conditions
 
@@ -281,20 +279,22 @@ Verify optional `references` can be omitted and remains absent from stored exerc
 ### Test Data
 
 - Prepare a complete communication request without `references`.
+- Prepare a complete word request with empty `references`, `sentences`, and `clues` arrays.
 
 ### Test Steps
 
-1. Submit the body to `POST /v1/manage/exercises`.
-2. Verify API response.
-3. Retrieve the created exercise from the database.
+1. Submit each body to `POST /v1/manage/exercises`.
+2. Verify each API response.
+3. Retrieve each created exercise from the database.
 
 ### Expected Result
 
-- The response status is `201 Created`.
+- Both responses have status `201 Created`.
 
 ### Postconditions
 
-- The created exercise does not have the `references` field.
+- Neither created exercise has the `references` field.
+- The word exercise does not have the `sentences`, `clues`, or inapplicable array fields.
 
 ## Hide internal details on service failure (TC_API_CE_09)
 

@@ -1,6 +1,6 @@
+import type { DialogRoot } from '@base-ui/react/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import { Controller, useForm, type UseFormReturn, useWatch } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,145 +19,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 
+import Controller from '../../../common/components/Controller';
 import type { Exercise } from '../../../core/types/exercise';
 import {
   ExerciseFormat,
   exerciseFormats,
 } from '../../../core/types/exercise-format';
-import { exerciseStatuses } from '../../../core/types/exercise-status';
+import {
+  ExerciseStatus,
+  exerciseStatuses,
+} from '../../../core/types/exercise-status';
+import { useCreateExercise } from '../hooks';
 import { type ExerciseFormData, exerciseFormSchema } from './exerciseFormSchema';
+import FieldsPerFormat from './FieldsPerFormat';
 import LinesFormField from './LinesFormField';
-import TextFormField from './TextFormField';
 import TopicsSelect from './TopicsSelect';
-import { toFormData } from './utils';
-
-/**
- * Component for rendering the appropriate fields based on the exercise format.
- */
-function FieldsPerFormat({
-  format,
-  form,
-}: {
-  format?: ExerciseFormat;
-  form: UseFormReturn<ExerciseFormData>;
-}) {
-  if (!format) {
-    return (
-      <p className="text-xs text-muted-foreground">
-        Select a format to show the required content fields.
-      </p>
-    );
-  }
-
-  switch (format) {
-    case ExerciseFormat.Communication:
-      return (
-        <>
-          <TextFormField
-            form={form}
-            name="scenario"
-            label="Scenario"
-            placeholder="Describe the situation for this conversation."
-          />
-          <LinesFormField
-            form={form}
-            name="prompts"
-            label="Prompts"
-            placeholder="Enter one prompt per line."
-          />
-          <LinesFormField
-            form={form}
-            name="validResponses"
-            label="Valid responses"
-            placeholder="Enter one valid response per line."
-          />
-        </>
-      );
-    case ExerciseFormat.Word:
-      return (
-        <>
-          <TextFormField
-            form={form}
-            name="word"
-            label="Word or phrase"
-            placeholder="Enter the vocabulary item."
-          />
-          <TextFormField
-            form={form}
-            name="meaning"
-            label="Meaning"
-            multiline
-            placeholder="Explain the word or phrase."
-          />
-          <LinesFormField
-            form={form}
-            name="sentences"
-            label="Sentences"
-            required={false}
-            placeholder="Enter one sentence per line."
-          />
-          <LinesFormField
-            form={form}
-            name="clues"
-            label="Clues"
-            required={false}
-            placeholder="Enter one clue per line."
-          />
-        </>
-      );
-    case ExerciseFormat.Sentence:
-      return (
-        <>
-          <TextFormField
-            form={form}
-            name="scenario"
-            label="Scenario"
-            placeholder="Describe the context for this exercise."
-          />
-          <TextFormField
-            form={form}
-            name="sentence"
-            label="Sentence"
-            placeholder="Enter the source sentence."
-          />
-          <LinesFormField
-            form={form}
-            name="words"
-            label="Words"
-            required={false}
-            placeholder="Enter one word or phrase per line."
-          />
-        </>
-      );
-    case ExerciseFormat.Paragraph:
-      return (
-        <>
-          <TextFormField
-            form={form}
-            name="scenario"
-            label="Scenario"
-            placeholder="Describe the context for this exercise."
-          />
-          <TextFormField
-            form={form}
-            name="paragraph"
-            label="Paragraph"
-            multiline
-            placeholder="Enter the source paragraph."
-            className="min-h-30"
-          />
-          <LinesFormField
-            form={form}
-            name="words"
-            label="Words"
-            required={false}
-            placeholder="Enter one word or phrase per line."
-          />
-        </>
-      );
-  }
-}
 
 export interface ExerciseDialogProps {
   open: boolean;
@@ -170,54 +48,63 @@ export default function ExerciseFormDialog({
   onOpenChange,
   exercise,
 }: ExerciseDialogProps) {
-  const isUpdate = Boolean(exercise?.id);
+  const createExercise = useCreateExercise();
+  const defaultValues = exercise ?? {
+    format: ExerciseFormat.Communication as const,
+  };
   const form = useForm<ExerciseFormData>({
     resolver: zodResolver(exerciseFormSchema),
-    defaultValues: toFormData(exercise),
+    defaultValues,
   });
-
-  useEffect(() => {
-    if (open) {
-      form.reset(toFormData(exercise));
-    }
-  }, [exercise, form, open]);
 
   const selectedFormat = useWatch({
     control: form.control,
     name: 'format',
   });
 
-  const handleOpenChange = (nextOpen: boolean) => {
+  const handleOpenChange = (
+    nextOpen: boolean,
+    eventDetails: DialogRoot.ChangeEventDetails,
+  ) => {
+    // reset the form when the dialog is closing
     if (!nextOpen) {
-      if (form.formState.isDirty && !window.confirm('Discard your changes?')) {
-        return;
-      }
+      form.reset();
     }
+
+    if (!nextOpen && form.formState.isSubmitting) {
+      eventDetails.cancel();
+      return;
+    }
+
     onOpenChange(nextOpen);
   };
 
+  const handleSubmit = async (values: ExerciseFormData) => {
+    await createExercise.mutateAsync(values);
+    form.reset();
+    onOpenChange(false);
+  };
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(nextOpen) => {
-        handleOpenChange(nextOpen);
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="text-start">
           <DialogTitle>
-            {isUpdate ? 'Update exercise' : 'Create Exercise'}
+            {exercise ? 'Update exercise' : 'Create Exercise'}
           </DialogTitle>
         </DialogHeader>
 
         <form
-          onSubmit={form.handleSubmit(() => undefined)}
+          id="exercise-form"
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="h-105 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3"
+          noValidate
         >
           <FieldGroup>
             <Controller
               name="format"
               control={form.control}
+              defaultValue={ExerciseFormat.Communication}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="exercise-format">
@@ -229,7 +116,12 @@ export default function ExerciseFormDialog({
                   <Select
                     name={field.name}
                     value={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={(format) => {
+                      if (format) {
+                        form.reset(defaultValues);
+                        form.setValue('format', format);
+                      }
+                    }}
                   >
                     <SelectTrigger
                       id="exercise-format"
@@ -257,6 +149,7 @@ export default function ExerciseFormDialog({
             <Controller
               name="topics"
               control={form.control}
+              defaultValue={[]}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="exercise-topics">
@@ -288,6 +181,7 @@ export default function ExerciseFormDialog({
             <Controller
               name="status"
               control={form.control}
+              defaultValue={ExerciseStatus.ACTIVE}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="exercise-status">
@@ -323,18 +217,23 @@ export default function ExerciseFormDialog({
             />
           </FieldGroup>
         </form>
-
         <DialogFooter>
           <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              handleOpenChange(false);
-            }}
+            type="submit"
+            form="exercise-form"
+            disabled={form.formState.isSubmitting}
           >
-            {isUpdate ? 'Close' : 'Cancel'}
+            {form.formState.isSubmitting && <Spinner data-icon="inline-start" />}
+            {exercise ? 'Update' : 'Create'}
           </Button>
-          <DialogClose render={<Button variant="outline">Close</Button>} />
+
+          <DialogClose
+            render={
+              <Button variant="outline" disabled={form.formState.isSubmitting}>
+                Close
+              </Button>
+            }
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

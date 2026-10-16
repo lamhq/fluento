@@ -4,10 +4,10 @@ import ExerciseFormat from '../../../core/components/ExerciseFormat';
 import ExerciseSkill from '../../../core/components/ExerciseSkill';
 import ExerciseStatus from '../../../core/components/ExerciseStatus';
 import ExerciseTopics from '../../../core/components/ExerciseTopics';
-import type { Exercise } from '../../../core/types/exercise';
+import type { ExerciseSummary } from '../../../core/types/exercise-summary';
 import ExerciseRowActions from './ExerciseRowActions';
 
-const columnHelper = createAppColumnHelper<Exercise>();
+const columnHelper = createAppColumnHelper<ExerciseSummary>();
 
 const dummyFilterFn = () => true; // because we use server-side filtering
 

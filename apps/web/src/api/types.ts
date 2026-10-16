@@ -2,6 +2,7 @@ import type { Exercise } from '../core/types/exercise';
 import { ExerciseFormat } from '../core/types/exercise-format';
 import type { ExerciseSkill } from '../core/types/exercise-skill';
 import type { ExerciseStatus } from '../core/types/exercise-status';
+import type { ExerciseSummary } from '../core/types/exercise-summary';
 import type { PracticeAttempt } from '../core/types/practice-attempt';
 import type { PracticeExercise } from '../core/types/practice-exercise';
 import type { PracticeType } from '../core/types/practice-type';
@@ -20,12 +21,14 @@ export interface ApiClient {
 
   getTopics(signal?: AbortSignal): Promise<Topic[]>;
 
+  getExerciseById(exerciseId: string): Promise<Exercise>;
+
   getExercises(
     options?: ExerciseQuery,
     signal?: AbortSignal,
-  ): Promise<OffsetPaginatedResponse<Exercise>>;
+  ): Promise<OffsetPaginatedResponse<ExerciseSummary>>;
 
-  createExercise(input: CreateExerciseInput): Promise<Exercise>;
+  createExercise(input: CreateExerciseInput): Promise<ExerciseSummary>;
 }
 
 export interface ExerciseQuery {

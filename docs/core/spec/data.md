@@ -154,12 +154,13 @@ Common fields (`name`, `format`, `skill`, `topics`, `references`, and `status`) 
 | `sentence`      | `sentence`, `scenario`                  | `words`                         |
 | `paragraph`     | `paragraph`, `scenario`                 | `words`                         |
 
-Optional array fields, when supplied, must contain at least one non-empty value.
+Optional array fields are omitted when absent or when trimming and removing blank entries leaves no values. Do not save empty arrays for optional fields. Required lists must contain at least one non-empty value after cleanup; otherwise, reject the record.
 
 ## Revision History
 
 | Version | Date       | Author       | Changes                                                                                             |
 | ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------- |
+| 1.6     | 2026-10-15 | Fluento team | Omit optional arrays from storage when absent or empty after cleanup.                               |
 | 1.5     | 2026-10-15 | Fluento team | Made word-format sentences and clues, and sentence/paragraph-format words optional.                 |
 | 1.4     | 2026-10-12 | Fluento team | Defined exercise name derivation by format.                                                         |
 | 1.3     | 2026-10-12 | Fluento team | Made exercise skill depend on format; defined the Format-Skill Mapping.                             |

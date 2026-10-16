@@ -527,7 +527,6 @@ describe('create exercise', () => {
             scenario: expect.any(String),
             prompts: expect.any(String),
             validResponses: expect.any(String),
-            references: expect.any(String),
           }),
         },
       },
@@ -643,7 +642,7 @@ describe('create exercise', () => {
   });
 
   describe('optional fields', () => {
-    it('should not persist omitted optional references (TC_API_CE_08)', async () => {
+    it('should not persist omitted optional fields (TC_API_CE_08)', async () => {
       const { id: userId, email } = getUser();
       const name = `${userId.toHexString()} communication-without-references`;
       const body = {
@@ -665,6 +664,47 @@ describe('create exercise', () => {
       const saved = await findById('exercises', exercise.id);
       expect(saved).toEqual(expect.objectContaining({ name, userId }));
       expect(saved).not.toHaveProperty('references');
+    });
+
+    it('should not persist empty optional fields (TC_API_CE_08)', async () => {
+      const { id: userId, email } = getUser();
+      const body = {
+        format: 'word',
+        topics: ['Test topic'],
+        status: 'active',
+        word: 'serendipity',
+        meaning: 'Finding something valuable by chance.',
+        references: [],
+        sentences: [],
+        clues: [],
+      };
+
+      const response = await request(getApp().getHttpServer())
+        .post('/v1/manage/exercises')
+        .set('x-user-email', email)
+        .send(body)
+        .expect(201);
+
+      const exercise = createExerciseResponseSchema.parse(response.body);
+      const saved = await findById('exercises', exercise.id);
+      expect(saved).toEqual(
+        expect.objectContaining({
+          name: 'serendipity',
+          format: 'word',
+          userId,
+        }),
+      );
+
+      for (const field of [
+        'references',
+        'sentences',
+        'clues',
+        'prompts',
+        'validResponses',
+        'words',
+      ]) {
+        expect(saved).not.toHaveProperty(field);
+      }
     });
   });
 

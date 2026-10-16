@@ -21,8 +21,8 @@ const loadingOption: Option = {
 
 interface MultiSelectProps {
   options?: Option[];
-  value: string[];
-  onChange: (values: string[]) => void;
+  value?: string[];
+  onChange?: (values: string[]) => void;
   onBlur?: () => void;
   invalid?: boolean;
   ref?: Ref<HTMLInputElement>;
@@ -34,7 +34,7 @@ interface MultiSelectProps {
 export default function MultiSelect({
   options = [],
   creatable,
-  value,
+  value = [],
   onChange,
   onBlur,
   invalid,
@@ -81,7 +81,7 @@ export default function MultiSelect({
             ? [] // ignore the Loading option
             : [item.value], // convert the Create option to string,
     );
-    onChange(normalizedValues);
+    onChange?.(normalizedValues);
   };
 
   return (

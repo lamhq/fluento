@@ -83,7 +83,7 @@ flowchart TD
 - Validate required lists after cleanup; each must retain at least one value.
 - The API generates `name` according to the [Exercise Name Mapping](../../core/spec/data.md#exercise-name-mapping).
 - The API infers and stores `skill` from `format` using the mapping in the core data specification.
-- Include one or more selected topics (including new values) and references; use an empty references list if omitted.
+- Include one or more selected topics (including new values). Omit references when none remain after blank lines are removed; do not save empty optional arrays.
 - Prevent duplicate submissions while saving.
 - For validation errors, identify fields and retain entered values.
 - For API or network errors, show retry and retain values.

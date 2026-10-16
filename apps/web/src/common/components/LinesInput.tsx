@@ -12,7 +12,7 @@ export default function LinesInput({ value, onChange, ...props }: LinesInputProp
   return (
     <Textarea
       {...props}
-      value={(value ?? []).join('\n')}
+      value={value ? value.join('\n') : undefined}
       onChange={(event) => {
         onChange?.(event.currentTarget.value.split(/\r?\n/));
       }}

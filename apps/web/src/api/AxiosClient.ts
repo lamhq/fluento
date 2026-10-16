@@ -1,7 +1,12 @@
 import axios, { type AxiosInstance } from 'axios';
 
 import type { Exercise } from '../core/types/exercise';
-import { exerciseSchema, paginatedExerciseSchema } from '../core/types/exercise';
+import { exerciseSchema } from '../core/types/exercise';
+import type { ExerciseSummary } from '../core/types/exercise-summary';
+import {
+  exerciseSummarySchema,
+  paginatedExerciseSummarySchema,
+} from '../core/types/exercise-summary';
 import type { PracticeAttempt } from '../core/types/practice-attempt';
 import { practiceAttemptSchema } from '../core/types/practice-attempt';
 import type { PracticeExercise } from '../core/types/practice-exercise';
@@ -66,10 +71,18 @@ export default class AxiosClient implements ApiClient {
     return topicSchema.array().parse(response.data);
   }
 
+  async getExerciseById(exerciseId: string): Promise<Exercise> {
+    const response = await this.httpClient.get<unknown>(
+      `/v1/manage/exercises/${exerciseId}`,
+    );
+
+    return exerciseSchema.parse(response.data);
+  }
+
   async getExercises(
     options: ExerciseQuery = {},
     signal?: AbortSignal,
-  ): Promise<OffsetPaginatedResponse<Exercise>> {
+  ): Promise<OffsetPaginatedResponse<ExerciseSummary>> {
     const params = options;
     const response = await this.httpClient.get<unknown>('/v1/manage/exercises', {
       params,
@@ -77,16 +90,16 @@ export default class AxiosClient implements ApiClient {
       signal,
     });
 
-    const data = paginatedExerciseSchema.parse(response.data);
+    const data = paginatedExerciseSummarySchema.parse(response.data);
     return data;
   }
 
-  async createExercise(input: CreateExerciseInput): Promise<Exercise> {
+  async createExercise(input: CreateExerciseInput): Promise<ExerciseSummary> {
     const response = await this.httpClient.post<unknown>(
       '/v1/manage/exercises',
       input,
     );
 
-    return exerciseSchema.parse(response.data);
+    return exerciseSummarySchema.parse(response.data);
   }
 }

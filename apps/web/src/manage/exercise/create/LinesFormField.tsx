@@ -1,7 +1,8 @@
-import { Controller, type UseFormReturn } from 'react-hook-form';
+import { type UseFormReturn } from 'react-hook-form';
 
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 
+import Controller from '../../../common/components/Controller';
 import LinesInput from '../../../common/components/LinesInput';
 import type { ExerciseFormData } from './exerciseFormSchema';
 
@@ -29,6 +30,7 @@ export default function LinesFormField({
     <Controller
       name={name}
       control={form.control}
+      defaultValue={[]}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor={controlId}>
