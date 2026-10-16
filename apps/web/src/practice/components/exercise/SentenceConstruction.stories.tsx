@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { ExerciseFormat } from '../../../core/types/exercise-format';
+import { ExerciseSkill } from '../../../core/types/exercise-skill';
+import { PracticeType } from '../../../core/types/practice-type';
 import SentenceConstruction from './SentenceConstruction';
 
 const meta = {
@@ -15,13 +18,13 @@ export const Default: Story = {
   args: {
     exercise: {
       id: '65f00000000000000000000b',
-      format: 'sentence',
+      format: ExerciseFormat.Sentence,
       name: 'Describe your background',
-      skill: 'articulation',
+      skill: ExerciseSkill.ARTICULATION,
       topics: ['Job Interview', 'Software Engineering'],
       references: [],
       scenario: 'Describe your educational background in a job interview.',
-      type: 'sentence-construction',
+      type: PracticeType.SENTENCE_CONSTRUCTION,
       practiceCount: 0,
       words: ['study', 'computer science', 'university', "bachelor's degree"],
       sentence:

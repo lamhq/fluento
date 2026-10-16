@@ -39,6 +39,7 @@ await build({
   sourcemap: true,
   minify: false,
   legalComments: 'none',
+  outExtension: { '.js': '.mjs' },
   external: [
     '@nestjs/microservices',
     '@nestjs/microservices/*',

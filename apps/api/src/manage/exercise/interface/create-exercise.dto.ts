@@ -2,62 +2,78 @@ import { z } from 'zod';
 
 import {
   ExerciseFormat,
-  ExerciseSkill,
   ExerciseStatus,
 } from '../../../content/core/exercise.entity.js';
 
-const trimmedText = z.string().trim();
-const nonEmptyText = trimmedText.min(1);
-const nonEmptyTextList = z
-  .array(trimmedText)
-  .transform((items) => items.filter((item) => item.length > 0))
-  .pipe(z.array(trimmedText).min(1, 'must contain at least one non-empty value'));
+// normalization functions for trimming text and lines
+const trimText = z
+  .string()
+  .optional()
+  .transform((val) => {
+    if (!val) return undefined;
+    const trimmed = val.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  });
+const trimLines = z
+  .array(z.string())
+  .optional()
+  .transform((items) => {
+    if (!items) return undefined;
+    const transformed = items.flatMap((item) => {
+      const trimmed = item.trim();
+      return trimmed.length > 0 ? [trimmed] : [];
+    });
+    return transformed.length > 0 ? transformed : undefined;
+  });
 
+// validators for text and lines
+const linesErrorMessage = 'Please enter at least one item.';
+const nonEmptyText = z.string().nonempty('Please enter a value.');
+const nonEmptyList = z
+  .array(z.string(), { error: linesErrorMessage })
+  .nonempty(linesErrorMessage);
+
+// schema
 const commonFields = {
-  name: nonEmptyText,
-  topics: nonEmptyTextList,
-  references: nonEmptyTextList.optional(),
   status: z.enum(ExerciseStatus),
+  topics: trimLines.pipe(nonEmptyList),
+  references: trimLines.pipe(nonEmptyList.optional()),
 };
 
 const communicationFields = z.strictObject({
   ...commonFields,
-  skill: z.literal(ExerciseSkill.Communication),
   format: z.literal(ExerciseFormat.Communication),
-  scenario: nonEmptyText,
-  prompts: nonEmptyTextList,
-  validResponses: nonEmptyTextList,
+  scenario: trimText.pipe(nonEmptyText),
+  prompts: trimLines.pipe(nonEmptyList),
+  validResponses: trimLines.pipe(nonEmptyList),
 });
 
 const wordFields = z.strictObject({
   ...commonFields,
-  skill: z.literal(ExerciseSkill.Vocabulary),
   format: z.literal(ExerciseFormat.Word),
-  word: nonEmptyText,
-  meaning: nonEmptyText,
-  sentences: nonEmptyTextList,
-  clues: nonEmptyTextList,
+  word: trimText.pipe(nonEmptyText),
+  meaning: trimText.pipe(nonEmptyText),
+  sentences: trimLines.pipe(nonEmptyList.optional()),
+  clues: trimLines.pipe(nonEmptyList.optional()),
 });
 
 const sentenceFields = z.strictObject({
   ...commonFields,
-  skill: z.literal(ExerciseSkill.Articulation),
   format: z.literal(ExerciseFormat.Sentence),
-  sentence: nonEmptyText,
-  words: nonEmptyTextList,
-  scenario: nonEmptyText,
+  sentence: trimText.pipe(nonEmptyText),
+  scenario: trimText.pipe(nonEmptyText),
+  words: trimLines.pipe(nonEmptyList.optional()),
 });
 
 const paragraphFields = z.strictObject({
   ...commonFields,
-  skill: z.literal(ExerciseSkill.Articulation),
   format: z.literal(ExerciseFormat.Paragraph),
-  paragraph: nonEmptyText,
-  words: nonEmptyTextList,
-  scenario: nonEmptyText,
+  paragraph: trimText.pipe(nonEmptyText),
+  scenario: trimText.pipe(nonEmptyText),
+  words: trimLines.pipe(nonEmptyList.optional()),
 });
 
-export const createExerciseSchema = z.union([
+export const createExerciseSchema = z.discriminatedUnion('format', [
   communicationFields,
   wordFields,
   sentenceFields,

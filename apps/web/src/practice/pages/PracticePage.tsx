@@ -1,5 +1,6 @@
-import type { PracticeExercise } from '../../api/types';
 import TopLoadingBar from '../../common/components/TopLoadingBar';
+import type { PracticeExercise } from '../../core/types/practice-exercise';
+import { PracticeType } from '../../core/types/practice-type';
 import Communication from '../components/exercise/Communication';
 import JustOneWord from '../components/exercise/JustOneWord';
 import ParagraphVariation from '../components/exercise/ParagraphVariation';
@@ -12,19 +13,19 @@ import { usePracticeExercise } from '../hooks';
 
 function renderExercise(exercise: PracticeExercise) {
   switch (exercise.type) {
-    case 'communication':
+    case PracticeType.COMMUNICATION:
       return <Communication exercise={exercise} />;
-    case 'using-word':
+    case PracticeType.USING_WORD:
       return <UsingWord exercise={exercise} />;
-    case 'just-one-word':
+    case PracticeType.JUST_ONE_WORD:
       return <JustOneWord exercise={exercise} />;
-    case 'word-guessing':
+    case PracticeType.WORD_GUESSING:
       return <WordGuessing exercise={exercise} />;
-    case 'sentence-construction':
+    case PracticeType.SENTENCE_CONSTRUCTION:
       return <SentenceConstruction exercise={exercise} />;
-    case 'sentence-variation':
+    case PracticeType.SENTENCE_VARIATION:
       return <SentenceVariation exercise={exercise} />;
-    case 'paragraph-variation':
+    case PracticeType.PARAGRAPH_VARIATION:
       return <ParagraphVariation exercise={exercise} />;
   }
 }
@@ -37,7 +38,7 @@ export default function PracticePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="mx-auto max-w-2xl">
       <TopLoadingBar open={isFetching} />
 
       {isFetching && !exercise && <ExerciseSkeleton />}

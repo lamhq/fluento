@@ -1,19 +1,23 @@
 import axios, { type AxiosInstance } from 'axios';
 
+import type { Exercise } from '../core/types/exercise';
+import { exerciseSchema } from '../core/types/exercise';
+import type { ExerciseSummary } from '../core/types/exercise-summary';
 import {
-  paginatedExerciseSchema,
-  paginatedPracticeExerciseSchema,
-  practiceAttemptSchema,
-  topicSchema,
-} from './schemas';
+  exerciseSummarySchema,
+  paginatedExerciseSummarySchema,
+} from '../core/types/exercise-summary';
+import type { PracticeAttempt } from '../core/types/practice-attempt';
+import { practiceAttemptSchema } from '../core/types/practice-attempt';
+import type { PracticeExercise } from '../core/types/practice-exercise';
+import { paginatedExerciseSchema as paginatedPracticeExerciseSchema } from '../core/types/practice-exercise';
+import { topicSchema } from '../core/types/topic';
 import type { CursorPaginatedResponse } from './types';
 import type {
   ApiClient,
-  Exercise,
+  CreateExerciseInput,
   ExerciseQuery,
   OffsetPaginatedResponse,
-  PracticeAttempt,
-  PracticeExercise,
 } from './types';
 import { selectPracticeType } from './utils';
 
@@ -42,7 +46,7 @@ export default class AxiosClient implements ApiClient {
     const items = data.items.map((exercise) => ({
       ...exercise,
       // randomly select practice type for each exercise
-      type: selectPracticeType(exercise.format),
+      type: selectPracticeType(exercise),
     }));
     return { ...data, items };
   }
@@ -59,10 +63,26 @@ export default class AxiosClient implements ApiClient {
     return practiceAttemptSchema.parse(result.data);
   }
 
+  async getTopics(signal?: AbortSignal) {
+    const response = await this.httpClient.get<unknown>('/v1/practice/topics', {
+      signal,
+    });
+
+    return topicSchema.array().parse(response.data);
+  }
+
+  async getExerciseById(exerciseId: string): Promise<Exercise> {
+    const response = await this.httpClient.get<unknown>(
+      `/v1/manage/exercises/${exerciseId}`,
+    );
+
+    return exerciseSchema.parse(response.data);
+  }
+
   async getExercises(
     options: ExerciseQuery = {},
     signal?: AbortSignal,
-  ): Promise<OffsetPaginatedResponse<Exercise>> {
+  ): Promise<OffsetPaginatedResponse<ExerciseSummary>> {
     const params = options;
     const response = await this.httpClient.get<unknown>('/v1/manage/exercises', {
       params,
@@ -70,15 +90,16 @@ export default class AxiosClient implements ApiClient {
       signal,
     });
 
-    const data = paginatedExerciseSchema.parse(response.data);
+    const data = paginatedExerciseSummarySchema.parse(response.data);
     return data;
   }
 
-  async getTopics(signal?: AbortSignal) {
-    const response = await this.httpClient.get<unknown>('/v1/practice/topics', {
-      signal,
-    });
+  async createExercise(input: CreateExerciseInput): Promise<ExerciseSummary> {
+    const response = await this.httpClient.post<unknown>(
+      '/v1/manage/exercises',
+      input,
+    );
 
-    return topicSchema.array().parse(response.data);
+    return exerciseSummarySchema.parse(response.data);
   }
 }

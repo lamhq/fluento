@@ -83,6 +83,8 @@ Each practice type has a specific way it is displayed.
 
 ### Just One Word
 
+Only apply when `clues` are available.
+
 - **Title:** Just One Word
 - **Topics:** Displayed below the title.
 - **Explanation:** `Guess the word/phrase from these clues:`
@@ -98,6 +100,8 @@ Each practice type has a specific way it is displayed.
 - **Response input:** A word or phrase guess.
 
 ### Sentence Construction
+
+Only apply when `words` are available.
 
 - **Title:** Sentence Construction
 - **Topics:** Displayed below the title.

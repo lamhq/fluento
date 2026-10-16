@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query';
 
 import { useApiClient } from '../api';
-import type { PracticeExercise } from '../api/types';
+import type { PracticeExercise } from '../core/types/practice-exercise';
 
 const PRACTICE_EXERCISES_QUERY_KEY = ['practice-exercise'];
 

@@ -1,21 +1,35 @@
-import type { PracticeExercise, PracticeType } from './types';
+import { ExerciseFormat } from '../core/types/exercise-format';
+import type { PracticeExercise } from '../core/types/practice-exercise';
+import { PracticeType } from '../core/types/practice-type';
 
-export function selectPracticeType(
-  format: PracticeExercise['format'],
-): PracticeType {
-  switch (format) {
-    case 'communication':
-      return 'communication';
-    case 'word': {
-      const types: PracticeType[] = ['using-word', 'just-one-word', 'word-guessing'];
+type Exercise = Pick<PracticeExercise, 'format'> & {
+  clues?: string[];
+  words?: string[];
+};
+
+export function selectPracticeType(exercise: Exercise): PracticeType {
+  switch (exercise.format) {
+    case ExerciseFormat.Communication:
+      return PracticeType.COMMUNICATION;
+    case ExerciseFormat.Word: {
+      const types: PracticeType[] = [
+        PracticeType.USING_WORD,
+        PracticeType.WORD_GUESSING,
+      ];
+      if (Array.isArray(exercise.clues) && exercise.clues.length > 0) {
+        types.push(PracticeType.JUST_ONE_WORD);
+      }
       return types[Math.floor(Math.random() * types.length)];
     }
-    case 'sentence': {
-      const types: PracticeType[] = ['sentence-construction', 'sentence-variation'];
+    case ExerciseFormat.Sentence: {
+      const types: PracticeType[] = [PracticeType.SENTENCE_VARIATION];
+      if (Array.isArray(exercise.words) && exercise.words.length > 0) {
+        types.push(PracticeType.SENTENCE_CONSTRUCTION);
+      }
       return types[Math.floor(Math.random() * types.length)];
     }
-    case 'paragraph':
-      return 'paragraph-variation';
+    case ExerciseFormat.Paragraph:
+      return PracticeType.PARAGRAPH_VARIATION;
     default:
       throw new Error('Unsupported exercise format');
   }

@@ -6,12 +6,43 @@ import {
 } from '../../context/context.service.js';
 import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto.js';
 import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto.js';
-import { ExerciseEntity } from './exercise.entity.js';
+import { ExerciseEntity, ExerciseFormat, ExerciseSkill } from './exercise.entity.js';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseQuery,
   type ExerciseRepository,
 } from './exercise.repository.js';
+
+function getExerciseMetadata(
+  data:
+    | { format: ExerciseFormat.Communication; scenario: string }
+    | { format: ExerciseFormat.Word; word: string }
+    | {
+        format: ExerciseFormat.Sentence | ExerciseFormat.Paragraph;
+        scenario: string;
+      },
+): Pick<ExerciseEntity, 'name' | 'skill'> {
+  switch (data.format) {
+    case ExerciseFormat.Communication:
+      return {
+        name: data.scenario,
+        skill: ExerciseSkill.Communication,
+      };
+    case ExerciseFormat.Word:
+      return {
+        name: data.word,
+        skill: ExerciseSkill.Vocabulary,
+      };
+    case ExerciseFormat.Sentence:
+    case ExerciseFormat.Paragraph:
+      return {
+        name: data.scenario,
+        skill: ExerciseSkill.Articulation,
+      };
+    default:
+      throw new Error('Unsupported exercise format');
+  }
+}
 
 @Injectable()
 export class ExerciseService {
@@ -25,6 +56,7 @@ export class ExerciseService {
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
     return this.repository.create({
       ...data,
+      ...getExerciseMetadata(data),
       userId: this.contextService.getUserIdOrThrow(),
     });
   }
@@ -78,7 +110,10 @@ export class ExerciseService {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.update(id, data);
+    return this.repository.update(id, {
+      ...data,
+      ...getExerciseMetadata(data),
+    });
   }
 
   async delete(id: string): Promise<void> {

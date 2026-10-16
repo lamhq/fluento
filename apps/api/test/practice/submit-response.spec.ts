@@ -312,7 +312,7 @@ const submissionCases = [
 ];
 
 describe('submit response', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
 
   it.each(submissionCases)(
     'should submit and validate a $request.practiceType response',
@@ -329,7 +329,7 @@ describe('submit response', () => {
           status: 'active',
           references: [],
           ...submissionCase.exercise,
-          topics: ['Practice', cleanupMarker],
+          topics: ['Practice'],
           userId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -375,10 +375,8 @@ describe('submit response', () => {
   afterEach(async () => {
     const { id: userId } = getUser();
     await deleteMany('practice_attempts', {
-      userId: userId,
+      userId,
     });
-    await deleteMany('exercises', {
-      topics: { $elemMatch: { $regex: cleanupMarker } },
-    });
+    await deleteMany('exercises', { userId });
   });
 });

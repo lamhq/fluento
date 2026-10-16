@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { ExerciseFormat } from '../../../core/types/exercise-format';
+import { ExerciseSkill } from '../../../core/types/exercise-skill';
+import { PracticeType } from '../../../core/types/practice-type';
 import UsingWord from './UsingWord';
 
 const meta = {
@@ -15,12 +18,12 @@ export const Default: Story = {
   args: {
     exercise: {
       id: '65f000000000000000000006',
-      format: 'word',
+      format: ExerciseFormat.Word,
       name: 'security',
-      skill: 'vocabulary',
+      skill: ExerciseSkill.VOCABULARY,
       topics: ['Airport', 'Travel'],
       references: [],
-      type: 'using-word',
+      type: PracticeType.USING_WORD,
       practiceCount: 0,
       word: 'security',
       meaning:

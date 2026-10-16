@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import request from 'supertest';
 import { z } from 'zod';
 
@@ -13,15 +14,18 @@ const getTopicsResponseSchema = z.array(
 );
 
 describe('get topics', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
+  const otherUserId = new ObjectId();
 
-  beforeEach(async () => {
-    await deleteMany('topics', {});
+  afterEach(async () => {
+    const { id: userId } = getUser();
+    await deleteMany('topics', { userId });
+    await deleteMany('topics', { userId: otherUserId });
+    await deleteMany('users', { _id: otherUserId });
   });
 
   it('should return all topics sorted by name ascending', async () => {
     const { email: userEmail, id: userId } = getUser();
-
     await insertMany('topics', [
       {
         userId,
@@ -44,7 +48,7 @@ describe('get topics', () => {
         createdAt: new Date('2026-01-10T08:00:00Z'),
       },
       {
-        userId: `other-user-${cleanupMarker}`,
+        userId: otherUserId,
         name: 'Secret',
         createdAt: new Date('2026-01-10T09:00:00Z'),
       },
@@ -90,8 +94,9 @@ describe('get topics', () => {
 
   it('should return topics regardless of their user', async () => {
     const { email: userEmail, id: userId } = getUser();
-    const otherUser = await insert('users', {
-      email: `other-${cleanupMarker}@example.com`,
+    const user2 = await insert('users', {
+      _id: otherUserId,
+      email: `${otherUserId.toHexString()}@example.com`,
     });
 
     await insertMany('topics', [
@@ -101,7 +106,7 @@ describe('get topics', () => {
         createdAt: new Date('2026-01-10T08:00:00Z'),
       },
       {
-        userId: otherUser._id,
+        userId: user2._id,
         name: 'Theirs',
         createdAt: new Date('2026-01-10T08:10:00Z'),
       },

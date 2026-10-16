@@ -51,7 +51,7 @@ const paginatedExercisesSchema = z.object({
 });
 
 describe('find practice exercises', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
 
   it('should only return active exercises', async () => {
     const { email: userEmail, id: userId } = getUser();
@@ -60,7 +60,7 @@ describe('find practice exercises', () => {
       {
         status: 'active',
         userId,
-        topics: ['Socializing', cleanupMarker],
+        topics: ['Socializing'],
         scenario: 'active practice one',
         name: 'Active practice one',
         skill: 'communication',
@@ -74,7 +74,7 @@ describe('find practice exercises', () => {
       {
         status: 'archived',
         userId,
-        topics: ['Socializing', cleanupMarker],
+        topics: ['Socializing'],
         scenario: 'archived practice',
         name: 'Archived practice',
         skill: 'communication',
@@ -109,7 +109,7 @@ describe('find practice exercises', () => {
         skill: 'communication',
         format: 'communication',
         status: 'active',
-        topics: ['Everyday Conversation', cleanupMarker],
+        topics: ['Everyday Conversation'],
         scenario: 'Answer small talk questions',
         prompts: ['What are you up to this weekend?'],
         references: [],
@@ -122,7 +122,7 @@ describe('find practice exercises', () => {
         skill: 'vocabulary',
         format: 'word',
         status: 'active',
-        topics: ['Airport', cleanupMarker],
+        topics: ['Airport'],
         word: 'customs',
         meaning: 'The official procedures required when entering a country.',
         sentences: ['At customs, they will check your passport.'],
@@ -137,7 +137,7 @@ describe('find practice exercises', () => {
         skill: 'articulation',
         format: 'sentence',
         status: 'active',
-        topics: ['Job Interview', cleanupMarker],
+        topics: ['Job Interview'],
         scenario: 'Describe your background',
         words: ['study', 'computer science', 'university', "bachelor's degree"],
         sentence:
@@ -152,7 +152,7 @@ describe('find practice exercises', () => {
         skill: 'articulation',
         format: 'paragraph',
         status: 'active',
-        topics: ['Mid-Autumn Festival', cleanupMarker],
+        topics: ['Mid-Autumn Festival'],
         scenario: 'Mid-Autumn Festival Introduction',
         prompts: ['Read and practice the paragraph.'],
         paragraph: 'The festival brings families together.',
@@ -188,7 +188,7 @@ describe('find practice exercises', () => {
         skill: 'communication',
         format: 'communication',
         status: 'active',
-        topics: ['Restaurant', cleanupMarker],
+        topics: ['Restaurant'],
         scenario: 'Order a meal at a restaurant',
         references: [],
         prompts: ['Order a meal.'],
@@ -202,7 +202,7 @@ describe('find practice exercises', () => {
         skill: 'communication',
         format: 'communication',
         status: 'active',
-        topics: ['School', cleanupMarker],
+        topics: ['School'],
         references: [],
         prompts: ['Ask about class.'],
         validResponses: ['How was class?'],
@@ -229,8 +229,6 @@ describe('find practice exercises', () => {
     await deleteMany('learner_exercise_progress', {
       userId,
     });
-    await deleteMany('exercises', {
-      topics: { $elemMatch: { $regex: cleanupMarker } },
-    });
+    await deleteMany('exercises', { userId });
   });
 });

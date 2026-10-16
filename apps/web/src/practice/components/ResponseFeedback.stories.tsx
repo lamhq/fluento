@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { PracticeType } from '../../core/types/practice-type';
 import ResponseFeedback from './ResponseFeedback';
 
 const meta = {
@@ -15,7 +16,7 @@ export const Communication: Story = {
   args: {
     feedback: {
       id: 'attempt-4',
-      practiceType: 'communication',
+      practiceType: PracticeType.COMMUNICATION,
       score: 64,
       feedback: 'The response is relevant but could sound more natural.',
       correctness: {
@@ -52,7 +53,7 @@ export const JustOneWord: Story = {
   args: {
     feedback: {
       id: 'attempt-1',
-      practiceType: 'just-one-word',
+      practiceType: PracticeType.JUST_ONE_WORD,
       score: 100,
       feedback: 'You have the correct answer.',
     },
@@ -64,7 +65,7 @@ export const WordGuessing: Story = {
   args: {
     feedback: {
       id: 'attempt-2',
-      practiceType: 'word-guessing',
+      practiceType: PracticeType.WORD_GUESSING,
       score: 100,
       feedback: 'You have the correct answer.',
     },
@@ -76,7 +77,7 @@ export const UsingWord: Story = {
   args: {
     feedback: {
       id: 'attempt-3',
-      practiceType: 'using-word',
+      practiceType: PracticeType.USING_WORD,
       score: 92,
       feedback: 'The target word is used naturally and correctly.',
       correctness: {
@@ -101,7 +102,7 @@ export const SentenceConstruction: Story = {
   args: {
     feedback: {
       id: 'attempt-5',
-      practiceType: 'sentence-construction',
+      practiceType: PracticeType.SENTENCE_CONSTRUCTION,
       score: 92,
       feedback: 'The sentence uses all required words clearly.',
       correctness: {
@@ -127,7 +128,7 @@ export const SentenceVariation: Story = {
   args: {
     feedback: {
       id: 'attempt-6',
-      practiceType: 'sentence-variation',
+      practiceType: PracticeType.SENTENCE_VARIATION,
       score: 93,
       feedback: 'The sentence preserves the original meaning naturally.',
       correctness: {
@@ -152,7 +153,7 @@ export const ParagraphVariation: Story = {
   args: {
     feedback: {
       id: 'attempt-7',
-      practiceType: 'paragraph-variation',
+      practiceType: PracticeType.PARAGRAPH_VARIATION,
       score: 91,
       feedback:
         'The paragraph preserves the original meaning clearly. But there are some minor grammatical issues.',

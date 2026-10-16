@@ -2,22 +2,24 @@
 
 ## Introduction
 
-This document defines prioritized tests for `POST /v1/manage/exercises`.
+This document defines prioritized tests for **Create Exercise API**.
 
 - API contract: [Create Exercise API](./create-exercise.md)
 - Data specification: [Core Data Specification](../../../core/spec/data.md).
+
+Create a test user before running all tests.
 
 Default request headers:
 
 - `Content-Type: application/json`
 - `Accept: application/json`
-- `x-user-email: <valid user email>`
+- `x-user-email: <test user email>`
 
-## Create exercise for every format (TC_API_CE_01)
+## Create an exercise in each supported format (TC_API_CE_01)
 
 ### Description
 
-Verify each supported skill-format pair creates an exercise with the correct format-specific content.
+Verify all exercises are created successfully with correct data when requests are valid.
 
 ### Pre-conditions
 
@@ -25,25 +27,28 @@ Verify each supported skill-format pair creates an exercise with the correct for
 
 ### Test Data
 
-- Prepare one complete request for each supported pair: communication/communication, vocabulary/word, articulation/sentence, and articulation/paragraph.
-- Populate all required fields with valid values and include at least one topic.
+- Prepare valid requests for all supported formats, with an expected `name` (inferred per [Exercise Name Mapping](../../../core/spec/data.md#exercise-name-mapping)).
 
 ### Test Steps
 
-1. Submit each body in a separate request to `POST /v1/manage/exercises`.
-2. Validate each response against the create-exercise summary schema.
-3. Retrieve each record and compare its stored common and format-specific fields with the normalized request body.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Verify API response.
+3. Retrieve the created exercise in the database.
 
 ### Expected Result
 
-- Each request returns `201 Created`.
-- Each response contains a generated, non-empty `id`, a valid `createdAt` timestamp, and the submitted `name`, `skill`, `format`, `topics`, and `status`.
-- The response omits format-specific content and `references`.
-- Each record contains the submitted fields and belongs to the authenticated user.
+- Response status is `201 Created`.
+- Response contains:
+  - `id`: non-empty string
+  - `name`: match with expected name
+  - `createdAt`: timestamp string
+  - `format`: string
+  - `topics`: array of non-empty strings
+  - `status`: string
 
 ### Postconditions
 
-- One exercise per supported pair is created for the test user.
+- One exercise per supported format is created for the authenticated user. The created exercise contains all common and format-specific fields (normalized).
 
 ## Reject unauthenticated create request (TC_API_CE_02)
 
@@ -57,27 +62,27 @@ Verify requests without authenticated user context cannot create exercises.
 
 ### Test Data
 
-- Prepare a complete valid request for any supported format and omit `x-user-email`.
+- Prepare a complete valid request for any supported format.
+- Omit `x-user-email` in request headers.
 
 ### Test Steps
 
 1. Submit the body to `POST /v1/manage/exercises` without `x-user-email`.
-2. Search for a record with the request's unique test name.
+2. Check the response.
 
 ### Expected Result
 
 - The response status is `401 Unauthorized`.
-- No matching exercise exists.
 
 ### Postconditions
 
-- No exercise is created for the rejected request.
+- No record is created in the database.
 
 ## Normalize field values (TC_API_CE_03)
 
 ### Description
 
-Verify scalar values and array items are trimmed, and blank array entries are removed before storage.
+Verify strings are trimmed, blank array items are removed before saving.
 
 ### Pre-conditions
 
@@ -85,30 +90,49 @@ Verify scalar values and array items are trimmed, and blank array entries are re
 
 ### Test Data
 
-- Prepare a communication request with whitespace around `name`, a scalar content field, and array items.
-- Include blank-only entries alongside non-blank entries in `topics`, a required content array, and `references`.
+Prepare requests for each supported format with:
+
+- `topics`: array of blank strings and one string with whitespace around it.
+- `references`: array of blank strings and one string with whitespace around it.
+- `communication` format:
+  - `scenario`: string with whitespace around it
+  - `prompts`: array of blank strings and one string with whitespace around it
+  - `validResponses`: array of blank strings and one string with whitespace around it
+- `word` format:
+  - `word`: string with whitespace around it
+  - `meaning`: string with whitespace around it
+  - `sentences`: array of blank strings and one string with whitespace around it
+  - `clues`: array of blank strings and one string with whitespace around it
+- `sentence` format:
+  - `sentence`: string with whitespace around it
+  - `scenario`: string with whitespace around it
+  - `words`: array of blank strings and one string with whitespace around it
+- `paragraph` format:
+  - `paragraph`: string with whitespace around it
+  - `scenario`: string with whitespace around it
+  - `words`: array of blank strings and one string with whitespace around it
 
 ### Test Steps
 
-1. Submit the body to `POST /v1/manage/exercises`.
-2. Check the response and retrieve the record.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Verify API response.
+3. Retrieve the created exercise in the database.
 
 ### Expected Result
 
 - The response status is `201 Created`.
-- The response contains the trimmed `name` and `topics`.
-- The stored `name`, scalar content, `topics`, format-specific arrays, and `references` are trimmed.
-- Blank array entries are removed, and the remaining entries retain their order.
+- The response contains `topics` as an array of trimmed strings.
 
 ### Postconditions
 
-- One normalized exercise is stored for the test user.
+- Each field in the created exercise is normalized according to the rules: strings are trimmed, and arrays have blank entries removed.
+- Empty arrays (after normalization) are not persisted.
 
 ## Reject missing required fields (TC_API_CE_04)
 
 ### Description
 
-Verify all required common and format-specific fields are required.
+Verify requests with missing required fields are rejected.
 
 ### Pre-conditions
 
@@ -116,20 +140,24 @@ Verify all required common and format-specific fields are required.
 
 ### Test Data
 
-- Prepare one empty request to check missing common fields.
-- Prepare one request for each supported exercise type with valid common fields and all format-specific fields omitted.
+- One request omits `format`, `status` fields
+- One request with `format: "communication"`; omits `scenario`, `prompts`, and `validResponses` fields.
+- One request with `format: "word"`; omits `word` and `meaning` fields.
+- One request with `format: "sentence"`; omits `sentence` and `scenario` fields.
+- One request with `format: "paragraph"`; omits `paragraph` and `scenario` fields.
 
 ### Test Steps
 
-1. Submit each request body to `POST /v1/manage/exercises`.
-2. Check each response and confirm the test user's persisted exercise count is unchanged; some fixtures omit `name`.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Verify API response.
 
 ### Expected Result
 
 - Every response status is `400 Bad Request`.
-- Every response contains `code: "invalid_request_body"` and `message: "Request validation failed"`.
-- `details` includes each omitted required field.
-- No exercise is created for any request.
+- Every response contains:
+  - `code: "invalid_request_body"`
+  - `message: "Request validation failed"`
+  - `details` includes the omitted fields per request.
 
 ### Postconditions
 
@@ -139,7 +167,7 @@ Verify all required common and format-specific fields are required.
 
 ### Description
 
-Verify common and format-specific fields accept only their declared types.
+Verify requests with invalid field types are rejected.
 
 ### Pre-conditions
 
@@ -147,19 +175,24 @@ Verify common and format-specific fields accept only their declared types.
 
 ### Test Data
 
-- Prepare one request with incorrect types for all common fields, including `references`.
-- Prepare one request for each supported exercise type with incorrect types for all applicable format-specific fields.
+- One request with `format`, `topics`, `references`, `status` fields having invalid types.
+- One request with `format: "communication"`; `scenario`, `prompts`, and `validResponses` fields having invalid types.
+- One request with `format: "word"`; `word`, `meaning`, `sentences`, and `clues` fields having invalid types.
+- One request with `format: "sentence"`; `sentence`, `scenario`, and `words` fields having invalid types.
+- One request with `format: "paragraph"`; `paragraph`, `scenario`, and `words` fields having invalid types.
 
 ### Test Steps
 
-1. Submit each request body to `POST /v1/manage/exercises`.
-2. Check each response and confirm the test user's persisted exercise count is unchanged; some fixtures contain an invalid `name`.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Verify API response.
 
 ### Expected Result
 
 - Every response status is `400 Bad Request`.
-- Every response contains `code: "invalid_request_body"`, `message: "Request validation failed"`, and `details` entries for all fields whose types were changed.
-- No exercise is created for any request.
+- Every response contains:
+  - `code: "invalid_request_body"`
+  - `message: "Request validation failed"`
+  - `details` includes the invalid fields per request.
 
 ### Postconditions
 
@@ -169,7 +202,7 @@ Verify common and format-specific fields accept only their declared types.
 
 ### Description
 
-Verify correctly typed values are rejected when blank, empty after normalization, outside an enum, or incompatible with the selected skill.
+Verify requests with correctly typed but invalid field values are rejected.
 
 ### Pre-conditions
 
@@ -177,21 +210,26 @@ Verify correctly typed values are rejected when blank, empty after normalization
 
 ### Test Data
 
-- Prepare one request with correctly typed but invalid common values: blank `name`, unsupported `skill`, `format`, and `status`, and blank-only `topics`.
-- Prepare one request for each supported exercise type with blank scalar values and empty or blank-only arrays in its format-specific fields.
-- Prepare a correctly typed request with a communication skill and word format to check an incompatible pair.
-- Prepare two complete communication requests with `references` set to an empty list and a list containing only blank or whitespace-only entries.
+- One request with `format`, `topics`, and `status` fields having invalid values.
+- One request with `format: "communication"`; `scenario`, `prompts`, and `validResponses` fields having invalid values.
+- One request with `format: "word"`; `word` and `meaning` fields having invalid values.
+- One request with `format: "sentence"`; `sentence` and `scenario` fields having invalid values.
+- One request with `format: "paragraph"`; `paragraph` and `scenario` fields having invalid values.
+
+**Invalid values** include wrong enum values, empty required strings, and required arrays containing only blank or whitespace-only entries.
 
 ### Test Steps
 
-1. Submit each request body to `POST /v1/manage/exercises`.
-2. Check each response and confirm the test user's persisted exercise count is unchanged; some fixtures contain an invalid `name`.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Verify API response.
 
 ### Expected Result
 
 - Every response status is `400 Bad Request`.
-- Every response contains `code: "invalid_request_body"`, `message: "Request validation failed"`, and `details` entries for all invalid fields; the incompatible-pair fixture includes a `format` entry, and requests with invalid `references` include a `references` entry.
-- No exercise is created for any request.
+- Every response contains:
+  - `code: "invalid_request_body"`
+  - `message: "Request validation failed"`
+  - `details` includes the invalid fields per request.
 
 ### Postconditions
 
@@ -201,7 +239,7 @@ Verify correctly typed values are rejected when blank, empty after normalization
 
 ### Description
 
-Verify the API rejects format-specific properties that do not apply and unrecognized body properties.
+Verify requests containing inapplicable or unknown properties are rejected.
 
 ### Pre-conditions
 
@@ -209,18 +247,20 @@ Verify the API rejects format-specific properties that do not apply and unrecogn
 
 ### Test Data
 
-- Prepare a complete valid communication request with one field from another format and one unrecognized property.
+- A communication request with one field from another format and one unrecognized property.
 
 ### Test Steps
 
-1. Submit the body to `POST /v1/manage/exercises`.
-2. Check the response and search for a record with the request's unique name.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Verify API response.
 
 ### Expected Result
 
-- The response status is `400 Bad Request`.
-- The body contains `code: "invalid_request_body"`, `message: "Request validation failed"`, and a `details` entry for each disallowed property.
-- No exercise is created.
+- Response status is `400 Bad Request`.
+- Response contains:
+  - `code: "invalid_request_body"`
+  - `message: "Request validation failed"`
+  - `details` includes the disallowed fields.
 
 ### Postconditions
 
@@ -230,7 +270,7 @@ Verify the API rejects format-specific properties that do not apply and unrecogn
 
 ### Description
 
-Verify optional `references` can be omitted and remains absent from stored exercises.
+Verify omitted fields or empty optional array values (e.g., `references`, `sentences`, `clues`) are not persisted.
 
 ### Pre-conditions
 
@@ -239,47 +279,51 @@ Verify optional `references` can be omitted and remains absent from stored exerc
 ### Test Data
 
 - Prepare a complete communication request without `references`.
+- Prepare a complete word request with empty `references`, `sentences`, and `clues` arrays.
 
 ### Test Steps
 
-1. Submit the body to `POST /v1/manage/exercises`.
-2. Retrieve the created record and check that each omitted field is absent.
+1. Submit each body to `POST /v1/manage/exercises`.
+2. Verify each API response.
+3. Retrieve each created exercise from the database.
 
 ### Expected Result
 
-- The response status is `201 Created`.
-- Each created record omits its request's `references` field.
+- Both responses have status `201 Created`.
 
 ### Postconditions
 
-- One exercise per request is stored without its omitted optional fields.
+- Neither created exercise has the `references` field.
+- The word exercise does not have the `sentences`, `clues`, or inapplicable array fields.
 
 ## Hide internal details on service failure (TC_API_CE_09)
 
 ### Description
 
-Verify exercise-service failures return a generic server error without exposing internal details.
+Verify error responses do not expose internal implementation details.
 
 ### Pre-conditions
 
 - API is available, and the test harness provides an authenticated user.
-- The test can make `ExerciseService.create` reject with an error.
+- The test can cause an internal error in the API.
 
 ### Test Data
 
-- Prepare a complete communication request with a unique test name.
+- Prepare a request in any supported format.
 - Configure `ExerciseService.create` to reject with an error containing a private implementation detail.
 
 ### Test Steps
 
-1. Submit the body to `POST /v1/manage/exercises`.
-2. Check the response and search for a record with the request's name.
-3. Restore the service spy even if an assertion fails.
+1. Submit request to `POST /v1/manage/exercises`.
+2. Restore the service spy.
+3. Verify API response.
 
 ### Expected Result
 
 - The response status is `500 Internal Server Error`.
-- The response body contains only the generic error code `INTERNAL_SERVER_ERROR` and message `Unable to create exercise`.
+- The response body contains:
+  - `code: "internal_error"`
+  - `message: "An unexpected error occurred. Please try again later."`.
 
 ### Postconditions
 
@@ -289,5 +333,5 @@ Verify exercise-service failures return a generic server error without exposing 
 
 ## Cleanup
 
-- After each test, delete exercises whose names contain that run's unique cleanup marker.
-- Ensure service spies or other injected failure behavior are restored in a `finally` block.
+- After each test, remove exercises of the test user from the database.
+- After all tests, remove the test user from the database.

@@ -5,7 +5,7 @@
 - **Purpose**: Create an exercise without leaving Exercise List.
 - **Context**: Opens when user clicks **Create** on Exercise List.
 - **Key Goals**:
-  - Guide skill and compatible format selection.
+  - Let users select a format.
   - Show only fields for selected format.
   - Make required fields and errors clear.
 
@@ -15,14 +15,11 @@
 +--------------------------------------------------------------------+
 | Create Exercise                                                [X]  |
 |                                                                    |
-| Name *                                                             |
-| [______________________________________________________________]   |
-|                                                                    |
-| Skill *                                                            |
-| [Select a skill                                               v]   |
+| Format *                                                           |
+| [Select a format                                              v]   |
 |                                                                    |
 | Exercise content                                                   |
-| Select a skill and format to show required content fields.         |
+| Select a format to show required content fields.                   |
 |                                                                    |
 | Topics *                                                           |
 | [Select or add topics                                        v]    |
@@ -53,20 +50,18 @@
 
 ### Common Fields
 
-| Field      | Control                | Behavior                                                                |
-| ---------- | ---------------------- | ----------------------------------------------------------------------- |
-| Name       | Text input             | Required; trim whitespace before save.                                  |
-| Skill      | Select                 | Required: Communication, Vocabulary, Articulation.                      |
-| Format     | Select                 | Required; hidden until Skill is selected, then show compatible formats. |
-| Topics     | Creatable multi-select | Required; select existing options or add new values, at least one.      |
-| References | Textarea               | Optional; one reference per line. Remove blank lines on submit.         |
-| Status     | Select                 | Required: Active or Archived; default Active.                           |
+| Field      | Control                | Behavior                                                           |
+| ---------- | ---------------------- | ------------------------------------------------------------------ |
+| Format     | Select                 | Required; choose any supported format.                             |
+| Topics     | Creatable multi-select | Required; select existing options or add new values, at least one. |
+| References | Textarea               | Optional; one reference per line. Remove blank lines on submit.    |
+| Status     | Select                 | Required: Active or Archived; default Active.                      |
 
-### Skill, Format, and additional fields
+### Format-specific fields
 
-Use the [core data specification](../../../core/spec/data.md#skill-format-compatibility) as the source of truth for allowed skill-format pairs and [format-specific fields](../../../core/spec/data.md#format-specific-fields), including requiredness. Show only fields available for the selected format. Use one-value-per-line textareas for arrays; each required list needs one non-empty line.
+Use the [core data specification](../../../core/spec/data.md#exercise-format) as the source of truth for available formats and [format-specific fields](../../../core/spec/data.md#format-specific-fields), including requiredness. Show only fields available for the selected format. Use one-value-per-line textareas for arrays; each required list needs one non-empty line.
 
-Before Skill and Format are selected, show: “Select a skill and format to show the required content fields.”
+Before a format is selected, show: “Select a format to show the required content fields.”
 
 ## Interactions and Behavior
 
@@ -79,12 +74,11 @@ Before Skill and Format are selected, show: “Select a skill and format to show
 - Confirm before discarding entered values.
 - Dismissing without saving leaves Exercise List unchanged.
 
-### Selecting a Skill and Format
+### Selecting a Format
 
-- Hide Format until Skill is selected; then show compatible formats.
-- Changing Skill clears Format and its values, then shows new options and helper text.
+- Show all supported formats in the Format selector.
 - Changing Format clears values for the previous format.
-- Keep Name, Topics, and References when Skill or Format changes.
+- Keep Topics and References when Format changes.
 
 ### Topics
 
@@ -95,10 +89,11 @@ Before Skill and Format are selected, show: “Select a skill and format to show
 
 ### Validation
 
-- Validate Name, Skill, Format, at least one Topic, and selected format's required fields.
+- Validate Format, at least one Topic, and selected format's required fields.
 - Treat whitespace-only values as empty.
 - On submit, remove empty or whitespace-only lines from line-based textareas before validation and save. Do not show errors for removed lines.
-- After cleanup, require one or more values in each required list.
+- If an optional list is empty after normalization, omit it from the API request.
+- After normalization, require one or more values in each required list.
 - Show errors beside invalid fields and focus first invalid field.
 - Clear each error when its field becomes valid.
 - Block submission until required fields pass validation.
@@ -113,7 +108,7 @@ Before Skill and Format are selected, show: “Select a skill and format to show
 ## Responsive Behavior
 
 - Stack fields on narrow screens.
-- On wide screens, Name, Skill, and Format may share rows if readable.
+- On wide screens, Format and Topics may share rows if readable.
 - Keep all fields and actions reachable without horizontal scrolling.
 - Keep actions distinct and reachable at the bottom.
 
@@ -129,6 +124,6 @@ Before Skill and Format are selected, show: “Select a skill and format to show
 ## Related Documents
 
 - [Exercise List Screen](./exercise-list.md)
-- [Create Exercise Feature Specification](../../spec/add-exercise.md)
+- [Create Exercise Feature Specification](../../spec/create-exercise.md)
 - [Find Topics API](../api/find-topics.md)
 - [Core Exercise Data Specification](../../../core/spec/data.md)
