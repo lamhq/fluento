@@ -1,4 +1,5 @@
-import ExerciseFormDialog from './ExerciseFormDialog';
+import ExerciseCreateDialog from './ExerciseCreateDialog';
+import ExerciseUpdateDialog from './ExerciseUpdateDialog';
 import { useExerciseDialogs } from './useExerciseDialogs';
 
 export default function ExerciseDialogs() {
@@ -6,16 +7,15 @@ export default function ExerciseDialogs() {
 
   return (
     <>
-      <ExerciseFormDialog
-        key="exercise-create"
+      <ExerciseCreateDialog
         open={open === 'create'}
         onOpenChange={() => {
           setOpen('create');
         }}
       />
       {currentRow && (
-        <ExerciseFormDialog
-          key={`exercise-update-${currentRow.id}`}
+        <ExerciseUpdateDialog
+          exerciseId={currentRow.id}
           open={open === 'update'}
           onOpenChange={() => {
             setOpen('update');
@@ -23,7 +23,6 @@ export default function ExerciseDialogs() {
               setCurrentRow(null);
             }, 500);
           }}
-          exercise={currentRow}
         />
       )}
     </>

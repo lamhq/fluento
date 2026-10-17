@@ -21,7 +21,7 @@ export interface ApiClient {
 
   getTopics(signal?: AbortSignal): Promise<Topic[]>;
 
-  getExerciseById(exerciseId: string): Promise<Exercise>;
+  getExerciseById(exerciseId: string, signal?: AbortSignal): Promise<Exercise>;
 
   getExercises(
     options?: ExerciseQuery,
@@ -29,6 +29,11 @@ export interface ApiClient {
   ): Promise<OffsetPaginatedResponse<ExerciseSummary>>;
 
   createExercise(input: CreateExerciseInput): Promise<ExerciseSummary>;
+
+  updateExercise(
+    exerciseId: string,
+    input: UpdateExerciseInput,
+  ): Promise<ExerciseSummary>;
 }
 
 export interface ExerciseQuery {
@@ -74,6 +79,8 @@ export type CreateExerciseInput =
       paragraph: string;
       words?: string[];
     });
+
+export type UpdateExerciseInput = CreateExerciseInput;
 
 export interface OffsetPaginatedResponse<T> {
   total: number;

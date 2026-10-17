@@ -1,5 +1,5 @@
 import { ColumnFilter } from '../../../common/data-table';
-import { useTopicsQuery } from '../hooks';
+import { useGetTopics } from '../hooks';
 
 interface TopicFilterProps {
   values: string[];
@@ -7,7 +7,7 @@ interface TopicFilterProps {
 }
 
 export default function TopicFilter({ values, onChange }: TopicFilterProps) {
-  const { data, error } = useTopicsQuery();
+  const { data, error } = useGetTopics();
   if (error) {
     throw error;
   }

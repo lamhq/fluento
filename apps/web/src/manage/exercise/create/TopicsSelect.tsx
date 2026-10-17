@@ -1,7 +1,7 @@
 import { type Ref } from 'react';
 
 import MultiSelect from '../../../common/components/MultiSelect';
-import { useTopicsQuery } from '../hooks';
+import { useGetTopics } from '../hooks';
 
 interface TopicsSelectProps {
   value?: string[];
@@ -18,7 +18,7 @@ export default function TopicsSelect({
   invalid,
   ref,
 }: TopicsSelectProps) {
-  const { data, isLoading } = useTopicsQuery();
+  const { data, isLoading } = useGetTopics();
   return (
     <MultiSelect
       options={data?.map(({ name }) => name)}

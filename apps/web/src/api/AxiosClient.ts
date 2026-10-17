@@ -18,6 +18,7 @@ import type {
   CreateExerciseInput,
   ExerciseQuery,
   OffsetPaginatedResponse,
+  UpdateExerciseInput,
 } from './types';
 import { selectPracticeType } from './utils';
 
@@ -71,9 +72,13 @@ export default class AxiosClient implements ApiClient {
     return topicSchema.array().parse(response.data);
   }
 
-  async getExerciseById(exerciseId: string): Promise<Exercise> {
+  async getExerciseById(
+    exerciseId: string,
+    signal?: AbortSignal,
+  ): Promise<Exercise> {
     const response = await this.httpClient.get<unknown>(
       `/v1/manage/exercises/${exerciseId}`,
+      { signal },
     );
 
     return exerciseSchema.parse(response.data);
@@ -97,6 +102,18 @@ export default class AxiosClient implements ApiClient {
   async createExercise(input: CreateExerciseInput): Promise<ExerciseSummary> {
     const response = await this.httpClient.post<unknown>(
       '/v1/manage/exercises',
+      input,
+    );
+
+    return exerciseSummarySchema.parse(response.data);
+  }
+
+  async updateExercise(
+    exerciseId: string,
+    input: UpdateExerciseInput,
+  ): Promise<ExerciseSummary> {
+    const response = await this.httpClient.put<unknown>(
+      `/v1/manage/exercises/${exerciseId}`,
       input,
     );
 

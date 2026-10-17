@@ -9,10 +9,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import type { Exercise } from '../../../core/types/exercise';
+import type { ExerciseSummary } from '../../../core/types/exercise-summary';
 import { useExerciseDialogs } from '../create/useExerciseDialogs';
 
-export default function ExerciseRowActions({ exercise }: { exercise: Exercise }) {
+export default function ExerciseRowActions({
+  exercise,
+}: {
+  exercise: ExerciseSummary;
+}) {
   const { setOpen, setCurrentRow } = useExerciseDialogs();
 
   return (
