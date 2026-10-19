@@ -37,6 +37,11 @@ describe('get exercise by id', () => {
       skill: 'communication',
       format: 'communication',
       topics: expect.arrayContaining(['School']),
+      scenario: 'asking for explanation',
+      prompts: ['Ask the teacher guidance for solving a math problem.'],
+      validResponses: [
+        "Could you please help me with this math problem? I'm having trouble understanding it.",
+      ],
       createdAt: expect.any(String),
       status: 'active',
     });

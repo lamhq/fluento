@@ -626,41 +626,6 @@ describe('update exercise', () => {
           }),
         },
       },
-      // Invalid references
-      {
-        label: 'empty-references',
-        request: {
-          format: 'communication',
-          topics: ['Test topic'],
-          status: 'active',
-          scenario: 'Order a meal at a restaurant.',
-          prompts: ['Ask to order a meal.'],
-          validResponses: ['I would like the grilled salmon, please.'],
-          references: [],
-        },
-        response: {
-          details: expect.objectContaining({
-            references: expect.any(String),
-          }),
-        },
-      },
-      {
-        label: 'blank-references',
-        request: {
-          format: 'communication',
-          topics: ['Test topic'],
-          status: 'active',
-          scenario: 'Order a meal at a restaurant.',
-          prompts: ['Ask to order a meal.'],
-          validResponses: ['I would like the grilled salmon, please.'],
-          references: [' ', '\t'],
-        },
-        response: {
-          details: expect.objectContaining({
-            references: expect.any(String),
-          }),
-        },
-      },
     ])(
       'should reject invalid $label field values (TC_API_UE_06)',
       async ({ request: requestBody, response: expectedResponse }) => {
@@ -722,7 +687,7 @@ describe('update exercise', () => {
   });
 
   describe('optional fields', () => {
-    it('should not persist omitted optional references (TC_API_UE_08)', async () => {
+    it('should not set default value for optional fields (TC_API_UE_08)', async () => {
       const { id: userId, email } = getUser();
       const name = `${userId.toHexString()} communication-without-references`;
       const body = {
@@ -750,6 +715,29 @@ describe('update exercise', () => {
       );
       expect(saved).not.toHaveProperty('references');
     });
+
+    it.each([{ references: [] }, { references: [' ', '\t'] }])(
+      'should not persist empty value for optional fields (TC_API_UE_08)',
+      async ({ references }) => {
+        const response = await request(getApp().getHttpServer())
+          .put(`/v1/manage/exercises/${exerciseId}`)
+          .set('x-user-email', getUser().email)
+          .send({
+            format: 'communication',
+            topics: ['Test topic'],
+            status: 'active',
+            scenario: 'Order a meal at a restaurant.',
+            prompts: ['Ask to order a meal.'],
+            validResponses: ['I would like the grilled salmon, please.'],
+            references,
+          })
+          .expect(200);
+
+        createExerciseResponseSchema.parse(response.body);
+        const saved = await findById('exercises', exerciseId);
+        expect(saved).not.toHaveProperty('references');
+      },
+    );
   });
 
   describe('server error', () => {

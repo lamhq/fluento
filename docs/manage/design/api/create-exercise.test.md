@@ -266,11 +266,13 @@ Verify requests containing inapplicable or unknown properties are rejected.
 
 - No exercise is persisted for the rejected request.
 
-## Do not persist omitted optional fields (TC_API_CE_08)
+## Do not persist omitted or empty optional fields (TC_API_CE_08)
 
 ### Description
 
-Verify omitted fields or empty optional array values (e.g., `references`, `sentences`, `clues`) are not persisted.
+Verify optional fields when omitted in the request, they are not stored in database with default value.
+
+Verify optional fields whose value is submitted as an empty string/array inthe request, are not stored in the database.
 
 ### Pre-conditions
 
@@ -294,7 +296,8 @@ Verify omitted fields or empty optional array values (e.g., `references`, `sente
 ### Postconditions
 
 - Neither created exercise has the `references` field.
-- The word exercise does not have the `sentences`, `clues`, or inapplicable array fields.
+- The word exercise does not have the `sentences` or `clues` fields.
+- Neither exercise has optional fields that were omitted or supplied as empty arrays.
 
 ## Hide internal details on service failure (TC_API_CE_09)
 
