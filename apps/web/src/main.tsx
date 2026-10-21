@@ -5,6 +5,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 
+import { Toaster } from '@/components/ui/toast';
+
 import { ApiProvider, AxiosClient } from './api';
 import App from './App';
 import { AuthProvider, initializeAuth } from './auth';
@@ -42,6 +44,7 @@ if (rootEl) {
           <BrowserRouter>
             <QueryClientProvider client={queryClient}>
               <App />
+              <Toaster />
             </QueryClientProvider>
           </BrowserRouter>
         </AuthProvider>

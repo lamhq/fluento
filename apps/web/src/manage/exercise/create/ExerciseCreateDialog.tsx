@@ -9,6 +9,7 @@ import {
 
 import { ExerciseFormat } from '../../../core/types/exercise-format';
 import { ExerciseStatus } from '../../../core/types/exercise-status';
+import { useErrorHandler } from '../../../error-new';
 import { useCreateExercise } from '../hooks';
 import ExerciseForm from './ExerciseForm';
 import type { ExerciseFormData } from './exerciseFormSchema';
@@ -32,6 +33,10 @@ export default function ExerciseCreateDialog({
   onOpenChange,
 }: ExerciseCreateDialogProps) {
   const { mutateAsync: createExercise, isPending } = useCreateExercise();
+  const handleSubmit = useErrorHandler(async (values: ExerciseFormData) => {
+    await createExercise(values);
+    onOpenChange(false);
+  });
 
   const handleOpenChange = (
     nextOpen: boolean,
@@ -43,11 +48,6 @@ export default function ExerciseCreateDialog({
     }
 
     onOpenChange(nextOpen);
-  };
-
-  const handleSubmit = async (values: ExerciseFormData) => {
-    await createExercise(values);
-    onOpenChange(false);
   };
 
   return (
