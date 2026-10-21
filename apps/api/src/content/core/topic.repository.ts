@@ -4,7 +4,7 @@ import { TopicEntity } from './topic.entity.js';
 export const TOPIC_REPOSITORY = Symbol('TopicRepository');
 
 export interface TopicQuery {
-  userId?: string;
+  userId: string;
 }
 
 export type TopicRepository = Repository<TopicEntity, TopicQuery>;

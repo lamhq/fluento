@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import request from 'supertest';
 import { z } from 'zod';
 
-import { deleteMany, insert, insertMany } from '../../utils/mongodb.js';
+import { deleteMany, insertMany } from '../../utils/mongodb.js';
 import { setUpApiTest } from '../../utils/test.js';
 
 const getTopicsResponseSchema = z.array(
@@ -24,33 +24,44 @@ describe('get topics', () => {
     await deleteMany('users', { _id: otherUserId });
   });
 
-  it('should return all topics sorted by name ascending', async () => {
+  it("should return public topics and the current user's topics sorted by name ascending", async () => {
     const { email: userEmail, id: userId } = getUser();
     await insertMany('topics', [
       {
         userId,
         name: 'Speaking',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T08:15:00Z'),
       },
       {
         userId,
         name: 'Communication',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T08:45:00Z'),
       },
       {
         userId,
         name: 'Grammar',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T08:30:00Z'),
       },
       {
         userId,
         name: 'Vocabulary',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T08:00:00Z'),
       },
       {
         userId: otherUserId,
         name: 'Secret',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T09:00:00Z'),
+      },
+      {
+        userId: otherUserId,
+        name: 'Airport',
+        visibility: 'public',
+        createdAt: new Date('2026-01-10T07:00:00Z'),
       },
     ]);
 
@@ -62,16 +73,16 @@ describe('get topics', () => {
 
     expect(topics).toHaveLength(5);
     expect(topics.map((topic) => topic.name)).toEqual([
+      'Airport',
       'Communication',
       'Grammar',
-      'Secret',
       'Speaking',
       'Vocabulary',
     ]);
     expect(topics[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        name: 'Communication',
+        name: 'Airport',
         createdAt: expect.any(String),
       }),
     );
@@ -90,35 +101,5 @@ describe('get topics', () => {
 
   it('should reject unauthenticated requests', async () => {
     await request(getApp().getHttpServer()).get('/v1/practice/topics').expect(401);
-  });
-
-  it('should return topics regardless of their user', async () => {
-    const { email: userEmail, id: userId } = getUser();
-    const user2 = await insert('users', {
-      _id: otherUserId,
-      email: `${otherUserId.toHexString()}@example.com`,
-    });
-
-    await insertMany('topics', [
-      {
-        userId,
-        name: 'Mine',
-        createdAt: new Date('2026-01-10T08:00:00Z'),
-      },
-      {
-        userId: user2._id,
-        name: 'Theirs',
-        createdAt: new Date('2026-01-10T08:10:00Z'),
-      },
-    ]);
-
-    const resp = await request(getApp().getHttpServer())
-      .get('/v1/practice/topics')
-      .set('x-user-email', userEmail)
-      .expect(200);
-    const topics = getTopicsResponseSchema.parse(resp.body);
-
-    expect(topics).toHaveLength(2);
-    expect(topics.map((topic) => topic.name)).toEqual(['Mine', 'Theirs']);
   });
 });

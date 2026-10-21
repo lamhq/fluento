@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Retrieve a list of topics created by the user for categorizing and filtering exercises.
+Retrieve public topics and topics created by the authenticated user for categorizing and filtering exercises.
 
 ## Contract
 
@@ -19,7 +19,7 @@ Retrieve a list of topics created by the user for categorizing and filtering exe
 
 ### Query Parameters
 
-No query parameters are supported for this endpoint. All available topics are returned sorted by name in ascending order.
+No query parameters are supported.
 
 ### Response
 
@@ -28,24 +28,19 @@ No query parameters are supported for this endpoint. All available topics are re
 ```json
 [
   {
-    "id": "topic_004",
-    "name": "Travel"
-  },
-  {
     "id": "topic_003",
-    "name": "Airport"
+    "name": "Airport",
+    "createdAt": "2026-10-01T09:00:00.000Z"
   },
   {
     "id": "topic_005",
-    "name": "Restaurant"
+    "name": "Restaurant",
+    "createdAt": "2026-10-02T09:00:00.000Z"
   },
   {
-    "id": "topic_002",
-    "name": "Food"
-  },
-  {
-    "id": "topic_001",
-    "name": "Job Interview"
+    "id": "topic_004",
+    "name": "Travel",
+    "createdAt": "2026-10-03T09:00:00.000Z"
   }
 ]
 ```
@@ -63,9 +58,9 @@ No query parameters are supported for this endpoint. All available topics are re
 ## Functional Requirements
 
 - **User Identification:** Require the `x-user-email` header to identify the authenticated request context.
-- **Topic List Retrieval:** Return all topics sorted by name in ascending order. The current implementation does not filter topics by the authenticated user.
-- **Consistent Format:** Return topic objects with id and name fields.
-- **Empty Results:** Return empty array if the user has not created any topics.
+- **Topic List Retrieval:** Return topics whose visibility is `public` or whose owner is the authenticated user. Sort by name in ascending order.
+- **Consistent Format:** Return topic objects with `id`, `name`, and `createdAt`.
+- **Empty Results:** Return an empty array when no public topics or user-owned topics are available.
 
 ## Non-Functional Requirements
 

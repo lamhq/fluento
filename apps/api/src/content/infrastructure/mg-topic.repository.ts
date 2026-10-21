@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { TopicEntity } from '../core/topic.entity.js';
+import { TopicEntity, TopicVisibility } from '../core/topic.entity.js';
 import { TopicQuery, TopicRepository } from '../core/topic.repository.js';
 import { TopicDocument, TopicModel } from './topic.schema.js';
 
@@ -14,10 +14,12 @@ export class MgTopicRepository implements TopicRepository {
   ) {}
 
   async findAll(query?: TopicQuery): Promise<TopicEntity[]> {
-    const topics = await this.topicModel
-      .find(query?.userId === undefined ? {} : { userId: query.userId })
-      .sort({ name: 1 })
-      .exec();
+    const filter = query?.userId
+      ? {
+          $or: [{ visibility: TopicVisibility.Public }, { userId: query.userId }],
+        }
+      : { visibility: TopicVisibility.Public };
+    const topics = await this.topicModel.find(filter).sort({ name: 1 }).exec();
 
     return topics.map((topic) => this.dbModelToEntity(topic));
   }
@@ -45,8 +47,9 @@ export class MgTopicRepository implements TopicRepository {
   private dbModelToEntity(data: TopicDocument): TopicEntity {
     return {
       id: data._id.toString(),
-      userId: data.userId?.toString(),
+      userId: data.userId.toString(),
       name: data.name,
+      visibility: data.visibility,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };

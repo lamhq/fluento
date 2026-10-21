@@ -82,7 +82,7 @@ Before a format is selected, show: “Select a format to show the required conte
 
 ### Topics
 
-- Load topic options when dialog opens; show loading state.
+- Load topic options from the Get Topics API when dialog opens; show loading state.
 - If loading fails, show an inline message and allow manual additions.
 - If no topics exist, show an empty hint and allow manual additions; require at least one before saving.
 - Keep selected existing and manually added values.

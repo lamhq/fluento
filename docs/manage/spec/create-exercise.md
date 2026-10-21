@@ -17,6 +17,7 @@
 - Choose a supported format.
 - Enter format-specific content.
 - Add one or more topics and optionally add references.
+- Choose from public topics and topics created by the authenticated user.
 - Select a status.
 
 ### Exclusions

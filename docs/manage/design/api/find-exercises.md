@@ -99,7 +99,7 @@ Do not include internal database or implementation details in error responses.
 - **User Isolation:** Return only exercises owned by the authenticated user. Apply user scoping independently of filters, sorting, and pagination.
 - **Name Filtering:** Match the `name` field case-insensitively when it contains the supplied value.
 - **Multi-Select Filtering:** Accept repeated `topics`, `skills`, `formats`, and `status` query parameters. Match OR within each parameter and AND across different parameters.
-- **Topic Options:** Topic filter values are topic names supplied by the topics API.
+- **Topic Options:** Topic filter values are names from public topics and topics created by the current user, returned from the Find Topics API.
 - **Sorting:** Support `name` and `createdAt`, including multiple fields with earlier fields taking priority and ascending/descending direction per field.
 - **Pagination:** Apply offset and limit on the backend and return the total matching count with the requested offset, limit, and page items.
 - **Empty Results:** Return `200 OK` with `total: 0` and an empty `items` array when no exercises match.

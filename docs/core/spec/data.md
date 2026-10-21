@@ -39,6 +39,7 @@ erDiagram
         Identifier id PK
         Identifier ownerId FK
         Text name
+        TopicVisibility visibility
         Timestamp createdAt
         Timestamp updatedAt
     }
@@ -75,17 +76,25 @@ Represents reusable user-created English practice material across supported skil
 
 Represents a label users can select to categorize and find exercises. Topics may be user-owned or shared.
 
-| Name          | ID          | Type       | Constraints        | Default          | Description                                            |
-| ------------- | ----------- | ---------- | ------------------ | ---------------- | ------------------------------------------------------ |
-| Topic ID      | `id`        | Identifier | Required, Unique   | —                | Stable identifier for the topic record.                |
-| Owner ID      | `ownerId`   | Identifier |                    | —                | User who owns the topic, when it is user-specific.     |
-| Name          | `name`      | Text       | Required, NonEmpty | —                | Label stored on the topic and referenced by exercises. |
-| Creation Time | `createdAt` | Timestamp  | Required           | System generated | Time the topic record was created.                     |
-| Update Time   | `updatedAt` | Timestamp  | Required           | System generated | Time the topic record was last changed.                |
+| Name          | ID           | Type                           | Constraints        | Default          | Description                                                   |
+| ------------- | ------------ | ------------------------------ | ------------------ | ---------------- | ------------------------------------------------------------- |
+| Topic ID      | `id`         | Identifier                     | Required, Unique   | —                | Stable identifier for the topic record.                       |
+| Owner ID      | `ownerId`    | Identifier                     |                    | —                | User who owns the topic, when it is user-specific.            |
+| Name          | `name`       | Text                           | Required, NonEmpty | —                | Label stored on the topic and referenced by exercises.        |
+| Visibility    | `visibility` | Topic Visibility (Enumeration) | Required           | `private`        | Whether the topic is private to its owner or shared publicly. |
+| Creation Time | `createdAt`  | Timestamp                      | Required           | System generated | Time the topic record was created.                            |
+| Update Time   | `updatedAt`  | Timestamp                      | Required           | System generated | Time the topic record was last changed.                       |
 
-Topic names are not globally unique. An exercise stores selected topic names, not topic identifiers; a topic label can be used by multiple exercises.
+Topics default to `private`. Public topics are available to all users; private topics are available only to their owner. Topic names are not globally unique. An exercise stores selected topic names, not topic identifiers; a topic label can be used by multiple exercises.
 
 ## Enumerations
+
+### Topic Visibility
+
+| Value     | Description                          |
+| --------- | ------------------------------------ |
+| `private` | Available only to the topic's owner. |
+| `public`  | Available to all users.              |
 
 ### Skill
 
