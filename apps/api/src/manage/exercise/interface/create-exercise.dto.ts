@@ -28,7 +28,9 @@ const trimLines = z
 
 // validators for text and lines
 const linesErrorMessage = 'Please enter at least one item.';
-const nonEmptyText = z.string().nonempty('Please enter a value.');
+const nonEmptyText = z
+  .string({ error: 'Please enter a value.' })
+  .nonempty('Please enter a value.');
 const nonEmptyList = z
   .array(z.string(), { error: linesErrorMessage })
   .nonempty(linesErrorMessage);

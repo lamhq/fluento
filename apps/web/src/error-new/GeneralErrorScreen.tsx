@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button';
 
 import { Actions, Container, Description, Title } from './ErrorScreen';
 
-export default function GeneralErrorScreen() {
+interface GeneralErrorScreenProps {
+  onRetry: () => void;
+}
+
+export default function GeneralErrorScreen({ onRetry }: GeneralErrorScreenProps) {
   const navigate = useNavigate();
 
   return (
@@ -17,7 +21,7 @@ export default function GeneralErrorScreen() {
         <Button variant="outline" onClick={() => navigate(-1)}>
           Go Back
         </Button>
-        <Button onClick={() => navigate('/')}>Back to Home</Button>
+        <Button onClick={onRetry}>Retry</Button>
       </Actions>
     </Container>
   );

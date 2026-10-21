@@ -20,7 +20,9 @@ const trimLines = z.array(z.string()).transform((items) => {
 });
 
 // check if a string is not empty
-const nonEmptyText = z.string().nonempty('Please enter a value.');
+const nonEmptyText = z
+  .string({ error: 'Please enter a value.' })
+  .nonempty('Please enter a value.');
 
 // check if an array of strings is not empty
 const linesErrorMessage = 'Please enter at least one item.';

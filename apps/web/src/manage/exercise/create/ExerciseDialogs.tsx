@@ -1,5 +1,5 @@
-import ExerciseCreateDialog from './ExerciseCreateDialog';
-import ExerciseUpdateDialog from './ExerciseUpdateDialog';
+import CreateExerciseDialog from './CreateExerciseDialog';
+import UpdateExerciseDialog from './UpdateExerciseDialog';
 import { useExerciseDialogs } from './useExerciseDialogs';
 
 export default function ExerciseDialogs() {
@@ -7,14 +7,14 @@ export default function ExerciseDialogs() {
 
   return (
     <>
-      <ExerciseCreateDialog
+      <CreateExerciseDialog
         open={open === 'create'}
         onOpenChange={() => {
           setOpen('create');
         }}
       />
       {currentRow && (
-        <ExerciseUpdateDialog
+        <UpdateExerciseDialog
           exerciseId={currentRow.id}
           open={open === 'update'}
           onOpenChange={() => {

@@ -86,7 +86,6 @@ export const Default: Story = {
       topics: [],
       status: ExerciseStatus.ACTIVE,
     },
-    submitLabel: 'Create',
     onSubmit: () => Promise.resolve(),
   },
 };
@@ -101,7 +100,6 @@ export const Communication: Story = {
       prompts: ['What are you up to this weekend?'],
       validResponses: ['My parents are coming to visit.'],
     },
-    submitLabel: 'Update',
     onSubmit: () => Promise.resolve(),
   },
 };
@@ -117,7 +115,6 @@ export const Word: Story = {
       sentences: ['We waited at baggage claim.'],
       clues: ['You go here after a flight.'],
     },
-    submitLabel: 'Update',
     onSubmit: () => Promise.resolve(),
   },
 };
@@ -132,7 +129,6 @@ export const Sentence: Story = {
       sentence: 'I learned a lot from working with that team.',
       words: ['experience', 'teamwork'],
     },
-    submitLabel: 'Update',
     onSubmit: () => Promise.resolve(),
   },
 };
@@ -147,7 +143,6 @@ export const Paragraph: Story = {
       paragraph: 'The Mid-Autumn Festival is a celebration of family and community.',
       words: ['festival', 'community'],
     },
-    submitLabel: 'Update',
     onSubmit: () => Promise.resolve(),
   },
 };

@@ -1,15 +1,12 @@
-import { toast } from '@/components/ui/toast';
-
 import { useAuth } from '../auth';
-import { ForbiddenError, NotFoundError, UnAuthorizedError } from './types';
-
-function showErrorToast(message: string) {
-  toast.add({
-    type: 'error',
-    title: 'Something went wrong',
-    description: message,
-  });
-}
+import {
+  ForbiddenError,
+  NetworkError,
+  NotFoundError,
+  ServerError,
+  UnAuthorizedError,
+} from './types';
+import { showErrorToast } from './utils';
 
 export default function useErrorHandler<Args extends unknown[], Result>(
   asyncFunction: (...args: Args) => Promise<Result>,
@@ -21,10 +18,16 @@ export default function useErrorHandler<Args extends unknown[], Result>(
       return await asyncFunction(...args);
     } catch (error) {
       if (error instanceof UnAuthorizedError) {
-        showErrorToast(error.message);
+        showErrorToast(error.message, 'Sign-in required');
         await signIn();
-      } else if (error instanceof ForbiddenError || error instanceof NotFoundError) {
-        showErrorToast(error.message);
+      } else if (error instanceof NetworkError) {
+        showErrorToast(error.message, 'Connection problem');
+      } else if (error instanceof ForbiddenError) {
+        showErrorToast(error.message, 'Access denied');
+      } else if (error instanceof NotFoundError) {
+        showErrorToast(error.message, 'Not found');
+      } else if (error instanceof ServerError) {
+        showErrorToast(error.message, 'Server error');
       } else {
         showErrorToast('Something went wrong. Please try again.');
         // TODO: send error to monitoring services

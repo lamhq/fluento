@@ -2,13 +2,23 @@ import type { FallbackProps } from 'react-error-boundary';
 
 import ForbiddenErrorScreen from './ForbiddenErrorScreen';
 import GeneralErrorScreen from './GeneralErrorScreen';
+import NetworkErrorScreen from './NetworkErrorScreen';
 import NotFoundErrorScreen from './NotFoundErrorScreen';
-import { ForbiddenError, NotFoundError, UnAuthorizedError } from './types';
+import {
+  ForbiddenError,
+  NetworkError,
+  NotFoundError,
+  UnAuthorizedError,
+} from './types';
 import UnauthorizedErrorScreen from './UnauthorizedErrorScreen';
 
-export default function ErrorFallback({ error }: FallbackProps) {
+export default function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   if (error instanceof UnAuthorizedError) {
     return <UnauthorizedErrorScreen />;
+  }
+
+  if (error instanceof NetworkError) {
+    return <NetworkErrorScreen onRetry={resetErrorBoundary} />;
   }
 
   if (error instanceof ForbiddenError) {
@@ -19,5 +29,5 @@ export default function ErrorFallback({ error }: FallbackProps) {
     return <NotFoundErrorScreen />;
   }
 
-  return <GeneralErrorScreen />;
+  return <GeneralErrorScreen onRetry={resetErrorBoundary} />;
 }
