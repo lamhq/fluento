@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import type { ExerciseSummary } from '../../../core/types/exercise-summary';
-import { useExerciseDialogs } from '../create/useExerciseDialogs';
+import { useExerciseDialogs } from '../dialog/useExerciseDialogs';
 
 export default function ExerciseRowActions({
   exercise,

@@ -1,8 +1,8 @@
 import { type ReactNode, useState } from 'react';
 
-import { useDialogState } from '../../common/hooks';
-import type { ExerciseSummary } from '../../core/types/exercise-summary';
-import { ExerciseContext, type ExerciseDialogType } from './create/context';
+import { useDialogState } from '../../../common/hooks';
+import type { ExerciseSummary } from '../../../core/types/exercise-summary';
+import { ExerciseContext, type ExerciseDialogType } from './context';
 
 export function ExerciseProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useDialogState<ExerciseDialogType>(null);

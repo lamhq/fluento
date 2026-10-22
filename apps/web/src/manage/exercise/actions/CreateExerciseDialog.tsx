@@ -13,9 +13,9 @@ import { Spinner } from '@/components/ui/spinner';
 
 import { ExerciseFormat } from '../../../core/types/exercise-format';
 import { ExerciseStatus } from '../../../core/types/exercise-status';
+import ExerciseForm from '../form/ExerciseForm';
+import type { ExerciseFormData } from '../form/exerciseFormSchema';
 import { useCreateExercise } from '../hooks';
-import ExerciseForm from './ExerciseForm';
-import type { ExerciseFormData } from './exerciseFormSchema';
 
 const defaultValues: ExerciseFormData = {
   format: ExerciseFormat.Communication,

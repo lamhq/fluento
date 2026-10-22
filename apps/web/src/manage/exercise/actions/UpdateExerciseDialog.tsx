@@ -12,10 +12,10 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 
 import TopLoadingBar from '../../../common/components/TopLoadingBar';
+import ExerciseForm from '../form/ExerciseForm';
+import { type ExerciseFormData } from '../form/exerciseFormSchema';
+import ExerciseFormSkeleton from '../form/ExerciseFormSkeleton';
 import { useGetExerciseDetails, useUpdateExercise } from '../hooks';
-import ExerciseForm from './ExerciseForm';
-import { type ExerciseFormData } from './exerciseFormSchema';
-import ExerciseFormSkeleton from './ExerciseFormSkeleton';
 
 interface UpdateExerciseDialogProps {
   open: boolean;

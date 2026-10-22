@@ -1,5 +1,5 @@
-import CreateExerciseDialog from './CreateExerciseDialog';
-import UpdateExerciseDialog from './UpdateExerciseDialog';
+import CreateExerciseDialog from '../actions/CreateExerciseDialog';
+import UpdateExerciseDialog from '../actions/UpdateExerciseDialog';
 import { useExerciseDialogs } from './useExerciseDialogs';
 
 export default function ExerciseDialogs() {
