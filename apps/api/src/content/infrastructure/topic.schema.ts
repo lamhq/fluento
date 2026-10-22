@@ -10,7 +10,7 @@ export class TopicModel {
   @Prop({ required: true, index: true })
   name: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   userId: mongoose.Types.ObjectId;
 
   @Prop({
@@ -25,3 +25,11 @@ export class TopicModel {
 }
 
 export const TopicSchema = SchemaFactory.createForClass(TopicModel);
+
+TopicSchema.index(
+  { userId: 1, name: 1 },
+  {
+    unique: true,
+    collation: { locale: 'en', strength: 2 },
+  },
+);

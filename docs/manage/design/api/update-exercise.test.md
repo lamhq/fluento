@@ -12,6 +12,36 @@ Default request headers:
 - `Accept: application/json`
 - `x-user-email: <test user email>`
 
+## Create new topics for an exercise (TC_API_UE_10)
+
+### Description
+
+Verify updating an exercise persists new topic records with normalized names.
+
+### Pre-conditions
+
+- API is available, and the test harness provides an authenticated user.
+- An existing exercise is stored for the authenticated user.
+
+### Test Data
+
+- An update request with three topics that do not exist in the system, in lowercase.
+
+### Test Steps
+
+1. Submit the request to `PUT /v1/manage/exercises/{id}`.
+2. Verify the API response.
+3. Retrieve the topic records for the authenticated user from the database.
+
+### Expected Result
+
+- The response status is `200 OK`.
+- The response contains the three submitted topic names (normalized).
+
+### Postconditions
+
+- Three new topic records are persisted in the database, one for each topic in the exercise, with names trimmed and formatted in Title Case.
+
 ## Reject invalid field values (TC_API_UE_06)
 
 ### Description

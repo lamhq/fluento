@@ -58,7 +58,8 @@ No query parameters are supported.
 ## Functional Requirements
 
 - **User Identification:** Require the `x-user-email` header to identify the authenticated request context.
-- **Topic List Retrieval:** Return topics whose visibility is `public` or whose owner is the authenticated user. Sort by name in ascending order.
+- **Topic List Retrieval:** Return topics whose visibility is `public` or whose owner is the authenticated user. Remove duplicated topic names.
+- **Ordering:** Sort the deduplicated list by name in ascending, case-insensitive alphabetical order.
 - **Consistent Format:** Return topic objects with `id`, `name`, and `createdAt`.
 - **Empty Results:** Return an empty array when no public topics or user-owned topics are available.
 

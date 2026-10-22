@@ -53,6 +53,7 @@ db.getCollection('users').insertOne({
 db.getCollection('topics').insertMany(
   topicNames.map((name) => ({
     name,
+    userId,
     visibility: 'public',
     createdAt: now,
     updatedAt: now,

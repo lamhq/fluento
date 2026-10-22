@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { toTitleCase } from '../../../common/utils.js';
 import {
   ExerciseFormat,
   ExerciseStatus,
@@ -38,7 +39,7 @@ const nonEmptyList = z
 // schema
 const commonFields = {
   status: z.enum(ExerciseStatus),
-  topics: trimLines.pipe(nonEmptyList),
+  topics: trimLines.pipe(nonEmptyList).transform((items) => items.map(toTitleCase)),
   references: trimLines.pipe(nonEmptyList.optional()),
 };
 

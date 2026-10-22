@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import {
   CONTEXT_SERVICE,
@@ -12,6 +13,10 @@ import {
   type ExerciseQuery,
   type ExerciseRepository,
 } from './exercise.repository.js';
+import {
+  EXERCISE_TOPICS_CHANGED_EVENT,
+  ExerciseTopicsChangedEvent,
+} from './exercise-topics-changed.event.js';
 
 function getExerciseMetadata(
   data:
@@ -46,19 +51,29 @@ function getExerciseMetadata(
 
 @Injectable()
 export class ExerciseService {
+  private readonly logger = new Logger(ExerciseService.name);
+
   constructor(
     @Inject(EXERCISE_REPOSITORY)
     private readonly repository: ExerciseRepository,
     @Inject(CONTEXT_SERVICE)
     private readonly contextService: ContextService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
-    return this.repository.create({
+    const exercise = await this.repository.create({
       ...data,
       ...getExerciseMetadata(data),
       userId: this.contextService.getUserIdOrThrow(),
     });
+
+    void this.eventEmitter.emitAsync(
+      EXERCISE_TOPICS_CHANGED_EVENT,
+      new ExerciseTopicsChangedEvent(exercise.userId, exercise.topics),
+    );
+
+    return exercise;
   }
 
   async findAllPaginated(query: Omit<ExerciseQuery, 'userId'> = {}): Promise<{
@@ -105,15 +120,21 @@ export class ExerciseService {
   async update(id: string, data: UpdateExerciseDto): Promise<ExerciseEntity> {
     const userId = this.contextService.getUserIdOrThrow();
     const exercise = await this.repository.findById(id);
-
     if (exercise?.userId !== userId) {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.update(id, {
+    const updatedExercise = await this.repository.update(id, {
       ...data,
       ...getExerciseMetadata(data),
     });
+
+    void this.eventEmitter.emitAsync(
+      EXERCISE_TOPICS_CHANGED_EVENT,
+      new ExerciseTopicsChangedEvent(updatedExercise.userId, updatedExercise.topics),
+    );
+
+    return updatedExercise;
   }
 
   async delete(id: string): Promise<void> {

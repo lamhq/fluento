@@ -19,12 +19,12 @@ This document defines the business meaning, required data, allowed values, and v
 ```mermaid
 erDiagram
     User ||--o{ Exercise : creates
-    User o|--o{ Topic : owns
+    User ||--o{ Topic : owns
     Exercise }o--o{ Topic : uses_topic_names
 
     Exercise {
         Identifier id PK
-        Identifier ownerId FK
+        Identifier userId FK
         Text name
         Enumeration skill
         Enumeration format
@@ -37,7 +37,7 @@ erDiagram
 
     Topic {
         Identifier id PK
-        Identifier ownerId FK
+        Identifier userId FK
         Text name
         TopicVisibility visibility
         Timestamp createdAt
@@ -52,7 +52,7 @@ Represents reusable user-created English practice material across supported skil
 | Name            | ID               | Type                          | Constraints                | Default          | Description                                                                                   |
 | --------------- | ---------------- | ----------------------------- | -------------------------- | ---------------- | --------------------------------------------------------------------------------------------- |
 | Exercise ID     | `id`             | Identifier                    | Required, Unique           | —                | Stable identifier for the exercise.                                                           |
-| Owner ID        | `ownerId`        | Identifier                    | Required                   | —                | Authenticated user who created the exercise.                                                  |
+| Owner ID        | `userId`         | Identifier                    | Required                   | —                | Authenticated user who created the exercise.                                                  |
 | Name            | `name`           | Text                          | Required, NonEmpty         | Derived          | Name shown to the exercise owner; derived at creation according to the Exercise Name Mapping. |
 | Format          | `format`         | Exercise Format (Enumeration) | Required, ExerciseFormat   | —                | Defines the additional fields required for the exercise.                                      |
 | Skill           | `skill`          | Skill (Enumeration)           | Required, ExerciseSkill    | Inferred         | English skill the exercise practices, inferred from its format.                               |
@@ -76,16 +76,14 @@ Represents reusable user-created English practice material across supported skil
 
 Represents a label users can select to categorize and find exercises. Topics may be user-owned or shared.
 
-| Name          | ID           | Type                           | Constraints        | Default          | Description                                                   |
-| ------------- | ------------ | ------------------------------ | ------------------ | ---------------- | ------------------------------------------------------------- |
-| Topic ID      | `id`         | Identifier                     | Required, Unique   | —                | Stable identifier for the topic record.                       |
-| Owner ID      | `ownerId`    | Identifier                     |                    | —                | User who owns the topic, when it is user-specific.            |
-| Name          | `name`       | Text                           | Required, NonEmpty | —                | Label stored on the topic and referenced by exercises.        |
-| Visibility    | `visibility` | Topic Visibility (Enumeration) | Required           | `private`        | Whether the topic is private to its owner or shared publicly. |
-| Creation Time | `createdAt`  | Timestamp                      | Required           | System generated | Time the topic record was created.                            |
-| Update Time   | `updatedAt`  | Timestamp                      | Required           | System generated | Time the topic record was last changed.                       |
-
-Topics default to `private`. Public topics are available to all users; private topics are available only to their owner. Topic names are not globally unique. An exercise stores selected topic names, not topic identifiers; a topic label can be used by multiple exercises.
+| Name          | ID           | Type                           | Constraints                       | Default          | Description                                                   |
+| ------------- | ------------ | ------------------------------ | --------------------------------- | ---------------- | ------------------------------------------------------------- |
+| Topic ID      | `id`         | Identifier                     | Required, Unique                  | —                | Stable identifier for the topic record.                       |
+| Owner ID      | `userId`     | Identifier                     | Required                          | —                | User who created and owns the topic.                          |
+| Name          | `name`       | Text                           | Required, NonEmpty, UniquePerUser | —                | Label stored on the topic and referenced by exercises.        |
+| Visibility    | `visibility` | Topic Visibility (Enumeration) | Required                          | `private`        | Whether the topic is private to its owner or shared publicly. |
+| Creation Time | `createdAt`  | Timestamp                      | Required                          | System generated | Time the topic record was created.                            |
+| Update Time   | `updatedAt`  | Timestamp                      | Required                          | System generated | Time the topic record was last changed.                       |
 
 ## Enumerations
 
@@ -122,15 +120,16 @@ Topics default to `private`. Public topics are available to all users; private t
 
 ## Constraints
 
-| Rule ID        | Trigger                                           | Business Rule                                                                              | Violation                                                        |
-| -------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| Required       | When a record is created or updated               | Field must be present in the object; it cannot be `undefined` or `null`.                   | Reject the record and identify the omitted field.                |
-| Unique         | When assigning a record identifier                | An entity's identifier must identify only one record.                                      | Reject the record.                                               |
-| NonEmpty       | When value is supplied                            | Value must contain a non-whitespace character after trimming.                              | Reject the value and identify the field.                         |
-| NonEmptyList   | When value is supplied                            | After trimming and removing blank entries, list contains at least one non-empty text item. | Reject non-text items or a list that is empty after cleanup.     |
-| ExerciseFormat | When an exercise is created or its format changes | The selected format must be a supported Exercise Format.                                   | Reject the exercise and identify the invalid format.             |
-| ExerciseSkill  | When an exercise is created or its format changes | Set `skill` from the selected `format` using the Format-Skill Mapping below.               | Reject the exercise if the format has no mapped skill.           |
-| FormatFields   | When an exercise is created or its format changes | Required fields must be present; fields that do not apply to the format must be omitted.   | Reject the exercise and identify missing or inapplicable fields. |
+| Rule ID        | Trigger                                           | Business Rule                                                                               | Violation                                                        |
+| -------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Required       | When a record is created or updated               | Field must be present in the object; it cannot be `undefined` or `null`.                    | Reject the record and identify the omitted field.                |
+| Unique         | When assigning a record identifier                | An entity's identifier must identify only one record.                                       | Reject the record.                                               |
+| NonEmpty       | When value is supplied                            | Value must contain a non-whitespace character after trimming.                               | Reject the value and identify the field.                         |
+| NonEmptyList   | When value is supplied                            | After trimming and removing blank entries, list contains at least one non-empty text item.  | Reject non-text items or a list that is empty after cleanup.     |
+| ExerciseFormat | When an exercise is created or its format changes | The selected format must be a supported Exercise Format.                                    | Reject the exercise and identify the invalid format.             |
+| ExerciseSkill  | When an exercise is created or its format changes | Set `skill` from the selected `format` using the Format-Skill Mapping below.                | Reject the exercise if the format has no mapped skill.           |
+| FormatFields   | When an exercise is created or its format changes | Required fields must be present; fields that do not apply to the format must be omitted.    | Reject the exercise and identify missing or inapplicable fields. |
+| UniquePerUser  | When topics are created                           | A topic name must not duplicate with other topics owned by the current user, ignoring case. | Skip topic creation.                                             |
 
 ### Exercise Name Mapping
 
@@ -169,6 +168,8 @@ Optional array fields are omitted when absent or when trimming and removing blan
 
 | Version | Date       | Author       | Changes                                                                                             |
 | ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------- |
+| 1.8     | 2026-10-21 | Fluento team | Require an owner for every topic, including public topics.                                          |
+| 1.7     | 2026-10-21 | Fluento team | Define case-insensitive topic name matching within the current user's visible topic scope.          |
 | 1.6     | 2026-10-15 | Fluento team | Omit optional arrays from storage when absent or empty after cleanup.                               |
 | 1.5     | 2026-10-15 | Fluento team | Made word-format sentences and clues, and sentence/paragraph-format words optional.                 |
 | 1.4     | 2026-10-12 | Fluento team | Defined exercise name derivation by format.                                                         |

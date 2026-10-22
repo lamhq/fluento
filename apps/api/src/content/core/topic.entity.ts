@@ -8,7 +8,7 @@ export enum TopicVisibility {
 export class TopicEntity implements Entity {
   id: string;
   name: string;
-  userId?: string;
+  userId: string;
   visibility: TopicVisibility;
   createdAt: Date;
   updatedAt: Date;

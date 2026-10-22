@@ -128,6 +128,35 @@ Prepare requests for each supported format with:
 - Each field in the created exercise is normalized according to the rules: strings are trimmed, and arrays have blank entries removed.
 - Empty arrays (after normalization) are not persisted.
 
+## Create new topics for an exercise (TC_API_CE_10)
+
+### Description
+
+Verify exercise creation persists new topic records with normalized names.
+
+### Pre-conditions
+
+- API is available, and the test harness provides an authenticated user.
+
+### Test Data
+
+- An exercise with three topics not existing in the system, in lowercase.
+
+### Test Steps
+
+1. Submit the request to `POST /v1/manage/exercises`.
+2. Verify the API response.
+3. Retrieve topic records for the authenticated user from the database.
+
+### Expected Result
+
+- The response status is `201 Created`.
+- The response contains the three submitted topic names (normalized).
+
+### Postconditions
+
+- Three new topic records are persisted in the database, one for each topic in the exercise, with names trimmed and formatted in Title Case.
+
 ## Reject missing required fields (TC_API_CE_04)
 
 ### Description
@@ -336,5 +365,5 @@ Verify error responses do not expose internal implementation details.
 
 ## Cleanup
 
-- After each test, remove exercises of the test user from the database.
+- After each test, remove exercises and topics created by the test user from the database.
 - After all tests, remove the test user from the database.

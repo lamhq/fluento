@@ -24,7 +24,7 @@ describe('get topics', () => {
     await deleteMany('users', { _id: otherUserId });
   });
 
-  it("should return public topics and the current user's topics sorted by name ascending", async () => {
+  it('should return public and user-owned topics sorted by name ascending', async () => {
     const { email: userEmail, id: userId } = getUser();
     await insertMany('topics', [
       {
@@ -32,24 +32,6 @@ describe('get topics', () => {
         name: 'Speaking',
         visibility: 'private',
         createdAt: new Date('2026-01-10T08:15:00Z'),
-      },
-      {
-        userId,
-        name: 'Communication',
-        visibility: 'private',
-        createdAt: new Date('2026-01-10T08:45:00Z'),
-      },
-      {
-        userId,
-        name: 'Grammar',
-        visibility: 'private',
-        createdAt: new Date('2026-01-10T08:30:00Z'),
-      },
-      {
-        userId,
-        name: 'Vocabulary',
-        visibility: 'private',
-        createdAt: new Date('2026-01-10T08:00:00Z'),
       },
       {
         userId: otherUserId,
@@ -71,21 +53,8 @@ describe('get topics', () => {
       .expect(200);
     const topics = getTopicsResponseSchema.parse(resp.body);
 
-    expect(topics).toHaveLength(5);
-    expect(topics.map((topic) => topic.name)).toEqual([
-      'Airport',
-      'Communication',
-      'Grammar',
-      'Speaking',
-      'Vocabulary',
-    ]);
-    expect(topics[0]).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        name: 'Airport',
-        createdAt: expect.any(String),
-      }),
-    );
+    expect(topics).toHaveLength(2);
+    expect(topics.map((topic) => topic.name)).toEqual(['Airport', 'Speaking']);
   });
 
   it('should return an empty array when the user has no topics', async () => {

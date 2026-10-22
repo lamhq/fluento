@@ -33,6 +33,6 @@ import { FindTopicsHttpController } from './interface/find-topics.http.controlle
       useExisting: MgTopicRepository,
     },
   ],
-  exports: [ExerciseService, EXERCISE_REPOSITORY],
+  exports: [ExerciseService, TopicService, EXERCISE_REPOSITORY],
 })
 export class ContentModule {}

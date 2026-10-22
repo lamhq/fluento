@@ -54,7 +54,7 @@
 | ---------- | ---------------------- | ------------------------------------------------------------------ |
 | Format     | Select                 | Required; choose any supported format.                             |
 | Topics     | Creatable multi-select | Required; select existing options or add new values, at least one. |
-| References | Textarea               | Optional; one reference per line. Remove blank lines on submit.    |
+| References | Textarea               | Optional; one reference per line.                                  |
 | Status     | Select                 | Required: Active or Archived; default Active.                      |
 
 ### Format-specific fields
@@ -86,14 +86,13 @@ Before a format is selected, show: “Select a format to show the required conte
 - If loading fails, show an inline message and allow manual additions.
 - If no topics exist, show an empty hint and allow manual additions; require at least one before saving.
 - Keep selected existing and manually added values.
+- Show available topic names without duplicate labels.
+- Display manually added names in the selected topics list.
 
 ### Validation
 
 - Validate Format, at least one Topic, and selected format's required fields.
 - Treat whitespace-only values as empty.
-- On submit, remove empty or whitespace-only lines from line-based textareas before validation and save. Do not show errors for removed lines.
-- If an optional list is empty after normalization, omit it from the API request.
-- After normalization, require one or more values in each required list.
 - Show errors beside invalid fields and focus first invalid field.
 - Clear each error when its field becomes valid.
 - Block submission until required fields pass validation.
@@ -102,7 +101,7 @@ Before a format is selected, show: “Select a format to show the required conte
 
 - Primary action: **Create Exercise**.
 - While saving, prevent duplicates, disable form actions, and show **Creating…**.
-- Submit selected Status. On success, close dialog, confirm creation, and refresh Exercise List.
+- On success, close dialog, confirm creation, and refresh Exercise List.
 - On validation, API, or network error, keep dialog open and values intact; explain issue and allow retry.
 
 ## Responsive Behavior

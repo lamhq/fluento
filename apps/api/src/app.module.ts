@@ -1,6 +1,7 @@
 import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClsModule } from 'nestjs-cls';
 
@@ -15,6 +16,7 @@ import { UserModule } from './user/user.module.js';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ClsModule.forRoot({
       global: true,
       middleware: { mount: true },

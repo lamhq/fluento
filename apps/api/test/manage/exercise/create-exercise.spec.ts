@@ -11,6 +11,7 @@ describe('create exercise', () => {
   afterEach(async () => {
     const { id: userId } = getUser();
     await deleteMany('exercises', { userId });
+    await deleteMany('topics', { userId });
   });
 
   describe('happy cases', () => {
@@ -19,58 +20,70 @@ describe('create exercise', () => {
       {
         request: {
           format: 'communication',
-          topics: ['Test topic'],
+          topics: ['Communication topic'],
           status: 'archived',
           scenario: 'Order a meal at a restaurant.',
           prompts: ['Ask to order a meal.'],
           validResponses: ['I would like the grilled salmon, please.'],
         },
-        expectedName: 'Order a meal at a restaurant.',
-        expectedSkill: 'communication',
+        expected: {
+          expectedTopics: ['Communication Topic'],
+          expectedName: 'Order a meal at a restaurant.',
+          expectedSkill: 'communication',
+        },
       },
       // Creates a vocabulary exercise with word, meaning, sentences, and clues.
       {
         request: {
           format: 'word',
-          topics: ['Test topic'],
+          topics: ['Vocabulary topic'],
           status: 'active',
           word: 'serendipity',
           meaning: 'Finding something valuable by chance.',
           sentences: ['We met by serendipity.'],
           clues: ['An unexpected fortunate discovery.'],
         },
-        expectedName: 'serendipity',
-        expectedSkill: 'vocabulary',
+        expected: {
+          expectedTopics: ['Vocabulary Topic'],
+          expectedName: 'serendipity',
+          expectedSkill: 'vocabulary',
+        },
       },
       // Creates an articulation sentence exercise.
       {
         request: {
           format: 'sentence',
-          topics: ['Test topic'],
+          topics: ['Sentence topic'],
           status: 'active',
           scenario: 'Practice saying the sentence clearly.',
           sentence: 'The quick brown fox jumps over the lazy dog.',
           words: ['quick', 'lazy'],
         },
-        expectedName: 'Practice saying the sentence clearly.',
-        expectedSkill: 'articulation',
+        expected: {
+          expectedTopics: ['Sentence Topic'],
+          expectedName: 'Practice saying the sentence clearly.',
+          expectedSkill: 'articulation',
+        },
       },
       // Creates an articulation paragraph exercise.
       {
         request: {
           format: 'paragraph',
-          topics: ['Test topic'],
+          topics: ['Paragraph topic'],
           status: 'active',
           scenario: 'Practice reading the paragraph aloud.',
           paragraph: 'A short paragraph for articulation practice.',
           words: ['articulation', 'practice'],
         },
-        expectedName: 'Practice reading the paragraph aloud.',
-        expectedSkill: 'articulation',
+        expected: {
+          expectedTopics: ['Paragraph Topic'],
+          expectedName: 'Practice reading the paragraph aloud.',
+          expectedSkill: 'articulation',
+        },
       },
     ])(
       'should create $request.format exercise (TC_API_CE_01)',
-      async ({ request: requestBody, expectedName, expectedSkill }) => {
+      async ({ request: requestBody, expected }) => {
         const { id: userId, email } = getUser();
 
         const response = await request(getApp().getHttpServer())
@@ -82,10 +95,10 @@ describe('create exercise', () => {
         const exercise = createExerciseResponseSchema.parse(response.body);
         expect(exercise).toEqual({
           id: expect.any(String),
-          name: expectedName,
-          skill: expectedSkill,
+          name: expected.expectedName,
+          skill: expected.expectedSkill,
           format: requestBody.format,
-          topics: requestBody.topics,
+          topics: expected.expectedTopics,
           createdAt: expect.any(String),
           status: requestBody.status,
         });
@@ -94,13 +107,51 @@ describe('create exercise', () => {
         expect(saved).toEqual(
           expect.objectContaining({
             ...requestBody,
-            skill: expectedSkill,
-            name: expectedName,
+            skill: expected.expectedSkill,
+            name: expected.expectedName,
+            topics: expected.expectedTopics,
             userId,
           }),
         );
       },
     );
+  });
+
+  describe('topics', () => {
+    it('should create new topics with normalized names (TC_API_CE_10)', async () => {
+      const { id: userId, email } = getUser();
+      const expectedTopicNames = ['Communication', 'Daily Routines', 'Travel'];
+      const body = {
+        format: 'communication',
+        topics: [' communication ', ' daily routines ', 'travel'],
+        status: 'active',
+        scenario: 'Practice communication.',
+        prompts: ['Start a conversation.'],
+        validResponses: ['Hello, how are you?'],
+      };
+
+      const response = await request(getApp().getHttpServer())
+        .post('/v1/manage/exercises')
+        .set('x-user-email', email)
+        .send(body)
+        .expect(201);
+
+      // verify API response
+      const exercise = createExerciseResponseSchema.parse(response.body);
+      expect(exercise.topics).toEqual(expectedTopicNames);
+
+      // verify database
+      await vi.waitFor(async () => {
+        const topics = await findAll('topics', {
+          userId,
+          name: { $in: expectedTopicNames },
+        });
+        expect(topics).toHaveLength(expectedTopicNames.length);
+        expect(topics.every(({ visibility }) => visibility === 'private')).toBe(
+          true,
+        );
+      });
+    });
   });
 
   describe('unauthenticated', () => {

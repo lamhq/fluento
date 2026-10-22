@@ -105,10 +105,12 @@ Returned when the request has no authenticated user context.
 - Validate only fields corresponding to `format`.
 - Reject missing, blank, incorrectly typed, or inapplicable content fields.
 - Trim scalar values and array items, then remove blank array entries before validating lists.
+- Normalize topic names to Title Case, collapse repeated whitespace.
 - Reject required lists that are empty after cleanup. Omit optional arrays that have no remaining values; do not persist empty optional arrays.
 - Infer `skill` from `format` using the [Format-Skill Mapping](../../../core/spec/data.md#format-skill-mapping).
 - Save the selected `status`.
   - The form defaults to `active`; `archived` is also accepted.
+- After saving the exercise, create private topic records for the current user if not already existing.
 - Return the created exercise summary with its server-generated identifier and creation timestamp.
 
 ## Non-Functional Requirements
@@ -127,8 +129,10 @@ Returned when the request has no authenticated user context.
 
 ## Changelog
 
-| Date       | Version | Changes                                                               |
-| ---------- | ------- | --------------------------------------------------------------------- |
-| 2026-10-06 | v1.0    | Initial create exercise API contract with format-specific validation. |
-| 2026-10-12 | v1.1    | Use format as the exercise type selector.                             |
-| 2026-10-12 | v1.2    | Generate exercise name from format-specific content.                  |
+| Date       | Version | Changes                                                                                       |
+| ---------- | ------- | --------------------------------------------------------------------------------------------- |
+| 2026-10-06 | v1.0    | Initial create exercise API contract with format-specific validation.                         |
+| 2026-10-12 | v1.1    | Use format as the exercise type selector.                                                     |
+| 2026-10-12 | v1.2    | Generate exercise name from format-specific content.                                          |
+| 2026-10-21 | v1.3    | Persist missing topics after exercise creation using case-insensitive visible-topic matching. |
+| 2026-10-21 | v1.4    | Normalize topic labels to Title Case and deduplicate submitted names.                         |
