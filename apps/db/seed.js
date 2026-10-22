@@ -1,9 +1,12 @@
 print('Seeding data...');
 
-const exercisesCol = db.getCollection('exercises');
-const practicesCol = db.getCollection('learner_exercise_practices');
-const topicsCol = db.getCollection('topics');
-const usersCol = db.getCollection('users');
+const collectionsToClear = [
+  'exercises',
+  'learner_exercise_progress',
+  'practice_attempts',
+  'topics',
+  'users',
+];
 const userId = ObjectId('65f000000000000000000003');
 const now = new Date();
 
@@ -34,23 +37,24 @@ const topicNames = [
   'Mid-Autumn Festival',
 ];
 
-exercisesCol.deleteMany({});
-practicesCol.deleteMany({});
-topicsCol.deleteMany({ name: { $in: topicNames } });
-usersCol.deleteMany({ email: 'test@example.com' });
+collectionsToClear.forEach((collectionName) => {
+  db.getCollection(collectionName).deleteMany({});
+});
 
-usersCol.insertOne({
+db.getCollection('users').insertOne({
   _id: userId,
-  email: 'test@example.com',
+  email: 'daibanglam@gmail.com',
   name: 'Test User',
   avatarUrl: null,
   createdAt: now,
   updatedAt: now,
 });
 
-topicsCol.insertMany(
+db.getCollection('topics').insertMany(
   topicNames.map((name) => ({
     name,
+    userId,
+    visibility: 'public',
     createdAt: now,
     updatedAt: now,
   })),
@@ -338,7 +342,7 @@ const exercises = [
   ...articulationExercises,
 ];
 
-exercisesCol.insertMany(
+db.getCollection('exercises').insertMany(
   exercises.map((exercise) => ({
     ...exercise,
     createdAt: new Date(now.getTime() - Math.random() * 365 * 24 * 60 * 60 * 1000),
@@ -355,4 +359,4 @@ const practiceRecords = exerciseIds.map((exerciseId, index) => ({
   updatedAt: now,
 }));
 
-practicesCol.insertMany(practiceRecords);
+db.getCollection('learner_exercise_progress').insertMany(practiceRecords);

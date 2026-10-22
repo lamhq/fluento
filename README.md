@@ -79,10 +79,12 @@ pnpm format <path>
 
 ## Run lint
 
+Always run lint with the `--fix` flag to automatically fix issues where possible.
+
 Run lint for all files:
 
 ```bash
-pnpm lint
+pnpm lint --fix
 ```
 
 Run lint for specific paths:

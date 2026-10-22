@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import {
   CONTEXT_SERVICE,
@@ -6,12 +7,47 @@ import {
 } from '../../context/context.service.js';
 import type { CreateExerciseDto } from '../../manage/exercise/interface/create-exercise.dto.js';
 import type { UpdateExerciseDto } from '../../manage/exercise/interface/update-exercise.dto.js';
-import { ExerciseEntity } from './exercise.entity.js';
+import { ExerciseEntity, ExerciseFormat, ExerciseSkill } from './exercise.entity.js';
 import {
   EXERCISE_REPOSITORY,
   type ExerciseQuery,
   type ExerciseRepository,
 } from './exercise.repository.js';
+import {
+  EXERCISE_TOPICS_CHANGED_EVENT,
+  ExerciseTopicsChangedEvent,
+} from './exercise-topics-changed.event.js';
+
+function getExerciseMetadata(
+  data:
+    | { format: ExerciseFormat.Communication; scenario: string }
+    | { format: ExerciseFormat.Word; word: string }
+    | {
+        format: ExerciseFormat.Sentence | ExerciseFormat.Paragraph;
+        scenario: string;
+      },
+): Pick<ExerciseEntity, 'name' | 'skill'> {
+  switch (data.format) {
+    case ExerciseFormat.Communication:
+      return {
+        name: data.scenario,
+        skill: ExerciseSkill.Communication,
+      };
+    case ExerciseFormat.Word:
+      return {
+        name: data.word,
+        skill: ExerciseSkill.Vocabulary,
+      };
+    case ExerciseFormat.Sentence:
+    case ExerciseFormat.Paragraph:
+      return {
+        name: data.scenario,
+        skill: ExerciseSkill.Articulation,
+      };
+    default:
+      throw new Error('Unsupported exercise format');
+  }
+}
 
 @Injectable()
 export class ExerciseService {
@@ -20,13 +56,22 @@ export class ExerciseService {
     private readonly repository: ExerciseRepository,
     @Inject(CONTEXT_SERVICE)
     private readonly contextService: ContextService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(data: CreateExerciseDto): Promise<ExerciseEntity> {
-    return this.repository.create({
+    const exercise = await this.repository.create({
       ...data,
+      ...getExerciseMetadata(data),
       userId: this.contextService.getUserIdOrThrow(),
     });
+
+    void this.eventEmitter.emitAsync(
+      EXERCISE_TOPICS_CHANGED_EVENT,
+      new ExerciseTopicsChangedEvent(exercise.userId, exercise.topics),
+    );
+
+    return exercise;
   }
 
   async findAllPaginated(query: Omit<ExerciseQuery, 'userId'> = {}): Promise<{
@@ -73,12 +118,21 @@ export class ExerciseService {
   async update(id: string, data: UpdateExerciseDto): Promise<ExerciseEntity> {
     const userId = this.contextService.getUserIdOrThrow();
     const exercise = await this.repository.findById(id);
-
     if (exercise?.userId !== userId) {
       throw new NotFoundException(`Exercise with id ${id} not found`);
     }
 
-    return this.repository.update(id, data);
+    const updatedExercise = await this.repository.update(id, {
+      ...data,
+      ...getExerciseMetadata(data),
+    });
+
+    void this.eventEmitter.emitAsync(
+      EXERCISE_TOPICS_CHANGED_EVENT,
+      new ExerciseTopicsChangedEvent(updatedExercise.userId, updatedExercise.topics),
+    );
+
+    return updatedExercise;
   }
 
   async delete(id: string): Promise<void> {

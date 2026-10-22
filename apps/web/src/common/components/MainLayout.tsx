@@ -1,36 +1,25 @@
-import { Link, Outlet } from 'react-router';
-
-import { MANAGE_EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
-import ErrorBoundary from './ErrorBoundary';
-
-export default function MainLayout() {
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 p-2 sm:flex-row sm:items-center sm:p-4 lg:px-8">
-          <nav aria-label="Main navigation" className="flex flex-wrap gap-2">
-            <Link
-              to={PRACTICE_ROUTE}
-              className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-              Practice
-            </Link>
-            <Link
-              to={MANAGE_EXERCISE_LIST_ROUTE}
-              className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-              Exercise List
-            </Link>
-          </nav>
-        </div>
-      </header>
-      <main className="flex-1 w-full">
-        <div className="mx-auto max-w-7xl p-2 md:p-4 lg:p-8">
-          <ErrorBoundary>
-            <Outlet />
-          </ErrorBoundary>
-        </div>
-      </main>
-    </div>
+    <main className="flex flex-1 flex-col gap-4 px-4 py-6 sm:gap-6">{children}</main>
+  );
+}
+
+export function Header({
+  children,
+  title,
+  description,
+}: {
+  children: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <header className="flex flex-wrap items-end justify-between gap-2">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+        <p className="text-muted-foreground">{description}</p>
+      </div>
+      {children}
+    </header>
   );
 }

@@ -42,7 +42,7 @@
 ### Filters
 
 - Name: text input for case-insensitive contains matching by name.
-- Topics: multi-select options loaded from the topics API.
+- Topics: multi-select options loaded from the Get Topics API.
 - Skills: multi-select using fixed application values.
 - Formats: multi-select using fixed application values.
 - Status: multi-select.

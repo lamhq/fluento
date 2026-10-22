@@ -16,8 +16,9 @@ import {
 import { Field, FieldError } from '@/components/ui/field';
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 
-import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
+import { ExerciseFormat } from '../../../core/types/exercise-format';
+import type { PracticeExercise } from '../../../core/types/practice-exercise';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import ResponseFeedback from '../ResponseFeedback';
@@ -33,7 +34,8 @@ interface SentenceVariationProps {
 }
 
 export default function SentenceVariation({ exercise }: SentenceVariationProps) {
-  if (exercise.format !== 'sentence') throw new Error('Invalid exercise format');
+  if (exercise.format !== ExerciseFormat.Sentence)
+    throw new Error('Invalid exercise format');
 
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();

@@ -58,7 +58,7 @@ flowchart TD
 - Name matching is case-insensitive contains.
 - Topic, skill, format, and status filters are multi-select with OR matching within each filter.
 - Different filters are combined with AND logic.
-- Topic options come from the API; skill and format options are fixed application values.
+- Topic options come from the Get Topics API, which returns public topics and topics created by the current user; skill and format options are fixed application values.
 - Changing any filter immediately refreshes results through the backend API.
 - Reset clears all filters and immediately refreshes results.
 

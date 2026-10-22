@@ -83,6 +83,8 @@ To start Storybook for the web application, run the following command:
 pnpx -F web storybook
 ```
 
+Storybook uses MSW to mock network requests in individual stories.
+
 ## Init shadcn/ui
 
 To re-initialize shadcn/ui setup:
@@ -125,19 +127,18 @@ apps/web/
 
 ```
 apps/web/src/
-├── api/                           # API client instance
-├── auth/                          # Authentication utilities
-├── error/                         # Error handling utilities
-├── common/                        # Shared utilities and components
-├── shadcn/                        # Shadcn UI generated codes
-├── demo/                          # Demo module
-├── comm/                          # Communication module
-├── main.tsx                       # App entry point
-├── App.tsx                        # Root component
-├── routes.ts                      # Route definitions
-├── constants.ts                   # Shared constants
+├── api/                           # API client and provider
+├── auth/                          # Authentication provider and utilities
+├── common/                        # Shared components, hooks, and utilities
+├── core/                          # Shared types/entities (exercise, topic), components
+├── error/                         # Error handling provider and utilities
+├── manage/                        # Exercise management
+├── practice/                      # Exercise practice
+├── shadcn/                        # Shadcn/ui components and utilities
+├── App.tsx                        # Root component and route composition
 ├── global.css                     # Global styles
-├── utils.ts                       # Shared helper functions
+├── main.tsx                       # App entry point
+├── routes.ts                      # Route path constants
 └── vite-env.d.ts                  # Vite type definitions
 ```
 

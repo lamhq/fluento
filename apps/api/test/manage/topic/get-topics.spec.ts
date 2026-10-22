@@ -1,7 +1,8 @@
+import { ObjectId } from 'mongodb';
 import request from 'supertest';
 import { z } from 'zod';
 
-import { deleteMany, insert, insertMany } from '../../utils/mongodb.js';
+import { deleteMany, insertMany } from '../../utils/mongodb.js';
 import { setUpApiTest } from '../../utils/test.js';
 
 const getTopicsResponseSchema = z.array(
@@ -13,40 +14,36 @@ const getTopicsResponseSchema = z.array(
 );
 
 describe('get topics', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
+  const otherUserId = new ObjectId();
 
-  beforeEach(async () => {
-    await deleteMany('topics', {});
+  afterEach(async () => {
+    const { id: userId } = getUser();
+    await deleteMany('topics', { userId });
+    await deleteMany('topics', { userId: otherUserId });
+    await deleteMany('users', { _id: otherUserId });
   });
 
-  it('should return all topics sorted by name ascending', async () => {
+  it('should return public and user-owned topics sorted by name ascending', async () => {
     const { email: userEmail, id: userId } = getUser();
-
     await insertMany('topics', [
       {
         userId,
         name: 'Speaking',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T08:15:00Z'),
       },
       {
-        userId,
-        name: 'Communication',
-        createdAt: new Date('2026-01-10T08:45:00Z'),
-      },
-      {
-        userId,
-        name: 'Grammar',
-        createdAt: new Date('2026-01-10T08:30:00Z'),
-      },
-      {
-        userId,
-        name: 'Vocabulary',
-        createdAt: new Date('2026-01-10T08:00:00Z'),
-      },
-      {
-        userId: `other-user-${cleanupMarker}`,
+        userId: otherUserId,
         name: 'Secret',
+        visibility: 'private',
         createdAt: new Date('2026-01-10T09:00:00Z'),
+      },
+      {
+        userId: otherUserId,
+        name: 'Airport',
+        visibility: 'public',
+        createdAt: new Date('2026-01-10T07:00:00Z'),
       },
     ]);
 
@@ -56,21 +53,8 @@ describe('get topics', () => {
       .expect(200);
     const topics = getTopicsResponseSchema.parse(resp.body);
 
-    expect(topics).toHaveLength(5);
-    expect(topics.map((topic) => topic.name)).toEqual([
-      'Communication',
-      'Grammar',
-      'Secret',
-      'Speaking',
-      'Vocabulary',
-    ]);
-    expect(topics[0]).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        name: 'Communication',
-        createdAt: expect.any(String),
-      }),
-    );
+    expect(topics).toHaveLength(2);
+    expect(topics.map((topic) => topic.name)).toEqual(['Airport', 'Speaking']);
   });
 
   it('should return an empty array when the user has no topics', async () => {
@@ -86,34 +70,5 @@ describe('get topics', () => {
 
   it('should reject unauthenticated requests', async () => {
     await request(getApp().getHttpServer()).get('/v1/practice/topics').expect(401);
-  });
-
-  it('should return topics regardless of their user', async () => {
-    const { email: userEmail, id: userId } = getUser();
-    const otherUser = await insert('users', {
-      email: `other-${cleanupMarker}@example.com`,
-    });
-
-    await insertMany('topics', [
-      {
-        userId,
-        name: 'Mine',
-        createdAt: new Date('2026-01-10T08:00:00Z'),
-      },
-      {
-        userId: otherUser._id,
-        name: 'Theirs',
-        createdAt: new Date('2026-01-10T08:10:00Z'),
-      },
-    ]);
-
-    const resp = await request(getApp().getHttpServer())
-      .get('/v1/practice/topics')
-      .set('x-user-email', userEmail)
-      .expect(200);
-    const topics = getTopicsResponseSchema.parse(resp.body);
-
-    expect(topics).toHaveLength(2);
-    expect(topics.map((topic) => topic.name)).toEqual(['Mine', 'Theirs']);
   });
 });

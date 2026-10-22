@@ -41,3 +41,12 @@ export function parseSortStr(
 export function stringToArray({ value }: { value: string | string[] }) {
   return typeof value === 'string' ? [value] : value;
 }
+
+export function toTitleCase(str: string): string {
+  return str
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}

@@ -1,14 +1,12 @@
-import type { infer as Infer } from 'zod';
-
-import type {
-  exerciseFormatSchema,
-  exerciseSchema,
-  exerciseSkillSchema,
-  exerciseStatusSchema,
-  practiceAttemptSchema,
-  practiceExerciseSchema,
-  practiceTypeSchema,
-} from './schemas';
+import type { Exercise } from '../core/types/exercise';
+import { ExerciseFormat } from '../core/types/exercise-format';
+import type { ExerciseSkill } from '../core/types/exercise-skill';
+import type { ExerciseStatus } from '../core/types/exercise-status';
+import type { ExerciseSummary } from '../core/types/exercise-summary';
+import type { PracticeAttempt } from '../core/types/practice-attempt';
+import type { PracticeExercise } from '../core/types/practice-exercise';
+import type { PracticeType } from '../core/types/practice-type';
+import type { Topic } from '../core/types/topic';
 
 export interface ApiClient {
   setAccessToken(token: string): void;
@@ -21,14 +19,22 @@ export interface ApiClient {
     response: string,
   ): Promise<PracticeAttempt>;
 
+  getTopics(signal?: AbortSignal): Promise<Topic[]>;
+
+  getExerciseById(exerciseId: string, signal?: AbortSignal): Promise<Exercise>;
+
   getExercises(
     options?: ExerciseQuery,
     signal?: AbortSignal,
-  ): Promise<OffsetPaginatedResponse<Exercise>>;
-  getTopics(signal?: AbortSignal): Promise<Topic[]>;
-}
+  ): Promise<OffsetPaginatedResponse<ExerciseSummary>>;
 
-export type PracticeType = Infer<typeof practiceTypeSchema>;
+  createExercise(input: CreateExerciseInput): Promise<ExerciseSummary>;
+
+  updateExercise(
+    exerciseId: string,
+    input: UpdateExerciseInput,
+  ): Promise<ExerciseSummary>;
+}
 
 export interface ExerciseQuery {
   name?: string;
@@ -41,23 +47,40 @@ export interface ExerciseQuery {
   limit?: number;
 }
 
-export type ExerciseSkill = Infer<typeof exerciseSkillSchema>;
-
-export type ExerciseFormat = Infer<typeof exerciseFormatSchema>;
-
-export type ExerciseStatus = Infer<typeof exerciseStatusSchema>;
-
-export type Exercise = Infer<typeof exerciseSchema>;
-
-export interface Topic {
-  id: string;
-  name: string;
-  createdAt: string;
+interface CreateExerciseCommonInput {
+  topics: string[];
+  references?: string[];
+  status: ExerciseStatus;
 }
 
-export type PracticeExercise = Infer<typeof practiceExerciseSchema> & {
-  type: PracticeType;
-};
+export type CreateExerciseInput =
+  | (CreateExerciseCommonInput & {
+      format: ExerciseFormat.Communication;
+      scenario: string;
+      prompts: string[];
+      validResponses: string[];
+    })
+  | (CreateExerciseCommonInput & {
+      format: ExerciseFormat.Word;
+      word: string;
+      meaning: string;
+      sentences?: string[];
+      clues?: string[];
+    })
+  | (CreateExerciseCommonInput & {
+      format: ExerciseFormat.Sentence;
+      scenario: string;
+      sentence: string;
+      words?: string[];
+    })
+  | (CreateExerciseCommonInput & {
+      format: ExerciseFormat.Paragraph;
+      scenario: string;
+      paragraph: string;
+      words?: string[];
+    });
+
+export type UpdateExerciseInput = CreateExerciseInput;
 
 export interface OffsetPaginatedResponse<T> {
   total: number;
@@ -73,5 +96,3 @@ export interface CursorPaginatedResponse<T> {
   hasNext: boolean;
   hasPrevious: boolean;
 }
-
-export type PracticeAttempt = Infer<typeof practiceAttemptSchema>;

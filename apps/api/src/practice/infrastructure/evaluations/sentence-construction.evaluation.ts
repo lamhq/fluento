@@ -13,7 +13,7 @@ import { correctnessSchema } from './correctness.schema.js';
 
 /**
  * Schema for Sentence Construction practice type evaluation
- * Evaluates correctness and if all required words are used appropriately
+ * Evaluates correctness of the sentence created using the supplied words.
  */
 const SentenceConstructionEvaluationSchema = z.object({
   feedback: z.string().describe('Overall feedback (max 120 char).'),
@@ -24,7 +24,7 @@ const SentenceConstructionEvaluationSchema = z.object({
       feedback: z.string().describe('Appropriateness feedback (max 120 char).'),
     })
     .describe(
-      'Whether the required words are used appropriately and the sentence sounds natural.',
+      'Whether supplied words are used appropriately and the sentence sounds natural.',
     ),
 });
 
@@ -61,7 +61,13 @@ export class SentenceConstructionEvaluation implements EvaluationService {
   }
 
   private buildPrompt(context: EvaluationContext): string {
-    const words = (context.exercise.words ?? []).join(', ');
+    if (
+      !Array.isArray(context.exercise.words) ||
+      context.exercise.words.length === 0
+    ) {
+      throw new Error('No words provided for sentence construction evaluation.');
+    }
+    const words = context.exercise.words.join(', ');
     const topic = context.exercise.topics.join(',');
     return `## Task
 

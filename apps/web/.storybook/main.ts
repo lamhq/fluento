@@ -13,6 +13,7 @@ function getAbsolutePath(value: string) {
 const config: StorybookConfig = {
   framework: getAbsolutePath('@storybook/react-vite'),
   stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  staticDirs: ['../public'],
   core: {
     disableTelemetry: true,
   },

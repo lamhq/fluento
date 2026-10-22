@@ -132,3 +132,8 @@
     @apply font-sans;
   }
 }
+
+/* make the toast appear above dialogs */
+[data-slot='toast-viewport'] {
+  z-index: 60;
+}

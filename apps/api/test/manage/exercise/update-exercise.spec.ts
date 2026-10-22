@@ -1,8 +1,10 @@
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import request from 'supertest';
 
 import { ExerciseService } from '../../../src/content/core/exercise.service.js';
 import {
   deleteMany,
+  findAll,
   findById,
   insertMany,
   MongoDocument,
@@ -11,23 +13,22 @@ import { setUpApiTest } from '../../utils/test.js';
 import { createExerciseResponseSchema } from './create-exercise.schema.js';
 
 describe('update exercise', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
   let exerciseId: string;
   let originalExercise: MongoDocument;
 
   beforeEach(async () => {
-    // Clean up any existing exercises before each test
-    await deleteMany('exercises', {});
     const { id: userId } = getUser();
+    await deleteMany('exercises', { userId });
 
     // Insert a new exercise for testing
     [exerciseId] = await insertMany('exercises', [
       {
         userId,
-        name: `${cleanupMarker} original exercise`,
+        name: 'Order a meal at a restaurant.',
         skill: 'communication',
         format: 'communication',
-        topics: ['Test topic', cleanupMarker],
+        topics: ['Test topic'],
         status: 'archived',
         scenario: 'Order a meal at a restaurant.',
         prompts: ['Ask to order a meal.'],
@@ -41,84 +42,112 @@ describe('update exercise', () => {
     originalExercise = exercise;
   });
 
+  afterEach(async () => {
+    const { id: userId } = getUser();
+    await deleteMany('exercises', { userId });
+    await deleteMany('topics', { userId });
+  });
+
   async function expectExerciseUnchanged() {
     expect(await findById('exercises', exerciseId)).toEqual(originalExercise);
   }
 
   describe('happy cases', () => {
     it.each([
+      // Updates a communication exercise with required prompt and response lists.
       {
-        skill: 'communication',
-        format: 'communication',
-        name: 'Communication exercise',
-        topics: ['Test topic', cleanupMarker],
-        status: 'active',
-        scenario: 'Order a meal at a restaurant.',
-        prompts: ['Ask to order a meal.'],
-        validResponses: ['I would like the grilled salmon, please.'],
+        request: {
+          format: 'communication',
+          topics: ['Communication topic'],
+          status: 'archived',
+          scenario: 'Order a meal at a restaurant.',
+          prompts: ['Ask to order a meal.'],
+          validResponses: ['I would like the grilled salmon, please.'],
+        },
+        expected: {
+          expectedTopics: ['Communication Topic'],
+          expectedName: 'Order a meal at a restaurant.',
+          expectedSkill: 'communication',
+        },
       },
+      // Updates a vocabulary exercise with word, meaning, sentences, and clues.
       {
-        skill: 'vocabulary',
-        format: 'word',
-        name: 'Vocabulary exercise',
-        topics: ['Test topic', cleanupMarker],
-        status: 'archived',
-        word: 'serendipity',
-        meaning: 'Finding something valuable by chance.',
-        sentences: ['We met by serendipity.'],
-        clues: ['An unexpected fortunate discovery.'],
+        request: {
+          format: 'word',
+          topics: ['Vocabulary topic'],
+          status: 'active',
+          word: 'serendipity',
+          meaning: 'Finding something valuable by chance.',
+          sentences: ['We met by serendipity.'],
+          clues: ['An unexpected fortunate discovery.'],
+        },
+        expected: {
+          expectedTopics: ['Vocabulary Topic'],
+          expectedName: 'serendipity',
+          expectedSkill: 'vocabulary',
+        },
       },
+      // Updates an articulation sentence exercise.
       {
-        skill: 'articulation',
-        format: 'sentence',
-        name: 'Articulation sentence exercise',
-        topics: ['Test topic', cleanupMarker],
-        status: 'active',
-        scenario: 'Practice saying the sentence clearly.',
-        sentence: 'The quick brown fox jumps over the lazy dog.',
-        words: ['quick', 'lazy'],
+        request: {
+          format: 'sentence',
+          topics: ['Sentence topic'],
+          status: 'active',
+          scenario: 'Practice saying the sentence clearly.',
+          sentence: 'The quick brown fox jumps over the lazy dog.',
+          words: ['quick', 'lazy'],
+        },
+        expected: {
+          expectedTopics: ['Sentence Topic'],
+          expectedName: 'Practice saying the sentence clearly.',
+          expectedSkill: 'articulation',
+        },
       },
+      // Updates an articulation paragraph exercise.
       {
-        skill: 'articulation',
-        format: 'paragraph',
-        name: 'Articulation paragraph exercise',
-        topics: ['Test topic', cleanupMarker],
-        status: 'active',
-        scenario: 'Practice reading the paragraph aloud.',
-        paragraph: 'A short paragraph for articulation practice.',
-        words: ['articulation', 'practice'],
+        request: {
+          format: 'paragraph',
+          topics: ['Paragraph topic'],
+          status: 'active',
+          scenario: 'Practice reading the paragraph aloud.',
+          paragraph: 'A short paragraph for articulation practice.',
+          words: ['articulation', 'practice'],
+        },
+        expected: {
+          expectedTopics: ['Paragraph Topic'],
+          expectedName: 'Practice reading the paragraph aloud.',
+          expectedSkill: 'articulation',
+        },
       },
     ])(
-      'should update exercise with $format format (TC_API_UE_01)',
-      async (requestData) => {
+      'should update $request.format exercise (TC_API_UE_01)',
+      async ({ request: requestBody, expected }) => {
         const { id: userId, email } = getUser();
-        const body = {
-          ...requestData,
-          name: `${cleanupMarker} ${requestData.format}`,
-        };
 
         const response = await request(getApp().getHttpServer())
           .put(`/v1/manage/exercises/${exerciseId}`)
           .set('x-user-email', email)
-          .send(body)
+          .send(requestBody)
           .expect(200);
 
         const exercise = createExerciseResponseSchema.parse(response.body);
         expect(exercise).toEqual({
           id: exerciseId,
-          name: body.name,
-          skill: requestData.skill,
-          format: requestData.format,
-          topics: requestData.topics,
+          name: expected.expectedName,
+          skill: expected.expectedSkill,
+          format: requestBody.format,
+          topics: expected.expectedTopics,
           createdAt: expect.any(String),
-          status: requestData.status,
+          status: requestBody.status,
         });
 
         const saved = await findById('exercises', exercise.id);
         expect(saved).toEqual(
           expect.objectContaining({
-            ...requestData,
-            name: body.name,
+            ...requestBody,
+            name: expected.expectedName,
+            skill: expected.expectedSkill,
+            topics: expected.expectedTopics,
             userId,
           }),
         );
@@ -128,20 +157,61 @@ describe('update exercise', () => {
     );
   });
 
+  describe('topics', () => {
+    it('should create new topics with normalized names (TC_API_UE_10)', async () => {
+      const { id: userId, email } = getUser();
+      const requestTopics = [' communication ', ' daily routines ', 'travel'];
+      const expectedTopicNames = ['Communication', 'Daily Routines', 'Travel'];
+      const body = {
+        format: 'communication',
+        topics: requestTopics,
+        status: 'active',
+        scenario: 'Practice communication.',
+        prompts: ['Start a conversation.'],
+        validResponses: ['Hello, how are you?'],
+      };
+
+      const response = await request(getApp().getHttpServer())
+        .put(`/v1/manage/exercises/${exerciseId}`)
+        .set('x-user-email', email)
+        .send(body)
+        .expect(200);
+
+      const exercise = createExerciseResponseSchema.parse(response.body);
+      expect(exercise.topics).toEqual(expectedTopicNames);
+
+      await vi.waitFor(async () => {
+        const topics = await findAll('topics', {
+          userId,
+          name: { $in: expectedTopicNames },
+        });
+        expect(topics).toHaveLength(expectedTopicNames.length);
+        expect(topics.map(({ name }) => name).sort()).toEqual(
+          [...expectedTopicNames].sort(),
+        );
+        expect(topics.every(({ visibility }) => visibility === 'private')).toBe(
+          true,
+        );
+      });
+    });
+  });
+
   describe('unauthenticated', () => {
     it('should reject unauthenticated requests (TC_API_UE_02)', async () => {
+      const { id: userId } = getUser();
+      const name = `${userId.toHexString()} unauthenticated`;
+      const body = {
+        format: 'communication',
+        topics: ['Test topic'],
+        status: 'active',
+        scenario: name,
+        prompts: ['Ask to order a meal.'],
+        validResponses: ['I would like the grilled salmon, please.'],
+      };
+
       await request(getApp().getHttpServer())
         .put(`/v1/manage/exercises/${exerciseId}`)
-        .send({
-          name: `${cleanupMarker} unauthenticated`,
-          skill: 'communication',
-          format: 'communication',
-          topics: ['Test topic'],
-          status: 'active',
-          scenario: 'Order a meal at a restaurant.',
-          prompts: ['Ask to order a meal.'],
-          validResponses: ['I would like the grilled salmon, please.'],
-        })
+        .send(body)
         .expect(401);
 
       await expectExerciseUnchanged();
@@ -149,116 +219,252 @@ describe('update exercise', () => {
   });
 
   describe('normalize field values', () => {
-    it('should trim and remove blank items (TC_API_UE_03)', async () => {
-      const name = `${cleanupMarker} normalized`;
-      const body = {
-        name: `  ${name}  `,
-        skill: 'communication',
-        format: 'communication',
-        topics: ['  Cafe  ', ' ', 'Restaurant  '],
-        status: 'active',
-        scenario: '  Practice ordering.  ',
-        prompts: ['  Ask to order.  ', ' ', ''],
-        validResponses: ['  I would like tea.  '],
-        references: ['  https://example.test/source  ', ' '],
-      };
-
-      const response = await request(getApp().getHttpServer())
-        .put(`/v1/manage/exercises/${exerciseId}`)
-        .set('x-user-email', getUser().email)
-        .send(body)
-        .expect(200);
-
-      const exercise = createExerciseResponseSchema.parse(response.body);
-      expect(exercise).toEqual(
-        expect.objectContaining({
-          name,
+    it.each([
+      {
+        request: {
+          format: 'communication',
+          topics: ['  Cafe  ', ' ', 'Restaurant  '],
+          status: 'active',
+          references: ['  https://example.test/source  ', ' '],
+          scenario: '  normalized communication  ',
+          prompts: ['  Ask to order.  ', ' ', ''],
+          validResponses: ['  I would like tea.  ', ' '],
+        },
+        response: {
+          id: expect.any(String),
+          name: 'normalized communication',
+          skill: 'communication',
+          format: 'communication',
           topics: ['Cafe', 'Restaurant'],
-        }),
-      );
-      const saved = await findById('exercises', exercise.id);
-      expect(saved).toEqual(
-        expect.objectContaining({
-          name,
-          scenario: 'Practice ordering.',
-          prompts: ['Ask to order.'],
-          validResponses: ['I would like tea.'],
+          createdAt: expect.any(String),
+          status: 'active',
+        },
+        saved: {
+          format: 'communication',
+          status: 'active',
+          name: 'normalized communication',
+          skill: 'communication',
           topics: ['Cafe', 'Restaurant'],
           references: ['https://example.test/source'],
-        }),
-      );
-    });
+          scenario: 'normalized communication',
+          prompts: ['Ask to order.'],
+          validResponses: ['I would like tea.'],
+        },
+      },
+      {
+        request: {
+          format: 'word',
+          topics: ['  Cafe  ', ' ', 'Restaurant  '],
+          status: 'active',
+          references: ['  https://example.test/source  ', ' '],
+          word: '  normalized word  ',
+          meaning: '  Finding something valuable by chance.  ',
+          sentences: ['  We met by serendipity.  ', ' '],
+          clues: ['  An unexpected fortunate discovery.  ', ''],
+        },
+        response: {
+          id: expect.any(String),
+          name: 'normalized word',
+          skill: 'vocabulary',
+          format: 'word',
+          topics: ['Cafe', 'Restaurant'],
+          createdAt: expect.any(String),
+          status: 'active',
+        },
+        saved: {
+          format: 'word',
+          status: 'active',
+          name: 'normalized word',
+          skill: 'vocabulary',
+          topics: ['Cafe', 'Restaurant'],
+          references: ['https://example.test/source'],
+          word: 'normalized word',
+          meaning: 'Finding something valuable by chance.',
+          sentences: ['We met by serendipity.'],
+          clues: ['An unexpected fortunate discovery.'],
+        },
+      },
+      {
+        request: {
+          format: 'sentence',
+          topics: ['  Cafe  ', ' ', 'Restaurant  '],
+          status: 'active',
+          references: ['  https://example.test/source  ', ' '],
+          scenario: '  normalized sentence  ',
+          sentence: '  The quick brown fox jumps over the lazy dog.  ',
+          words: ['  quick  ', ' ', ' lazy '],
+        },
+        response: {
+          id: expect.any(String),
+          name: 'normalized sentence',
+          skill: 'articulation',
+          format: 'sentence',
+          topics: ['Cafe', 'Restaurant'],
+          createdAt: expect.any(String),
+          status: 'active',
+        },
+        saved: {
+          format: 'sentence',
+          status: 'active',
+          name: 'normalized sentence',
+          skill: 'articulation',
+          topics: ['Cafe', 'Restaurant'],
+          references: ['https://example.test/source'],
+          scenario: 'normalized sentence',
+          sentence: 'The quick brown fox jumps over the lazy dog.',
+          words: ['quick', 'lazy'],
+        },
+      },
+      {
+        request: {
+          format: 'paragraph',
+          topics: ['  Cafe  ', ' ', 'Restaurant  '],
+          status: 'active',
+          references: ['  https://example.test/source  ', ' '],
+          scenario: '  normalized paragraph  ',
+          paragraph: '  A short paragraph for articulation practice.  ',
+          words: ['  articulation  ', '', ' practice '],
+        },
+        response: {
+          id: expect.any(String),
+          name: 'normalized paragraph',
+          skill: 'articulation',
+          format: 'paragraph',
+          topics: ['Cafe', 'Restaurant'],
+          createdAt: expect.any(String),
+          status: 'active',
+        },
+        saved: {
+          format: 'paragraph',
+          status: 'active',
+          name: 'normalized paragraph',
+          skill: 'articulation',
+          topics: ['Cafe', 'Restaurant'],
+          references: ['https://example.test/source'],
+          scenario: 'normalized paragraph',
+          paragraph: 'A short paragraph for articulation practice.',
+          words: ['articulation', 'practice'],
+        },
+      },
+    ])(
+      'should normalize $request.format fields (TC_API_UE_03)',
+      async ({
+        request: requestBody,
+        response: expectedResponse,
+        saved: expectedSaved,
+      }) => {
+        const { id: userId, email } = getUser();
+
+        const response = await request(getApp().getHttpServer())
+          .put(`/v1/manage/exercises/${exerciseId}`)
+          .set('x-user-email', email)
+          .send(requestBody)
+          .expect(200);
+
+        const exercise = createExerciseResponseSchema.parse(response.body);
+        expect(exercise).toEqual({
+          ...expectedResponse,
+          id: exerciseId,
+        });
+
+        const saved = await findById('exercises', exercise.id);
+        expect(saved).toEqual(
+          expect.objectContaining({
+            ...expectedSaved,
+            userId,
+          }),
+        );
+      },
+    );
   });
 
   describe('missing fields', () => {
     it.each([
+      // Checks missing common fields
       {
         label: 'common',
-        body: {},
-        missingFields: ['name', 'skill', 'format', 'topics', 'status'],
+        request: {
+          scenario: 'Order a meal.',
+          prompts: ['Ask to order a meal.'],
+          validResponses: ['I would like tea.'],
+        },
+        response: {
+          details: expect.objectContaining({
+            format: expect.any(String),
+          }),
+        },
       },
+      // Checks missing communication-specific fields
       {
         label: 'communication',
-        body: {
-          name: 'Communication exercise',
-          skill: 'communication',
+        request: {
           format: 'communication',
-          topics: ['Test topic'],
-          status: 'active',
         },
-        missingFields: ['scenario', 'prompts', 'validResponses'],
+        response: {
+          details: expect.objectContaining({
+            scenario: expect.any(String),
+            prompts: expect.any(String),
+            validResponses: expect.any(String),
+          }),
+        },
       },
+      // Checks missing word-format fields
       {
         label: 'word',
-        body: {
-          name: 'Vocabulary exercise',
-          skill: 'vocabulary',
+        request: {
           format: 'word',
-          topics: ['Test topic'],
-          status: 'active',
         },
-        missingFields: ['word', 'meaning', 'sentences', 'clues'],
+        response: {
+          details: expect.objectContaining({
+            word: expect.any(String),
+            meaning: expect.any(String),
+          }),
+        },
       },
+      // Checks missing sentence-format fields
       {
         label: 'sentence',
-        body: {
-          name: 'Articulation sentence exercise',
-          skill: 'articulation',
+        request: {
           format: 'sentence',
-          topics: ['Test topic'],
-          status: 'active',
         },
-        missingFields: ['scenario', 'sentence', 'words'],
+        response: {
+          details: expect.objectContaining({
+            scenario: expect.any(String),
+            sentence: expect.any(String),
+          }),
+        },
       },
+      // Checks missing paragraph-format fields
       {
         label: 'paragraph',
-        body: {
-          name: 'Articulation paragraph exercise',
-          skill: 'articulation',
+        request: {
           format: 'paragraph',
-          topics: ['Test topic'],
-          status: 'active',
         },
-        missingFields: ['scenario', 'paragraph', 'words'],
+        response: {
+          details: expect.objectContaining({
+            scenario: expect.any(String),
+            paragraph: expect.any(String),
+          }),
+        },
       },
     ])(
       'should reject missing $label fields (TC_API_UE_04)',
-      async ({ body, missingFields }) => {
+      async ({ request: requestBody, response: expectedResponse }) => {
         const response = await request(getApp().getHttpServer())
           .put(`/v1/manage/exercises/${exerciseId}`)
           .set('x-user-email', getUser().email)
-          .send(body)
+          .send({
+            topics: ['Test topic'],
+            status: 'active',
+            ...requestBody,
+          })
           .expect(400);
 
         expect(response.body).toEqual(
           expect.objectContaining({
             code: 'invalid_request_body',
             message: 'Request validation failed',
-            details: expect.objectContaining(
-              Object.fromEntries(
-                missingFields.map((field) => [field, expect.any(String)]),
-              ),
-            ),
+            ...expectedResponse,
           }),
         );
         await expectExerciseUnchanged();
@@ -268,23 +474,28 @@ describe('update exercise', () => {
 
   describe('invalid field type', () => {
     it.each([
+      // Gives common fields incorrect types
       {
         label: 'common',
-        body: {
-          name: 1,
-          skill: 1,
+        request: {
           format: 1,
           topics: 1,
           status: 1,
           references: 1,
+          scenario: 'Order a meal.',
+          prompts: ['Ask to order a meal.'],
+          validResponses: ['I would like tea.'],
         },
-        invalidFields: ['name', 'skill', 'format', 'topics', 'status', 'references'],
+        response: {
+          details: expect.objectContaining({
+            format: expect.any(String),
+          }),
+        },
       },
+      // Gives communication-specific fields incorrect types.
       {
         label: 'communication',
-        body: {
-          name: 'Communication exercise',
-          skill: 'communication',
+        request: {
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -292,13 +503,18 @@ describe('update exercise', () => {
           prompts: 1,
           validResponses: 1,
         },
-        invalidFields: ['scenario', 'prompts', 'validResponses'],
+        response: {
+          details: expect.objectContaining({
+            scenario: expect.any(String),
+            prompts: expect.any(String),
+            validResponses: expect.any(String),
+          }),
+        },
       },
+      // Gives word-format fields incorrect types.
       {
         label: 'word',
-        body: {
-          name: 'Vocabulary exercise',
-          skill: 'vocabulary',
+        request: {
           format: 'word',
           topics: ['Test topic'],
           status: 'active',
@@ -307,13 +523,19 @@ describe('update exercise', () => {
           sentences: 1,
           clues: 1,
         },
-        invalidFields: ['word', 'meaning', 'sentences', 'clues'],
+        response: {
+          details: expect.objectContaining({
+            word: expect.any(String),
+            meaning: expect.any(String),
+            sentences: expect.any(String),
+            clues: expect.any(String),
+          }),
+        },
       },
+      // Gives sentence-format fields incorrect types.
       {
         label: 'sentence',
-        body: {
-          name: 'Articulation sentence exercise',
-          skill: 'articulation',
+        request: {
           format: 'sentence',
           topics: ['Test topic'],
           status: 'active',
@@ -321,13 +543,18 @@ describe('update exercise', () => {
           words: 1,
           scenario: 1,
         },
-        invalidFields: ['sentence', 'words', 'scenario'],
+        response: {
+          details: expect.objectContaining({
+            sentence: expect.any(String),
+            words: expect.any(String),
+            scenario: expect.any(String),
+          }),
+        },
       },
+      // Gives paragraph-format fields incorrect types.
       {
         label: 'paragraph',
-        body: {
-          name: 'Articulation paragraph exercise',
-          skill: 'articulation',
+        request: {
           format: 'paragraph',
           topics: ['Test topic'],
           status: 'active',
@@ -335,26 +562,28 @@ describe('update exercise', () => {
           words: 1,
           scenario: 1,
         },
-        invalidFields: ['paragraph', 'words', 'scenario'],
+        response: {
+          details: expect.objectContaining({
+            paragraph: expect.any(String),
+            words: expect.any(String),
+            scenario: expect.any(String),
+          }),
+        },
       },
     ])(
       'should reject invalid $label field types (TC_API_UE_05)',
-      async ({ body, invalidFields }) => {
+      async ({ request: requestBody, response: expectedResponse }) => {
         const response = await request(getApp().getHttpServer())
           .put(`/v1/manage/exercises/${exerciseId}`)
           .set('x-user-email', getUser().email)
-          .send(body)
+          .send(requestBody)
           .expect(400);
 
         expect(response.body).toEqual(
           expect.objectContaining({
             code: 'invalid_request_body',
             message: 'Request validation failed',
-            details: expect.objectContaining(
-              Object.fromEntries(
-                invalidFields.map((field) => [field, expect.any(String)]),
-              ),
-            ),
+            ...expectedResponse,
           }),
         );
         await expectExerciseUnchanged();
@@ -364,22 +593,28 @@ describe('update exercise', () => {
 
   describe('invalid field value', () => {
     it.each([
+      // Invalid common field values
       {
         label: 'common',
-        body: {
-          name: '  ',
-          skill: 'grammar',
+        request: {
           format: 'dialogue',
           topics: [' ', ''],
           status: 'draft',
+          references: [' ', '\t'],
+          scenario: 'Order a meal.',
+          prompts: ['Ask to order a meal.'],
+          validResponses: ['I would like tea.'],
         },
-        invalidFields: ['name', 'skill', 'format', 'topics', 'status'],
+        response: {
+          details: expect.objectContaining({
+            format: expect.any(String),
+          }),
+        },
       },
+      // Blank communication field values
       {
         label: 'communication',
-        body: {
-          name: 'Communication exercise',
-          skill: 'communication',
+        request: {
           format: 'communication',
           topics: ['Test topic'],
           status: 'active',
@@ -387,114 +622,79 @@ describe('update exercise', () => {
           prompts: [' ', ''],
           validResponses: [],
         },
-        invalidFields: ['scenario', 'prompts', 'validResponses'],
+        response: {
+          details: expect.objectContaining({
+            scenario: expect.any(String),
+            prompts: expect.any(String),
+            validResponses: expect.any(String),
+          }),
+        },
       },
+      // Blank word-format field values
       {
         label: 'word',
-        body: {
-          name: 'Vocabulary exercise',
-          skill: 'vocabulary',
+        request: {
           format: 'word',
           topics: ['Test topic'],
           status: 'active',
           word: '  ',
           meaning: '  ',
-          sentences: ['  '],
-          clues: [],
         },
-        invalidFields: ['word', 'meaning', 'sentences', 'clues'],
+        response: {
+          details: expect.objectContaining({
+            word: expect.any(String),
+            meaning: expect.any(String),
+          }),
+        },
       },
+      // Blank sentence-format field values
       {
         label: 'sentence',
-        body: {
-          name: 'Articulation sentence exercise',
-          skill: 'articulation',
+        request: {
           format: 'sentence',
           topics: ['Test topic'],
           status: 'active',
           sentence: '  ',
-          words: [''],
           scenario: '  ',
         },
-        invalidFields: ['sentence', 'words', 'scenario'],
+        response: {
+          details: expect.objectContaining({
+            sentence: expect.any(String),
+            scenario: expect.any(String),
+          }),
+        },
       },
+      // Blank paragraph-format field values
       {
         label: 'paragraph',
-        body: {
-          name: 'Articulation paragraph exercise',
-          skill: 'articulation',
+        request: {
           format: 'paragraph',
           topics: ['Test topic'],
           status: 'active',
           paragraph: '  ',
-          words: [''],
           scenario: '  ',
         },
-        invalidFields: ['paragraph', 'words', 'scenario'],
-      },
-      {
-        label: 'format-skill',
-        body: {
-          name: 'Vocabulary exercise',
-          skill: 'communication',
-          format: 'word',
-          topics: ['Test topic'],
-          status: 'active',
-          word: 'serendipity',
-          meaning: 'Finding something valuable by chance.',
-          sentences: ['We met by serendipity.'],
-          clues: ['An unexpected fortunate discovery.'],
+        response: {
+          details: expect.objectContaining({
+            paragraph: expect.any(String),
+            scenario: expect.any(String),
+          }),
         },
-        invalidFields: ['format'],
-      },
-      {
-        label: 'empty-references',
-        body: {
-          name: 'Communication exercise',
-          skill: 'communication',
-          format: 'communication',
-          topics: ['Test topic'],
-          status: 'active',
-          scenario: 'Order a meal at a restaurant.',
-          prompts: ['Ask to order a meal.'],
-          validResponses: ['I would like the grilled salmon, please.'],
-          references: [],
-        },
-        invalidFields: ['references'],
-      },
-      {
-        label: 'blank-references',
-        body: {
-          name: 'Communication exercise',
-          skill: 'communication',
-          format: 'communication',
-          topics: ['Test topic'],
-          status: 'active',
-          scenario: 'Order a meal at a restaurant.',
-          prompts: ['Ask to order a meal.'],
-          validResponses: ['I would like the grilled salmon, please.'],
-          references: [' ', '\t'],
-        },
-        invalidFields: ['references'],
       },
     ])(
       'should reject invalid $label field values (TC_API_UE_06)',
-      async ({ body, invalidFields }) => {
+      async ({ request: requestBody, response: expectedResponse }) => {
         const response = await request(getApp().getHttpServer())
           .put(`/v1/manage/exercises/${exerciseId}`)
           .set('x-user-email', getUser().email)
-          .send(body)
+          .send(requestBody)
           .expect(400);
 
         expect(response.body).toEqual(
           expect.objectContaining({
             code: 'invalid_request_body',
             message: 'Request validation failed',
-            details: expect.objectContaining(
-              Object.fromEntries(
-                invalidFields.map((field) => [field, expect.any(String)]),
-              ),
-            ),
+            ...expectedResponse,
           }),
         );
         await expectExerciseUnchanged();
@@ -504,15 +704,17 @@ describe('update exercise', () => {
 
   describe('unknown fields', () => {
     it('should reject inapplicable and unknown properties (TC_API_UE_07)', async () => {
+      const { id: userId } = getUser();
+      const name = `${userId.toHexString()} inapplicable and unknown properties`;
       const body = {
-        name: `${cleanupMarker} inapplicable and unknown properties`,
-        skill: 'communication',
         format: 'communication',
         topics: ['Test topic'],
         status: 'active',
-        scenario: 'Order a meal at a restaurant.',
+        scenario: name,
         prompts: ['Ask to order a meal.'],
         validResponses: ['I would like the grilled salmon, please.'],
+        name: 'Client-supplied name',
+        skill: 'communication',
         word: 'serendipity',
         unexpected: 'value',
       };
@@ -529,7 +731,9 @@ describe('update exercise', () => {
           message: 'Request validation failed',
           details: expect.objectContaining({
             word: expect.any(String),
+            name: expect.any(String),
             unexpected: expect.any(String),
+            skill: expect.any(String),
           }),
         }),
       );
@@ -538,16 +742,14 @@ describe('update exercise', () => {
   });
 
   describe('optional fields', () => {
-    it('should not persist omitted optional references (TC_API_UE_08)', async () => {
-      const { email } = getUser();
-      const name = `${cleanupMarker} communication-without-references`;
+    it('should not set default value for optional fields (TC_API_UE_08)', async () => {
+      const { id: userId, email } = getUser();
+      const name = `${userId.toHexString()} communication-without-references`;
       const body = {
-        name,
-        skill: 'communication',
         format: 'communication',
         topics: ['Test topic'],
         status: 'active',
-        scenario: 'Order a meal at a restaurant.',
+        scenario: name,
         prompts: ['Ask to order a meal.'],
         validResponses: ['I would like the grilled salmon, please.'],
       };
@@ -560,20 +762,83 @@ describe('update exercise', () => {
 
       const exercise = createExerciseResponseSchema.parse(response.body);
       const saved = await findById('exercises', exercise.id);
-      expect(saved).toEqual(expect.objectContaining({ name }));
+      expect(saved).toEqual(
+        expect.objectContaining({
+          name,
+          userId,
+        }),
+      );
       expect(saved).not.toHaveProperty('references');
     });
+
+    it.each([{ references: [] }, { references: [' ', '\t'] }])(
+      'should not persist empty value for optional fields (TC_API_UE_08)',
+      async ({ references }) => {
+        const response = await request(getApp().getHttpServer())
+          .put(`/v1/manage/exercises/${exerciseId}`)
+          .set('x-user-email', getUser().email)
+          .send({
+            format: 'communication',
+            topics: ['Test topic'],
+            status: 'active',
+            scenario: 'Order a meal at a restaurant.',
+            prompts: ['Ask to order a meal.'],
+            validResponses: ['I would like the grilled salmon, please.'],
+            references,
+          })
+          .expect(200);
+
+        createExerciseResponseSchema.parse(response.body);
+        const saved = await findById('exercises', exerciseId);
+        expect(saved).not.toHaveProperty('references');
+      },
+    );
   });
 
   describe('server error', () => {
-    it('should hide internal details on service failure (TC_API_UE_09)', async () => {
+    it('should succeed when topic processing fails', async () => {
+      const emitSpy = vi
+        .spyOn(getApp().get(EventEmitter2), 'emitAsync')
+        .mockRejectedValue(new Error('topic processing failed'));
       const body = {
-        name: `${cleanupMarker} persistence-failure`,
-        skill: 'communication',
+        format: 'communication',
+        topics: ['Updated Topic'],
+        status: 'active',
+        scenario: 'topic processing failure',
+        prompts: ['Ask to order a meal.'],
+        validResponses: ['I would like the grilled salmon, please.'],
+      };
+
+      try {
+        const response = await request(getApp().getHttpServer())
+          .put(`/v1/manage/exercises/${exerciseId}`)
+          .set('x-user-email', getUser().email)
+          .send(body)
+          .expect(200);
+
+        const exercise = createExerciseResponseSchema.parse(response.body);
+        expect(exercise).toEqual(
+          expect.objectContaining({
+            name: body.scenario,
+            topics: body.topics,
+          }),
+        );
+        expect(await findById('exercises', exerciseId)).toEqual(
+          expect.objectContaining({ name: body.scenario, topics: body.topics }),
+        );
+      } finally {
+        emitSpy.mockRestore();
+      }
+    });
+
+    it('should hide internal details on service failure (TC_API_UE_09)', async () => {
+      const { id: userId } = getUser();
+      const name = `${userId.toHexString()} persistence-failure`;
+      const body = {
         format: 'communication',
         topics: ['Test topic'],
         status: 'active',
-        scenario: 'Order a meal at a restaurant.',
+        scenario: name,
         prompts: ['Ask to order a meal.'],
         validResponses: ['I would like the grilled salmon, please.'],
       };

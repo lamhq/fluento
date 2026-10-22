@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router';
 
 import { requireAuth } from './auth';
 import ErrorBoundary from './common/components/ErrorBoundary';
-import MainLayout from './common/components/MainLayout';
+import PageLayout from './common/components/PageLayout';
 import SignInCallbackPage from './common/pages/SignInCallbackPage';
 import SignOutCallbackPage from './common/pages/SignOutCallbackPage';
 import ExerciseListPage from './manage/exercise/list/ExerciseListPage';
@@ -21,7 +21,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Routes>
-        <Route element={<MainLayout />}>
+        <Route element={<PageLayout />}>
           <Route path={DEFAULT_ROUTE} element={<PracticePage />} />
           <Route path={PRACTICE_ROUTE} element={<PracticePage />} />
           <Route

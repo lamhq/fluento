@@ -16,8 +16,8 @@ import {
 import { Field, FieldError } from '@/components/ui/field';
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 
-import type { PracticeExercise } from '../../../api/types';
 import SubmitButton from '../../../common/components/Button';
+import type { PracticeExercise } from '../../../core/types/practice-exercise';
 import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from '../../utils';
@@ -99,7 +99,7 @@ export default function Communication({ exercise }: CommunicationProps) {
               Communicate in a real-life conversation.
             </p>
 
-            <p className="text-lg text-foreground my-4 text-center">{prompt}</p>
+            <p className="my-4 text-center text-lg text-foreground">{prompt}</p>
 
             <Controller
               name="response"

@@ -11,7 +11,7 @@ import {
 import { RequireUser } from '../../../common/auth/require-user.guard.js';
 import { ApiVersion } from '../../../common/http/api-version.js';
 import { ExerciseService } from '../../../content/core/exercise.service.js';
-import { ExerciseDto } from './exercise.dto.js';
+import { ExerciseSummaryDto } from './exercise-summary.dto.js';
 import type { UpdateExerciseDto } from './update-exercise.dto.js';
 import { updateExerciseSchema } from './update-exercise.dto.js';
 
@@ -26,7 +26,9 @@ export class UpdateExerciseHttpController {
     @Param('id') id: string,
     @Body({ schema: updateExerciseSchema })
     body: UpdateExerciseDto,
-  ): Promise<ExerciseDto> {
-    return ExerciseDto.fromEntity(await this.exerciseService.update(id, body));
+  ): Promise<ExerciseSummaryDto> {
+    return ExerciseSummaryDto.fromEntity(
+      await this.exerciseService.update(id, body),
+    );
   }
 }

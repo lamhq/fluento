@@ -34,10 +34,10 @@ export class ExerciseModel {
   @Prop()
   paragraph?: string;
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: undefined })
   prompts?: string[];
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: undefined })
   validResponses?: string[];
 
   @Prop({ type: [String], default: undefined })
@@ -49,13 +49,13 @@ export class ExerciseModel {
   @Prop()
   meaning?: string;
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: undefined })
   clues?: string[];
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: undefined })
   sentences?: string[];
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: undefined })
   words?: string[];
 
   @Prop()

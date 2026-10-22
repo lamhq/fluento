@@ -33,26 +33,38 @@ interface Exercise {
 }
 
 describe('find exercises', () => {
-  const { cleanupMarker, getApp, getUser } = setUpApiTest();
+  const { getApp, getUser } = setUpApiTest();
+  const seededUserIds = new Set<ObjectId>();
 
   async function seedExercises(...items: Exercise[]) {
+    const { id: userId } = getUser();
     await insertMany(
       'exercises',
-      items.map((item) => ({
-        userId: item.userId ?? getUser().id,
-        status: item.status ?? 'active',
-        name: item.name ?? 'Coffee Shop Order',
-        skill: item.skill ?? 'communication',
-        format: item.format ?? 'communication',
-        topics: item.topics ?? [],
-        scenario: cleanupMarker,
-        prompts: ['Order a coffee.'],
-        validResponses: ['I would like a coffee.'],
-        createdAt: item.createdAt ?? new Date('2026-08-10T09:30:00.000Z'),
-        updatedAt: new Date('2026-08-10T09:30:00.000Z'),
-      })),
+      items.map((item) => {
+        const exerciseUserId = item.userId ?? userId;
+        seededUserIds.add(exerciseUserId);
+
+        return {
+          userId: exerciseUserId,
+          status: item.status ?? 'active',
+          name: item.name ?? 'Coffee Shop Order',
+          skill: item.skill ?? 'communication',
+          format: item.format ?? 'communication',
+          topics: item.topics ?? [],
+          scenario: 'Order a coffee.',
+          prompts: ['Order a coffee.'],
+          validResponses: ['I would like a coffee.'],
+          createdAt: item.createdAt ?? new Date('2026-08-10T09:30:00.000Z'),
+          updatedAt: new Date('2026-08-10T09:30:00.000Z'),
+        };
+      }),
     );
   }
+
+  afterEach(async () => {
+    await deleteMany('exercises', { userId: { $in: [...seededUserIds] } });
+    seededUserIds.clear();
+  });
 
   describe('filtering', () => {
     it('should return exercises of current user', async () => {
@@ -333,12 +345,6 @@ describe('find exercises', () => {
         message: 'Request validation failed',
         details,
       });
-    });
-  });
-
-  afterEach(async () => {
-    await deleteMany('exercises', {
-      scenario: { $regex: cleanupMarker },
     });
   });
 });

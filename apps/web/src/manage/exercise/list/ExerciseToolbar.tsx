@@ -1,32 +1,12 @@
 import type { ColumnFiltersState } from '@tanstack/react-table';
 
-import type {
-  Exercise,
-  ExerciseFormat,
-  ExerciseSkill,
-  ExerciseStatus,
-} from '../../../api/types';
 import DebouncedInput from '../../../common/components/DebouncedInput';
 import { ColumnFilter, useTableContext } from '../../../common/data-table';
+import type { Exercise } from '../../../core/types/exercise';
+import { exerciseFormats } from '../../../core/types/exercise-format';
+import { exerciseSkills } from '../../../core/types/exercise-skill';
+import { exerciseStatuses } from '../../../core/types/exercise-status';
 import TopicFilter from './TopicFilter';
-
-const skills: { label: string; value: ExerciseSkill }[] = [
-  { label: 'Communication', value: 'communication' },
-  { label: 'Vocabulary', value: 'vocabulary' },
-  { label: 'Articulation', value: 'articulation' },
-];
-
-const formats: { label: string; value: ExerciseFormat }[] = [
-  { label: 'Communication', value: 'communication' },
-  { label: 'Word', value: 'word' },
-  { label: 'Sentence', value: 'sentence' },
-  { label: 'Paragraph', value: 'paragraph' },
-];
-
-const statuses: { label: string; value: ExerciseStatus }[] = [
-  { label: 'Active', value: 'active' },
-  { label: 'Archived', value: 'archived' },
-];
 
 function getFilterValue<T>(
   columnFilters: ColumnFiltersState,
@@ -70,7 +50,7 @@ export default function ExerciseToolbar() {
             onChange={(values) => {
               table.getColumn('skill')?.setFilterValue(values);
             }}
-            options={skills}
+            options={exerciseSkills}
           />
           <ColumnFilter
             title="Formats"
@@ -78,7 +58,7 @@ export default function ExerciseToolbar() {
             onChange={(values) => {
               table.getColumn('format')?.setFilterValue(values);
             }}
-            options={formats}
+            options={exerciseFormats}
           />
           <ColumnFilter
             title="Status"
@@ -86,7 +66,7 @@ export default function ExerciseToolbar() {
             onChange={(values) => {
               table.getColumn('status')?.setFilterValue(values);
             }}
-            options={statuses}
+            options={exerciseStatuses}
           />
         </>
       )}
