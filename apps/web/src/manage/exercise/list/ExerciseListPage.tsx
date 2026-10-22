@@ -3,15 +3,19 @@ import { cn } from '@/lib/utils';
 import { Header } from '../../../common/components/MainLayout';
 import TableSkeleton from '../../../common/components/TableSkeleton';
 import TopLoadingBar from '../../../common/components/TopLoadingBar';
+import { useServerTable } from '../../../common/data-table';
 import ExerciseDialogs from '../dialog/ExerciseDialogs';
 import { ExerciseProvider } from '../dialog/ExerciseProvider';
-import { exerciseColumns } from './columns';
+import { useGetExercises } from '../hooks';
+import exerciseColumns from './columns';
 import ExercisesPrimaryButtons from './ExercisesPrimaryButtons';
 import ExerciseToolbar from './ExerciseToolbar';
-import { useExercisesTable } from './hooks';
 
 export default function ExerciseListPage() {
-  const { table, isFetching, data } = useExercisesTable();
+  const { table, isFetching, data } = useServerTable({
+    columns: exerciseColumns,
+    useServerQuery: useGetExercises,
+  });
 
   return (
     <ExerciseProvider>

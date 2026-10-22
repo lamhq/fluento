@@ -1,22 +1,58 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useApiClient } from '../../api';
 import type { CreateExerciseInput, UpdateExerciseInput } from '../../api/types';
+import type { ServerTableQueryHook } from '../../common/data-table/hooks/useServerTable';
 import type { Exercise } from '../../core/types/exercise';
+import type { ExerciseSummary } from '../../core/types/exercise-summary';
+import { buildExerciseQuery } from './utils';
 
-const EXERCISE_QUERY_KEY = ['exercise'] as const;
-const EXERCISE_LIST_QUERY_KEY = ['exercise_list'] as const;
-const TOPIC_LIST_QUERY_KEY = ['exercise-topics'] as const;
+export const EXERCISE_QUERY_KEY = 'exercise';
+export const EXERCISE_LIST_QUERY_KEY = 'exercises';
+export const TOPIC_LIST_QUERY_KEY = 'exercise-topics';
 
-interface UpdateExerciseVariables {
-  exerciseId: string;
-  input: UpdateExerciseInput;
-}
+export const useGetExercises: ServerTableQueryHook<ExerciseSummary> = ({
+  pagination,
+  globalFilter,
+  columnFilters,
+  sorting,
+}) => {
+  const apiClient = useApiClient();
+  return useQuery({
+    queryKey: [
+      EXERCISE_LIST_QUERY_KEY,
+      pagination,
+      globalFilter,
+      columnFilters,
+      sorting,
+    ],
+    queryFn: async ({ signal }) => {
+      try {
+        const exerciseQuery = buildExerciseQuery({
+          pagination,
+          columnFilters,
+          sorting,
+        });
+
+        const result = await apiClient.getExercises(exerciseQuery, signal);
+        return [result.total, result.items] as [number, ExerciseSummary[]];
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error;
+        }
+        throw new Error('Unable to load exercises.');
+      }
+    },
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 5,
+  });
+};
 
 export function useGetExerciseDetails(exerciseId?: string) {
   const apiClient = useApiClient();
   return useQuery<Exercise>({
-    queryKey: [...EXERCISE_QUERY_KEY, exerciseId],
+    queryKey: [EXERCISE_QUERY_KEY, exerciseId],
     queryFn: ({ signal }) => {
       if (!exerciseId) {
         throw new Error('An exercise ID is required to load exercise details.');
@@ -31,7 +67,7 @@ export function useGetExerciseDetails(exerciseId?: string) {
 export function useGetTopics() {
   const apiClient = useApiClient();
   return useQuery({
-    queryKey: TOPIC_LIST_QUERY_KEY,
+    queryKey: [TOPIC_LIST_QUERY_KEY],
     queryFn: ({ signal }) => apiClient.getTopics(signal),
   });
 }
@@ -44,8 +80,10 @@ export function useCreateExercise() {
     mutationFn: (input: CreateExerciseInput) => apiClient.createExercise(input),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: EXERCISE_LIST_QUERY_KEY }),
-        queryClient.invalidateQueries({ queryKey: TOPIC_LIST_QUERY_KEY }),
+        queryClient.invalidateQueries({
+          queryKey: [EXERCISE_LIST_QUERY_KEY],
+        }),
+        queryClient.invalidateQueries({ queryKey: [TOPIC_LIST_QUERY_KEY] }),
       ]);
     },
   });
@@ -56,15 +94,22 @@ export function useUpdateExercise() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ exerciseId, input }: UpdateExerciseVariables) =>
-      apiClient.updateExercise(exerciseId, input),
-    onSuccess: async (_exercise, { exerciseId }) => {
+    mutationFn: ({
+      exerciseId,
+      data,
+    }: {
+      exerciseId: string;
+      data: UpdateExerciseInput;
+    }) => apiClient.updateExercise(exerciseId, data),
+    onSuccess: async (_exercise, exerciseId) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: EXERCISE_LIST_QUERY_KEY }),
         queryClient.invalidateQueries({
-          queryKey: [...EXERCISE_QUERY_KEY, exerciseId],
+          queryKey: [EXERCISE_LIST_QUERY_KEY],
         }),
-        queryClient.invalidateQueries({ queryKey: TOPIC_LIST_QUERY_KEY }),
+        queryClient.invalidateQueries({
+          queryKey: [EXERCISE_QUERY_KEY, exerciseId],
+        }),
+        queryClient.invalidateQueries({ queryKey: [TOPIC_LIST_QUERY_KEY] }),
       ]);
     },
   });

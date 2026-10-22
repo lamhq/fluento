@@ -1,4 +1,3 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,29 +10,26 @@ import { type SetStateAction, useState } from 'react';
 import type { RowData, TableFeatures } from '../types';
 import { useAppTable } from '../utils';
 
-interface QueryOptions {
+export type ServerTableQueryHook<TData extends RowData> = (options: {
   pagination: PaginationState;
+  globalFilter: string;
   columnFilters: ColumnFiltersState;
-  globalFilter?: string;
   sorting: SortingState;
-  signal?: AbortSignal;
-}
-
-export type QueryFn<TData extends RowData> = (
-  query: QueryOptions,
-) => Promise<[rowCount: number, data: TData[]]>;
+}) => {
+  data: [rowCount: number, data: TData[]] | undefined;
+  error: Error | null;
+  isFetching: boolean;
+};
 
 interface TableOptions<TData extends RowData> {
   columns: ColumnDef<TableFeatures, TData>[];
-  queryFn: QueryFn<TData>;
-  queryKeyPrefix: string;
+  useServerQuery: ServerTableQueryHook<TData>;
   globalFilterFn?: FilterFnOption<TableFeatures, TData>;
 }
 
 export function useServerTable<TData extends RowData>({
   columns,
-  queryFn,
-  queryKeyPrefix,
+  useServerQuery,
   globalFilterFn,
 }: TableOptions<TData>) {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -44,16 +40,8 @@ export function useServerTable<TData extends RowData>({
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
   const state = { pagination, columnFilters, globalFilter, sorting };
-  const {
-    data: [totalCount, items] = [],
-    error,
-    isFetching,
-  } = useQuery({
-    queryKey: [queryKeyPrefix, pagination, globalFilter, columnFilters, sorting],
-    queryFn: ({ signal }) => queryFn({ ...state, signal }),
-    placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data, error, isFetching } = useServerQuery(state);
+  const [totalCount, items] = data ?? [];
 
   if (error) throw error;
 
