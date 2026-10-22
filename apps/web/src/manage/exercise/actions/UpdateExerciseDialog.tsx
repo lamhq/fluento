@@ -31,6 +31,11 @@ export default function UpdateExerciseDialog({
   const { mutateAsync: updateExercise, isPending } = useUpdateExercise();
   const { data: exerciseDetails, isFetching } = useGetExerciseDetails(exerciseId);
 
+  const handleSubmit = async (values: ExerciseFormData) => {
+    await updateExercise({ exerciseId, data: values });
+    onOpenChange(false);
+  };
+
   const handleOpenChange = (
     nextOpen: boolean,
     eventDetails: DialogRoot.ChangeEventDetails,
@@ -41,11 +46,6 @@ export default function UpdateExerciseDialog({
     }
 
     onOpenChange(nextOpen);
-  };
-
-  const handleSubmit = async (values: ExerciseFormData) => {
-    await updateExercise({ exerciseId, input: values });
-    onOpenChange(false);
   };
 
   return (
@@ -60,10 +60,7 @@ export default function UpdateExerciseDialog({
 
           {exerciseDetails ? (
             <>
-              <ExerciseForm
-                defaultValues={exerciseDetails}
-                onSubmit={handleSubmit}
-              />
+              <ExerciseForm exercise={exerciseDetails} onSubmit={handleSubmit} />
               <DialogFooter>
                 <DialogClose
                   render={

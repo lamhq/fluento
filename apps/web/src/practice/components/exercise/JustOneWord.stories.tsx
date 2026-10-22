@@ -20,7 +20,7 @@ export const Default: Story = {
       id: '65f000000000000000000007',
       format: ExerciseFormat.Word,
       name: 'baggage claim',
-      skill: ExerciseSkill.VOCABULARY,
+      skill: ExerciseSkill.Vocabulary,
       topics: ['Airport', 'Travel'],
       references: [],
       type: PracticeType.JUST_ONE_WORD,

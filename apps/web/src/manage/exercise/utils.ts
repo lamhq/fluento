@@ -53,9 +53,9 @@ export function buildExerciseQuery({
 
 function isExerciseSkill(value: unknown): value is ExerciseSkill {
   return (
-    value === ExerciseSkill.COMMUNICATION ||
-    value === ExerciseSkill.VOCABULARY ||
-    value === ExerciseSkill.ARTICULATION
+    value === ExerciseSkill.Communication ||
+    value === ExerciseSkill.Vocabulary ||
+    value === ExerciseSkill.Articulation
   );
 }
 

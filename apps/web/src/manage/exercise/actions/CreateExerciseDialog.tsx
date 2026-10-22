@@ -11,20 +11,9 @@ import {
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 
-import { ExerciseFormat } from '../../../core/types/exercise-format';
-import { ExerciseStatus } from '../../../core/types/exercise-status';
 import ExerciseForm from '../form/ExerciseForm';
 import type { ExerciseFormData } from '../form/exerciseFormSchema';
 import { useCreateExercise } from '../hooks';
-
-const defaultValues: ExerciseFormData = {
-  format: ExerciseFormat.Communication,
-  scenario: '',
-  prompts: [],
-  validResponses: [],
-  topics: [],
-  status: ExerciseStatus.ACTIVE,
-};
 
 interface CreateExerciseDialogProps {
   open: boolean;
@@ -36,6 +25,7 @@ export default function CreateExerciseDialog({
   onOpenChange,
 }: CreateExerciseDialogProps) {
   const { mutateAsync: createExercise, isPending } = useCreateExercise();
+
   const handleSubmit = async (values: ExerciseFormData) => {
     await createExercise(values);
     onOpenChange(false);
@@ -49,7 +39,6 @@ export default function CreateExerciseDialog({
       eventDetails.cancel();
       return;
     }
-
     onOpenChange(nextOpen);
   };
 
@@ -59,7 +48,7 @@ export default function CreateExerciseDialog({
         <DialogHeader className="text-start">
           <DialogTitle>Create Exercise</DialogTitle>
         </DialogHeader>
-        <ExerciseForm defaultValues={defaultValues} onSubmit={handleSubmit} />
+        <ExerciseForm onSubmit={handleSubmit} />
         <DialogFooter>
           <DialogClose
             render={

@@ -20,7 +20,7 @@ export const Default: Story = {
       id: '65f000000000000000000006',
       format: ExerciseFormat.Word,
       name: 'security',
-      skill: ExerciseSkill.VOCABULARY,
+      skill: ExerciseSkill.Vocabulary,
       topics: ['Airport', 'Travel'],
       references: [],
       type: PracticeType.WORD_GUESSING,

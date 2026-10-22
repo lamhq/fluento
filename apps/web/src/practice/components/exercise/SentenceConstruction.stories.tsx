@@ -20,7 +20,7 @@ export const Default: Story = {
       id: '65f00000000000000000000b',
       format: ExerciseFormat.Sentence,
       name: 'Describe your background',
-      skill: ExerciseSkill.ARTICULATION,
+      skill: ExerciseSkill.Articulation,
       topics: ['Job Interview', 'Software Engineering'],
       references: [],
       scenario: 'Describe your educational background in a job interview.',
