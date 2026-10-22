@@ -65,6 +65,7 @@
 - Name and Date Created columns can be sorted.
 - Multiple sort columns are supported; earlier selections have higher priority.
 - Show sort direction on each active sort column.
+- Sort by Date Created in descending order by default.
 
 ### Pagination
 

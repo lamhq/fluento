@@ -25,20 +25,28 @@ interface TableOptions<TData extends RowData> {
   columns: ColumnDef<TableFeatures, TData>[];
   useServerQuery: ServerTableQueryHook<TData>;
   globalFilterFn?: FilterFnOption<TableFeatures, TData>;
+  state?: {
+    pagination?: PaginationState;
+    columnFilters?: ColumnFiltersState;
+    globalFilter?: string;
+    sorting?: SortingState;
+  };
 }
 
 export function useServerTable<TData extends RowData>({
   columns,
   useServerQuery,
   globalFilterFn,
+  state: defaultState,
 }: TableOptions<TData>) {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState<PaginationState>(
+    defaultState?.pagination ?? { pageIndex: 0, pageSize: 10 },
+  );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+    defaultState?.columnFilters ?? [],
+  );
+  const [globalFilter, setGlobalFilter] = useState(defaultState?.globalFilter ?? '');
+  const [sorting, setSorting] = useState<SortingState>(defaultState?.sorting ?? []);
   const state = { pagination, columnFilters, globalFilter, sorting };
   const { data, error, isFetching } = useServerQuery(state);
   const [totalCount, items] = data ?? [];

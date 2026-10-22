@@ -15,6 +15,7 @@ export default function ExerciseListPage() {
   const { table, isFetching, data } = useServerTable({
     columns: exerciseColumns,
     useServerQuery: useGetExercises,
+    state: { sorting: [{ id: 'createdAt', desc: true }] },
   });
 
   return (
