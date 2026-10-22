@@ -101,7 +101,7 @@ export function useUpdateExercise() {
       exerciseId: string;
       data: UpdateExerciseInput;
     }) => apiClient.updateExercise(exerciseId, data),
-    onSuccess: async (_exercise, exerciseId) => {
+    onSuccess: async (_exercise, { exerciseId }) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: [EXERCISE_LIST_QUERY_KEY],
