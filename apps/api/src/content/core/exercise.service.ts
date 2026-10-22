@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import {
@@ -51,8 +51,6 @@ function getExerciseMetadata(
 
 @Injectable()
 export class ExerciseService {
-  private readonly logger = new Logger(ExerciseService.name);
-
   constructor(
     @Inject(EXERCISE_REPOSITORY)
     private readonly repository: ExerciseRepository,
