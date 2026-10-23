@@ -17,7 +17,6 @@ export type ServerTableQueryHook<TData extends RowData> = (options: {
   sorting: SortingState;
 }) => {
   data: [rowCount: number, data: TData[]] | undefined;
-  error: Error | null;
   isFetching: boolean;
 };
 
@@ -48,10 +47,8 @@ export function useServerTable<TData extends RowData>({
   const [globalFilter, setGlobalFilter] = useState(defaultState?.globalFilter ?? '');
   const [sorting, setSorting] = useState<SortingState>(defaultState?.sorting ?? []);
   const state = { pagination, columnFilters, globalFilter, sorting };
-  const { data, error, isFetching } = useServerQuery(state);
+  const { data, isFetching } = useServerQuery(state);
   const [totalCount, items] = data ?? [];
-
-  if (error) throw error;
 
   const table = useAppTable({
     data: items ?? [],

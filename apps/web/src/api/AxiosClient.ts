@@ -11,6 +11,7 @@ import type { PracticeAttempt } from '../core/types/practice-attempt';
 import { practiceAttemptSchema } from '../core/types/practice-attempt';
 import type { PracticeExercise } from '../core/types/practice-exercise';
 import { paginatedExerciseSchema as paginatedPracticeExerciseSchema } from '../core/types/practice-exercise';
+import type { PracticeExerciseQuery } from '../core/types/practice-exercise-query';
 import { topicSchema } from '../core/types/topic';
 import {
   type FieldErrors,
@@ -95,7 +96,7 @@ export default class AxiosClient implements ApiClient {
     this.httpClient.defaults.headers.common.Authorization = `Bearer ${token}`;
   }
 
-  async getPracticeExercise() {
+  async getPracticeExercise(query: PracticeExerciseQuery = {}) {
     const response = await this.request(
       this.httpClient.get<CursorPaginatedResponse<PracticeExercise>>(
         '/v1/practice/exercises',
@@ -103,7 +104,9 @@ export default class AxiosClient implements ApiClient {
           params: {
             sort: 'practicedAt',
             limit: 1,
+            ...query,
           },
+          paramsSerializer: { indexes: null },
         },
       ),
     );

@@ -7,17 +7,18 @@ import {
 
 import { useApiClient } from '../api';
 import type { PracticeExercise } from '../core/types/practice-exercise';
+import type { PracticeExerciseQuery } from '../core/types/practice-exercise-query';
 
-const PRACTICE_EXERCISES_QUERY_KEY = ['practice-exercise'];
+const PRACTICE_EXERCISES_QUERY_KEY = 'practice-exercise';
 
-export function usePracticeExercise() {
+export function usePracticeExercise(query: PracticeExerciseQuery = {}) {
   const apiClient = useApiClient();
   return useQuery(
     queryOptions({
-      queryKey: PRACTICE_EXERCISES_QUERY_KEY,
+      queryKey: [PRACTICE_EXERCISES_QUERY_KEY, query],
       queryFn: async () => {
         try {
-          const { items } = await apiClient.getPracticeExercise();
+          const { items } = await apiClient.getPracticeExercise(query);
           return items.length > 0 ? items[0] : null;
         } catch (error) {
           if (error instanceof Error) {
@@ -26,6 +27,7 @@ export function usePracticeExercise() {
           throw new Error('Unable to load exercise.');
         }
       },
+      throwOnError: true,
     }),
   );
 }
@@ -52,6 +54,6 @@ export function useSubmitResponse() {
 export function useResetPracticeExercise() {
   const queryClient = useQueryClient();
   return () => {
-    void queryClient.invalidateQueries({ queryKey: PRACTICE_EXERCISES_QUERY_KEY });
+    void queryClient.invalidateQueries({ queryKey: [PRACTICE_EXERCISES_QUERY_KEY] });
   };
 }

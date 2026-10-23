@@ -78,6 +78,12 @@ After submission:
 - **Next exercise**:
   - When the learner clicks Next, the app fetches another active exercise and selects a practice type allowed by its format.
   - Prevent duplicate requests while an exercise is loading.
+- **Filter by topics**:
+  - An icon-only Filter button in the top-right corner opens a dialog with a Topics multi-select.
+  - The Topics select displays the currently applied topics and only allows choosing existing topics; new topics cannot be added.
+  - Cancel closes the dialog without changing the filters.
+  - Apply updates the filters, closes the dialog, and reloads the exercise using the selected topics (OR condition).
+  - The applied filters are saved to local storage and restored when the user returns to the Practice screen.
 
 ## Practice Type Determination
 

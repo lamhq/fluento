@@ -1,5 +1,7 @@
 import TopLoadingBar from '../../common/components/TopLoadingBar';
+import { useLocalStorageState } from '../../common/hooks';
 import type { PracticeExercise } from '../../core/types/practice-exercise';
+import type { PracticeExerciseQuery } from '../../core/types/practice-exercise-query';
 import { PracticeType } from '../../core/types/practice-type';
 import Communication from '../components/exercise/Communication';
 import JustOneWord from '../components/exercise/JustOneWord';
@@ -8,6 +10,7 @@ import SentenceConstruction from '../components/exercise/SentenceConstruction';
 import SentenceVariation from '../components/exercise/SentenceVariation';
 import UsingWord from '../components/exercise/UsingWord';
 import WordGuessing from '../components/exercise/WordGuessing';
+import ExerciseQueryDialog from '../components/ExerciseQueryDialog';
 import { ExerciseSkeleton } from '../components/ExerciseSkeleton';
 import { usePracticeExercise } from '../hooks';
 
@@ -30,16 +33,22 @@ function renderExercise(exercise: PracticeExercise) {
   }
 }
 
-export default function PracticePage() {
-  const { data: exercise, error, isFetching } = usePracticeExercise();
+const EXERCISE_QUERY_STORAGE_KEY = 'practice-exercise-query';
 
-  if (error) {
-    throw error;
-  }
+export default function PracticePage() {
+  const [query, setQuery] = useLocalStorageState<PracticeExerciseQuery>(
+    EXERCISE_QUERY_STORAGE_KEY,
+    {},
+  );
+  const { data: exercise, isFetching } = usePracticeExercise(query);
 
   return (
     <div className="mx-auto max-w-2xl">
       <TopLoadingBar open={isFetching} />
+
+      <div className="mb-4 flex justify-end">
+        <ExerciseQueryDialog query={query} onSubmit={setQuery} />
+      </div>
 
       {isFetching && !exercise && <ExerciseSkeleton />}
 

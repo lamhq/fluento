@@ -5,13 +5,16 @@ import type { ExerciseStatus } from '../core/types/exercise-status';
 import type { ExerciseSummary } from '../core/types/exercise-summary';
 import type { PracticeAttempt } from '../core/types/practice-attempt';
 import type { PracticeExercise } from '../core/types/practice-exercise';
+import type { PracticeExerciseQuery } from '../core/types/practice-exercise-query';
 import type { PracticeType } from '../core/types/practice-type';
 import type { Topic } from '../core/types/topic';
 
 export interface ApiClient {
   setAccessToken(token: string): void;
 
-  getPracticeExercise(): Promise<CursorPaginatedResponse<PracticeExercise>>;
+  getPracticeExercise(
+    query?: PracticeExerciseQuery,
+  ): Promise<CursorPaginatedResponse<PracticeExercise>>;
 
   submitPracticeResponse(
     exerciseId: string,

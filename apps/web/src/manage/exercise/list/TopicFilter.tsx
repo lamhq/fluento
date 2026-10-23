@@ -7,10 +7,7 @@ interface TopicFilterProps {
 }
 
 export default function TopicFilter({ values, onChange }: TopicFilterProps) {
-  const { data, error } = useGetTopics();
-  if (error) {
-    throw error;
-  }
+  const { data } = useGetTopics();
 
   return (
     <ColumnFilter
