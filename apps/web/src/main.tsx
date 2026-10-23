@@ -3,15 +3,15 @@ import './global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router';
+import { RouterProvider } from 'react-router';
 
 import { Toaster } from '@/components/ui/toast';
 
 import { ApiProvider, AxiosClient } from './api';
-import App from './App';
 import { AuthProvider, initializeAuth } from './auth';
 import { LAST_ROUTE_KEY } from './common/constants';
 import { getAbsoluteURL, getEnv } from './common/utils';
+import { router } from './router';
 import { SIGN_IN_REDIRECT_ROUTE, SIGN_OUT_REDIRECT_ROUTE } from './routes';
 
 const httpClient = new AxiosClient({ baseUrl: getEnv('VITE_API_BASE_URL') });
@@ -41,12 +41,10 @@ if (rootEl) {
     <StrictMode>
       <ApiProvider apiClient={httpClient}>
         <AuthProvider config={authConfig}>
-          <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
-              <App />
-              <Toaster />
-            </QueryClientProvider>
-          </BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <Toaster />
+          </QueryClientProvider>
         </AuthProvider>
       </ApiProvider>
     </StrictMode>,
