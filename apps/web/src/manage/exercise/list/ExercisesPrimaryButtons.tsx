@@ -2,7 +2,7 @@ import { MailPlus, UserPlus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { useExerciseDialogs } from '../create/useExerciseDialogs';
+import { useExerciseDialogs } from '../dialog/useExerciseDialogs';
 
 export default function ExercisesPrimaryButtons() {
   const { setOpen } = useExerciseDialogs();

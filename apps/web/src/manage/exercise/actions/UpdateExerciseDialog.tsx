@@ -12,10 +12,10 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 
 import TopLoadingBar from '../../../common/components/TopLoadingBar';
+import ExerciseForm from '../form/ExerciseForm';
+import { type ExerciseFormData } from '../form/exerciseFormSchema';
+import ExerciseFormSkeleton from '../form/ExerciseFormSkeleton';
 import { useGetExerciseDetails, useUpdateExercise } from '../hooks';
-import ExerciseForm from './ExerciseForm';
-import { type ExerciseFormData } from './exerciseFormSchema';
-import ExerciseFormSkeleton from './ExerciseFormSkeleton';
 
 interface UpdateExerciseDialogProps {
   open: boolean;
@@ -29,7 +29,14 @@ export default function UpdateExerciseDialog({
   exerciseId,
 }: UpdateExerciseDialogProps) {
   const { mutateAsync: updateExercise, isPending } = useUpdateExercise();
-  const { data: exerciseDetails, isFetching } = useGetExerciseDetails(exerciseId);
+  const { data: exerciseDetails, isFetching } = useGetExerciseDetails(exerciseId, {
+    enabled: open,
+  });
+
+  const handleSubmit = async (values: ExerciseFormData) => {
+    await updateExercise({ exerciseId, data: values });
+    onOpenChange(false);
+  };
 
   const handleOpenChange = (
     nextOpen: boolean,
@@ -41,11 +48,6 @@ export default function UpdateExerciseDialog({
     }
 
     onOpenChange(nextOpen);
-  };
-
-  const handleSubmit = async (values: ExerciseFormData) => {
-    await updateExercise({ exerciseId, input: values });
-    onOpenChange(false);
   };
 
   return (
@@ -60,10 +62,7 @@ export default function UpdateExerciseDialog({
 
           {exerciseDetails ? (
             <>
-              <ExerciseForm
-                defaultValues={exerciseDetails}
-                onSubmit={handleSubmit}
-              />
+              <ExerciseForm exercise={exerciseDetails} onSubmit={handleSubmit} />
               <DialogFooter>
                 <DialogClose
                   render={

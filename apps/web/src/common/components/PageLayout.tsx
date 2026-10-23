@@ -1,10 +1,11 @@
-import { Link, Outlet } from 'react-router';
+import { Link, Outlet, useLocation } from 'react-router';
 
-import { MANAGE_EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
-import ErrorBoundary from './ErrorBoundary';
+import { ErrorBoundary } from '../../error';
+import { EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
 import MainLayout from './MainLayout';
 
 export default function PageLayout() {
+  const location = useLocation();
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
@@ -17,7 +18,7 @@ export default function PageLayout() {
               Practice
             </Link>
             <Link
-              to={MANAGE_EXERCISE_LIST_ROUTE}
+              to={EXERCISE_LIST_ROUTE}
               className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
             >
               Exercise List
@@ -26,7 +27,7 @@ export default function PageLayout() {
         </div>
       </header>
       <MainLayout>
-        <ErrorBoundary>
+        <ErrorBoundary resetKeys={[location.pathname]}>
           <Outlet />
         </ErrorBoundary>
       </MainLayout>

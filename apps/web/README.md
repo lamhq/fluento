@@ -131,7 +131,7 @@ apps/web/src/
 ├── auth/                          # Authentication provider and utilities
 ├── common/                        # Shared components, hooks, and utilities
 ├── core/                          # Shared types/entities (exercise, topic), components
-├── error/                         # Error handling provider and utilities
+├── error/                     # Error boundary, error screens, and error handling hooks
 ├── manage/                        # Exercise management
 ├── practice/                      # Exercise practice
 ├── shadcn/                        # Shadcn/ui components and utilities

@@ -20,7 +20,7 @@ export const Default: Story = {
       id: '65f00000000000000000000e',
       format: ExerciseFormat.Paragraph,
       name: 'Mid-Autumn Festival Introduction',
-      skill: ExerciseSkill.ARTICULATION,
+      skill: ExerciseSkill.Articulation,
       topics: ['Mid-Autumn Festival'],
       references: [],
       scenario: 'Introduce the Mid-Autumn Festival to an international audience.',

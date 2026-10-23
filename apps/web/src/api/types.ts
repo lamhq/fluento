@@ -34,6 +34,8 @@ export interface ApiClient {
     exerciseId: string,
     input: UpdateExerciseInput,
   ): Promise<ExerciseSummary>;
+
+  deleteExercise(exerciseId: string): Promise<void>;
 }
 
 export interface ExerciseQuery {

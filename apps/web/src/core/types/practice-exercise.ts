@@ -18,13 +18,13 @@ const practiceExerciseBaseSchema = z.object({
 
 export const practiceExerciseSchema = z.discriminatedUnion('format', [
   practiceExerciseBaseSchema.extend({
-    skill: z.literal(ExerciseSkill.COMMUNICATION),
+    skill: z.literal(ExerciseSkill.Communication),
     format: z.literal(ExerciseFormat.Communication),
     scenario: z.string().nonempty(),
     prompts: z.array(z.string().nonempty()).nonempty(),
   }),
   practiceExerciseBaseSchema.extend({
-    skill: z.literal(ExerciseSkill.VOCABULARY),
+    skill: z.literal(ExerciseSkill.Vocabulary),
     format: z.literal(ExerciseFormat.Word),
     word: z.string().nonempty(),
     meaning: z.string().nonempty(),
@@ -32,14 +32,14 @@ export const practiceExerciseSchema = z.discriminatedUnion('format', [
     sentences: z.array(z.string().nonempty()).optional(),
   }),
   practiceExerciseBaseSchema.extend({
-    skill: z.literal(ExerciseSkill.ARTICULATION),
+    skill: z.literal(ExerciseSkill.Articulation),
     format: z.literal(ExerciseFormat.Sentence),
     scenario: z.string().nonempty(),
     sentence: z.string().nonempty(),
     words: z.array(z.string().nonempty()).optional(),
   }),
   practiceExerciseBaseSchema.extend({
-    skill: z.literal(ExerciseSkill.ARTICULATION),
+    skill: z.literal(ExerciseSkill.Articulation),
     format: z.literal(ExerciseFormat.Paragraph),
     scenario: z.string().nonempty(),
     paragraph: z.string().nonempty(),

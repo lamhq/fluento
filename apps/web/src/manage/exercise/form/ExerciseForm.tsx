@@ -16,15 +16,17 @@ import {
 } from '@/components/ui/select';
 
 import Controller from '../../../common/components/Controller';
+import type { Exercise } from '../../../core/types/exercise';
 import {
   ExerciseFormat,
   exerciseFormats,
 } from '../../../core/types/exercise-format';
+import { ExerciseSkill } from '../../../core/types/exercise-skill';
 import {
   ExerciseStatus,
   exerciseStatuses,
 } from '../../../core/types/exercise-status';
-import { useErrorHandler, useFormErrorHandler } from '../../../error-new';
+import { useErrorHandler, useFormErrorHandler } from '../../../error';
 import { type ExerciseFormData, exerciseFormSchema } from './exerciseFormSchema';
 import FieldsPerFormat from './FieldsPerFormat';
 import LinesFormField from './LinesFormField';
@@ -48,41 +50,71 @@ const exerciseFormFields = [
 ] satisfies FieldPath<ExerciseFormData>[];
 
 interface ExerciseFormProps {
-  defaultValues: DefaultValues<ExerciseFormData>;
+  exercise?: Exercise;
   onSubmit: (values: ExerciseFormData) => Promise<void>;
 }
 
-function getDefaultValues(format: ExerciseFormat): ExerciseFormData {
-  const common = {
+function getDefaultValues(exercise?: Exercise): DefaultValues<ExerciseFormData> {
+  const data: Exercise = exercise ?? {
+    id: '',
+    name: '',
+    format: ExerciseFormat.Communication,
+    skill: ExerciseSkill.Communication,
     topics: [],
     references: [],
+    createdAt: new Date().toISOString(),
     status: ExerciseStatus.ACTIVE,
+    prompts: [],
+    validResponses: [],
   };
-  switch (format) {
+
+  const common = {
+    topics: data.topics,
+    references: data.references,
+    status: data.status,
+  };
+
+  switch (data.format) {
     case ExerciseFormat.Communication:
       return {
         ...common,
-        format,
-        scenario: '',
-        prompts: [],
-        validResponses: [],
+        format: data.format,
+        scenario: data.scenario ?? '',
+        prompts: data.prompts,
+        validResponses: data.validResponses,
       };
     case ExerciseFormat.Word:
-      return { ...common, format, word: '', meaning: '' };
+      return {
+        ...common,
+        format: data.format,
+        word: data.word,
+        meaning: data.meaning,
+        sentences: data.sentences,
+        clues: data.clues,
+      };
     case ExerciseFormat.Sentence:
-      return { ...common, format, scenario: '', sentence: '' };
+      return {
+        ...common,
+        format: data.format,
+        scenario: data.scenario,
+        sentence: data.sentence ?? '',
+        words: data.words,
+      };
     case ExerciseFormat.Paragraph:
-      return { ...common, format, scenario: '', paragraph: '' };
+      return {
+        ...common,
+        format: data.format,
+        scenario: data.scenario,
+        paragraph: data.paragraph ?? '',
+        words: data.words,
+      };
   }
 }
 
-export default function ExerciseForm({
-  defaultValues,
-  onSubmit,
-}: ExerciseFormProps) {
+export default function ExerciseForm({ onSubmit, exercise }: ExerciseFormProps) {
   const form = useForm<ExerciseFormData>({
     resolver: zodResolver(exerciseFormSchema),
-    defaultValues,
+    defaultValues: getDefaultValues(exercise),
   });
   const selectedFormat = useWatch({
     control: form.control,
@@ -116,7 +148,7 @@ export default function ExerciseForm({
                 value={field.value}
                 onValueChange={(format) => {
                   if (!format) return;
-                  form.reset(getDefaultValues(format));
+                  form.reset(getDefaultValues({ format } as Exercise));
                 }}
               >
                 <SelectTrigger

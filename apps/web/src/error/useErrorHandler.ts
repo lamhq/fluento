@@ -1,29 +1,38 @@
 import { useAuth } from '../auth';
-import { getErrorInfo } from '.';
+import {
+  ForbiddenError,
+  NetworkError,
+  NotFoundError,
+  ServerError,
+  UnAuthorizedError,
+} from './types';
+import { showErrorToast } from './utils';
 
-export type ErrorHandlerFunction = (error: unknown) => Promise<void>;
-
-/**
- * Hook that returns a function to handle errors in event handlers.
- */
-export default function useErrorHandler(): ErrorHandlerFunction {
+export default function useErrorHandler<Args extends unknown[], Result>(
+  asyncFunction: (...args: Args) => Promise<Result>,
+): (...args: Args) => Promise<Result | undefined> {
   const { signIn } = useAuth();
 
-  const handleError = async (error: unknown) => {
-    const { code, message } = getErrorInfo(error);
-
-    if (code === 'UNAUTHORIZED_ACCESS') {
-      // TODO: Show a toast notification with the error message
-      console.log('show alert:', message);
-      await signIn();
-    } else {
-      // TODO: Show a toast notification with the error message
-      console.log('show toast:', message);
+  return async (...args) => {
+    try {
+      return await asyncFunction(...args);
+    } catch (error) {
+      if (error instanceof UnAuthorizedError) {
+        showErrorToast(error.message, 'Sign-in required');
+        await signIn();
+      } else if (error instanceof NetworkError) {
+        showErrorToast(error.message, 'Connection problem');
+      } else if (error instanceof ForbiddenError) {
+        showErrorToast(error.message, 'Access denied');
+      } else if (error instanceof NotFoundError) {
+        showErrorToast(error.message, 'Not found');
+      } else if (error instanceof ServerError) {
+        showErrorToast(error.message, 'Server error');
+      } else {
+        showErrorToast('Something went wrong. Please try again.');
+        // TODO: send error to monitoring services
+        console.error(error);
+      }
     }
-
-    // TODO: send to error tracking service
-    console.error(error);
   };
-
-  return handleError;
 }

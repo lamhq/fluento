@@ -42,7 +42,6 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
 
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
-  const handleError = useErrorHandler();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { response: '' },
@@ -51,18 +50,14 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
   const [feedback, setFeedback] = useState<Awaited<
     ReturnType<typeof submitResponse>
   > | null>(null);
-  const handleSubmit = form.handleSubmit(async (values) => {
-    try {
-      setFeedback(
-        await submitResponse({
-          exerciseId: exercise.id,
-          practiceType: exercise.type,
-          response: values.response,
-        }),
-      );
-    } catch (error) {
-      void handleError(error);
-    }
+  const submit = useErrorHandler(async (values: FormValues) => {
+    setFeedback(
+      await submitResponse({
+        exerciseId: exercise.id,
+        practiceType: exercise.type,
+        response: values.response,
+      }),
+    );
   });
   const handleNext = () => {
     form.reset();
@@ -78,7 +73,7 @@ export default function JustOneWord({ exercise }: JustOneWordProps) {
           <CardTitle>Just One Word</CardTitle>
         </CardHeader>
         <CardContent>
-          <form id="practice-form" onSubmit={handleSubmit} noValidate>
+          <form id="practice-form" onSubmit={form.handleSubmit(submit)} noValidate>
             <p className="text-xs tracking-wide text-muted-foreground">
               Guess the word or phrase from these clues:
             </p>

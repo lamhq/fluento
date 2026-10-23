@@ -39,7 +39,6 @@ export default function SentenceVariation({ exercise }: SentenceVariationProps) 
 
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
-  const handleError = useErrorHandler();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { response: '' },
@@ -48,18 +47,14 @@ export default function SentenceVariation({ exercise }: SentenceVariationProps) 
   const [feedback, setFeedback] = useState<Awaited<
     ReturnType<typeof submitResponse>
   > | null>(null);
-  const handleSubmit = form.handleSubmit(async (values) => {
-    try {
-      setFeedback(
-        await submitResponse({
-          exerciseId: exercise.id,
-          practiceType: exercise.type,
-          response: values.response,
-        }),
-      );
-    } catch (error) {
-      void handleError(error);
-    }
+  const submit = useErrorHandler(async (values: FormValues) => {
+    setFeedback(
+      await submitResponse({
+        exerciseId: exercise.id,
+        practiceType: exercise.type,
+        response: values.response,
+      }),
+    );
   });
   const handleNext = () => {
     form.reset();
@@ -90,7 +85,7 @@ export default function SentenceVariation({ exercise }: SentenceVariationProps) 
         <CardContent>
           <form
             id="practice-form"
-            onSubmit={handleSubmit}
+            onSubmit={form.handleSubmit(submit)}
             noValidate
             className="space-y-4"
           >

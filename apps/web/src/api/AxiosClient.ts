@@ -20,7 +20,7 @@ import {
   NotFoundError,
   ServerError,
   UnAuthorizedError,
-} from '../error-new/types';
+} from '../error/types';
 import type { CursorPaginatedResponse } from './types';
 import type {
   ApiClient,
@@ -186,5 +186,9 @@ export default class AxiosClient implements ApiClient {
     );
 
     return exerciseSummarySchema.parse(response.data);
+  }
+
+  async deleteExercise(exerciseId: string): Promise<void> {
+    await this.request(this.httpClient.delete(`/v1/manage/exercises/${exerciseId}`));
   }
 }

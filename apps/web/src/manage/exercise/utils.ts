@@ -4,10 +4,10 @@ import type {
   SortingState,
 } from '@tanstack/react-table';
 
-import type { ExerciseQuery } from '../../../api/types';
-import { ExerciseFormat } from '../../../core/types/exercise-format';
-import { ExerciseSkill } from '../../../core/types/exercise-skill';
-import { ExerciseStatus } from '../../../core/types/exercise-status';
+import type { ExerciseQuery } from '../../api/types';
+import { ExerciseFormat } from '../../core/types/exercise-format';
+import { ExerciseSkill } from '../../core/types/exercise-skill';
+import { ExerciseStatus } from '../../core/types/exercise-status';
 
 export function buildExerciseQuery({
   pagination,
@@ -53,9 +53,9 @@ export function buildExerciseQuery({
 
 function isExerciseSkill(value: unknown): value is ExerciseSkill {
   return (
-    value === ExerciseSkill.COMMUNICATION ||
-    value === ExerciseSkill.VOCABULARY ||
-    value === ExerciseSkill.ARTICULATION
+    value === ExerciseSkill.Communication ||
+    value === ExerciseSkill.Vocabulary ||
+    value === ExerciseSkill.Articulation
   );
 }
 

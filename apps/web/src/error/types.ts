@@ -1,27 +1,48 @@
-import type { ComponentType } from 'react';
-import type { FallbackProps } from 'react-error-boundary';
+export type FieldErrors = Record<string, string>;
 
-export type ErrorCode =
-  | 'UNKNOWN_ERROR'
-  | 'NO_NETWORK_CONNECTION'
-  | 'BAD_REQUEST'
-  | 'UNAUTHORIZED_ACCESS'
-  | 'FORBIDDEN_ACCESS'
-  | 'TIMEOUT_ERROR'
-  | 'RATE_LIMITING_ERROR'
-  | 'SERVER_PROCESSING_ERROR';
+export class FormError extends Error {
+  readonly details: FieldErrors;
 
-export interface ErrorInfo {
-  code: ErrorCode;
-  message: string;
+  constructor(fieldErrors: FieldErrors) {
+    super('The submitted form contains errors.');
+    this.name = 'FormError';
+    this.details = fieldErrors;
+  }
 }
 
-/**
- * Configuration for the error module.
- */
-export interface ErrorConfig {
-  /**
-   * React component to render when an error is caught
-   */
-  fallbackComponent?: ComponentType<FallbackProps>;
+export class UnAuthorizedError extends Error {
+  constructor(message = 'Please sign in to continue.') {
+    super(message);
+    this.name = 'UnAuthorizedError';
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor(message = "You don't have permission to access this page.") {
+    super(message);
+    this.name = 'ForbiddenError';
+  }
+}
+
+export class NotFoundError extends Error {
+  constructor(message = 'The page you are looking for could not be found.') {
+    super(message);
+    this.name = 'NotFoundError';
+  }
+}
+
+export class NetworkError extends Error {
+  constructor(
+    message = 'No network connection. Check your connection and try again.',
+  ) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
+export class ServerError extends Error {
+  constructor(message = 'Something went wrong. Please try again.') {
+    super(message);
+    this.name = 'ServerError';
+  }
 }

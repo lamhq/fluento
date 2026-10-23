@@ -11,7 +11,7 @@ const columnHelper = createAppColumnHelper<ExerciseSummary>();
 
 const dummyFilterFn = () => true; // because we use server-side filtering
 
-export const exerciseColumns = columnHelper.columns([
+const exerciseColumns = columnHelper.columns([
   columnHelper.accessor('name', {
     header: 'Name',
     enableMultiSort: true,
@@ -57,3 +57,5 @@ export const exerciseColumns = columnHelper.columns([
     cell: ({ row }) => <ExerciseRowActions exercise={row.original} />,
   }),
 ]);
+
+export default exerciseColumns;

@@ -36,7 +36,6 @@ interface CommunicationProps {
 export default function Communication({ exercise }: CommunicationProps) {
   const submitResponse = useSubmitResponse();
   const resetPracticeExercise = useResetPracticeExercise();
-  const handleError = useErrorHandler();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { response: '' },
@@ -46,17 +45,13 @@ export default function Communication({ exercise }: CommunicationProps) {
     ReturnType<typeof submitResponse>
   > | null>(null);
 
-  const handleSubmit = form.handleSubmit(async (values) => {
-    try {
-      const result = await submitResponse({
-        exerciseId: exercise.id,
-        practiceType: exercise.type,
-        response: normalizeLearnerResponse(values.response),
-      });
-      setFeedback(result);
-    } catch (error) {
-      void handleError(error);
-    }
+  const submit = useErrorHandler(async (values: FormValues) => {
+    const result = await submitResponse({
+      exerciseId: exercise.id,
+      practiceType: exercise.type,
+      response: normalizeLearnerResponse(values.response),
+    });
+    setFeedback(result);
   });
 
   const handleNext = () => {
@@ -94,7 +89,7 @@ export default function Communication({ exercise }: CommunicationProps) {
           )}
         </CardHeader>
         <CardContent>
-          <form id="practice-form" onSubmit={handleSubmit} noValidate>
+          <form id="practice-form" onSubmit={form.handleSubmit(submit)} noValidate>
             <p className="text-xs tracking-wide text-muted-foreground">
               Communicate in a real-life conversation.
             </p>
