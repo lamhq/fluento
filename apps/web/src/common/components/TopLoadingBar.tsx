@@ -63,9 +63,28 @@ export default function TopLoadingBar({ open }: TopLoadingBarProps) {
     );
   }, [open]);
 
+  // keep the bar mounted after `open` turns false, so it can finish its animation
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [isRendered, setIsRendered] = useState(open);
+  // changing the key on each reopen remounts the bar and drops any pending finish callback
+  const [session, setSession] = useState(0);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setIsRendered(true);
+      setSession((s) => s + 1);
+    }
+  }
+
+  if (!isRendered) return null;
+
   return (
     <ReactTopLoadingBar
-      progress={!open ? MAX_PROGRESS : progress}
+      key={session}
+      progress={open ? progress : MAX_PROGRESS}
+      onLoaderFinished={() => {
+        setIsRendered(false);
+      }}
       shadow={true}
       color="var(--muted-foreground)"
     />

@@ -52,7 +52,7 @@ export default function UpdateExerciseDialog({
 
   return (
     <>
-      {open && <TopLoadingBar open={isFetching} />}
+      <TopLoadingBar open={isFetching} />
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-lg">

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 
+import TopLoadingBar from '../../../common/components/TopLoadingBar';
 import ExerciseForm from '../form/ExerciseForm';
 import type { ExerciseFormData } from '../form/exerciseFormSchema';
 import { useCreateExercise } from '../hooks';
@@ -43,26 +44,30 @@ export default function CreateExerciseDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader className="text-start">
-          <DialogTitle>Create Exercise</DialogTitle>
-        </DialogHeader>
-        <ExerciseForm onSubmit={handleSubmit} />
-        <DialogFooter>
-          <DialogClose
-            render={
-              <Button variant="outline" disabled={isPending}>
-                Close
-              </Button>
-            }
-          />
-          <Button type="submit" form="exercise-form" disabled={isPending}>
-            {isPending && <Spinner data-icon="inline-start" />}
-            Create
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <>
+      <TopLoadingBar open={isPending} />
+
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader className="text-start">
+            <DialogTitle>Create Exercise</DialogTitle>
+          </DialogHeader>
+          <ExerciseForm onSubmit={handleSubmit} />
+          <DialogFooter>
+            <DialogClose
+              render={
+                <Button variant="outline" disabled={isPending}>
+                  Close
+                </Button>
+              }
+            />
+            <Button type="submit" form="exercise-form" disabled={isPending}>
+              {isPending && <Spinner data-icon="inline-start" />}
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

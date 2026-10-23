@@ -1,4 +1,5 @@
 import { ConfirmDialog } from '../../../common/components/ConfirmDialog';
+import TopLoadingBar from '../../../common/components/TopLoadingBar';
 import type { ExerciseSummary } from '../../../core/types/exercise-summary';
 import { useDeleteExercise } from '../hooks';
 
@@ -21,15 +22,19 @@ export default function DeleteExerciseDialog({
   };
 
   return (
-    <ConfirmDialog
-      destructive
-      open={open}
-      onOpenChange={onOpenChange}
-      handleConfirm={handleDelete}
-      isLoading={isPending}
-      title="Delete exercise?"
-      desc={`"${exercise.name}" will be permanently deleted. This action cannot be undone.`}
-      confirmText="Delete"
-    />
+    <>
+      <TopLoadingBar open={isPending} />
+
+      <ConfirmDialog
+        destructive
+        open={open}
+        onOpenChange={onOpenChange}
+        handleConfirm={handleDelete}
+        isLoading={isPending}
+        title="Delete exercise?"
+        desc={`"${exercise.name}" will be permanently deleted. This action cannot be undone.`}
+        confirmText="Delete"
+      />
+    </>
   );
 }
