@@ -20,7 +20,7 @@ import {
   NotFoundError,
   ServerError,
   UnAuthorizedError,
-} from '../error-new/types';
+} from '../error/types';
 import type { CursorPaginatedResponse } from './types';
 import type {
   ApiClient,

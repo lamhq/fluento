@@ -19,7 +19,7 @@ import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
 import SubmitButton from '../../../common/components/Button';
 import { ExerciseFormat } from '../../../core/types/exercise-format';
 import type { PracticeExercise } from '../../../core/types/practice-exercise';
-import { useErrorHandler } from '../../../error-new';
+import { useErrorHandler } from '../../../error';
 import { useResetPracticeExercise, useSubmitResponse } from '../../hooks';
 import { normalizeLearnerResponse } from '../../utils';
 import ResponseFeedback from '../ResponseFeedback';

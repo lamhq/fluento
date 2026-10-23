@@ -26,7 +26,7 @@ import {
   ExerciseStatus,
   exerciseStatuses,
 } from '../../../core/types/exercise-status';
-import { useErrorHandler, useFormErrorHandler } from '../../../error-new';
+import { useErrorHandler, useFormErrorHandler } from '../../../error';
 import { type ExerciseFormData, exerciseFormSchema } from './exerciseFormSchema';
 import FieldsPerFormat from './FieldsPerFormat';
 import LinesFormField from './LinesFormField';

@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router';
 
-import { ErrorBoundary } from '../../error-new';
+import { ErrorBoundary } from '../../error';
 import { MANAGE_EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
 import MainLayout from './MainLayout';
 

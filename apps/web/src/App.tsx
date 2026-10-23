@@ -4,7 +4,7 @@ import { requireAuth } from './auth';
 import PageLayout from './common/components/PageLayout';
 import SignInCallbackPage from './common/pages/SignInCallbackPage';
 import SignOutCallbackPage from './common/pages/SignOutCallbackPage';
-import { ErrorBoundary } from './error-new';
+import { ErrorBoundary } from './error';
 import ExerciseListPage from './manage/exercise/list/ExerciseListPage';
 import PracticePage from './practice/pages/PracticePage';
 import {
