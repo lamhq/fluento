@@ -29,7 +29,9 @@ export default function UpdateExerciseDialog({
   exerciseId,
 }: UpdateExerciseDialogProps) {
   const { mutateAsync: updateExercise, isPending } = useUpdateExercise();
-  const { data: exerciseDetails, isFetching } = useGetExerciseDetails(exerciseId);
+  const { data: exerciseDetails, isFetching } = useGetExerciseDetails(exerciseId, {
+    enabled: open,
+  });
 
   const handleSubmit = async (values: ExerciseFormData) => {
     await updateExercise({ exerciseId, data: values });
@@ -50,7 +52,7 @@ export default function UpdateExerciseDialog({
 
   return (
     <>
-      <TopLoadingBar open={isFetching} />
+      {open && <TopLoadingBar open={isFetching} />}
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-lg">

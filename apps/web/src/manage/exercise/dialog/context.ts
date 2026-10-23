@@ -2,7 +2,7 @@ import { createContext, type Dispatch, type SetStateAction } from 'react';
 
 import type { ExerciseSummary } from '../../../core/types/exercise-summary';
 
-export type ExerciseDialogType = 'create' | 'update' | 'import';
+export type ExerciseDialogType = 'create' | 'update' | 'import' | 'delete';
 
 export interface ExerciseContextValue {
   open: ExerciseDialogType | null;

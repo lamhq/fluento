@@ -49,18 +49,15 @@ export const useGetExercises: ServerTableQueryHook<ExerciseSummary> = ({
   });
 };
 
-export function useGetExerciseDetails(exerciseId?: string) {
+export function useGetExerciseDetails(
+  exerciseId: string,
+  { enabled = true }: { enabled?: boolean } = {},
+) {
   const apiClient = useApiClient();
   return useQuery<Exercise>({
     queryKey: [EXERCISE_QUERY_KEY, exerciseId],
-    queryFn: ({ signal }) => {
-      if (!exerciseId) {
-        throw new Error('An exercise ID is required to load exercise details.');
-      }
-
-      return apiClient.getExerciseById(exerciseId, signal);
-    },
-    enabled: Boolean(exerciseId),
+    queryFn: ({ signal }) => apiClient.getExerciseById(exerciseId, signal),
+    enabled,
   });
 }
 
@@ -78,6 +75,23 @@ export function useCreateExercise() {
 
   return useMutation({
     mutationFn: (input: CreateExerciseInput) => apiClient.createExercise(input),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [EXERCISE_LIST_QUERY_KEY],
+        }),
+        queryClient.invalidateQueries({ queryKey: [TOPIC_LIST_QUERY_KEY] }),
+      ]);
+    },
+  });
+}
+
+export function useDeleteExercise() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (exerciseId: string) => apiClient.deleteExercise(exerciseId),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({

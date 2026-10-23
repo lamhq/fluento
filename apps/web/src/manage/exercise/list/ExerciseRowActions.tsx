@@ -19,6 +19,11 @@ export default function ExerciseRowActions({
 }) {
   const { setOpen, setCurrentRow } = useExerciseDialogs();
 
+  const openDialog = (dialog: 'update' | 'delete') => {
+    setCurrentRow(exercise);
+    setOpen(dialog);
+  };
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -36,15 +41,19 @@ export default function ExerciseRowActions({
         <DropdownMenuItem
           aria-label="Update"
           onClick={() => {
-            setCurrentRow(exercise);
-            setOpen('update');
+            openDialog('update');
           }}
         >
           <Pencil size={16} />
           Update
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem aria-label="Delete">
+        <DropdownMenuItem
+          aria-label="Delete"
+          onClick={() => {
+            openDialog('delete');
+          }}
+        >
           <Trash2 size={16} />
           Delete
         </DropdownMenuItem>
