@@ -1,10 +1,11 @@
-import { Link, Outlet } from 'react-router';
+import { Link, Outlet, useLocation } from 'react-router';
 
+import { ErrorBoundary } from '../../error-new';
 import { MANAGE_EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
-import ErrorBoundary from './ErrorBoundary';
 import MainLayout from './MainLayout';
 
 export default function PageLayout() {
+  const location = useLocation();
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
@@ -26,7 +27,7 @@ export default function PageLayout() {
         </div>
       </header>
       <MainLayout>
-        <ErrorBoundary>
+        <ErrorBoundary resetKeys={[location.pathname]}>
           <Outlet />
         </ErrorBoundary>
       </MainLayout>

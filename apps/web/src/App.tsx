@@ -1,10 +1,10 @@
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 
 import { requireAuth } from './auth';
-import ErrorBoundary from './common/components/ErrorBoundary';
 import PageLayout from './common/components/PageLayout';
 import SignInCallbackPage from './common/pages/SignInCallbackPage';
 import SignOutCallbackPage from './common/pages/SignOutCallbackPage';
+import { ErrorBoundary } from './error-new';
 import ExerciseListPage from './manage/exercise/list/ExerciseListPage';
 import PracticePage from './practice/pages/PracticePage';
 import {
@@ -18,8 +18,9 @@ import {
 const ExerciseListPageWithAuth = requireAuth(ExerciseListPage);
 
 export default function App() {
+  const location = useLocation();
   return (
-    <ErrorBoundary>
+    <ErrorBoundary resetKeys={[location.pathname]}>
       <Routes>
         <Route element={<PageLayout />}>
           <Route path={DEFAULT_ROUTE} element={<PracticePage />} />

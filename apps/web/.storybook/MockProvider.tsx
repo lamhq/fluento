@@ -5,16 +5,17 @@ import { MemoryRouter } from 'react-router';
 
 import { ApiProvider, AxiosClient } from '../src/api';
 import { type AuthConfig, AuthProvider } from '../src/auth';
-import { ErrorProvider } from '../src/error';
 
 export interface MockProviderProps {
   children: React.ReactNode;
 }
 
 const apiClient = new AxiosClient({ baseUrl: '/api' });
+
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false } },
 });
+
 const authConfig: AuthConfig = {
   oidcAuthority: 'https://storybook.invalid',
   oidcClientId: 'storybook',
@@ -38,7 +39,7 @@ export default function MockProvider({ children }: MockProviderProps) {
         <AuthContext.Provider value={authContextValue}>
           <AuthProvider config={authConfig}>
             <QueryClientProvider client={queryClient}>
-              <ErrorProvider>{children}</ErrorProvider>
+              {children}
             </QueryClientProvider>
           </AuthProvider>
         </AuthContext.Provider>
