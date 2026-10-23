@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router';
 
 import { ErrorBoundary } from '../../error';
-import { MANAGE_EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
+import { EXERCISE_LIST_ROUTE, PRACTICE_ROUTE } from '../../routes';
 import MainLayout from './MainLayout';
 
 export default function PageLayout() {
@@ -18,7 +18,7 @@ export default function PageLayout() {
               Practice
             </Link>
             <Link
-              to={MANAGE_EXERCISE_LIST_ROUTE}
+              to={EXERCISE_LIST_ROUTE}
               className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
             >
               Exercise List

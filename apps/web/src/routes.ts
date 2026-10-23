@@ -11,7 +11,7 @@ export const PRACTICE_ROUTE = '/practice';
 /**
  * Manage exercises list page
  */
-export const MANAGE_EXERCISE_LIST_ROUTE = '/manage/exercises';
+export const EXERCISE_LIST_ROUTE = '/manage/exercises';
 
 /**
  * Where user is redirected after signing in on Identity Provider's page
