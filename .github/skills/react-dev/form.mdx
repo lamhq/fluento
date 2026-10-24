@@ -1,0 +1,51 @@
+import { PackageManagerTabs } from '@theme'
+
+# React Hook Form
+
+Building forms with React Hook Form.
+
+## Installation
+
+<PackageManagerTabs command="install react-hook-form @hookform/resolvers zod" />
+
+
+## Basic Form
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add field input input-group button',
+    npm: 'npx shadcn@latest add field input input-group button',
+    bun: 'bunx --bun shadcn@latest add field input input-group button'
+  }}
+/>
+
+```tsx title="form.tsx" file="./_basic-form.tsx"
+```
+
+## Complex Form
+
+Here is an example of a more complex form with multiple fields and validation.
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add button card checkbox field radio-group select switch',
+    npm: 'npx shadcn@latest add button card checkbox field radio-group select switch',
+    bun: 'bunx --bun shadcn@latest add button card checkbox field radio-group select switch',
+  }}
+/>
+
+```tsx title="complex-form.tsx" file="./_complex-form.tsx"
+```
+
+## Array Field
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add field input-group button',
+    npm: 'npx shadcn@latest add field input-group button',
+    bun: 'bunx --bun shadcn@latest add field input-group button'
+  }}
+/>
+
+```tsx title="array-fields.tsx" file="./_array-fields.tsx"
+```
