@@ -1,6 +1,6 @@
 # Writing Cheat Sheets
 
-How to write cheat sheets and guides.
+This guide explains how to write cheat sheets and guides.
 
 ## Code examples
 

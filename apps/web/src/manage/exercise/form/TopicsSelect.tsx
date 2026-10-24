@@ -9,6 +9,7 @@ interface TopicsSelectProps {
   onBlur?: () => void;
   invalid?: boolean;
   ref?: Ref<HTMLInputElement>;
+  creatable?: boolean;
 }
 
 export default function TopicsSelect({
@@ -17,6 +18,7 @@ export default function TopicsSelect({
   onBlur,
   invalid,
   ref,
+  creatable,
 }: TopicsSelectProps) {
   const { data, isLoading } = useGetTopics();
   return (
@@ -28,8 +30,8 @@ export default function TopicsSelect({
       onBlur={onBlur}
       invalid={invalid}
       ref={ref}
-      creatable
-      placeholder="Select or add topics"
+      creatable={creatable}
+      placeholder={creatable ? 'Select or add topics' : 'Select topics'}
     />
   );
 }

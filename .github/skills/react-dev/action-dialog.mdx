@@ -1,0 +1,265 @@
+# Action Dialogs
+
+## Introduction
+
+This guide explains how to render UI to perform actions such as creating, updating, and deleting records using Shadcn UI dialogs.
+
+It covers how to provide shared dialog state, render dialogs, manage open and close behavior, and implement dialogs for creating or updating features.
+
+The examples use the users feature, but you can adapt this pattern to other features.
+
+## Provide shared dialog state
+
+The `useDialogState` hook tracks the active dialog and returns a setter to update it. Its initial value defaults to `null`, indicating that no dialog is open. Passing a dialog type to the setter opens that dialog, or closes it if it is already active. Pass `null` to close any open dialog.
+
+```tsx title="src/hooks/use-dialog-state.tsx"
+import { useState } from 'react'
+
+export default function useDialogState<T extends string | boolean>(
+  initialState: T | null = null
+) {
+  const [open, _setOpen] = useState<T | null>(initialState)
+
+  const setOpen = (str: T | null) =>
+    _setOpen((prev) => (prev === str ? null : str))
+
+  return [open, setOpen] as const
+}
+```
+
+Next, create a React context to store the active dialog and the entity being acted upon. Use a provider component to make this state and its setters available throughout the component tree.
+
+```tsx title="src/features/users/components/users-provider.tsx"
+type UsersDialogType = 'add' | 'edit' | 'delete'
+
+type UsersContextType = {
+  open: UsersDialogType | null
+  setOpen: (str: UsersDialogType | null) => void
+  currentRow: User | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>
+}
+
+const UsersContext = React.createContext<UsersContextType | null>(null)
+
+export function UsersProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<UsersDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<User | null>(null)
+
+  return (
+    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+      {children}
+    </UsersContext>
+  )
+}
+
+export function useUsers() {
+  const usersContext = React.useContext(UsersContext)
+
+  if (!usersContext) {
+    throw new Error('useUsers has to be used within <UsersContext>')
+  }
+
+  return usersContext
+}
+```
+
+`UsersContextType` defines the shared dialog state:
+- `open`: identifies the active dialog type, or is `null` when no dialog is open.
+- `setOpen`: toggles the specified dialog. Pass `null` to close any active dialog.
+- `currentRow`: stores the entity being edited or acted upon.
+- `setCurrentRow`: sets or clears the selected entity.
+
+`UsersProvider` owns the context value and makes it available to its descendants.
+
+`useUsers()` retrieves this context. Descendants of `UsersProvider` can use it to read or update the shared state.
+
+## Render dialogs
+
+```tsx title="src/features/users/components/users-dialogs.tsx"
+import { UsersActionDialog } from './users-action-dialog'
+import { UsersDeleteDialog } from './users-delete-dialog'
+import { useUsers } from './users-provider'
+
+export function UsersDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useUsers()
+  return (
+    <>
+      <UsersActionDialog
+        key='user-add'
+        open={open === 'add'}
+        onOpenChange={() => setOpen('add')}
+      />
+
+      {currentRow && (
+        <>
+          <UsersActionDialog
+            key={`user-edit-${currentRow.id}`}
+            open={open === 'edit'}
+            onOpenChange={() => {
+              setOpen('edit')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            currentRow={currentRow}
+          />
+
+          <UsersDeleteDialog
+            key={`user-delete-${currentRow.id}`}
+            open={open === 'delete'}
+            onOpenChange={() => {
+              setOpen('delete')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            currentRow={currentRow}
+          />
+        </>
+      )}
+    </>
+  )
+}
+```
+
+
+The `UsersDialogs` component reads the dialog state (`open` and `currentRow`) and renders the appropriate dialog.
+
+The `UsersActionDialog` component handles both create and update dialogs because they share the same structure and logic. The mode depends on whether `currentRow` is present:
+- The add dialog is rendered when `open` is `add`.
+- The edit dialog is rendered only when `open` is `edit` and a user is selected in `currentRow`.
+
+The `UsersDeleteDialog` component displays a confirmation dialog for deleting a selected user. It is rendered only when `open` is `delete` and a user is selected in `currentRow`.
+
+
+## Open dialogs
+
+To create an entity, call `setOpen('add')`. To update, first store the selected entity, then call `setOpen('edit')`.
+
+```tsx title="src/features/users/components/users-primary-buttons.tsx"
+export function UsersPrimaryButtons() {
+  const { setOpen } = useUsers()
+  return (
+    <div className='flex gap-2'>
+      <Button className='space-x-1' onClick={() => setOpen('add')}>
+        <span>Add User</span> <UserPlus size={18} />
+      </Button>
+    </div>
+  )
+}
+```
+
+```tsx title="src/features/users/components/data-table-row-actions.tsx"
+function EditUserAction({ row }: { row: Row<User> }) {
+  const { setOpen, setCurrentRow } = useUsers()
+
+  return (
+    <DropdownMenuItem
+      onClick={() => {
+        setCurrentRow(row.original)
+        setOpen('edit')
+      }}
+    >
+      Edit
+    </DropdownMenuItem>
+  )
+}
+```
+
+
+## Implement a dialog
+
+The `UsersActionDialog` component accepts an optional `currentRow`, a controlled `open` value, and an `onOpenChange` callback.
+
+Providing `currentRow` enables **edit mode**.
+
+When the user closes the dialog or submits the form, `onOpenChange` is called to update the dialog state.
+
+The form uses React Hook Form with a Zod resolver. In **create mode**, the form initializes with empty values; in **edit mode**, it is prefilled with the selected user's fields.
+
+The `Dialog*` and `Form` components come from shadcn/ui.
+
+```tsx title="src/features/users/components/users-action-dialog.tsx"
+const formSchema = z.object(...);
+type UserForm = z.infer<typeof formSchema>
+
+type UserActionDialogProps = {
+  currentRow?: User
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function UsersActionDialog({
+  currentRow,
+  open,
+  onOpenChange,
+}: UserActionDialogProps) {
+  const isEdit = !!currentRow
+  const form = useForm<UserForm>({
+    resolver: zodResolver(formSchema),
+    defaultValues: isEdit
+      ? {
+          ...currentRow,
+          password: '',
+          confirmPassword: '',
+          isEdit,
+        }
+      : {
+          firstName: '',
+          lastName: '',
+          username: '',
+          email: '',
+          role: '',
+          phoneNumber: '',
+          password: '',
+          confirmPassword: '',
+          isEdit,
+        },
+  })
+
+  const onSubmit = (values: UserForm) => {
+    form.reset()
+    console.log(values)
+    onOpenChange(false)
+  }
+
+  const isPasswordTouched = !!form.formState.dirtyFields.password
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        form.reset()
+        onOpenChange(nextOpen)
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogDescription>
+            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
+            Click save when you&apos;re done.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className='h-105 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
+          <Form {...form}>
+            <form
+              id='user-form'
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='space-y-4 px-0.5'
+            >
+              {/* Form fields */}
+            </form>
+          </Form>
+        </div>
+        <DialogFooter>
+          <Button type='submit' form='user-form'>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+```

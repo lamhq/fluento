@@ -1,0 +1,223 @@
+import { PackageManagerTabs } from '@theme';
+
+# Loading UI
+
+## Introduction
+
+This guide explains how to render loading indicators in your UI. It includes:
+
+- Top loading bar
+- Skeleton screens
+- Spinner components
+
+## Top Loading Bar
+
+### Installation
+
+Install the `react-top-loading-bar` package using your preferred package manager:
+
+<PackageManagerTabs
+  command={{
+    npm: 'npm install react-top-loading-bar',
+    yarn: 'yarn add react-top-loading-bar',
+    pnpm: 'pnpm add react-top-loading-bar',
+    bun: 'bun add react-top-loading-bar',
+  }}
+/>
+
+### Implementation
+
+```tsx title="./common/components/TopLoadingBar.tsx"
+import { useCallback, useEffect, useRef, useState } from 'react';
+import ReactTopLoadingBar from 'react-top-loading-bar';
+
+const START_PROGRESS = 1;
+const MAX_PROGRESS = 100;
+const MAX_LOADING_PROGRESS = 95;
+const INTERVAL = 80;
+const INITIAL_DURATION = 2000;
+
+interface TopLoadingBarProps {
+  open: boolean;
+}
+
+export default function TopLoadingBar({ open }: TopLoadingBarProps) {
+  const [progress, setProgress] = useState(START_PROGRESS);
+  const [duration, setDuration] = useState(INITIAL_DURATION);
+  const delta = MAX_LOADING_PROGRESS * (INTERVAL / duration);
+  const increaseProgress = useCallback(
+    (p: number) => Math.min(p + delta, MAX_LOADING_PROGRESS),
+    [delta],
+  );
+  // needed for tracking past loading bar's completion time
+  const isOpened = useRef(open);
+  const lastStart = useRef<number | null>(null);
+  const pastDurations = useRef<number[]>([]);
+
+  // automatic increase loading bar's progress while open
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (open) {
+      setTimeout(() => {
+        setProgress(START_PROGRESS);
+      }, 0);
+      interval = setInterval(() => {
+        setProgress(increaseProgress);
+      }, INTERVAL);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [open, increaseProgress]);
+
+  useEffect(() => {
+    const durations = pastDurations.current;
+
+    // track loading bar's completion time
+    if (open) {
+      lastStart.current ??= performance.now();
+    } else if (isOpened.current && lastStart.current !== null) {
+      durations.push(performance.now() - lastStart.current);
+      if (durations.length > 3) {
+        durations.shift();
+      }
+      lastStart.current = null;
+    }
+    isOpened.current = open;
+
+    // calculate approximate completion time based on past data
+    setDuration(
+      durations.length > 0
+        ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
+        : INITIAL_DURATION,
+    );
+  }, [open]);
+
+  // keep the bar mounted after `open` turns false, so it can finish its animation
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [isRendered, setIsRendered] = useState(open);
+  // changing the key on each reopen remounts the bar and drops any pending finish callback
+  const [session, setSession] = useState(0);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setIsRendered(true);
+      setSession((s) => s + 1);
+    }
+  }
+
+  if (!isRendered) return null;
+
+  return (
+    <ReactTopLoadingBar
+      key={session}
+      progress={open ? progress : MAX_PROGRESS}
+      onLoaderFinished={() => {
+        setIsRendered(false);
+      }}
+      shadow={true}
+      color="var(--muted-foreground)"
+    />
+  );
+}
+```
+
+### Usage
+
+```tsx
+import TopLoadingBar from './common/components/TopLoadingBar';
+
+export default function App() {
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <>
+      <TopLoadingBar open={loading} />
+      <button onClick={() => setLoading(true)}>Start Loading</button>
+    </>
+  );
+}
+```
+
+## TableSkeleton
+
+### Installation
+
+Add shadcn/ui components:
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add skeleton table',
+    npm: 'npx shadcn@latest add skeleton table',
+    bun: 'bunx --bun shadcn@latest add skeleton table',
+  }}
+/>
+
+### Implementation
+
+```tsx title="./common/components/TableSkeleton.tsx"
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
+interface TableSkeletonProps {
+  columnCount?: number;
+  rowCount?: number;
+}
+
+export default function TableSkeleton({
+  columnCount = 6,
+  rowCount = 5,
+}: TableSkeletonProps) {
+  const columns = Array.from({ length: columnCount });
+  const rows = Array.from({ length: rowCount });
+
+  return (
+    <div className="overflow-hidden border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {columns.map((_, columnIndex) => (
+              <TableHead key={columnIndex} className="bg-background">
+                <Skeleton className="h-4 w-16" />
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {rows.map((_, rowIndex) => (
+            <TableRow key={rowIndex}>
+              {columns.map((_, columnIndex) => (
+                <TableCell key={columnIndex} className="bg-background">
+                  <Skeleton className="h-4 w-full" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+```
+
+### Usage
+
+```tsx
+import TableSkeleton from './common/components/TableSkeleton';
+
+export default function App() {
+  return (
+    <div>
+      <TableSkeleton columnCount={6} rowCount={5} />
+    </div>
+  );
+}
+```

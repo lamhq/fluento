@@ -46,6 +46,7 @@ export const useGetExercises: ServerTableQueryHook<ExerciseSummary> = ({
     },
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
+    throwOnError: true,
   });
 };
 
@@ -57,6 +58,7 @@ export function useGetExerciseDetails(
   return useQuery<Exercise>({
     queryKey: [EXERCISE_QUERY_KEY, exerciseId],
     queryFn: ({ signal }) => apiClient.getExerciseById(exerciseId, signal),
+    throwOnError: true,
     enabled,
   });
 }
@@ -66,6 +68,7 @@ export function useGetTopics() {
   return useQuery({
     queryKey: [TOPIC_LIST_QUERY_KEY],
     queryFn: ({ signal }) => apiClient.getTopics(signal),
+    throwOnError: true,
   });
 }
 

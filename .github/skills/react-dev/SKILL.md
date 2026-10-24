@@ -1,32 +1,46 @@
 ---
 name: react-dev
-description: Use when developing React UI in this project, including starting the web app, running Storybook, installing shadcn/ui components, building data lists, or implementing create, update, and delete, form interfaces.
+description: guides for React development tasks. Includes project structure; start application; run Storybook; install shadcn/ui components; render tables, dialogs, and forms.
 ---
 
 ## Project Structure
 
-Refer to the [Project Structure section](../../../apps/web/README.md#project-structure).
+Refer to [Project Structure section](../../../apps/web/README.md#project-structure).
 
 ## Start the web app
 
-Follow the [Getting Started section](../../../apps/web/README.md#getting-started).
+Refer to [Getting Started section](../../../apps/web/README.md#getting-started).
 
 ## Run Storybook
 
-Follow the [Run Storybook section](../../../apps/web/README.md#run-storybook).
+Refer to [Run Storybook section](../../../apps/web/README.md#run-storybook).
 
 ## Install shadcn/ui components
 
-Follow the [Install shadcn/ui components section](../../../apps/web/README.md#install-shadcnui-components).
+Refer to [Install shadcn/ui components section](../../../apps/web/README.md#install-shadcnui-components).
 
-## Build a Data List UI
+## Data Fetching
 
-Copy the code snippet in [Data List](http://localhost:4173/web/react/tanstack-table/data-list.md).
+## Data Mutation
 
-## Render Create/Update/Delete UI
+## Error Handling
 
-Copy the code snippets in [Action UIs](http://localhost:4173/web/react/shadcn-ui/action-ui.md)
+## Render Table (Data List)
 
-## Implement Form UI
+Refer to [Data List guide](./data-list.mdx).
 
-Copy the code snippets in [React Hook Form](http://localhost:4173/web/react/shadcn-ui/react-hook-form.md).
+## Render Dialog (Action UI)
+
+Refer to [Action Dialog guide](./action-dialog.mdx)
+
+## Render Form
+
+Refer to [React Hook Form guide](./react-hook-form.mdx).
+
+## Render Confirmation Dialog
+
+Refer to [Confirmation Dialog guide](./confirm-dialog.mdx).
+
+## Render Loading UI
+
+Refer to [Loading UI guide](./loading-ui.mdx).
