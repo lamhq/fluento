@@ -129,7 +129,7 @@ Represents a label users can select to categorize and find exercises. Topics may
 | ExerciseFormat | When an exercise is created or its format changes | The selected format must be a supported Exercise Format.                                    | Reject the exercise and identify the invalid format.             |
 | ExerciseSkill  | When an exercise is created or its format changes | Set `skill` from the selected `format` using the Format-Skill Mapping below.                | Reject the exercise if the format has no mapped skill.           |
 | FormatFields   | When an exercise is created or its format changes | Required fields must be present; fields that do not apply to the format must be omitted.    | Reject the exercise and identify missing or inapplicable fields. |
-| UniquePerUser  | When topics are created                           | A topic name must not duplicate with other topics owned by the current user, ignoring case. | Skip topic creation.                                             |
+| UniquePerUser  | When topics are created or renamed                | A topic name must not duplicate with other topics owned by the current user, ignoring case. | Skip topic creation; reject the topic rename.                    |
 
 ### Exercise Name Mapping
 
@@ -164,10 +164,26 @@ Common fields (`name`, `format`, `skill`, `topics`, `references`, and `status`) 
 
 Optional array fields are omitted when absent or when trimming and removing blank entries leaves no values. Do not save empty arrays for optional fields. Required lists must contain at least one non-empty value after cleanup; otherwise, reject the record.
 
+### Topic Name Cascade
+
+Removing or renaming a topic affects the exercises that reference it:
+
+| Operation | Topic visibility | Exercises affected                   |
+| --------- | ---------------- | ------------------------------------ |
+| Rename    | `private`        | Exercises owned by the topic's owner |
+| Rename    | `public`         | All exercises                        |
+| Delete    | `private`        | Exercises owned by the topic's owner |
+| Delete    | `public`         | All exercises                        |
+
+- A rename replaces matching names with the new name and removes duplicate names within each exercise.
+- A delete removes matching names from the exercise topic list.
+- If a delete leaves an exercise without topics, add `Uncategorized` to that exercise and ensure its owner has a `private` topic named `Uncategorized`.
+
 ## Revision History
 
 | Version | Date       | Author       | Changes                                                                                             |
 | ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------- |
+| 1.9     | 2026-10-24 | Fluento team | Defined the Topic Name Cascade for renaming and deleting topics; applied UniquePerUser to renames.  |
 | 1.8     | 2026-10-21 | Fluento team | Require an owner for every topic, including public topics.                                          |
 | 1.7     | 2026-10-21 | Fluento team | Define case-insensitive topic name matching within the current user's visible topic scope.          |
 | 1.6     | 2026-10-15 | Fluento team | Omit optional arrays from storage when absent or empty after cleanup.                               |
